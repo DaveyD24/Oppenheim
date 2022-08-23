@@ -1,0 +1,3 @@
+The Monkey and bat created a while ago to test some things with blender
+Feel free to change them if you found better ones
+Note that the Monkey does not contain any animations so a better one is likly required
