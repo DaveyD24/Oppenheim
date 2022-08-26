@@ -2,7 +2,7 @@
 #define WITH_GUI_INFO
 #endif
 //#define USE_KEYBOARD_YAW
-//#define USE_ANY_YAW
+#define USE_ANY_YAW
 
 using UnityEngine;
 using static UnityEngine.InputSystem.InputAction;
@@ -23,9 +23,14 @@ public class BatMovement : PlayerController
 	float YawDirection = 0f;
 	float PitchDirection = 0f;
 
+	// Ground Variables.
+	Vector3 GroundMovement;
+
 	Rigidbody BatPhysics;
 	// Stop the Player from Gliding more than once per Jump.
 	bool bHasGlidedThisJump, bHasCancelledGlideThisJump;
+
+	Camera BatCamera;
 
 	protected override void Start()
 	{
@@ -57,35 +62,23 @@ public class BatMovement : PlayerController
 			HandleLook(Vector2.zero);
 			YawDirection = PitchDirection = 0f;
 		};
+
+		BatCamera = GameObject.FindGameObjectWithTag("Bat Camera").GetComponent<Camera>();
 	}
 
 	void Update()
 	{
-		// Translate World-Velocity to Local Forward.
-		if (YawDirection != 0f)
-		{
-			Vector3 YawVelocity = RotateVector(BatPhysics.velocity, transform.up, YawDirection);
-			BatPhysics.velocity = YawVelocity;
-		}
-
-		if (PitchDirection != 0f)
-		{
-			Vector3 PitchVelocity = RotateVector(BatPhysics.velocity, -transform.right, PitchDirection);
-			BatPhysics.velocity = PitchVelocity;
-		}
-
-		// Stop dead input affecting rotations.
-		if (IsZero(YawDirection + PitchDirection))
-		{
-			BatPhysics.angularVelocity = Vector3.zero;
-		}
-
-		// Set to Zero if its close enough to Zero.
-		Vector3 Velocity = BatPhysics.velocity;
-		ForceZeroIfZero(ref Velocity);
-
 		if (YawDirection != 0f || PitchDirection != 0f)
 		{
+			// Translate World-Velocity to Local Forward.
+			Vector3 YawVelocity = RotateVector(BatPhysics.velocity, transform.up, YawDirection);
+			Vector3 CombinedVelocity = RotateVector(YawVelocity, -transform.right, PitchDirection);
+			BatPhysics.velocity = CombinedVelocity; // Combination of Pitch and Yaw.
+
+			// Set to Zero if its close enough to Zero.
+			Vector3 Velocity = BatPhysics.velocity;
+			ForceZeroIfZero(ref Velocity);
+
 			BatPhysics.velocity = Velocity;
 
 			// Not Zero and must be facing in the same general direction.
@@ -95,6 +88,22 @@ public class BatMovement : PlayerController
 				transform.rotation = Quaternion.LookRotation(Velocity, Vector3.up);
 			}
 		}
+		else
+		{
+			if (GroundMovement != Vector3.zero)
+			{
+				// Smoothly rotate the Bat towards where it's moving.
+				Quaternion RotationNow = transform.rotation;
+				Vector3 MovementVector = DirectionRelativeToCamera(GroundMovement);
+				Quaternion TargetRot = Quaternion.LookRotation(MovementVector, Vector3.up);
+				transform.rotation = Quaternion.RotateTowards(RotationNow, TargetRot, RotationSpeed);
+			}
+		}
+	}
+
+	void FixedUpdate()
+	{
+		HandleGroundMovement();
 	}
 
 	void OnTriggerEnter(Collider Other)
@@ -121,15 +130,15 @@ public class BatMovement : PlayerController
 
 	void HandleMovement(Vector2 Throw)
 	{
-		float Vertical = Throw.y;
-		float Horizontal = Throw.x;
-
 		if (IsAirborne())
 		{
 			// Airborne Motion and Controls.
 
 			// Gliding Sensitivity for Gamepad Compatibility.
 			const float kGlideInputSensitivity = .5f;
+
+			float Vertical = Throw.y;
+			float Horizontal = Throw.x;
 
 			// Forward Gliding.
 			if (!bHasGlidedThisJump && Vertical > kGlideInputSensitivity)
@@ -172,6 +181,16 @@ public class BatMovement : PlayerController
 				YawDirection = 0f;
 			}
 #endif
+
+			// Stop Ground Movement from taking place while Airborne.
+			GroundMovement = Vector3.zero;
+		}
+		else
+		{
+			// Grounded Controls.
+
+			GroundMovement = new Vector3(Throw.x, 0f, Throw.y).normalized;
+			GroundMovement *= MovementSpeed;
 		}
 	}
 
@@ -234,7 +253,40 @@ public class BatMovement : PlayerController
 		else
 		{
 			// Camera Look.
+
+			/*
+			 * Should be handled with a Spring Arm or similar component.
+			 */
 		}
+	}
+
+	void HandleGroundMovement()
+	{
+		// Ground Movement relative to the camera.
+		Vector3 CameraRelativeDirection = DirectionRelativeToCamera(GroundMovement);
+		Rb.MovePosition(Rb.position + (CameraRelativeDirection * Time.fixedDeltaTime));
+	}
+
+	/// <summary>Converts a world direction to be relative to the Camera's forward.</summary>
+	Vector3 DirectionRelativeToCamera(Vector3 Direction, bool bIgnoreYAxis = true)
+	{
+		Transform Camera = BatCamera.transform;
+
+		Vector3 BatCameraForward = Camera.forward;
+		Vector3 BatCameraRight = Camera.right;
+
+		if (bIgnoreYAxis)
+			BatCameraForward.y = BatCameraRight.y = 0f;
+
+		BatCameraForward.Normalize();
+		BatCameraRight.Normalize();
+
+		float LeftRight = Direction.x;
+		float ForwardBackward = Direction.z;
+
+		Vector3 RelativeMovementVector = BatCameraForward * ForwardBackward + BatCameraRight * LeftRight;
+
+		return RelativeMovementVector;
 	}
 
 	bool IsAirborne()
@@ -251,6 +303,8 @@ public class BatMovement : PlayerController
 		GUI.Label(new Rect(10, 40, 250, 250), $"Airborne? {(IsAirborne() ? "Yes" : "No")}");
 	}
 #endif
+
+	#region MATH FUNCTIONS
 
 	/// 
 	/// MATH FUNCTIONS
@@ -297,7 +351,8 @@ public class BatMovement : PlayerController
 	/// <summary>Rotates a Vector about an Axis by Angle degrees.</summary>
 	Vector3 RotateVector(Vector3 Vector, Vector3 Axis, float Angle)
 	{
-		// 3D Version of: https://matthew-brett.github.io/teaching/rotation_2d.html
+		if (IsZero(Angle))
+			return Vector;
 
 		SinCos(out float S, out float C, Angle * Mathf.Deg2Rad);
 
@@ -320,7 +375,6 @@ public class BatMovement : PlayerController
 			(OMC * XY + ZS) * Vector.x + (OMC * YY + C) * Vector.y + (OMC * YZ - XS) * Vector.z,
 			(OMC * ZX - YS) * Vector.x + (OMC * YZ + XS) * Vector.y + (OMC * ZZ + C) * Vector.z
 		);
-
 	}
 
 	/// <summary>Computes the Sine and Cosine of a given Angle.</summary>
@@ -363,24 +417,16 @@ public class BatMovement : PlayerController
 		Cosine = Sign * ((((-2.6051615e-07f * A2 + 2.4760495e-05f) * A2 - 0.0013888378f) * A2 + 0.041666638f) * A2 - 0.5f) * A2 + 1.0f;
 	}
 
-	void Abs(ref Vector3 V)
-	{
-		V.x = Mathf.Abs(V.x);
-		V.y = Mathf.Abs(V.y);
-		V.z = Mathf.Abs(V.z);
-	}
-
 	/// <summary>True if F is close enough to zero.</summary>
 	bool IsZero(float F)
 	{
-		return F <= .01f;
+		return Mathf.Abs(F) <= .01f;
 	}
 
 	/// <summary>True if V is close enough to zero.</summary>
 	/// <remarks>'Close enough' is define in <see cref="IsZero(float)"/>.</remarks>
 	bool IsZero(Vector3 V)
 	{
-		Abs(ref V);
 		return IsZero(V.x) && IsZero(V.y) && IsZero(V.z);
 	}
 
@@ -389,8 +435,10 @@ public class BatMovement : PlayerController
 	void ForceZeroIfZero(ref Vector3 V)
 	{
 		// Vector3's == operator is accurate to: 9.99999944 E-11 (0.0000000000999999944)
-		// This is too accurate, define our own threshold.
+		// This is too accurate; define our own threshold.
 		if (IsZero(V))
 			V = Vector3.zero;
 	}
+
+	#endregion
 }

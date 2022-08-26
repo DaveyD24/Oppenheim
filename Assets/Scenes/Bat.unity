@@ -136,7 +136,7 @@ GameObject:
   - component: {fileID: 371066510}
   m_Layer: 0
   m_Name: Main Camera
-  m_TagString: MainCamera
+  m_TagString: Bat Camera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -430,8 +430,8 @@ MonoBehaviour:
   fuel: 0
   bouyancy: 0
   foodTag: Mango
-  movementSpeed: 0
-  rotationSpeed: 0
+  movementSpeed: 5
+  rotationSpeed: 5
   health: 0
   TakeoffAcceleration: 850
   JumpHeight: 5
