@@ -1,6 +1,8 @@
 ﻿#if UNITY_EDITOR
 #define WITH_GUI_INFO
 #endif
+//#define USE_KEYBOARD_YAW
+//#define USE_ANY_YAW
 
 using UnityEngine;
 using static UnityEngine.InputSystem.InputAction;
@@ -18,7 +20,8 @@ public class BatMovement : PlayerController
 
 	[SerializeField] float YawStrength = 3f;
 	[SerializeField] float PitchStrength = 1f;
-	float YawDirection = 0;
+	float YawDirection = 0f;
+	float PitchDirection = 0f;
 
 	Rigidbody BatPhysics;
 	// Stop the Player from Gliding more than once per Jump.
@@ -42,15 +45,55 @@ public class BatMovement : PlayerController
 		{
 			HandleJump(0f);
 		};
+
+		Inputs.Player.Look.performed += (CallbackContext Context) =>
+		{
+			Vector2 Throw = Context.action.ReadValue<Vector2>();
+			HandleLook(Throw);
+		};
+
+		Inputs.Player.Look.canceled += (CallbackContext Context) =>
+		{
+			HandleLook(Vector2.zero);
+			YawDirection = PitchDirection = 0f;
+		};
 	}
 
 	void Update()
 	{
+		// Translate World-Velocity to Local Forward.
 		if (YawDirection != 0f)
 		{
-			// Translate World-Velocity to Local Forward.
-			Vector3 YawVelocity = RotateVector(BatPhysics.velocity, -transform.up, YawDirection);
+			Vector3 YawVelocity = RotateVector(BatPhysics.velocity, transform.up, YawDirection);
 			BatPhysics.velocity = YawVelocity;
+		}
+
+		if (PitchDirection != 0f)
+		{
+			Vector3 PitchVelocity = RotateVector(BatPhysics.velocity, -transform.right, PitchDirection);
+			BatPhysics.velocity = PitchVelocity;
+		}
+
+		// Stop dead input affecting rotations.
+		if (IsZero(YawDirection + PitchDirection))
+		{
+			BatPhysics.angularVelocity = Vector3.zero;
+		}
+
+		// Set to Zero if its close enough to Zero.
+		Vector3 Velocity = BatPhysics.velocity;
+		ForceZeroIfZero(ref Velocity);
+
+		if (YawDirection != 0f || PitchDirection != 0f)
+		{
+			BatPhysics.velocity = Velocity;
+
+			// Not Zero and must be facing in the same general direction.
+			if (Velocity != Vector3.zero && Vector3.Dot(transform.forward, Velocity) > .5f)
+			{
+				// Use transform.up or Vector3.up?
+				transform.rotation = Quaternion.LookRotation(Velocity, Vector3.up);
+			}
 		}
 	}
 
@@ -62,15 +105,15 @@ public class BatMovement : PlayerController
 		}
 	}
 
-	protected override void Movement(CallbackContext ctx)
+	protected override void Movement(CallbackContext Context)
 	{
-		Vector2 Throw = ctx.action.ReadValue<Vector2>();
+		Vector2 Throw = Context.action.ReadValue<Vector2>();
 		HandleMovement(Throw);
 	}
 
-	protected override void Jump(CallbackContext ctx)
+	protected override void Jump(CallbackContext Context)
 	{
-		float Throw = ctx.action.ReadValue<float>();
+		float Throw = Context.action.ReadValue<float>();
 		HandleJump(Throw);
 	}
 
@@ -113,32 +156,22 @@ public class BatMovement : PlayerController
 				BatPhysics.AddForce(transform.up * Lift);
 			}
 
-			// Pitch.
-			//if (Input.GetKey(KeyCode.UpArrow))
-			//{
-			//	BatPhysics.AddTorque(transform.right * PitchStrength);
-			//}
-			//else if (Input.GetKey(KeyCode.DownArrow))
-			//{
-			//	BatPhysics.AddTorque(-transform.right * PitchStrength);
-			//}
-
-			// Yaw.
-			if (Horizontal < -.1f)
+#if USE_KEYBOARD_YAW || USE_ANY_YAW
+			// Keyboard Yaw.
+			if (Horizontal < -.3f)
 			{
-				BatPhysics.AddTorque(-transform.up * YawStrength);
-				YawDirection = YawStrength;
-			}
-			else if (Horizontal > .1f)
-			{
-				BatPhysics.AddTorque(transform.up * YawStrength);
 				YawDirection = -YawStrength;
+			}
+			else if (Horizontal > .3f)
+			{
+				YawDirection = YawStrength;
 			}
 			else
 			{
 				BatPhysics.angularVelocity = Vector3.zero;
 				YawDirection = 0f;
 			}
+#endif
 		}
 	}
 
@@ -155,6 +188,52 @@ public class BatMovement : PlayerController
 			{
 				BatPhysics.velocity += ComputeJumpVelocity();
 			}
+		}
+	}
+
+	void HandleLook(Vector2 Throw)
+	{
+		Throw.Normalize();
+		float Azimuth = Throw.x;
+		float Inclination = Throw.y;
+
+		if (IsAirborne())
+		{
+			// Pitch.
+			if (Inclination < -.3f)
+			{
+				PitchDirection = PitchStrength;
+			}
+			else if (Inclination > .3f)
+			{
+				PitchDirection = -PitchStrength;
+			}
+			else
+			{
+				BatPhysics.angularVelocity = Vector3.zero;
+				PitchDirection = 0f;
+			}
+
+#if !USE_KEYBOARD_YAW || USE_ANY_YAW
+			// Yaw.
+			if (Azimuth < -.3f)
+			{
+				YawDirection = -YawStrength;
+			}
+			else if (Azimuth > .3f)
+			{
+				YawDirection = YawStrength;
+			}
+			else
+			{
+				BatPhysics.angularVelocity = Vector3.zero;
+				YawDirection = 0f;
+			}
+#endif
+		}
+		else
+		{
+			// Camera Look.
 		}
 	}
 
@@ -282,5 +361,36 @@ public class BatMovement : PlayerController
 		Sine = (((((-2.3889859e-08f * A2 + 2.7525562e-06f) * A2 - 0.00019840874f) * A2 + 0.0083333310f) * A2 - 0.16666667f) * A2 + 1.0f) * A;
 
 		Cosine = Sign * ((((-2.6051615e-07f * A2 + 2.4760495e-05f) * A2 - 0.0013888378f) * A2 + 0.041666638f) * A2 - 0.5f) * A2 + 1.0f;
+	}
+
+	void Abs(ref Vector3 V)
+	{
+		V.x = Mathf.Abs(V.x);
+		V.y = Mathf.Abs(V.y);
+		V.z = Mathf.Abs(V.z);
+	}
+
+	/// <summary>True if F is close enough to zero.</summary>
+	bool IsZero(float F)
+	{
+		return F <= .01f;
+	}
+
+	/// <summary>True if V is close enough to zero.</summary>
+	/// <remarks>'Close enough' is define in <see cref="IsZero(float)"/>.</remarks>
+	bool IsZero(Vector3 V)
+	{
+		Abs(ref V);
+		return IsZero(V.x) && IsZero(V.y) && IsZero(V.z);
+	}
+
+	/// <summary>Sets V to Vector3.zero if it's close enough to zero.</summary>
+	/// <remarks>'Close enough' is define in <see cref="IsZero(float)"/>.</remarks>
+	void ForceZeroIfZero(ref Vector3 V)
+	{
+		// Vector3's == operator is accurate to: 9.99999944 E-11 (0.0000000000999999944)
+		// This is too accurate, define our own threshold.
+		if (IsZero(V))
+			V = Vector3.zero;
 	}
 }
