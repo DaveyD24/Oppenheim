@@ -5,21 +5,36 @@ using UnityEngine;
 public class YellowController : MonoBehaviour
 {
     private CharacterController controller;
+    [SerializeField] private GreenController greenGuy;
     private Vector3 playerVelocity;
     private bool groundedPlayer;
     private float playerSpeed = 2.0f;
     private float jumpHeight = 1.0f;
     private float gravityValue = -9.81f;
+    private float followSpeed = 0.001f;
 
     bool active = false;
+    bool tooClose = false;
 
     private void Start()
     {
         controller = gameObject.AddComponent<CharacterController>();
+        this.controller.minMoveDistance = 0;
     }
 
     void Update()
     {
+        float distance = Vector3.Distance(this.transform.position, greenGuy.transform.position);
+        if (distance < 2.0f)
+        {
+            tooClose = true;
+        }
+        else
+        {
+            tooClose = false;
+        }
+
+
         if (active)
         {
             groundedPlayer = controller.isGrounded;
@@ -44,6 +59,15 @@ public class YellowController : MonoBehaviour
 
             playerVelocity.y += gravityValue * Time.deltaTime;
             controller.Move(playerVelocity * Time.deltaTime);
+        }
+        else
+        {
+            if (!tooClose)
+            {
+                Vector3 desiredPosition = greenGuy.transform.position;
+                Vector3 smoothedPosition = Vector3.Lerp(this.transform.position, desiredPosition, followSpeed);
+                this.transform.position = smoothedPosition;
+            }
         }
     }
 

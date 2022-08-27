@@ -16,6 +16,7 @@ public class BlueController : MonoBehaviour
     private void Start()
     {
         controller = gameObject.AddComponent<CharacterController>();
+        this.controller.minMoveDistance = 0;
     }
 
     void Update()
