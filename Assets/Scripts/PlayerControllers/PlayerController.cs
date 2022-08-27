@@ -56,13 +56,19 @@ public abstract class PlayerController : MonoBehaviour
         weight = Rb.mass;
     }
 
+    // https://docs.unity3d.com/Packages/com.unity.inputsystem@1.0/manual/Actions.html see here for further details on the input types
     private void OnEnable()
     {
         Inputs = new InputActions();
 
         Inputs.Player.Move.performed += Movement;
+        Inputs.Player.Move.canceled += Movement;
+
         Inputs.Player.Ability.performed += PerformAbility;
+        // Inputs.Player.Ability.canceled += PerformAbility;
+
         Inputs.Player.Jump.performed += Jump;
+        // Inputs.Player.Jump.canceled += Jump;
 
         Inputs.Player.Enable();
     }
