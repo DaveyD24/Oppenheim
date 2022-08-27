@@ -204,7 +204,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &683887430
 GameObject:
@@ -297,7 +297,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
 --- !u!1 &971585727
 GameObject:
@@ -312,8 +312,10 @@ GameObject:
   - component: {fileID: 971585729}
   - component: {fileID: 971585732}
   - component: {fileID: 971585728}
-  - component: {fileID: 971585733}
+  - component: {fileID: 971585736}
+  - component: {fileID: 971585735}
   - component: {fileID: 971585734}
+  - component: {fileID: 971585733}
   m_Layer: 0
   m_Name: Bat
   m_TagString: Untagged
@@ -407,7 +409,7 @@ Rigidbody:
   m_GameObject: {fileID: 971585727}
   serializedVersion: 2
   m_Mass: 1
-  m_Drag: 0
+  m_Drag: 0.01
   m_AngularDrag: 0
   m_UseGravity: 1
   m_IsKinematic: 0
@@ -423,20 +425,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 971585727}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6a4d4054a63ec4244a516f6277b2c8e6, type: 3}
+  m_Script: {fileID: 11500000, guid: b9df38b0bda325c45853f81993fba925, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weight: 0
-  fuel: 0
-  bouyancy: 0
-  foodTag: Mango
-  movementSpeed: 5
-  rotationSpeed: 5
-  health: 0
-  TakeoffAcceleration: 850
-  JumpHeight: 5
-  YawStrength: 2
-  PitchStrength: 1
 --- !u!96 &971585734
 TrailRenderer:
   serializedVersion: 2
@@ -536,6 +527,41 @@ TrailRenderer:
   m_MinVertexDistance: 0
   m_Autodestruct: 0
   m_Emitting: 1
+--- !u!114 &971585735
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 971585727}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a4d4054a63ec4244a516f6277b2c8e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TakeoffAcceleration: 850
+  JumpHeight: 5
+  YawStrength: 2
+  PitchStrength: 1
+--- !u!114 &971585736
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 971585727}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0c72d7fda9310b4f9d15486cb7db14d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weight: 0
+  fuel: 1
+  bouyancy: 1
+  foodTag: Mango
+  movementSpeed: 5
+  rotationSpeed: 5
+  health: 1
 --- !u!1 &1634760102
 GameObject:
   m_ObjectHideFlags: 0
@@ -631,5 +657,5 @@ Transform:
   m_LocalScale: {x: 20, y: 1, z: 20}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
