@@ -430,7 +430,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 87a4ac2e4093d9540b395e877017022b, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 55.31
+      value: 60.1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 87a4ac2e4093d9540b395e877017022b, type: 3}
       propertyPath: m_LocalPosition.y
@@ -438,7 +438,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 87a4ac2e4093d9540b395e877017022b, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -418.65
+      value: -438.5
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 87a4ac2e4093d9540b395e877017022b, type: 3}
       propertyPath: m_LocalRotation.w
@@ -584,6 +584,9 @@ MonoBehaviour:
     motor: 1
     steering: 0
   breakTorque: 20
+  popUpForce: 250
+  antiRollTorque: 400
+  baseOffset: 1.3
 --- !u!54 &463713142
 Rigidbody:
   m_ObjectHideFlags: 0

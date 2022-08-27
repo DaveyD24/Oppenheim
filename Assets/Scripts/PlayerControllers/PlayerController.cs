@@ -63,7 +63,6 @@ public abstract class PlayerController : MonoBehaviour
         Inputs.Player.Move.performed += Movement;
         Inputs.Player.Move.canceled += Movement;
         Inputs.Player.Ability.performed += PerformAbility;
-        Inputs.Player.Ability.canceled += PerformAbility;
         Inputs.Player.Jump.performed += Jump;
         Inputs.Player.Jump.canceled += Jump;
 
