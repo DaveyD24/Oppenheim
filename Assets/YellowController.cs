@@ -5,7 +5,7 @@ using UnityEngine;
 public class YellowController : MonoBehaviour
 {
     private CharacterController controller;
-    [SerializeField] private GreenController greenGuy;
+    [SerializeField] private GameObject activePlayer;
     private Vector3 playerVelocity;
     private bool groundedPlayer;
     private float playerSpeed = 2.0f;
@@ -16,15 +16,20 @@ public class YellowController : MonoBehaviour
     bool active = false;
     bool tooClose = false;
 
+    SwitchManager switchManager;
+
     private void Start()
     {
         controller = gameObject.AddComponent<CharacterController>();
         this.controller.minMoveDistance = 0;
+
+        switchManager = FindObjectOfType<SwitchManager>();
     }
 
     void Update()
     {
-        float distance = Vector3.Distance(this.transform.position, greenGuy.transform.position);
+        activePlayer = switchManager.GetActivePlayer();
+        float distance = Vector3.Distance(this.transform.position, activePlayer.transform.position);
         if (distance < 2.0f)
         {
             tooClose = true;
@@ -64,7 +69,7 @@ public class YellowController : MonoBehaviour
         {
             if (!tooClose)
             {
-                Vector3 desiredPosition = greenGuy.transform.position;
+                Vector3 desiredPosition = activePlayer.transform.position;
                 Vector3 smoothedPosition = Vector3.Lerp(this.transform.position, desiredPosition, followSpeed);
                 this.transform.position = smoothedPosition;
             }

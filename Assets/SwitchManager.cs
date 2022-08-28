@@ -58,4 +58,18 @@ public class SwitchManager : MonoBehaviour
         green.Deactivate();
         yellow.Deactivate();
     }
+
+    public GameObject GetActivePlayer()
+    {
+        if (red.isActive())
+            return red.gameObject;
+        if (blue.isActive())
+            return blue.gameObject;
+        if (green.isActive())
+            return green.gameObject;
+        if (yellow.isActive())
+            return yellow.gameObject;
+
+        return null;
+    }
 }
