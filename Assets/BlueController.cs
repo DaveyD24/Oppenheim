@@ -17,6 +17,7 @@ public class BlueController : MonoBehaviour
     bool tooClose = false;
 
     SwitchManager switchManager;
+    [SerializeField] Canvas canvas;
 
     private void Start()
     {
@@ -79,11 +80,13 @@ public class BlueController : MonoBehaviour
     public void Activate()
     {
         active = true;
+        canvas.gameObject.SetActive(true);
     }
 
     public void Deactivate()
     {
         active = false;
+        canvas.gameObject.SetActive(false);
     }
 
     public bool isActive()

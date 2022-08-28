@@ -10,6 +10,7 @@ public class SwitchManager : MonoBehaviour
     [SerializeField] public GreenController green;
     [SerializeField] public YellowController yellow;
 
+
     // Start is called before the first frame update
     void Start()
     {
