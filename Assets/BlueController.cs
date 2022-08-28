@@ -18,6 +18,7 @@ public class BlueController : MonoBehaviour
 
     SwitchManager switchManager;
     [SerializeField] Canvas canvas;
+    float groundHeight = 0.580005f;
 
     private void Start()
     {
@@ -72,7 +73,8 @@ public class BlueController : MonoBehaviour
             {
                 Vector3 desiredPosition = activePlayer.transform.position;
                 Vector3 smoothedPosition = Vector3.Lerp(this.transform.position, desiredPosition, followSpeed);
-                this.transform.position = smoothedPosition;
+                Vector3 flattenedPosition = new Vector3(smoothedPosition.x, groundHeight, smoothedPosition.z);
+                this.transform.position = flattenedPosition;
             }
         }
     }
