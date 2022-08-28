@@ -50,7 +50,7 @@ public abstract class PlayerController : MonoBehaviour
         // also update the ui for it
     }
 
-    private void Start()
+    protected virtual void Start()
     {
         Rb = GetComponent<Rigidbody>();
         weight = Rb.mass;

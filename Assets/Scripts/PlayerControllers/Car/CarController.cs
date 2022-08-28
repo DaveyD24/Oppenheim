@@ -22,6 +22,8 @@ public class CarController : PlayerController
 
     private Vector2 inputAmount; // current movement and steering input applied
 
+    [SerializeField] private AnimationCurve accelerationCurve; // this is saying that at time xx acceleration is y, but I want at the known speed time is the unknown
+    private float maxAcceleratTime;
     public void ApplyLocalPositionToVisuals(WheelCollider collider)
     {
         if (collider.transform.childCount == 0)
@@ -43,6 +45,12 @@ public class CarController : PlayerController
         AntiFlip();
     }
 
+    protected override void Start()
+    {
+        base.Start();
+        maxAcceleratTime = accelerationCurve[1].time;
+    }
+
     protected override void Jump(InputAction.CallbackContext ctx)
     {
         // this car cannot jump
@@ -59,9 +67,16 @@ public class CarController : PlayerController
         // bIsDash = true;
     }
 
+    private float motor = 0;
+
     private void ApplyMovement()
     {
-        float motor = MovementSpeed * inputAmount.y;
+        // note that this is wrong and should be the Y value to get the X value
+        float timeAtCurrentSpeed = CurveTimeFromValue(Rb.velocity.magnitude / MovementSpeed, accelerationCurve); // idea here is to get the time for the current speed
+        float newSpeed = accelerationCurve.Evaluate(timeAtCurrentSpeed + Time.deltaTime * 5); // for this frame what would the speed be
+
+        motor = newSpeed * inputAmount.y * MovementSpeed;
+
         float steering = RotationSpeed * inputAmount.x;
 
         // if (bIsDash)
@@ -158,6 +173,7 @@ public class CarController : PlayerController
     {
         GUI.Label(new Rect(10, 10, 250, 250), $"Speed: {CalculateSpeed():F1} km/h");
         GUI.Label(new Rect(10, 30, 250, 250), $"Current Up Direction Offset: {Vector3.Dot(transform.up, Vector3.up):F1}");
+        GUI.Label(new Rect(10, 50, 250, 250), $"Motor Torque: {motor:F1}");
     }
 #endif
 
@@ -165,5 +181,32 @@ public class CarController : PlayerController
     {
         // speed is in units/second and as 1 unit is 1 meter it comes to meters/second so need to multiply by 3.6 to get km/h
         return Rb.velocity.magnitude * 3.6f;
+    }
+
+    private float CurveTimeFromValue(float value, AnimationCurve curve)
+    {
+        float endTimeCheck = maxAcceleratTime;
+        float startTimeCheck = 0;
+        float currentTimeAt = (endTimeCheck + startTimeCheck) / 2;
+        int iterations = 0;
+        while (curve.Evaluate(currentTimeAt) > value + 0.05f || curve.Evaluate(currentTimeAt) < value - 0.05f) // || iterations < 20)
+        {
+            if (curve.Evaluate(currentTimeAt) > value)
+            {
+                endTimeCheck = currentTimeAt;
+            }
+            else
+            {
+                startTimeCheck = currentTimeAt;
+            }
+
+            currentTimeAt = (endTimeCheck + startTimeCheck) / 2;
+            iterations++;
+
+        }
+
+        // Debug.Log(currentTimeAt + " also Value " + value);
+
+        return curve.Evaluate(currentTimeAt);
     }
 }

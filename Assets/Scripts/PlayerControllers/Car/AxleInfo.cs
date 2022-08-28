@@ -33,3 +33,32 @@ public class AxleInfo
         get => steering; private set => steering = value;
     }
 }
+
+[System.Serializable]
+public class AxleInfoCustom
+{
+    [SerializeField] private CustomWheel leftWheel;
+    [SerializeField] private CustomWheel rightWheel;
+    [SerializeField] private bool motor; // is this wheel attached to motor?
+    [SerializeField] private bool steering; // is this wheel attached to motor?
+
+    public CustomWheel LeftWheel
+    {
+        get => leftWheel; private set => leftWheel = value;
+    }
+
+    public CustomWheel RightWheel
+    {
+        get => rightWheel; private set => rightWheel = value;
+    }
+
+    public bool Motor // is this wheel attached to motor?
+    {
+        get => motor; private set => motor = value;
+    }
+
+    public bool Steering // does this wheel apply steer angle?
+    {
+        get => steering; private set => steering = value;
+    }
+}
