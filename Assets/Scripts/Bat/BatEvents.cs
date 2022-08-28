@@ -13,14 +13,17 @@ public class BatEvents : MonoBehaviour
 
 	void OnTriggerEnter(Collider Other)
 	{
-		if (Other.CompareTag(Bat.FoodTag))
+		if (Other.CompareTag(Bat.Food))
 		{
-			Debug.Log("Mango Collected!");
+			OnMangoCollected();
 		}
 	}
 
-	void OnValidate()
+	void OnMangoCollected()
 	{
-		
+		Debug.Log("Mango Collected!");
+
+		Bat.AdjustEnergy(10f);
+		Bat.AdjustHealth(10f);
 	}
 }

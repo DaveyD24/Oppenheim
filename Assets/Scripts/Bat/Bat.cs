@@ -5,10 +5,10 @@ using static UnityEngine.InputSystem.InputAction;
 public class Bat : PlayerController
 {
 	// Expose Protected Fields.
-	public Rigidbody Physics { get => Rb; }
-	public float GroundSpeed { get => MovementSpeed; }
-	public float YawSpeed { get => RotationSpeed; }
-	public new string FoodTag { get => FoodTag; }
+	public Rigidbody Physics => Rb;
+	public float GroundSpeed => MovementSpeed;
+	public float YawSpeed => RotationSpeed;
+	public string Food => FoodTag;
 
 	BatMovement MovementComponent;
 
@@ -49,4 +49,14 @@ public class Bat : PlayerController
 	protected override void Jump(CallbackContext Context) => MovementComponent.JumpBinding(ref Context);
 
 	protected override void PerformAbility(CallbackContext ctx) => MovementComponent.AbilityBinding();
+
+	public void AdjustEnergy(float Amount)
+	{
+		AdjustFuelValue(Amount);
+	}
+
+	public void AdjustHealth(float Amount)
+	{
+		// Can't modify Health because it's a protected value with no set method.
+	}
 }

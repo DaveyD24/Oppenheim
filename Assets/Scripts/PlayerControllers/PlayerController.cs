@@ -10,10 +10,10 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(Rigidbody))]
 public abstract class PlayerController : MonoBehaviour
 {
-    [SerializeField] private float weight;
+    [SerializeField, ReadOnly] private float weight;
     [SerializeField] private float fuel;
     [SerializeField] private float bouyancy;
-    [SerializeField] private string foodTag;
+    [SerializeField, Tag] private string foodTag;
     [SerializeField] private float movementSpeed;
     [SerializeField] private float rotationSpeed;
     [SerializeField] private float health;
