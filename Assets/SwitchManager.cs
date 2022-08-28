@@ -16,6 +16,11 @@ public class SwitchManager : MonoBehaviour
         
     }
 
+    private void Awake()
+    {
+        green.Activate();
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -23,6 +28,7 @@ public class SwitchManager : MonoBehaviour
         {
             RotatePlayer();
         }
+        Debug.Log(GetActivePlayer().gameObject.name);
     }
 
     void RotatePlayer()
