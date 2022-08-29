@@ -126,10 +126,7 @@ public class BatMovement : MonoBehaviour
 			// Forward Gliding.
 			if (!bHasGlidedThisJump && Vertical > kGlideInputSensitivity)
 			{
-				// F = ma.
-				Bat.Physics.AddForce(Bat.Physics.mass * TakeoffAcceleration * transform.forward);
-
-				bHasGlidedThisJump = true;
+				StartGliding();
 			}
 			else if (!bHasCancelledGlideThisJump && Vertical < -kGlideInputSensitivity)
 			{
@@ -174,6 +171,8 @@ public class BatMovement : MonoBehaviour
 
 			GroundMovement = new Vector3(Throw.x, 0f, Throw.y).normalized;
 			GroundMovement *= Bat.GroundSpeed;
+
+			LockCursor(false);
 		}
 	}
 
@@ -250,6 +249,30 @@ public class BatMovement : MonoBehaviour
 		// Ground Movement relative to the camera.
 		Vector3 CameraRelativeDirection = DirectionRelativeToCamera(BatCamera.transform, GroundMovement);
 		Bat.Physics.MovePosition(Bat.Physics.position + (CameraRelativeDirection * Time.fixedDeltaTime));
+	}
+
+	void StartGliding()
+	{
+		// F = ma.
+		Bat.Physics.AddForce(Bat.Physics.mass * TakeoffAcceleration * transform.forward);
+
+		bHasGlidedThisJump = true;
+
+		LockCursor(true);
+	}
+
+	static void LockCursor(bool bShouldLock)
+	{
+		if (bShouldLock)
+		{
+			Cursor.lockState = CursorLockMode.Locked;
+			Cursor.visible = bShouldLock;
+		}
+		else
+		{
+			Cursor.lockState = CursorLockMode.None;
+			Cursor.visible = true;
+		}
 	}
 
 	bool IsAirborne()
