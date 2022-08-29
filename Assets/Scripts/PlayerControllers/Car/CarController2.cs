@@ -27,6 +27,8 @@ public class CarController2 : PlayerController
     protected override void Start()
     {
         base.Start();
+        Rb.ResetCenterOfMass();
+        Rb.centerOfMass = Rb.centerOfMass - Rb.centerOfMass; // Rb.transform.forward * 0.15f;
     }
 
     protected override void Jump(InputAction.CallbackContext ctx)

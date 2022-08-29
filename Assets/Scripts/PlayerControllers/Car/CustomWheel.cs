@@ -11,8 +11,11 @@ public class CustomWheel : MonoBehaviour
 
     [Header("Suspension")]
     [SerializeField] private float springStrength;
+    private float springStiffness;
     [SerializeField] private float springDampening;
+    private float maxDampening;
     [SerializeField] private float suspensionRange;
+    [SerializeField] private Vector3 suspensionOffset;
 
     [Header("Steering")]
     [Range(0, 1)]
@@ -25,33 +28,70 @@ public class CustomWheel : MonoBehaviour
     {
         wheelCenter = gameObject.transform.localPosition;
         carRb = transform.parent.GetComponent<Rigidbody>();
+        wheelMass = carRb.mass / 4; // assumes even distribution of the cars weight amoung all springs
+
+        float naturalFrequency = wheelMass > 0.0001 ? springStrength / wheelMass : 0.0f;
+
+        springStiffness = wheelMass * naturalFrequency * naturalFrequency;
+        float criticalDamping = 2 * naturalFrequency * wheelMass;
+        maxDampening = (criticalDamping > 0.0001 ? springDampening / criticalDamping : 1.0f) * criticalDamping;
+
+        float springrestLength = 1; // when at rest what distance is the spring from its rest position based on it's mass and junk
     }
 
     private float DetermineDampingForce(Vector3 wheelVelocity)
     {
         float springVelocity = Vector3.Dot(transform.up, wheelVelocity);
-        Debug.Log("spring Velocity: " + springVelocity);
-        return springVelocity * springDampening;
+        // Debug.Log("spring Velocity: " + springVelocity);
+        return springVelocity * maxDampening;
     }
 
     private void ApplySuspensionForce(Vector3 wheelVelocity, float dist)
     {
-            // the suspension force stuff
-            float offset = suspensionRange + wheelRadius - dist;
+        float naturalFrequency = wheelMass > 0.0001 ? springStrength / wheelMass : 0.0f;
 
-            Debug.Log(offset + " The offset force");
+        springStiffness = wheelMass * naturalFrequency * naturalFrequency;
+        float criticalDamping = 2 * naturalFrequency * wheelMass;
+        maxDampening = (criticalDamping > 0.0001 ? springDampening / criticalDamping : 1.0f) * criticalDamping;
 
-            float forceApplying = (offset * springStrength) - DetermineDampingForce(wheelVelocity);
-            carRb.AddForceAtPosition(forceApplying * transform.up, transform.position + (-transform.parent.up * (dist - wheelRadius)));
+        // in unreal they find the center point of the springs and ensure that the force applied to them will equal the weight of the vehicle
 
-            // Debug.Log(forceApplying);
-            Debug.DrawRay(transform.position, forceApplying * transform.parent.up * (suspensionRange + wheelRadius), Color.blue);
+        Vector3 localSpringEnd = wheelCenter - (suspensionRange / 2 * carRb.transform.up);
+        // the suspension force stuff
+        float offset = Vector3.Dot(wheelCenter - (wheelCenter + (carRb.transform.up * dist)), carRb.transform.up);  // (suspensionRange / 2) + wheelRadius - dist; // how compressed is the spring currently
 
-            // the steering force stuff
+        // Debug.Log(offset + " The offset force");
+
+        float forceApplying = offset * springStiffness;
+      //  if (offset > -suspensionRange && offset < suspensionRange)
+        {
+            forceApplying -= DetermineDampingForce(wheelVelocity);
+        }
+        Debug.Log(forceApplying + " stiffness " + springStiffness + " offset " + offset + " damping " + maxDampening);
+        carRb.AddForceAtPosition(forceApplying * -Vector3.up * Time.fixedDeltaTime, suspensionOffset + transform.position + (-transform.parent.up * (dist - wheelRadius)));
+
+        // Debug.Log(forceApplying);
+        Debug.DrawRay(transform.position, forceApplying * -transform.parent.up * (suspensionRange + wheelRadius), Color.blue);
+
+        // the steering force stuff
         // if it doesn't hit anything then the wheels just need to fall back down to their resting positions
     }
 
-    public void ApplySteeringForce(Vector3 direction)
+    // from https://github.com/EpicGames/UnrealEngine/blob/5.0/Engine/Source/Runtime/Engine/Private/PhysicsEngine/SimpleSuspension.cpp
+
+    float ComputeSpringStiffness(float SprungMass, float NaturalFrequency)
+    {
+        return SprungMass * NaturalFrequency * NaturalFrequency;
+    }
+
+    private float ComputeSpringForce(float springStiffness, float springDamping, float springDisplacement, float springVelocity)
+    {
+        float stiffnessForce = springDisplacement * springStiffness;
+        float dampingForce = springDisplacement > 0.0001 ? springVelocity * springDamping : 0.0f;
+        return stiffnessForce + dampingForce;
+    }
+
+public void ApplySteeringForce(Vector3 direction)
     {
         Vector3 wheelVelocity = carRb.GetPointVelocity(transform.position);
 
@@ -65,7 +105,8 @@ public class CustomWheel : MonoBehaviour
     public void ApplyAcceleration(float amount)
     {
         RaycastHit hit;
-        if (Physics.Raycast(transform.position, -transform.parent.up, out hit, suspensionRange + wheelRadius) && hit.collider.transform.root != transform.root)
+        if (Physics.Raycast(transform.position, -transform.parent.up, out hit, suspensionRange + wheelRadius) && hit.collider.transform.root != transform.root
+          )//  && hit.collider != transform.GetChild(0).gameObject)
         {
             carRb.AddForceAtPosition(amount * transform.forward, transform.position);
         }
@@ -75,6 +116,7 @@ public class CustomWheel : MonoBehaviour
 {
         RaycastHit hit;
         if (Physics.Raycast(transform.position, -transform.parent.up, out hit, suspensionRange + wheelRadius) && hit.collider.transform.root != transform.root)
+//            && hit.collider.gameObject != transform.GetChild(0).gameObject)
         {
             float dist = hit.distance;
             Vector3 wheelVelocity = carRb.GetPointVelocity(transform.position);
@@ -88,12 +130,23 @@ public class CustomWheel : MonoBehaviour
 
     private void SetGraphicPosition(float hitDist)
     {
-        transform.GetChild(0).position = transform.position + (-transform.parent.up * (hitDist - wheelRadius));
+        transform.localPosition = suspensionOffset + transform.localPosition + (-transform.parent.up * (hitDist - wheelRadius));
+        transform.localPosition = new Vector3(wheelCenter.x, transform.localPosition.y, wheelCenter.z);
+
+        Vector3 wheelCurrPos = transform.localPosition;
+        wheelCurrPos.y = Mathf.Clamp(wheelCurrPos.y, wheelCenter.y - suspensionRange/2, wheelCenter.y + suspensionRange/2);
+        transform.localPosition = wheelCurrPos;
     }
 
     private void OnDrawGizmosSelected()
     {
         Gizmos.DrawWireSphere(transform.position, wheelRadius);
+        if (carRb != null)
+        {
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawCube(carRb.transform.position + carRb.centerOfMass, new Vector3(wheelRadius, wheelRadius, wheelRadius));
+        }
+
         Gizmos.color = Color.red;
         Gizmos.DrawRay(transform.position, -transform.parent.up * wheelRadius);
     }

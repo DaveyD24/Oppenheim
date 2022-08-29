@@ -2102,7 +2102,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400050, guid: 0e7ee4df08df88c4880f43398f9ad2c2, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 50.46631
+      value: 46.45
       objectReference: {fileID: 0}
     - target: {fileID: 400050, guid: 0e7ee4df08df88c4880f43398f9ad2c2, type: 3}
       propertyPath: m_LocalPosition.y
@@ -2937,7 +2937,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 87a4ac2e4093d9540b395e877017022b, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.77
+      value: 7.38
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 87a4ac2e4093d9540b395e877017022b, type: 3}
       propertyPath: m_LocalPosition.z
@@ -3148,11 +3148,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbe0d730ce39a834896003bd54f7b6c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wheelRadius: 1.25
+  wheelRadius: 1
   wheelMass: 1
-  springStrength: 2
-  springDampening: 2.26
+  springStrength: 10000
+  springDampening: 1
   suspensionRange: 0.5
+  suspensionOffset: {x: 0, y: 0, z: 0}
   grip: 1
 --- !u!114 &2070098363
 MonoBehaviour:
@@ -3166,11 +3167,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbe0d730ce39a834896003bd54f7b6c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wheelRadius: 1.25
+  wheelRadius: 1
   wheelMass: 1
-  springStrength: 2
-  springDampening: 2.26
+  springStrength: 10000
+  springDampening: 1
   suspensionRange: 0.5
+  suspensionOffset: {x: 0, y: 0, z: 0}
   grip: 1
 --- !u!114 &2070098364
 MonoBehaviour:
@@ -3184,11 +3186,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbe0d730ce39a834896003bd54f7b6c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wheelRadius: 1.25
+  wheelRadius: 1
   wheelMass: 1
-  springStrength: 2
-  springDampening: 2.26
+  springStrength: 10000
+  springDampening: 1
   suspensionRange: 0.5
+  suspensionOffset: {x: 0, y: 0, z: 0}
   grip: 1
 --- !u!114 &2070098365
 MonoBehaviour:
@@ -3202,11 +3205,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbe0d730ce39a834896003bd54f7b6c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wheelRadius: 1.25
+  wheelRadius: 1
   wheelMass: 1
-  springStrength: 2
-  springDampening: 2.26
+  springStrength: 10000
+  springDampening: 1
   suspensionRange: 0.5
+  suspensionOffset: {x: 0, y: 0, z: 0}
   grip: 1
 --- !u!54 &2070098366
 Rigidbody:
