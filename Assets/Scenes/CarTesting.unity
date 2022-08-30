@@ -548,6 +548,10 @@ PrefabInstance:
       propertyPath: m_LocalRotation.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4183780681806614627, guid: 87a4ac2e4093d9540b395e877017022b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 270
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 4283017660337953535, guid: 87a4ac2e4093d9540b395e877017022b, type: 3}
     - {fileID: 3283302647034208200, guid: 87a4ac2e4093d9540b395e877017022b, type: 3}
@@ -591,7 +595,6 @@ MonoBehaviour:
     rightWheel: {fileID: 463713147}
     motor: 1
     steering: 0
-  meshRenderer: {fileID: 463713157}
   indicatorMat: {fileID: 2100000, guid: 99b51c67b4a1109438cc9f4d00af213e, type: 2}
   normalLightMat: {fileID: -2499569385991133865, guid: 87a4ac2e4093d9540b395e877017022b, type: 3}
   indicatorFrequency: 0.5
@@ -655,7 +658,41 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  transitionRotCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 442.85516
+      outSlope: 442.85516
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.47179347
+    - serializedVersion: 3
+      time: 0.18047023
+      value: 179.29343
+      inSlope: 702.6235
+      outSlope: 702.6235
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.058421496
+    - serializedVersion: 3
+      time: 1
+      value: 360
+      inSlope: 63.032417
+      outSlope: 63.032417
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.07318813
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   dashOffset: {x: 0, y: 0, z: 0.79}
+  dashBodyMaterial: {fileID: -478035346441924844, guid: 87a4ac2e4093d9540b395e877017022b, type: 3}
   windParticles: {fileID: 1305414152}
   particelSpeedMultiplier: 0.0025
 --- !u!54 &463713142
@@ -848,11 +885,6 @@ BoxCollider:
 --- !u!4 &463713156 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3850465698688294105, guid: 87a4ac2e4093d9540b395e877017022b, type: 3}
-  m_PrefabInstance: {fileID: 463713139}
-  m_PrefabAsset: {fileID: 0}
---- !u!23 &463713157 stripped
-MeshRenderer:
-  m_CorrespondingSourceObject: {fileID: -6002344215426875317, guid: 87a4ac2e4093d9540b395e877017022b, type: 3}
   m_PrefabInstance: {fileID: 463713139}
   m_PrefabAsset: {fileID: 0}
 --- !u!65 &463713158
@@ -6410,7 +6442,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -761481245691617968, guid: 87a4ac2e4093d9540b395e877017022b, type: 3}
+  - {fileID: 3055996272150503839, guid: 87a4ac2e4093d9540b395e877017022b, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

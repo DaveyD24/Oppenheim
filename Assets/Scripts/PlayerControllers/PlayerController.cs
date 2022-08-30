@@ -18,7 +18,9 @@ public abstract class PlayerController : MonoBehaviour
     [SerializeField] private float rotationSpeed;
     [SerializeField] private float health;
 
-    protected float Weight { get => weight; private set => weight = value; }
+    public Rigidbody Rb { get; private set; }
+
+    public float Weight { get => weight; private set => weight = value; }
 
     protected float Bouyancy { get => bouyancy; private set => bouyancy = value; }
 
@@ -31,8 +33,6 @@ public abstract class PlayerController : MonoBehaviour
     protected float Health { get => health; private set => health = value; }
 
     protected float Guel { get => fuel; private set => fuel = value; }
-
-    protected Rigidbody Rb { get; private set; }
 
     protected InputActions Inputs { get; private set; }
 
