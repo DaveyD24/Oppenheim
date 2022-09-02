@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using EventSystem;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 /// <summary>
 /// A base class for handling the common functionality across all players.
@@ -10,8 +12,10 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(Rigidbody))]
 public abstract class PlayerController : MonoBehaviour
 {
+    [SerializeField] private PlayerIdObject playerIDSO;
+    [SerializeField] private DefaultPlayerDataObject defaultDataSO;
     [SerializeField] private float weight;
-    [SerializeField] private float fuel;
+    private float fuel;
     [SerializeField] private float bouyancy;
     [SerializeField] private string foodTag;
     [SerializeField] private float movementSpeed;
@@ -21,6 +25,11 @@ public abstract class PlayerController : MonoBehaviour
     public Rigidbody Rb { get; private set; }
 
     public float Weight { get => weight; private set => weight = value; }
+
+    // A unique object each scene object gets assigned, being largly used to store the players id
+    protected PlayerIdObject PlayerID { get => playerIDSO; private set => playerIDSO = value; }
+
+    protected DefaultPlayerDataObject DefaultPlayerData { get => defaultDataSO; private set => defaultDataSO = value; }
 
     protected float Bouyancy { get => bouyancy; private set => bouyancy = value; }
 
@@ -32,7 +41,7 @@ public abstract class PlayerController : MonoBehaviour
 
     protected float Health { get => health; private set => health = value; }
 
-    protected float Guel { get => fuel; private set => fuel = value; }
+    protected float Fuel { get => fuel; set => fuel = Mathf.Clamp(value, 0, defaultDataSO.MaxFuel); }
 
     protected InputActions Inputs { get; private set; }
 
@@ -45,19 +54,36 @@ public abstract class PlayerController : MonoBehaviour
 
     protected void AdjustFuelValue(float amount)
     {
-        fuel += amount;
+        Fuel += amount;
+        UIEvents.OnFuelChanged(PlayerID.PlayerID, Fuel / defaultDataSO.MaxFuel);
 
-        // also update the ui for it
+        if (Fuel <= 0)
+        {
+            OnDeath();
+        }
+    }
+
+    protected virtual void Update()
+    {
+        AdjustFuelValue(-defaultDataSO.DecreaseFuelAmount.Evaluate(Fuel / defaultDataSO.MaxFuel) * Time.deltaTime);
     }
 
     protected virtual void Start()
     {
         Rb = GetComponent<Rigidbody>();
         weight = Rb.mass;
+        Fuel = defaultDataSO.MaxFuel;
+    }
+
+    protected virtual void OnDeath()
+    {
+        Debug.Log("Player Died");
+        Inputs.Player.Disable();
     }
 
     private void OnEnable()
     {
+        // setup the inputs to use
         Inputs = new InputActions();
 
         Inputs.Player.Move.performed += Movement;
@@ -67,6 +93,8 @@ public abstract class PlayerController : MonoBehaviour
         Inputs.Player.Jump.canceled += Jump;
 
         Inputs.Player.Enable();
+
+        // assign the nessesary functions to the event system
     }
 
     private void OnDisable()

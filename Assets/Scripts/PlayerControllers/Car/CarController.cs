@@ -50,6 +50,7 @@ public class CarController : PlayerController
     public MeshRenderer BodyMeshRenderer { get; set; }
 
     public Material[] CarMaterials { get; set; }
+
     public Material DashBodyMaterial { get => dashBodyMaterial; private set => dashBodyMaterial = value; }
 
     public Transform BodyTransform { get; private set; }
@@ -85,8 +86,11 @@ public class CarController : PlayerController
     // car movement is based on this https://docs.unity3d.com/2022.2/Documentation/Manual/WheelColliderTutorial.html
     public void FixedUpdate()
     {
-        ApplyMovement();
-        AntiFlip();
+        if (Fuel > 0)
+        {
+            ApplyMovement();
+            AntiFlip();
+        }
     }
 
     protected override void Start()
@@ -130,10 +134,31 @@ public class CarController : PlayerController
         }
     }
 
-    private void Update()
+    protected override void Update()
     {
+        base.Update();
+
         bIsGrounded = IsGrounded();
         SetWindParticles();
+    }
+
+    protected override void OnDeath()
+    {
+        base.OnDeath();
+        foreach (AxleInfo axleInfo in axleInfos)
+        {
+            if (axleInfo.LeftWheel != null)
+            {
+                axleInfo.LeftWheel.transform.parent = null;
+                axleInfo.RightWheel.transform.parent = null;
+
+                axleInfo.LeftWheel.gameObject.AddComponent<Rigidbody>().AddForce(250 * -transform.right);
+                axleInfo.RightWheel.gameObject.AddComponent<Rigidbody>().AddForce(250 * transform.right);
+
+                Destroy(axleInfo.LeftWheel.gameObject.GetComponent<WheelCollider>());
+                Destroy(axleInfo.RightWheel.gameObject.GetComponent<WheelCollider>());
+            }
+        }
     }
 
     /// <summary>
@@ -147,7 +172,6 @@ public class CarController : PlayerController
 
         particleEmission.rateOverDistance = velocityDamped;
         mainSettings.startSpeed = Rb.velocity.magnitude;
-        // dashParticles.emission = particleEmission;
     }
 
     private void ApplyMovement()
@@ -193,32 +217,15 @@ public class CarController : PlayerController
 
     private void PerformDash()
     {
-        // at least one wheel on the ground
-
         if (BIsDash)
         {
             dashTopNode.Evaluate();
-
-            // motor = dashSpeedCurve.Evaluate(dashCurrentTime);
-
-            //if (bAnyWheelGrounded)
-            //{
-            //    Rb.AddForceAtPosition(Rb.transform.forward * dashSpeedCurve.Evaluate(dashCurrentTime), CalculateDashOffset(), ForceMode.Acceleration);
-            //}
-
-            //dashCurrentTime += Time.fixedDeltaTime;
-            //if (dashCurrentTime >= dashMaxTime)
-            //{
-            //    bIsDash = false;
-            //    Rb.mass = Weight;
-            //}
         }
     }
 
     /// <summary>
     /// Apply a breaking force to the wheels.
     /// </summary>
-    /// <param name="motor">the current power of the engine.</param>
     /// <param name="axleInfo">the axle of the car recieving breaking.</param>
     private void ApplyBreaking(AxleInfo axleInfo)
     {
@@ -393,6 +400,24 @@ public class CarController : PlayerController
             {
                 CarMaterials[3] = normalLightMat;
                 BodyMeshRenderer.sharedMaterials = CarMaterials;
+            }
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Breakable") && BIsDash)
+        {
+            // convert this to the event system
+            Destroy(collision.gameObject.GetComponent<MeshCollider>());
+            Destroy(collision.gameObject.GetComponent<MeshRenderer>());
+            Destroy(collision.gameObject.GetComponent<MeshFilter>());
+            for (int i = collision.gameObject.transform.childCount - 1; i >= 0; i--)
+            {
+                collision.gameObject.transform.GetChild(i).gameObject.AddComponent<Rigidbody>().AddForce(1500 * transform.forward);
+                collision.gameObject.transform.GetChild(i).gameObject.AddComponent<MeshCollider>().convex = true;
+                collision.gameObject.transform.GetChild(i).gameObject.GetComponent<MeshRenderer>().enabled = true;
+                collision.gameObject.transform.GetChild(i).parent = null;
             }
         }
     }
