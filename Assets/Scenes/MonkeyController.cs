@@ -53,7 +53,10 @@ public class MonkeyController : MonoBehaviour
             }
             if (clinging)
             {
-                transform.position = clingPosition;
+                //transform.position = clingPosition;
+                Vector3 desiredPosition = new Vector3(transform.position.x, 0.5f, transform.position.z);
+                Vector3 gradual = Vector3.Lerp(transform.position, desiredPosition, 0.00125f);
+                transform.position = gradual;
             }
             else
             {
@@ -114,6 +117,10 @@ public class MonkeyController : MonoBehaviour
             Debug.Log("dsadfs");
             clinging = true;
             clingPosition = transform.position;
+        }
+        else
+        {
+            clinging = false;
         }
     }
 }
