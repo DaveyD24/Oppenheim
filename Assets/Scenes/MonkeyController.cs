@@ -9,7 +9,7 @@ public class MonkeyController : MonoBehaviour
     private Rigidbody rb;
     private Vector3 playerVelocity;
     private bool groundedPlayer;
-    private float playerSpeed = 3.5f;
+    private float playerSpeed = 4.5f;
     private float jumpHeight = 2.0f;
     private float gravityValue = -9.81f;
     private float followSpeed = 0.001f;
