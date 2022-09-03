@@ -12,30 +12,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9589d07c2cbcc7d48912869397d6c2af, type: 3}
   m_Name: Default Player Data SO
   m_EditorClassIdentifier: 
-  decreaseFuelAmount:
+  <DecreaseFuelAmount>k__BackingField:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
-      inSlope: 12.552591
-      outSlope: 12.552591
+      value: 1.4783325
+      inSlope: 8.0956955
+      outSlope: 8.0956955
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 0.096934065
+      outWeight: 0.11703548
     - serializedVersion: 3
-      time: 0.09275381
-      value: 0.62766194
-      inSlope: 1.2198104
-      outSlope: 1.2198104
+      time: 0.2692379
+      value: 2.5907986
+      inSlope: 1.6156626
+      outSlope: 1.6156626
       tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
-      outWeight: 0.042794477
+      outWeight: 0.33333334
     - serializedVersion: 3
       time: 1
-      value: 1
+      value: 3
       inSlope: 0
       outSlope: 0
       tangentMode: 0

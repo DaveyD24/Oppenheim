@@ -34,7 +34,6 @@ public class WallConstructor : MonoBehaviour
 
     private void GenerateWall()
     {
-
         for (int i = spawnedObjs.Count - 1; i >= 0;  i--)
         {
             DestroyImmediate(spawnedObjs[i]);
@@ -79,7 +78,7 @@ public class WallConstructor : MonoBehaviour
                         xoffset = 0;
                     }
 
-                    Vector3 segmentPos = new Vector3(xoffset + (x * width) + pos.x + (segmentsOffsetX*x) - offsetX, (y * height) + pos.y + (segmentsOffsetY * y) - offsetY, zoffset + (z * depth) + pos.z + (segmentsOffsetZ * z) - offsetZ);
+                    Vector3 segmentPos = new Vector3(xoffset + (x * width) + pos.x + (segmentsOffsetX * x) - offsetX, (y * height) + pos.y + (segmentsOffsetY * y) - offsetY, zoffset + (z * depth) + pos.z + (segmentsOffsetZ * z) - offsetZ);
                     GameObject segment = Instantiate(wallSegment, segmentPos, Quaternion.identity, transform);
                     segment.GetComponent<MeshRenderer>().material.color = Random.ColorHSV();
                     spawnedObjs.Add(segment);

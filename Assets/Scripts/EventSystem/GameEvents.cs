@@ -1,6 +1,5 @@
 namespace EventSystem
 {
-
     using System;
 
     /// <summary>
@@ -10,9 +9,16 @@ namespace EventSystem
     {
         public static Action OnDashCarCollide { get; set; }
 
+        public static Action<int> OnCollectFuel { get; set; }
+
         public static void DashCarCollide()
         {
             OnDashCarCollide?.Invoke(); // not yet implemented
+        }
+
+        public static void CollectFuel(int playerId)
+        {
+            OnCollectFuel?.Invoke(playerId);
         }
     }
 }

@@ -12,36 +12,26 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Rigidbody))]
 public abstract class PlayerController : MonoBehaviour
 {
-    [SerializeField] private PlayerIdObject playerIDSO;
-    [SerializeField] private DefaultPlayerDataObject defaultDataSO;
-    [SerializeField] private float weight;
     private float fuel;
-    [SerializeField] private float bouyancy;
-    [SerializeField] private string foodTag;
-    [SerializeField] private float movementSpeed;
-    [SerializeField] private float rotationSpeed;
-    [SerializeField] private float health;
 
     public Rigidbody Rb { get; private set; }
 
-    public float Weight { get => weight; private set => weight = value; }
+    public float Weight { get; private set; }
 
     // A unique object each scene object gets assigned, being largly used to store the players id
-    protected PlayerIdObject PlayerID { get => playerIDSO; private set => playerIDSO = value; }
+    [field: SerializeField] protected PlayerIdObject PlayerIdSO { get; private set; }
 
-    protected DefaultPlayerDataObject DefaultPlayerData { get => defaultDataSO; private set => defaultDataSO = value; }
+    [field: SerializeField] protected DefaultPlayerDataObject DefaultPlayerData { get; private set; }
 
-    protected float Bouyancy { get => bouyancy; private set => bouyancy = value; }
+    [field: SerializeField] protected float Bouyancy { get; private set; }
 
-    protected string FoodTag { get => foodTag; private set => foodTag = value; }
+    [field: SerializeField] protected float MovementSpeed { get; private set; }
 
-    protected float MovementSpeed { get => movementSpeed; private set => movementSpeed = value; }
+    [field: SerializeField] protected float RotationSpeed { get; private set; }
 
-    protected float RotationSpeed { get => rotationSpeed; private set => rotationSpeed = value; }
+    [field: SerializeField] protected float Health { get; private set; }
 
-    protected float Health { get => health; private set => health = value; }
-
-    protected float Fuel { get => fuel; set => fuel = Mathf.Clamp(value, 0, defaultDataSO.MaxFuel); }
+    protected float CurrentFuel { get => fuel; set => fuel = Mathf.Clamp(value, 0, DefaultPlayerData.MaxFuel); }
 
     protected InputActions Inputs { get; private set; }
 
@@ -54,10 +44,10 @@ public abstract class PlayerController : MonoBehaviour
 
     protected void AdjustFuelValue(float amount)
     {
-        Fuel += amount;
-        UIEvents.OnFuelChanged(PlayerID.PlayerID, Fuel / defaultDataSO.MaxFuel);
+        CurrentFuel += amount;
+        UIEvents.OnFuelChanged(PlayerIdSO.PlayerID, CurrentFuel / DefaultPlayerData.MaxFuel);
 
-        if (Fuel <= 0)
+        if (CurrentFuel <= 0)
         {
             OnDeath();
         }
@@ -65,19 +55,20 @@ public abstract class PlayerController : MonoBehaviour
 
     protected virtual void Update()
     {
-        AdjustFuelValue(-defaultDataSO.DecreaseFuelAmount.Evaluate(Fuel / defaultDataSO.MaxFuel) * Time.deltaTime);
+        AdjustFuelValue(-DefaultPlayerData.DecreaseFuelAmount.Evaluate(CurrentFuel / DefaultPlayerData.MaxFuel) * Time.deltaTime);
     }
 
     protected virtual void Start()
     {
         Rb = GetComponent<Rigidbody>();
-        weight = Rb.mass;
-        Fuel = defaultDataSO.MaxFuel;
+        Weight = Rb.mass;
+        fuel = DefaultPlayerData.MaxFuel;
     }
 
     protected virtual void OnDeath()
     {
         Debug.Log("Player Died");
+
         Inputs.Player.Disable();
     }
 
@@ -98,6 +89,7 @@ public abstract class PlayerController : MonoBehaviour
         Inputs.Player.Enable();
 
         // assign the nessesary functions to the event system
+        GameEvents.OnCollectFuel += MaxFuel;
     }
 
     private void OnDisable()
@@ -119,5 +111,13 @@ public abstract class PlayerController : MonoBehaviour
     private void Respawn()
     {
         // respawning code...
+    }
+
+    private void MaxFuel(int playerId)
+    {
+        if (playerId == PlayerIdSO.PlayerID)
+        {
+            AdjustFuelValue(DefaultPlayerData.MaxFuel);
+        }
     }
 }

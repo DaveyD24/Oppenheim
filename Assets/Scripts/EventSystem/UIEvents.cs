@@ -1,6 +1,5 @@
 namespace EventSystem
 {
-
     using System;
 
     /// <summary>

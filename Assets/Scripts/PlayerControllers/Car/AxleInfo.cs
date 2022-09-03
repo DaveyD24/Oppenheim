@@ -8,13 +8,16 @@ using UnityEngine;
 [System.Serializable]
 public class AxleInfo
 {
-    [SerializeField] private WheelCollider leftWheel;
-    [SerializeField] private WheelCollider rightWheel;
-    [SerializeField] private bool motor; // is this wheel attached to motor?
-    [SerializeField] private bool steering; // is this wheel attached to motor?
-
     private TrailRenderer leftSkidTrails;
     private TrailRenderer rightSkidTrails;
+
+    [field: SerializeField] public WheelCollider LeftWheel { get; private set; }
+
+    [field: SerializeField] public WheelCollider RightWheel { get; private set; }
+
+    [field: SerializeField] public bool Motor { get; private set; } // is this wheel attached to motor?
+
+    [field: SerializeField] public bool Steering { get; private set; } // is this wheel attached to motor?
 
     public GameObject Trail { get; set; }
 
@@ -23,32 +26,12 @@ public class AxleInfo
         leftSkidTrails = leftTrail;
         leftSkidTrails.emitting = false;
         leftSkidTrails.gameObject.transform.parent = null;
-        leftSkidTrails.gameObject.transform.position = leftWheel.transform.position;
+        leftSkidTrails.gameObject.transform.position = LeftWheel.transform.position;
 
         rightSkidTrails = rightTrail;
         rightSkidTrails.emitting = false;
         rightSkidTrails.gameObject.transform.parent = null;
-        rightSkidTrails.gameObject.transform.position = rightWheel.transform.position;
-    }
-
-    public WheelCollider LeftWheel
-    {
-        get => leftWheel; private set => leftWheel = value;
-    }
-
-    public WheelCollider RightWheel
-    {
-        get => rightWheel; private set => rightWheel = value;
-    }
-
-    public bool Motor // is this wheel attached to motor?
-    {
-        get => motor; private set => motor = value;
-    }
-
-    public bool Steering // does this wheel apply steer angle?
-    {
-        get => steering; private set => steering = value;
+        rightSkidTrails.gameObject.transform.position = RightWheel.transform.position;
     }
 
     /// <summary>
@@ -56,9 +39,9 @@ public class AxleInfo
     /// </summary>
     public void SetSkidTrails()
     {
-        if (leftWheel.isGrounded)
+        if (LeftWheel.isGrounded)
         {
-            Vector3 leftTrailPos = leftWheel.transform.position - (leftWheel.transform.parent.up * leftWheel.radius * 0.99f);
+            Vector3 leftTrailPos = LeftWheel.transform.position - (LeftWheel.transform.parent.up * LeftWheel.radius * 0.99f);
             if (leftSkidTrails == null || leftSkidTrails.emitting == false)
             {
                 leftSkidTrails = MonoBehaviour.Instantiate(Trail, leftTrailPos, Quaternion.identity).GetComponent<TrailRenderer>();
@@ -66,9 +49,8 @@ public class AxleInfo
             }
 
             WheelHit leftWheelHit;
-            leftWheel.GetGroundHit(out leftWheelHit);
+            LeftWheel.GetGroundHit(out leftWheelHit);
             leftSkidTrails.gameObject.transform.position = leftTrailPos;
-            Debug.Log(leftWheelHit.point);
             leftSkidTrails.gameObject.transform.forward = -leftWheelHit.normal;
         }
         else if (leftSkidTrails != null)
@@ -76,9 +58,9 @@ public class AxleInfo
             leftSkidTrails.emitting = false;
         }
 
-        if (rightWheel.isGrounded)
+        if (RightWheel.isGrounded)
         {
-            Vector3 rightTrailPos = rightWheel.transform.position - (rightWheel.transform.parent.up * leftWheel.radius * 0.99f);
+            Vector3 rightTrailPos = RightWheel.transform.position - (RightWheel.transform.parent.up * RightWheel.radius * 0.99f);
             if (rightSkidTrails == null || rightSkidTrails.emitting == false)
             {
                 rightSkidTrails = MonoBehaviour.Instantiate(Trail, rightTrailPos, Quaternion.identity).GetComponent<TrailRenderer>();
@@ -86,7 +68,7 @@ public class AxleInfo
             }
 
             WheelHit rightWheelHit;
-            rightWheel.GetGroundHit(out rightWheelHit);
+            RightWheel.GetGroundHit(out rightWheelHit);
             rightSkidTrails.gameObject.transform.position = rightTrailPos;
             rightSkidTrails.gameObject.transform.forward = -rightWheelHit.normal;
         }

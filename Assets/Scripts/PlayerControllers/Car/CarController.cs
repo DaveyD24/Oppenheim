@@ -8,6 +8,8 @@ public class CarController : PlayerController
     [SerializeField] private List<AxleInfo> axleInfos; // the information about each individual axle
     private bool bIsGrounded = true;
 
+    private Node dashTopNode;
+
     [Header("Steering")]
     [Space(1)]
     [SerializeField] private Material indicatorMat;
@@ -31,17 +33,21 @@ public class CarController : PlayerController
     [SerializeField] private float maxFlippedWait = 1.5f;
     private float flippedTime = 3;
 
-    [Header("Dash Settings")]
-    [Space(1)]
-    [SerializeField] private AnimationCurve dashSpeedCurve;
-    [SerializeField] private AnimationCurve transitionRotCurve;
-    [SerializeField] private Vector3 dashOffset;
-    [SerializeField] private Material dashBodyMaterial;
-    private Node dashTopNode;
+    [field: Header("Dash Settings")]
+    [field: Space(1)]
+    [field: SerializeField] public AnimationCurve DashSpeedCurve { get; private set; }
+
+    [field: SerializeField] public AnimationCurve TransitionRotCurve { get; private set; }
+
+    [field: SerializeField] public Vector3 DashOffset { get; private set; }
+
+    [field: SerializeField] public Material DashBodyMaterial { get; private set; }
 
     [Header("Wind Particles")]
     [Space(1)]
-    [SerializeField] private ParticleSystem windParticles;
+    [SerializeField]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.OrderingRules", "SA1201:Elements should appear in the correct order", Justification = "Order would get messed up making it confusiong.")]
+    private ParticleSystem windParticles;
     [Range(0, 1)]
     [SerializeField] private float particelSpeedMultiplier;
 
@@ -51,23 +57,13 @@ public class CarController : PlayerController
 
     public Material[] CarMaterials { get; set; }
 
-    public Material DashBodyMaterial { get => dashBodyMaterial; private set => dashBodyMaterial = value; }
-
     public Transform BodyTransform { get; private set; }
-
-    [SerializeField] public AnimationCurve TransitionRotCurve { get => transitionRotCurve; private set => transitionRotCurve = value; }
 
     public bool BIsDash { get; set; }
 
     public bool BAnyWheelGrounded { get; private set; } = true;
 
-    public AnimationCurve DashSpeedCurve
-    { get => dashSpeedCurve; private set => dashSpeedCurve = value; }
-
-    public Vector3 DashOffset
-    { get => dashOffset; private set => dashOffset = value; }
-
-    public float Motor { get; set; } // the current force of the cars motor
+    public float Motor { get; set; } = 0; // the current force of the cars motor
 
     public void ApplyLocalPositionToVisuals(WheelCollider collider)
     {
@@ -86,7 +82,7 @@ public class CarController : PlayerController
     // car movement is based on this https://docs.unity3d.com/2022.2/Documentation/Manual/WheelColliderTutorial.html
     public void FixedUpdate()
     {
-        if (Fuel > 0)
+        if (CurrentFuel > 0)
         {
             ApplyMovement();
             AntiFlip();
@@ -130,7 +126,6 @@ public class CarController : PlayerController
         if (!BIsDash && BAnyWheelGrounded)
         {
             BIsDash = true;
-           // bIsDash = true;
         }
     }
 
@@ -230,7 +225,7 @@ public class CarController : PlayerController
     private void ApplyBreaking(AxleInfo axleInfo)
     {
         // do breaking
-        if (!BIsDash && Motor == 0 && Mathf.Round(Rb.velocity.magnitude) > 1)
+        if (!BIsDash && Motor == 0 && Mathf.Round(Rb.velocity.magnitude) > 0.25f)
         {
             if (CarMaterials[4] != illumimatedTailLights)
             {
