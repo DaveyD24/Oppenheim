@@ -1,14 +1,25 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
+[RequireComponent(typeof(Animator))]
 public class BatEvents : MonoBehaviour
 {
+	public Action<EAnimationState> OnAnimationStateChanged;
+
 	Bat Bat;
+
+	Animator Animator;
+
+	void Awake()
+	{
+		OnAnimationStateChanged += OnAnimationEStateChanged;
+	}
 
 	void Start()
 	{
 		Bat = GetComponent<Bat>();
+
+		Animator = GetComponent<Animator>();
 	}
 
 	void OnTriggerEnter(Collider Other)
@@ -19,6 +30,21 @@ public class BatEvents : MonoBehaviour
 		}
 	}
 
+	public EAnimationState GetCurrentAnimState()
+	{
+		int State = Animator.GetInteger("Behaviour");
+		if (State > 3)
+			return EAnimationState.Fail;
+
+		return (EAnimationState)State;
+	}
+
+	void OnAnimationEStateChanged(EAnimationState NewState)
+	{
+		Debug.Log(NewState);
+		Animator.SetInteger("Behaviour", (int)NewState);
+	}
+
 	void OnMangoCollected()
 	{
 		Debug.Log("Mango Collected!");
@@ -26,4 +52,12 @@ public class BatEvents : MonoBehaviour
 		Bat.AdjustEnergy(10f);
 		Bat.AdjustHealth(10f);
 	}
+}
+
+public enum EAnimationState : int
+{
+	Walking = 1,
+	WingedFlight = 2,
+	Gliding = 3,
+	Fail = -1
 }

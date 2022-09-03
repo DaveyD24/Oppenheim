@@ -91,6 +91,21 @@ public class BatMovement : MonoBehaviour
 				transform.rotation = Quaternion.RotateTowards(RotationNow, TargetRot, Bat.YawSpeed);
 			}
 		}
+
+		if (!IsAirborne())
+		{
+			// If we're not Airborne, we're in the Walking Animation.
+			Bat.Events.OnAnimationStateChanged?.Invoke(EAnimationState.Walking);
+		}
+		else
+		{
+			// If the Bat's Animation is Walking, change to WingedFlight.
+			// Otherwise, the Bat should already be in the Air; change to Gliding.
+			Bat.Events.OnAnimationStateChanged?.Invoke(Bat.Events.GetCurrentAnimState() == EAnimationState.Walking
+				? EAnimationState.WingedFlight
+				: EAnimationState.Gliding
+			);
+		}
 	}
 
 	void FixedUpdate()
@@ -220,9 +235,12 @@ public class BatMovement : MonoBehaviour
 
 	void HandleGroundMovement()
 	{
-		// Ground Movement relative to the camera.
-		Vector3 CameraRelativeDirection = DirectionRelativeToCamera(BatCamera.transform, GroundMovement);
-		Bat.Physics.MovePosition(Bat.Physics.position + (CameraRelativeDirection * Time.fixedDeltaTime));
+		if (!IsAirborne())
+		{
+			// Ground Movement relative to the camera.
+			Vector3 CameraRelativeDirection = DirectionRelativeToCamera(BatCamera.transform, GroundMovement);
+			Bat.Physics.MovePosition(Bat.Physics.position + (CameraRelativeDirection * Time.fixedDeltaTime));
+		}
 	}
 
 	void StartGliding()

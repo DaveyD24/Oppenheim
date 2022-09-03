@@ -9,14 +9,17 @@ public class Bat : PlayerController
 	public float GroundSpeed => MovementSpeed;
 	public float YawSpeed => RotationSpeed;
 	public string Food => FoodTag;
+	public BatEvents Events => EventsComponent;
 
 	BatMovement MovementComponent;
+	BatEvents EventsComponent;
 
 	protected override void Start()
 	{
 		base.Start();
 
 		MovementComponent = GetComponent<BatMovement>();
+		EventsComponent = GetComponent<BatEvents>();
 
 		BindMiscellaneousInputs();
 	}
