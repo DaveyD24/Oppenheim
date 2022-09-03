@@ -11,10 +11,13 @@ public class bulletScript : MonoBehaviour
         Destroy(gameObject, life);
     }
 
-    void onCollisionEnter(Collision col)
+    void OnCollisionEnter(Collision col)
     {
         Debug.Log("Hit");
-        Destroy(col.gameObject);
-        Destroy(gameObject);
+        if (col.gameObject.CompareTag("Destroyable"))
+        {
+            Destroy(col.gameObject);
+            Destroy(gameObject);
+        }
     }
 }
