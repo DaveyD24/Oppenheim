@@ -45,6 +45,14 @@ public static class BatMathematics
 	}
 
 	/// <summary>Rotates a Vector about an Axis by Angle degrees.</summary>
+	/// <remarks>
+	/// Because you can't really define 0-degrees with Vector angles,
+	/// <paramref name="Angle"/> should be passed in as a delta angle instead
+	/// of a raw angle-in-degrees.
+	/// <br></br><br></br>
+	/// <b>While looking towards -Axis:</b><br></br>
+	/// + Angle is CW. - Angle is CCW.
+	/// </remarks>
 	public static Vector3 RotateVector(Vector3 Vector, Vector3 Axis, float Angle)
 	{
 		if (IsZero(Angle))

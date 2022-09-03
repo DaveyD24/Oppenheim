@@ -9,7 +9,7 @@
 // Enables Yaw control with the Horizontal Axis of InputActions.Move.
 #define USE_MOVE_YAW
 // Enables Yaw control with the Horizontal Axis of InputActions.Look.
-// #define USE_LOOK_YAW
+//#define USE_LOOK_YAW
 
 using UnityEngine;
 using static UnityEngine.InputSystem.InputAction;
@@ -26,10 +26,17 @@ public class BatMovement : MonoBehaviour
 	[SerializeField] float TakeoffAcceleration = 850f;
 	[SerializeField] float JumpHeight = 5f;
 
+	[SerializeField] float SecondsOfPitchFlight = 1f;
+	float RemainingSeconds;
+
 	[SerializeField] float YawStrength = 2f;
 	[SerializeField] float PitchStrength = 1f;
 	float YawDirection = 0f;
 	float PitchDirection = 0f;
+
+	[Header("Ground Checks")]
+	[SerializeField] Vector3 GroundCheckOffset;
+	[SerializeField] float GroundRayDistance = .51f;
 
 	// Ground Variables.
 	Vector3 GroundMovement;
@@ -147,19 +154,7 @@ public class BatMovement : MonoBehaviour
 
 #if USE_MOVE_YAW
 			// Keyboard Yaw.
-			if (Horizontal < -.3f)
-			{
-				YawDirection = -YawStrength;
-			}
-			else if (Horizontal > .3f)
-			{
-				YawDirection = YawStrength;
-			}
-			else
-			{
-				Bat.Physics.angularVelocity = Vector3.zero;
-				YawDirection = 0f;
-			}
+			ThrowYaw(Horizontal);
 #endif
 
 			// Stop Ground Movement from taking place while Airborne.
@@ -191,6 +186,9 @@ public class BatMovement : MonoBehaviour
 			{
 				Bat.Physics.velocity += ComputeJumpVelocity(transform.up, JumpHeight);
 			}
+
+			// Fact - Every time the Bat jumps, it has to take off from the Ground.
+			RemainingSeconds = SecondsOfPitchFlight;
 		}
 	}
 
@@ -202,36 +200,12 @@ public class BatMovement : MonoBehaviour
 
 		if (IsAirborne())
 		{
-			// Pitch.
-			if (Inclination < -.3f)
-			{
-				PitchDirection = PitchStrength;
-			}
-			else if (Inclination > .3f)
-			{
-				PitchDirection = -PitchStrength;
-			}
-			else
-			{
-				Bat.Physics.angularVelocity = Vector3.zero;
-				PitchDirection = 0f;
-			}
+
+			ThrowPitch(Inclination);
 
 #if USE_LOOK_YAW
-			// Yaw.
-			if (Azimuth < -.3f)
-			{
-				YawDirection = -YawStrength;
-			}
-			else if (Azimuth > .3f)
-			{
-				YawDirection = YawStrength;
-			}
-			else
-			{
-				Bat.Physics.angularVelocity = Vector3.zero;
-				YawDirection = 0f;
-			}
+			// Look Yaw.
+			ThrowYaw(Azimuth);
 #endif
 		}
 		else
@@ -261,6 +235,56 @@ public class BatMovement : MonoBehaviour
 		LockCursor(true);
 	}
 
+	/// <summary>Gives Pitch Input.</summary>
+	/// <param name="Throw">Direction of Pitch; delta.</param>
+	void ThrowPitch(float Throw)
+	{
+		// The Bat is too tired to Pitch upwards.
+		if (RemainingSeconds <= 0f)
+		{
+			PitchDirection = 0f;
+			return;
+		}
+
+		// Pitch.
+		if (Throw < -.3f)
+		{
+			PitchDirection = PitchStrength;
+
+			// Deduct time only when Pitching upwards.
+			RemainingSeconds -= Time.deltaTime;
+		}
+		else if (Throw > .3f)
+		{
+			PitchDirection = -PitchStrength;
+		}
+		else
+		{
+			Bat.Physics.angularVelocity = Vector3.zero;
+			PitchDirection = 0f;
+		}
+	}
+
+	/// <summary>Gives Yaw Input.</summary>
+	/// <param name="Throw">Direction of Yaw; delta.</param>
+	void ThrowYaw(float Throw)
+	{
+		// Yaw.
+		if (Throw < -.3f)
+		{
+			YawDirection = -YawStrength;
+		}
+		else if (Throw > .3f)
+		{
+			YawDirection = YawStrength;
+		}
+		else
+		{
+			Bat.Physics.angularVelocity = Vector3.zero;
+			YawDirection = 0f;
+		}
+	}
+
 	static void LockCursor(bool bShouldLock)
 	{
 		if (bShouldLock)
@@ -277,8 +301,8 @@ public class BatMovement : MonoBehaviour
 
 	bool IsAirborne()
 	{
-		Ray GroundRay = new Ray(transform.position, -transform.up);
-		return !Physics.Raycast(GroundRay, .51f);
+		Ray GroundRay = new Ray(transform.position + GroundCheckOffset, -transform.up);
+		return !Physics.Raycast(GroundRay, GroundRayDistance);
 	}
 
 #if WITH_GUI_INFO
