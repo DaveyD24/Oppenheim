@@ -41,7 +41,6 @@ public class BatEvents : MonoBehaviour
 
 	void OnAnimationEStateChanged(EAnimationState NewState)
 	{
-		Debug.Log(NewState);
 		Animator.SetInteger("Behaviour", (int)NewState);
 	}
 
@@ -56,6 +55,7 @@ public class BatEvents : MonoBehaviour
 
 public enum EAnimationState : int
 {
+	StandIdle = 0,
 	Walking = 1,
 	WingedFlight = 2,
 	Gliding = 3,

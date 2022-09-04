@@ -45,6 +45,7 @@ public class BatMovement : MonoBehaviour
 	bool bHasGlidedThisJump, bHasCancelledGlideThisJump;
 
 	Camera BatCamera;
+	Speedometer Speedometer;
 
 	void Start()
 	{
@@ -54,6 +55,8 @@ public class BatMovement : MonoBehaviour
 		bHasCancelledGlideThisJump = false;
 
 		BatCamera = GameObject.FindGameObjectWithTag("Bat Camera").GetComponent<Camera>();
+		Speedometer = new Speedometer();
+		Speedometer.Initialise();
 	}
 
 	void Update()
@@ -92,25 +95,17 @@ public class BatMovement : MonoBehaviour
 			}
 		}
 
-		if (!IsAirborne())
-		{
-			// If we're not Airborne, we're in the Walking Animation.
-			Bat.Events.OnAnimationStateChanged?.Invoke(EAnimationState.Walking);
-		}
-		else
-		{
-			// If the Bat's Animation is Walking, change to WingedFlight.
-			// Otherwise, the Bat should already be in the Air; change to Gliding.
-			Bat.Events.OnAnimationStateChanged?.Invoke(Bat.Events.GetCurrentAnimState() == EAnimationState.Walking
-				? EAnimationState.WingedFlight
-				: EAnimationState.Gliding
-			);
-		}
+		SetAnimationState();
+		Realign();
 	}
 
 	void FixedUpdate()
 	{
+		Speedometer.Record();
+
 		HandleGroundMovement();
+
+		Speedometer.Mark(this);
 	}
 
 	public void MovementBinding(ref CallbackContext Context)
@@ -303,6 +298,35 @@ public class BatMovement : MonoBehaviour
 		}
 	}
 
+	void SetAnimationState()
+	{
+		if (!IsAirborne())
+		{
+			// If we're not moving, we're in the Stand Idle State.
+			Bat.Events.OnAnimationStateChanged?.Invoke(!IsZero(Speedometer.Velocity)
+				? EAnimationState.Walking
+				: EAnimationState.StandIdle);
+		}
+		else
+		{
+			// If the Bat's Animation is Walking, change to WingedFlight.
+			// Otherwise, the Bat should already be in the Air; change to Gliding.
+			Bat.Events.OnAnimationStateChanged?.Invoke(Bat.Events.GetCurrentAnimState() < EAnimationState.WingedFlight
+				? EAnimationState.WingedFlight
+				: EAnimationState.Gliding
+			);
+		}
+	}
+
+	void Realign()
+	{
+		if (Vector3.Dot(transform.up, Vector3.up) < .4f)
+		{
+			transform.rotation = Quaternion.FromToRotation(transform.up, Vector3.up) * transform.rotation;
+			Bat.Physics.angularVelocity = Vector3.zero;
+		}
+	}
+
 	static void LockCursor(bool bShouldLock)
 	{
 		if (bShouldLock)
@@ -328,7 +352,35 @@ public class BatMovement : MonoBehaviour
 	{
 		GUI.Label(new Rect(10, 10, 250, 250), $"Velocity: {Bat.Physics.velocity:F1}");
 		GUI.Label(new Rect(10, 25, 250, 250), $"Speed: {Bat.Physics.velocity.magnitude:F1}");
-		GUI.Label(new Rect(10, 40, 250, 250), $"Airborne? {(IsAirborne() ? "Yes" : "No")}");
+		GUI.Label(new Rect(10, 40, 250, 250), $"Speedo: {Speedometer.Velocity:F1}");
+		//GUI.Label(new Rect(10, 40, 250, 250), $"Airborne? {(IsAirborne() ? "Yes" : "No")}");
 	}
 #endif
+}
+
+public struct Speedometer
+{
+	public float MetresPerSecond => (ThisFrame - LastFrame).magnitude / Time.deltaTime;
+	public Vector3 Velocity => (ThisFrame - LastFrame) / Time.deltaTime;
+
+	Vector3 LastFrame;
+	Vector3 ThisFrame;
+
+	public void Initialise()
+	{
+		LastFrame = ThisFrame = Vector3.zero;
+	}
+
+	/// <summary>Begins recording Speed.</summary>
+	public void Record()
+	{
+		LastFrame = ThisFrame;
+	}
+
+	/// <summary>Marks the end of a Speed Recording after <see cref="Time.deltaTime"/>.</summary>
+	/// <param name="Behaviour">The Behaviour to mark a Speed relative to.</param>
+	public void Mark(MonoBehaviour Behaviour)
+	{
+		ThisFrame = Behaviour.transform.position;
+	}
 }
