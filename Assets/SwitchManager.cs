@@ -5,7 +5,7 @@ using UnityEngine;
 public class SwitchManager : MonoBehaviour
 {
 
-    [SerializeField] public RedController red;
+    [SerializeField] public SoldierMovement red;
     [SerializeField] public BlueController blue;
     [SerializeField] public MonkeyController green;
     [SerializeField] public YellowController yellow;
