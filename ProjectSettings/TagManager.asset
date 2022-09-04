@@ -7,6 +7,8 @@ TagManager:
   - Breakable
   - Clingable
   - Destroyable
+  - Bat Camera
+  - Mango
   layers:
   - Default
   - TransparentFX
