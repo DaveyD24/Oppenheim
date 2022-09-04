@@ -255,9 +255,11 @@ MonoBehaviour:
   <PlayerIdSO>k__BackingField: {fileID: 11400000, guid: a6ba5f247f9af9242bb3d3700fe06543, type: 2}
   <DefaultPlayerData>k__BackingField: {fileID: 11400000, guid: edaf631a83ce6ea42aa9463c9228f767, type: 2}
   <Bouyancy>k__BackingField: 0
-  <MovementSpeed>k__BackingField: 6000
+  <MovementSpeed>k__BackingField: 8000
   <RotationSpeed>k__BackingField: 45
   <Health>k__BackingField: 0
+  active: 0
+  canvas: {fileID: 0}
   axleInfos:
   - <LeftWheel>k__BackingField: {fileID: 5583241534940801187}
     <RightWheel>k__BackingField: {fileID: 5583241534940801188}
