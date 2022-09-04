@@ -7,7 +7,7 @@ public class SwitchManager : MonoBehaviour
 
     [SerializeField] public RedController red;
     [SerializeField] public BlueController blue;
-    [SerializeField] public GreenController green;
+    [SerializeField] public MonkeyController green;
     [SerializeField] public YellowController yellow;
 
 
