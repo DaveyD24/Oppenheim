@@ -2,8 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class MonkeyController : MonoBehaviour
 {
+    enum State
+    {
+        CLING,
+        HANG,
+        WALK
+    }
+
     private CharacterController controller;
     [SerializeField] private GameObject activePlayer;
     private Rigidbody rb;
@@ -110,7 +118,7 @@ public class MonkeyController : MonoBehaviour
         return active;
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnControllerColliderHit(ControllerColliderHit collision)
     {
         if (collision.gameObject.CompareTag("Clingable"))
         {
