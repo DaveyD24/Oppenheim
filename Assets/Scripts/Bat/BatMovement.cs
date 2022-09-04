@@ -249,7 +249,7 @@ public class BatMovement : MonoBehaviour
 	}
 
 	/// <summary>Gives Pitch Input.</summary>
-	/// <param name="Throw">Direction of Pitch; delta.</param>
+	/// <param name="Throw">Direction of Pitch; delta. + Downwards. - Upwards.</param>
 	void ThrowPitch(float Throw)
 	{
 		// The Bat is too tired to Pitch upwards.
@@ -279,7 +279,7 @@ public class BatMovement : MonoBehaviour
 	}
 
 	/// <summary>Gives Yaw Input.</summary>
-	/// <param name="Throw">Direction of Yaw; delta.</param>
+	/// <param name="Throw">Direction of Yaw; delta. + Right. - Left.</param>
 	void ThrowYaw(float Throw)
 	{
 		// Yaw.
@@ -323,7 +323,9 @@ public class BatMovement : MonoBehaviour
 		if (Vector3.Dot(transform.up, Vector3.up) < .4f)
 		{
 			transform.rotation = Quaternion.FromToRotation(transform.up, Vector3.up) * transform.rotation;
-			Bat.Physics.angularVelocity = Vector3.zero;
+
+			// Stop moving.
+			Bat.Physics.velocity = Bat.Physics.angularVelocity = Vector3.zero;
 		}
 	}
 
@@ -352,8 +354,7 @@ public class BatMovement : MonoBehaviour
 	{
 		GUI.Label(new Rect(10, 10, 250, 250), $"Velocity: {Bat.Physics.velocity:F1}");
 		GUI.Label(new Rect(10, 25, 250, 250), $"Speed: {Bat.Physics.velocity.magnitude:F1}");
-		GUI.Label(new Rect(10, 40, 250, 250), $"Speedo: {Speedometer.Velocity:F1}");
-		//GUI.Label(new Rect(10, 40, 250, 250), $"Airborne? {(IsAirborne() ? "Yes" : "No")}");
+		GUI.Label(new Rect(10, 40, 250, 250), $"Airborne? {(IsAirborne() ? "Yes" : "No")}");
 	}
 #endif
 }
