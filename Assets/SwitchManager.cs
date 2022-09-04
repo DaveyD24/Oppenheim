@@ -8,7 +8,7 @@ public class SwitchManager : MonoBehaviour
     [SerializeField] public SoldierMovement red;
     [SerializeField] public Bat blue;
     [SerializeField] public MonkeyController green;
-    [SerializeField] public YellowController yellow;
+    [SerializeField] public PlayerController yellow;
 
 
     // Start is called before the first frame update

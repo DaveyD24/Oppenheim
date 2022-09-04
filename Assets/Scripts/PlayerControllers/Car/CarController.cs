@@ -82,7 +82,7 @@ public class CarController : PlayerController
     // car movement is based on this https://docs.unity3d.com/2022.2/Documentation/Manual/WheelColliderTutorial.html
     public void FixedUpdate()
     {
-        if (CurrentFuel > 0)
+        if (CurrentFuel > 0 && active)
         {
             ApplyMovement();
             AntiFlip();
@@ -324,12 +324,12 @@ public class CarController : PlayerController
         return Rb.velocity.magnitude * 3.6f;
     }
 
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.green;
-        Gizmos.DrawCube(transform.position, Vector3.one);
-        Gizmos.color = Color.red;
-   }
+   // private void OnDrawGizmosSelected()
+   // {
+   //     gizmos.color = color.green;
+   //     Gizmos.DrawCube(transform.position, Vector3.one);
+   //     Gizmos.color = Color.red;
+   // }
 
     private void BuildDashTree()
     {

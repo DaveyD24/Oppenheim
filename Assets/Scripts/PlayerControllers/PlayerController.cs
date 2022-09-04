@@ -19,7 +19,7 @@ public abstract class PlayerController : MonoBehaviour
     public float Weight { get; private set; }
 
     // A unique object each scene object gets assigned, being largly used to store the players id
-    [field: SerializeField] protected PlayerIdObject PlayerIdSO { get; private set; }
+    [field: SerializeField] public PlayerIdObject PlayerIdSO { get; private set; }
 
     [field: SerializeField] protected DefaultPlayerDataObject DefaultPlayerData { get; private set; }
 
@@ -119,5 +119,25 @@ public abstract class PlayerController : MonoBehaviour
         {
             AdjustFuelValue(DefaultPlayerData.MaxFuel);
         }
+    }
+
+    [HideInInspector] public bool active = false;
+    [SerializeField] Canvas canvas;
+
+    public void Activate()
+    {
+        active = true;
+        canvas.gameObject.SetActive(true);
+    }
+
+    public void Deactivate()
+    {
+        active = false;
+        canvas.gameObject.SetActive(false);
+    }
+
+    public bool isActive()
+    {
+        return active;
     }
 }

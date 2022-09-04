@@ -63,24 +63,4 @@ public class Bat : PlayerController
 		// Can't modify Health because it's a protected value with no set method.
 	}
 
-	[HideInInspector] public bool active = false;
-	[SerializeField] Canvas canvas;
-
-	public void Activate()
-	{
-		active = true;
-		canvas.gameObject.SetActive(true);
-	}
-
-	public void Deactivate()
-	{
-		active = false;
-		canvas.gameObject.SetActive(false);
-	}
-
-	public bool isActive()
-	{
-		return active;
-	}
-
 }
