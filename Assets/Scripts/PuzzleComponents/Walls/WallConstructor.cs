@@ -11,6 +11,7 @@ public class WallConstructor : MonoBehaviour
     [SerializeField] private float mass;
     [SerializeField] private float drag;
     [SerializeField] private float angularDrag;
+    [SerializeField] private bool bRandomColour = false;
 
     [Header("Wall Size")]
     [SerializeField] private int numSegmentsX;
@@ -27,9 +28,55 @@ public class WallConstructor : MonoBehaviour
     [ContextMenuItem("Generate Wall", "GenerateWall")]
     [SerializeField] private List<GameObject> spawnedObjs = new List<GameObject>();
 
+    [Space(30)]
+    [Header("ShelveItems")]
+    [SerializeField] private List<GameObject> randomItems = new List<GameObject>();
+    [SerializeField] private List<GameObject> spawnedItems = new List<GameObject>();
+    [ContextMenuItem("Add Shelve Items", "GenerateShelveItems")]
+    [SerializeField] private int numItemsX;
+    [ContextMenuItem("Add Shelve Items", "GenerateShelveItems")]
+    [SerializeField] private int numItemsZ;
+    [SerializeField] private float shelveDepth;
+    [SerializeField] private Vector3 itemScale;
+    [SerializeField] private Vector3 shelveItemOffset;
+
     // Start is called before the first frame update
     private void Start()
     {
+    }
+
+    private void GenerateShelveItems()
+    {
+        for (int i = spawnedItems.Count - 1; i >= 0; i--)
+        {
+            DestroyImmediate(spawnedItems[i]);
+        }
+
+        spawnedItems.Clear();
+
+        for (int i = 0; i < spawnedObjs.Count; i++)
+        {
+            // as each rack has 5 shelves & they start from child 4 of the parent shelve object
+            for (int j = 4; j <= 8; j++)
+            {
+                Debug.Log(spawnedObjs[i].transform.childCount + "  " + j);
+                if (j <= spawnedObjs[i].transform.childCount - 1)
+                {
+                    Vector3 shelvePos = spawnedObjs[i].transform.GetChild(j).position;
+                    for (int x = 0; x < numItemsX; x++)
+                    {
+                        for (int z = 0; z < numItemsZ; z++)
+                        {
+                            GameObject randomItem = randomItems[Random.Range(0, randomItems.Count)];
+                            Vector3 itemPos = new Vector3(shelvePos.x + (((float)width / (float)numItemsX * x) + shelveItemOffset.x), shelvePos.y + shelveItemOffset.y, shelvePos.z + (((float)shelveDepth / (float)numItemsZ * z) + shelveItemOffset.z));
+                            GameObject segment = Instantiate(randomItem, itemPos, randomItem.transform.rotation, spawnedObjs[i].transform.GetChild(j));
+                            segment.transform.localScale = itemScale;
+                            spawnedItems.Add(segment);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private void GenerateWall()
@@ -41,12 +88,12 @@ public class WallConstructor : MonoBehaviour
 
         spawnedObjs.Clear();
 
-        wallSegment = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        wallSegment.transform.localScale = new Vector3(width, height, depth);
-        Rigidbody rb = wallSegment.AddComponent<Rigidbody>();
-        rb.mass = mass;
-        rb.angularDrag = angularDrag;
-        rb.drag = drag;
+        // wallSegment = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        // wallSegment.transform.localScale = new Vector3(width, height, depth);
+        // Rigidbody rb = wallSegment.AddComponent<Rigidbody>();
+        // rb.mass = mass;
+        // rb.angularDrag = angularDrag;
+        // rb.drag = drag;
 
         Vector3 pos = transform.position;
         float offsetX = width * numSegmentsX / 2;
@@ -80,7 +127,11 @@ public class WallConstructor : MonoBehaviour
 
                     Vector3 segmentPos = new Vector3(xoffset + (x * width) + pos.x + (segmentsOffsetX * x) - offsetX, (y * height) + pos.y + (segmentsOffsetY * y) - offsetY, zoffset + (z * depth) + pos.z + (segmentsOffsetZ * z) - offsetZ);
                     GameObject segment = Instantiate(wallSegment, segmentPos, Quaternion.identity, transform);
-                    segment.GetComponent<MeshRenderer>().material.color = Random.ColorHSV();
+                    if (bRandomColour)
+                    {
+                        segment.GetComponent<MeshRenderer>().material.color = Random.ColorHSV();
+                    }
+                    segment.transform.localScale = new Vector3(width, height, depth);
                     spawnedObjs.Add(segment);
                 }
             }
