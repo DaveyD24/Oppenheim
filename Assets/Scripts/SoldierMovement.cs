@@ -68,6 +68,12 @@ public class SoldierMovement : MonoBehaviour
 
             playerVelocity.y += gravityValue * Time.deltaTime;
             controller.Move(playerVelocity * Time.deltaTime);
+
+            if (Input.GetKeyDown(KeyCode.F))
+            {
+                var bullet = Instantiate(bulletPrefab, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
+                bullet.GetComponent<Rigidbody>().velocity = bulletSpawnPoint.forward * bulletSpeed;
+            }
         }
         else
         {
@@ -78,11 +84,6 @@ public class SoldierMovement : MonoBehaviour
                 Vector3 flattenedPosition = new Vector3(smoothedPosition.x, groundHeight, smoothedPosition.z);
                 this.transform.position = flattenedPosition;
             }
-        }
-
-        if (Input.GetKeyDown(KeyCode.F)) {
-            var bullet = Instantiate(bulletPrefab, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
-            bullet.GetComponent<Rigidbody>().velocity = bulletSpawnPoint.forward * bulletSpeed;
         }
     }
 
