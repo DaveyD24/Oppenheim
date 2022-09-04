@@ -8,11 +8,19 @@ namespace EventSystem
     public static class UIEvents
     {
         public static Action<int, float> OnFuelChanged { get; set; }
+        
+        public static Action OnShowIntructions { get; set; }
 
         public static void FuelChanged(int playerID, float currentFuel)
         {
             // if this Action has one or more methods assigned to it then run this method
             OnFuelChanged?.Invoke(playerID, currentFuel);
+        }
+
+        public static void ShowInstructions()
+        {
+            // if this Action has one or more methods assigned to it then run this method
+            OnShowIntructions?.Invoke();
         }
     }
 }

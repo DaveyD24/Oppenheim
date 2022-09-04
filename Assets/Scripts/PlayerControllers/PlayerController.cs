@@ -14,6 +14,11 @@ public abstract class PlayerController : MonoBehaviour
 {
     private float fuel;
 
+    private Vector3 startPosition;
+    private Quaternion startRot;
+
+    [SerializeField] private GameObject Oppenheim;
+
     public Rigidbody Rb { get; private set; }
 
     public float Weight { get; private set; }
@@ -55,6 +60,11 @@ public abstract class PlayerController : MonoBehaviour
 
     protected virtual void Update()
     {
+        if (transform.position.y < 2)
+        {
+            GameEvents.Die();
+        }
+
         //AdjustFuelValue(-DefaultPlayerData.DecreaseFuelAmount.Evaluate(CurrentFuel / DefaultPlayerData.MaxFuel) * Time.deltaTime);
     }
 
@@ -63,6 +73,9 @@ public abstract class PlayerController : MonoBehaviour
         Rb = GetComponent<Rigidbody>();
         Weight = Rb.mass;
         fuel = DefaultPlayerData.MaxFuel;
+
+        startPosition = transform.position;
+        startRot = transform.rotation;
     }
 
     protected virtual void OnDeath()
@@ -90,6 +103,8 @@ public abstract class PlayerController : MonoBehaviour
 
         // assign the nessesary functions to the event system
         GameEvents.OnCollectFuel += MaxFuel;
+        UIEvents.OnShowIntructions += EnableInstructions;
+        GameEvents.OnDie += Respawn;
     }
 
     private void OnDisable()
@@ -101,6 +116,10 @@ public abstract class PlayerController : MonoBehaviour
         Inputs.Player.Jump.performed -= Jump;
 
         Inputs.Player.Disable();
+
+        UIEvents.OnShowIntructions -= EnableInstructions;
+        GameEvents.OnCollectFuel -= MaxFuel;
+        GameEvents.OnDie -= Respawn;
     }
 
     private void AddBouyancy()
@@ -111,6 +130,9 @@ public abstract class PlayerController : MonoBehaviour
     private void Respawn()
     {
         // respawning code...
+        Rb.velocity = Vector3.zero;
+        Rb.transform.position = startPosition;
+        transform.rotation = startRot;
     }
 
     private void MaxFuel(int playerId)
@@ -139,5 +161,10 @@ public abstract class PlayerController : MonoBehaviour
     public bool isActive()
     {
         return active;
+    }
+
+    private void EnableInstructions()
+    {
+        Oppenheim.SetActive(true);
     }
 }

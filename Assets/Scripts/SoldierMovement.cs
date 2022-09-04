@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using EventSystem;
 
 public class SoldierMovement : MonoBehaviour
 {
-
+    private Vector3 startPos;
+    private Quaternion startRot;
     //public float Rigidbody3D rb;
     public CharacterController controller;
     public Transform bulletSpawnPoint;
@@ -13,6 +15,7 @@ public class SoldierMovement : MonoBehaviour
     public float speed = 6f;
 
     [SerializeField] private GameObject activePlayer;
+    [SerializeField] private GameObject oppenheim;
     SwitchManager switchManager;
     private Vector3 playerVelocity;
     private bool groundedPlayer;
@@ -29,9 +32,40 @@ public class SoldierMovement : MonoBehaviour
     private void Start()
     {
         switchManager = FindObjectOfType<SwitchManager>();
+        startPos = transform.position;
+        startRot = transform.rotation;
     }
 
-    void Update() {
+    private void OnEnable()
+    {
+        UIEvents.OnShowIntructions += ShowInfo;
+    }
+
+    private void Respawn()
+    {
+        transform.position = startPos;
+        transform.rotation = startRot;
+        playerVelocity = Vector3.zero;
+    }
+
+    private void ShowInfo()
+    {
+        oppenheim.SetActive(true);
+    }
+
+    private void OnDisable()
+    {
+        UIEvents.OnShowIntructions -= ShowInfo;
+        GameEvents.OnDie -= Respawn;
+    }
+
+    private void Update() 
+    {
+        if (transform.position.y < 2)
+        {
+            GameEvents.Die();
+        }
+
         activePlayer = switchManager.GetActivePlayer();
         float distance = Vector3.Distance(this.transform.position, activePlayer.transform.position);
         if (distance < 2.0f)

@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using EventSystem;
 using UnityEngine;
-
 
 public class MonkeyController : MonoBehaviour
 {
@@ -11,6 +11,9 @@ public class MonkeyController : MonoBehaviour
         HANG,
         WALK
     }
+
+    private Vector3 startPos;
+    private Quaternion startRot;
 
     private CharacterController controller;
     [SerializeField] private GameObject activePlayer;
@@ -34,15 +37,47 @@ public class MonkeyController : MonoBehaviour
     private bool bDidJump = false;
     private float jumpWaitTime = 1;
 
+    [SerializeField] private GameObject oppenheim;
+
+    private void OnEnable()
+    {
+        UIEvents.OnShowIntructions += ShowInfo;
+        GameEvents.OnDie += Respawn;
+    }
+
+    private void Respawn()
+    {
+        transform.position = startPos;
+        transform.rotation = startRot;
+        playerVelocity = Vector3.zero;
+    }
+
+    private void ShowInfo()
+    {
+        oppenheim.SetActive(true);
+    }
+
+    private void OnDisable()
+    {
+        UIEvents.OnShowIntructions -= ShowInfo;
+        GameEvents.OnDie -= Respawn;
+    }
+
     private void Start()
     {
         controller = gameObject.AddComponent<CharacterController>();
         this.controller.minMoveDistance = 0;
         rb = gameObject.GetComponent<Rigidbody>();
+        startPos = transform.position;
+        startRot = transform.rotation;
     }
 
     private void Update()
     {
+        if (transform.position.y < 2)
+        {
+            GameEvents.Die();
+        }
         /*float distance = Vector3.Distance(this.transform.position, activePlayer.transform.position);
         if (distance < 2.0f)
         {

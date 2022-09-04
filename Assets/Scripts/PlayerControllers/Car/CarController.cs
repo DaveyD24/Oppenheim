@@ -82,7 +82,7 @@ public class CarController : PlayerController
     // car movement is based on this https://docs.unity3d.com/2022.2/Documentation/Manual/WheelColliderTutorial.html
     public void FixedUpdate()
     {
-        if (CurrentFuel > 0 && active)
+        if (CurrentFuel > 0)
         {
             ApplyMovement();
             AntiFlip();
@@ -174,18 +174,21 @@ public class CarController : PlayerController
         Motor = MovementSpeed * inputAmount.y;
         float steering = RotationSpeed * inputAmount.x;
 
-        PerformDash();
+        if (active)
+        {
+            PerformDash();
+        }
 
         int numWheelGrounded = 0;
         foreach (AxleInfo axleInfo in axleInfos)
         {
-            if (axleInfo.Steering)
+            if (axleInfo.Steering && active)
             {
                 axleInfo.LeftWheel.steerAngle = steering;
                 axleInfo.RightWheel.steerAngle = steering;
             }
 
-            if (axleInfo.Motor)
+            if (axleInfo.Motor && active)
             {
                 axleInfo.LeftWheel.motorTorque = Motor;
                 axleInfo.RightWheel.motorTorque = Motor;

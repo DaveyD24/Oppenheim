@@ -8,7 +8,7 @@ public class SwitchManager : MonoBehaviour
     [SerializeField] public SoldierMovement red;
     [SerializeField] public Bat blue;
     [SerializeField] public MonkeyController green;
-    [SerializeField] public PlayerController yellow;
+    [SerializeField] public PlayerController yellow; // car
 
 
     // Start is called before the first frame update
@@ -30,12 +30,12 @@ public class SwitchManager : MonoBehaviour
             RotatePlayer();
         }
 
-        Debug.Log(GetActivePlayer().gameObject.name);
+        // Debug.Log(GetActivePlayer().gameObject.name);
     }
 
-    void RotatePlayer()
+    private void RotatePlayer()
     {
-        //bygr
+        // bygr
         if (blue.isActive())
         {
             DeactivateAll();
@@ -59,7 +59,7 @@ public class SwitchManager : MonoBehaviour
 
     }
 
-    void DeactivateAll()
+    private void DeactivateAll()
     {
         red.Deactivate();
         blue.Deactivate();

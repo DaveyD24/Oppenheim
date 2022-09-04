@@ -9,6 +9,8 @@ namespace EventSystem
     {
         public static Action OnDashCarCollide { get; set; }
 
+        public static Action OnDie { get; set; }
+
         public static Action<int> OnCollectFuel { get; set; }
 
         public static void DashCarCollide()
@@ -19,6 +21,11 @@ namespace EventSystem
         public static void CollectFuel(int playerId)
         {
             OnCollectFuel?.Invoke(playerId);
+        }
+
+        public static void Die()
+        {
+            OnDie?.Invoke();
         }
     }
 }
