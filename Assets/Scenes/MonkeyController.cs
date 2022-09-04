@@ -22,14 +22,17 @@ public class MonkeyController : MonoBehaviour
     private float gravityValue = -9.81f;
     private float followSpeed = 0.001f;
 
-    bool active = true;
+    private bool active = true;
     bool tooClose = false;
     bool clinging = false;
 
     [SerializeField] Canvas canvas;
     float groundHeight = 0.580005f;
 
-    Vector3 clingPosition;
+    private Vector3 clingPosition;
+
+    private bool bDidJump = false;
+    private float jumpWaitTime = 1;
 
     private void Start()
     {
@@ -38,7 +41,7 @@ public class MonkeyController : MonoBehaviour
         rb = gameObject.GetComponent<Rigidbody>();
     }
 
-    void Update()
+    private void Update()
     {
         /*float distance = Vector3.Distance(this.transform.position, activePlayer.transform.position);
         if (distance < 2.0f)
@@ -50,21 +53,32 @@ public class MonkeyController : MonoBehaviour
             tooClose = false;
         }*/
 
+        if (bDidJump)
+        {
+            jumpWaitTime -= Time.deltaTime;
+            if (jumpWaitTime <= 0)
+            {
+                jumpWaitTime = 1;
+                bDidJump = false;
+            }
+        }
 
         if (active)
         {
-            if (Input.GetButtonDown("Jump") && (groundedPlayer || clinging))
+            if (Input.GetButtonDown("Jump") && (groundedPlayer || clinging) && !bDidJump)
             {
                 playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityValue);
                 clinging = false;
+                bDidJump = true;
                 Debug.Log("yeet");
             }
-            if (clinging)
+            else if (clinging)
             {
                 //transform.position = clingPosition;
-                Vector3 desiredPosition = new Vector3(transform.position.x, 0.5f, transform.position.z);
+                Vector3 desiredPosition = new Vector3(transform.position.x, 6.184793f, transform.position.z);
                 Vector3 gradual = Vector3.Lerp(transform.position, desiredPosition, 0.00125f);
                 transform.position = gradual;
+                playerVelocity.y = gravityValue * Time.deltaTime;
             }
             else
             {

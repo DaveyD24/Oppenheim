@@ -17,7 +17,7 @@ public class SoldierMovement : MonoBehaviour
     private Vector3 playerVelocity;
     private bool groundedPlayer;
     private float playerSpeed = 2.0f;
-    private float jumpHeight = 1.0f;
+    private float jumpHeight = 1f;
     private float gravityValue = -9.81f;
     private float followSpeed = 0.001f;
     float groundHeight = 0.580005f;
@@ -66,10 +66,16 @@ public class SoldierMovement : MonoBehaviour
                 playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityValue);
             }
 
+            groundedPlayer = controller.isGrounded;
+            if (groundedPlayer && playerVelocity.y < 0)
+            {
+                playerVelocity.y = 0f;
+            }
+
             playerVelocity.y += gravityValue * Time.deltaTime;
             controller.Move(playerVelocity * Time.deltaTime);
 
-            if (Input.GetKeyDown(KeyCode.F))
+            if (Input.GetKeyDown(KeyCode.X))
             {
                 var bullet = Instantiate(bulletPrefab, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
                 bullet.GetComponent<Rigidbody>().velocity = bulletSpawnPoint.forward * bulletSpeed;
