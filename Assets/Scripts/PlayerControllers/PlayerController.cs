@@ -45,7 +45,7 @@ public abstract class PlayerController : MonoBehaviour
     protected void AdjustFuelValue(float amount)
     {
         CurrentFuel += amount;
-        UIEvents.OnFuelChanged(PlayerIdSO.PlayerID, CurrentFuel / DefaultPlayerData.MaxFuel);
+        //UIEvents.OnFuelChanged(PlayerIdSO.PlayerID, CurrentFuel / DefaultPlayerData.MaxFuel);
 
         if (CurrentFuel <= 0)
         {
@@ -55,7 +55,7 @@ public abstract class PlayerController : MonoBehaviour
 
     protected virtual void Update()
     {
-        AdjustFuelValue(-DefaultPlayerData.DecreaseFuelAmount.Evaluate(CurrentFuel / DefaultPlayerData.MaxFuel) * Time.deltaTime);
+        //AdjustFuelValue(-DefaultPlayerData.DecreaseFuelAmount.Evaluate(CurrentFuel / DefaultPlayerData.MaxFuel) * Time.deltaTime);
     }
 
     protected virtual void Start()

@@ -24,10 +24,10 @@ public class BatEvents : MonoBehaviour
 
 	void OnTriggerEnter(Collider Other)
 	{
-		if (Other.CompareTag(Bat.Food))
-		{
-			OnMangoCollected();
-		}
+		//if (Other.CompareTag(Bat.Food))
+		//{
+		//	OnMangoCollected();
+		//}
 	}
 
 	public EAnimationState GetCurrentAnimState()

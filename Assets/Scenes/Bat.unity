@@ -135,6 +135,7 @@ GameObject:
   - component: {fileID: 260954201}
   - component: {fileID: 260954200}
   - component: {fileID: 260954199}
+  - component: {fileID: 260954203}
   m_Layer: 0
   m_Name: Mango
   m_TagString: Mango
@@ -219,6 +220,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &260954203
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 260954198}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08ff7faf6adb3144b9fe9c45f2686e57, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerId: {fileID: 11400000, guid: 250a1cc6c2eafb54fb4fa9dcd6298d62, type: 2}
+  collectParticles: {fileID: 573916451}
 --- !u!1 &371066509
 GameObject:
   m_ObjectHideFlags: 0
@@ -302,6 +317,11 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &573916451 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4485146020558123178, guid: 283b6e8a8ea81244190b33581ca13b59, type: 3}
+  m_PrefabInstance: {fileID: 6346657402103329397}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &683887430
 GameObject:
   m_ObjectHideFlags: 0
@@ -655,13 +675,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0c72d7fda9310b4f9d15486cb7db14d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weight: 1
-  fuel: 1
-  bouyancy: 3
-  foodTag: Mango
-  movementSpeed: 5
-  rotationSpeed: 5
-  health: 50
+  <PlayerIdSO>k__BackingField: {fileID: 0}
+  <DefaultPlayerData>k__BackingField: {fileID: 0}
+  <Bouyancy>k__BackingField: 0
+  <MovementSpeed>k__BackingField: 0
+  <RotationSpeed>k__BackingField: 0
+  <Health>k__BackingField: 0
 --- !u!95 &971585737
 Animator:
   serializedVersion: 3

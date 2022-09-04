@@ -173,13 +173,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0c72d7fda9310b4f9d15486cb7db14d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weight: 1
-  fuel: 1
-  bouyancy: 3
-  foodTag: Mango
-  movementSpeed: 5
-  rotationSpeed: 7.5
-  health: 50
+  <PlayerIdSO>k__BackingField: {fileID: 11400000, guid: 250a1cc6c2eafb54fb4fa9dcd6298d62, type: 2}
+  <DefaultPlayerData>k__BackingField: {fileID: 11400000, guid: edaf631a83ce6ea42aa9463c9228f767, type: 2}
+  <Bouyancy>k__BackingField: 0
+  <MovementSpeed>k__BackingField: 5
+  <RotationSpeed>k__BackingField: 7.5
+  <Health>k__BackingField: 1
 --- !u!114 &356694347851262371
 MonoBehaviour:
   m_ObjectHideFlags: 0

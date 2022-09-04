@@ -44,7 +44,7 @@ public class BatMovement : MonoBehaviour
 	// Stop the Player from Gliding more than once per Jump.
 	bool bHasGlidedThisJump, bHasCancelledGlideThisJump;
 
-	Camera BatCamera;
+	[SerializeField] Camera BatCamera;
 	Speedometer Speedometer;
 
 	void Start()
@@ -54,7 +54,7 @@ public class BatMovement : MonoBehaviour
 		bHasGlidedThisJump = false;
 		bHasCancelledGlideThisJump = false;
 
-		BatCamera = GameObject.FindGameObjectWithTag("Bat Camera").GetComponent<Camera>();
+		//BatCamera = GameObject.FindGameObjectWithTag("Bat Camera").GetComponent<Camera>();
 		Speedometer = new Speedometer();
 		Speedometer.Initialise();
 	}
@@ -110,20 +110,41 @@ public class BatMovement : MonoBehaviour
 
 	public void MovementBinding(ref CallbackContext Context)
 	{
-		Vector2 Throw = Context.action.ReadValue<Vector2>();
-		HandleMovement(Throw);
+		if (Bat.active)
+		{
+			Vector2 Throw = Context.action.ReadValue<Vector2>();
+			HandleMovement(Throw);
+		}
+		else
+		{
+			HandleMovement(Vector2.zero);
+		}
 	}
 
 	public void JumpBinding(ref CallbackContext Context)
 	{
-		float Throw = Context.action.ReadValue<float>();
-		HandleJump(Throw);
+		if (Bat.active)
+		{
+			float Throw = Context.action.ReadValue<float>();
+			HandleJump(Throw);
+		}
+		else
+		{
+			HandleJump(0f);
+		}
 	}
 
 	public void LookBinding(ref CallbackContext Context)
 	{
-		Vector2 Throw = Context.action.ReadValue<Vector2>();
-		HandleLook(Throw);
+		if (Bat.active)
+		{
+			Vector2 Throw = Context.action.ReadValue<Vector2>();
+			HandleLook(Throw);
+		}
+		else
+		{
+			HandleLook(Vector2.zero);
+		}
 	}
 
 	public void AbilityBinding() { }
