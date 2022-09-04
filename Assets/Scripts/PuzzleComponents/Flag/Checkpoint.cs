@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Checkpoint : MonoBehaviour
 {
@@ -27,7 +28,7 @@ public class Checkpoint : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            int playerId = other.gameObject.transform.root.gameObject.GetComponent<PlayerController>().PlayerIdSO.PlayerID;
+            int playerId = other.gameObject.transform.root.gameObject.GetComponent<IDStuff>().PlayerIdSO.PlayerID;
             if (!seenId.Contains(playerId))
             {
                 seenId.Add(playerId);
@@ -45,16 +46,17 @@ public class Checkpoint : MonoBehaviour
         }
         else
         {
-            flagPos = flagTransform.position;
+            flagPos = flagTransform.localPosition;
         }
 
         flagPos.y += flagUpAmount;
 
-        flagMoveTween = new Tween(flagTransform.position, flagPos, Time.time, animationDuration);
+        flagMoveTween = new Tween(flagTransform.localPosition, flagPos, Time.time, animationDuration);
 
         if (seenId.Count >= 4)
         {
             RespawnPosition = transform.position;
+            SceneManager.LoadScene("WinScene");
         }
     }
 
@@ -68,7 +70,7 @@ public class Checkpoint : MonoBehaviour
             }
             else
             {
-                flagTransform.position = flagMoveTween.UpdatePositionCurve(movementSpeedCurve);
+                flagTransform.localPosition = flagMoveTween.UpdatePositionCurve(movementSpeedCurve);
             }
         }
     }

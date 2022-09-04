@@ -123,7 +123,7 @@ public class CarController : PlayerController
     protected override void PerformAbility(InputAction.CallbackContext ctx)
     {
         // note buggs out and fails if the car's wheels currently are not moving at all, otherwise it is fine
-        if (!BIsDash && BAnyWheelGrounded)
+        if (!BIsDash && BAnyWheelGrounded && active)
         {
             BIsDash = true;
         }
@@ -417,6 +417,11 @@ public class CarController : PlayerController
                 collision.gameObject.transform.GetChild(i).gameObject.GetComponent<MeshRenderer>().enabled = true;
                 collision.gameObject.transform.GetChild(i).parent = null;
             }
+        }
+
+        if (collision.gameObject.CompareTag("Wall") && BIsDash)
+        {
+            collision.gameObject.GetComponent<Rigidbody>().AddForce(50000 * transform.forward);
         }
     }
 }

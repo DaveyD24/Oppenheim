@@ -39,6 +39,7 @@ public class SoldierMovement : MonoBehaviour
     private void OnEnable()
     {
         UIEvents.OnShowIntructions += ShowInfo;
+        GameEvents.OnDie += Respawn;
     }
 
     private void Respawn()
@@ -59,9 +60,9 @@ public class SoldierMovement : MonoBehaviour
         GameEvents.OnDie -= Respawn;
     }
 
-    private void Update() 
+    private void Update()
     {
-        if (transform.position.y < 2)
+        if (transform.position.y < 2.0f)
         {
             GameEvents.Die();
         }

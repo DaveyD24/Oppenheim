@@ -87,7 +87,7 @@ public class WallConstructor : MonoBehaviour
         }
 
         spawnedObjs.Clear();
-
+        wallSegment.transform.localScale = new Vector3(width, height, depth);
         // wallSegment = GameObject.CreatePrimitive(PrimitiveType.Cube);
         // wallSegment.transform.localScale = new Vector3(width, height, depth);
         // Rigidbody rb = wallSegment.AddComponent<Rigidbody>();
@@ -131,6 +131,7 @@ public class WallConstructor : MonoBehaviour
                     {
                         segment.GetComponent<MeshRenderer>().material.color = Random.ColorHSV();
                     }
+
                     segment.transform.localScale = new Vector3(width, height, depth);
                     spawnedObjs.Add(segment);
                 }

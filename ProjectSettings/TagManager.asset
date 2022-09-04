@@ -9,6 +9,7 @@ TagManager:
   - Destroyable
   - Bat Camera
   - Mango
+  - Wall
   layers:
   - Default
   - TransparentFX

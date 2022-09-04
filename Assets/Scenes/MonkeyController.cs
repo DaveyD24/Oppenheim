@@ -74,7 +74,7 @@ public class MonkeyController : MonoBehaviour
 
     private void Update()
     {
-        if (transform.position.y < 2)
+        if (transform.position.y < 2.0f)
         {
             GameEvents.Die();
         }

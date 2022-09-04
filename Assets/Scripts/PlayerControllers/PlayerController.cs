@@ -60,7 +60,7 @@ public abstract class PlayerController : MonoBehaviour
 
     protected virtual void Update()
     {
-        if (transform.position.y < 2)
+        if (Rb.transform.position.y < 2.5f)
         {
             GameEvents.Die();
         }

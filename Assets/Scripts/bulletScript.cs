@@ -34,5 +34,10 @@ public class BulletScript : MonoBehaviour
                 col.gameObject.transform.GetChild(i).parent = null;
             }
         }
+
+        if (col.gameObject.CompareTag("Wall"))
+        {
+            col.gameObject.GetComponent<Rigidbody>().AddForce(5000 * transform.forward);
+        }
     }
 }
