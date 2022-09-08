@@ -62,10 +62,10 @@ public abstract class PlayerController : MonoBehaviour
     {
         if (Rb.transform.position.y < 2.5f)
         {
-            GameEvents.Die();
+            // GameEvents.Die();
         }
 
-        //AdjustFuelValue(-DefaultPlayerData.DecreaseFuelAmount.Evaluate(CurrentFuel / DefaultPlayerData.MaxFuel) * Time.deltaTime);
+        // AdjustFuelValue(-DefaultPlayerData.DecreaseFuelAmount.Evaluate(CurrentFuel / DefaultPlayerData.MaxFuel) * Time.deltaTime);
     }
 
     protected virtual void Start()

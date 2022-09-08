@@ -164,6 +164,10 @@ public class CarController : PlayerController
         ParticleSystem.EmissionModule particleEmission = windParticles.emission;
         ParticleSystem.MainModule mainSettings = windParticles.main;
         float velocityDamped = Rb.velocity.magnitude * particelSpeedMultiplier;
+        if(BIsDash)
+        {
+            velocityDamped *= 5;
+        }
 
         particleEmission.rateOverDistance = velocityDamped;
         mainSettings.startSpeed = Rb.velocity.magnitude;
@@ -172,7 +176,7 @@ public class CarController : PlayerController
     private void ApplyMovement()
     {
         Motor = MovementSpeed * inputAmount.y;
-        float steering = RotationSpeed * inputAmount.x;
+        float steering = BIsDash ? 0 : RotationSpeed * inputAmount.x;
 
         if (active)
         {
@@ -327,12 +331,12 @@ public class CarController : PlayerController
         return Rb.velocity.magnitude * 3.6f;
     }
 
-   // private void OnDrawGizmosSelected()
-   // {
-   //     gizmos.color = color.green;
-   //     Gizmos.DrawCube(transform.position, Vector3.one);
-   //     Gizmos.color = Color.red;
-   // }
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.green;
+        Gizmos.DrawCube(DashOffset + transform.position, Vector3.one*.25f);
+        Gizmos.color = Color.red;
+    }
 
     private void BuildDashTree()
     {

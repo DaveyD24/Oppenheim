@@ -45,6 +45,12 @@ public class DashTransition : Node
         currentAngle = new Vector3(startAngle.eulerAngles.x, startAngle.eulerAngles.y, startAngle.eulerAngles.z + (direction * Blackboard.TransitionRotCurve.Evaluate(initTime)));
 
         Blackboard.BodyTransform.localRotation = Quaternion.Euler(currentAngle);
+
+        if (Blackboard.BAnyWheelGrounded)
+        {
+            // Blackboard.Rb.AddForce(Vector3.down * Blackboard.Weight); // add a downwards force so it does not flip
+        }
+
         if (initTime >= maxTime)
         {
             return ENodeState.Success; // can be whatever retrun is nessesary

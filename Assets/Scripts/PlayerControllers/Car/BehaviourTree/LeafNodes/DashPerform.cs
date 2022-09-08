@@ -29,10 +29,13 @@ public class DashPerform : Node
         if (Blackboard.BAnyWheelGrounded)
         {
             Blackboard.Rb.AddForceAtPosition(Blackboard.Rb.transform.forward * currDashSpeed, CalculateDashOffset(), ForceMode.Acceleration);
+            Blackboard.Rb.AddForce(Vector3.down * Blackboard.Weight); // add a downwards force so it does not flip
         }
 
-        Blackboard.Motor = currDashSpeed;
+        // Blackboard.Motor = currDashSpeed;
         dashCurrentTime += Time.fixedDeltaTime;
+        CancleSidewaysVelocity();
+
         if (dashCurrentTime >= dashMaxTime)
         {
             return ENodeState.Success;
@@ -58,5 +61,22 @@ public class DashPerform : Node
         pos += Blackboard.transform.up * Blackboard.DashOffset.y;
 
         return pos;
+    }
+
+    /// <summary>
+    /// elliminate all sideways velocity and rotation velocities.
+    /// </summary>
+    private void CancleSidewaysVelocity()
+    {
+        // remove all sideways movement from the local movement space
+        Vector3 localVelocity = Blackboard.transform.InverseTransformDirection(Blackboard.Rb.velocity);
+        localVelocity.x = 0;
+        Blackboard.Rb.velocity = Blackboard.transform.TransformDirection(localVelocity);
+
+        // remove all angular velocity which is not in the local forward direction
+        Vector3 localAngleVelocity = Blackboard.transform.InverseTransformDirection(Blackboard.Rb.angularVelocity);
+        localAngleVelocity.y = 0;
+        localAngleVelocity.z = 0;
+        Blackboard.Rb.angularVelocity = Blackboard.transform.TransformDirection(localAngleVelocity);
     }
 }
