@@ -305,7 +305,7 @@ public class CarController : PlayerController
     /// checks if any part of the car is tounching the ground.
     /// </summary>
     /// <returns>if the car is tounching the ground or not.</returns>
-    private bool IsGrounded()
+    public override bool IsGrounded()
     {
         Vector3 centerOffset = transform.position - (transform.up * rayCenterOffset);
         Debug.DrawRay(transform.position - (transform.up * rayCenterOffset), Vector3.down * 5, Color.black);

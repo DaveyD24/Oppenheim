@@ -24,7 +24,7 @@ public class Bat : PlayerController
 		BindMiscellaneousInputs();
 	}
 
-    void BindMiscellaneousInputs()
+	void BindMiscellaneousInputs()
 	{
 		Inputs.Player.Move.canceled += (CallbackContext Context) =>
 		{
@@ -53,12 +53,12 @@ public class Bat : PlayerController
 
 	protected override void PerformAbility(CallbackContext ctx) => MovementComponent.AbilityBinding();
 
-    public void AdjustEnergy(float Amount)
+	public void AdjustEnergy(float Amount)
 	{
 		AdjustFuelValue(Amount);
 	}
 
-    public void AdjustHealth(float Amount)
+	public void AdjustHealth(float Amount)
 	{
 		// Can't modify Health because it's a protected value with no set method.
 	}

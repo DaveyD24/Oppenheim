@@ -88,10 +88,8 @@ public class BatMovement : MonoBehaviour
 			if (GroundMovement != Vector3.zero)
 			{
 				// Smoothly rotate the Bat towards where it's moving.
-				Quaternion RotationNow = transform.rotation;
-				Vector3 MovementVector = DirectionRelativeToCamera(BatCamera.transform, GroundMovement);
-				Quaternion TargetRot = Quaternion.LookRotation(MovementVector, Vector3.up);
-				transform.rotation = Quaternion.RotateTowards(RotationNow, TargetRot, Bat.YawSpeed);
+				Vector3 MovementVector = DirectionRelativeToTransform(BatCamera.transform, GroundMovement);
+				AlignTransformToMovement(transform, MovementVector, Bat.YawSpeed, Vector3.up);
 			}
 		}
 
@@ -254,7 +252,7 @@ public class BatMovement : MonoBehaviour
 		if (!IsAirborne())
 		{
 			// Ground Movement relative to the camera.
-			Vector3 CameraRelativeDirection = DirectionRelativeToCamera(BatCamera.transform, GroundMovement);
+			Vector3 CameraRelativeDirection = DirectionRelativeToTransform(BatCamera.transform, GroundMovement);
 			Bat.Physics.MovePosition(Bat.Physics.position + (CameraRelativeDirection * Time.fixedDeltaTime));
 		}
 	}

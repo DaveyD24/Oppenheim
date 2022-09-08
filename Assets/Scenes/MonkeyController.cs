@@ -1,9 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using EventSystem;
 using UnityEngine;
+using static UnityEngine.InputSystem.InputAction;
+using static global::BatMathematics;
 
-public class MonkeyController : MonoBehaviour
+public class MonkeyController : PlayerController
 {
     enum State
     {
@@ -12,81 +12,55 @@ public class MonkeyController : MonoBehaviour
         WALK
     }
 
-    private Vector3 startPos;
-    private Quaternion startRot;
-
-    private CharacterController controller;
-    [SerializeField] private GameObject activePlayer;
-    private Rigidbody rb;
-    private Vector3 playerVelocity;
-    private bool groundedPlayer;
-    private float playerSpeed = 4.5f;
     private float jumpHeight = 2.0f;
-    private float gravityValue = -9.81f;
-    private float followSpeed = 0.001f;
+    Vector3 move;
 
-    private bool active = true;
-    bool tooClose = false;
     bool clinging = false;
-
-    [SerializeField] Canvas canvas;
-    float groundHeight = 0.580005f;
+    ContactPoint contactPoint;
 
     private Vector3 clingPosition;
 
     private bool bDidJump = false;
     private float jumpWaitTime = 1;
 
-    [SerializeField] private GameObject oppenheim;
-
-    private void OnEnable()
+    protected override void OnEnable()
     {
+        base.OnEnable();
+
         UIEvents.OnShowIntructions += ShowInfo;
         GameEvents.OnDie += Respawn;
     }
 
     private void Respawn()
     {
-        transform.position = startPos;
-        transform.rotation = startRot;
-        playerVelocity = Vector3.zero;
+        transform.position = startPosition;
+        transform.rotation = startRotation;
     }
 
     private void ShowInfo()
     {
-        oppenheim.SetActive(true);
+        Oppenheim.SetActive(true);
     }
 
-    private void OnDisable()
+    protected override void OnDisable()
     {
+        base.OnDisable();
+
         UIEvents.OnShowIntructions -= ShowInfo;
         GameEvents.OnDie -= Respawn;
     }
 
-    private void Start()
+    protected override void Start()
     {
-        controller = gameObject.AddComponent<CharacterController>();
-        this.controller.minMoveDistance = 0;
-        rb = gameObject.GetComponent<Rigidbody>();
-        startPos = transform.position;
-        startRot = transform.rotation;
+        base.Start();
+
+        startPosition = transform.position;
+        startRotation = transform.rotation;
     }
 
-    private void Update()
+    protected override void Update()
     {
-        if (transform.position.y < 2.0f)
-        {
-            GameEvents.Die();
-        }
-        /*float distance = Vector3.Distance(this.transform.position, activePlayer.transform.position);
-        if (distance < 2.0f)
-        {
-            tooClose = true;
-        }
-        else
-        {
-            tooClose = false;
-        }*/
+        base.Update();
 
         if (bDidJump)
         {
@@ -100,84 +74,92 @@ public class MonkeyController : MonoBehaviour
 
         if (active)
         {
-            if (Input.GetButtonDown("Jump") && (groundedPlayer || clinging) && !bDidJump)
+            if (clinging)
             {
-                playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityValue);
-                clinging = false;
-                bDidJump = true;
-                Debug.Log("yeet");
+                transform.position = clingPosition;
+                //Vector3 desiredPosition = transform.position - Vector3.up;
+                //Vector3 gradual = Vector3.Lerp(transform.position, desiredPosition, 0.00125f);
+                //transform.position = gradual;
+                Rb.velocity = Vector3.zero;
             }
-            else if (clinging)
-            {
-                //transform.position = clingPosition;
-                Vector3 desiredPosition = new Vector3(transform.position.x, 6.184793f, transform.position.z);
-                Vector3 gradual = Vector3.Lerp(transform.position, desiredPosition, 0.00125f);
-                transform.position = gradual;
-                playerVelocity.y = gravityValue * Time.deltaTime;
-            }
-            else
-            {
-                groundedPlayer = controller.isGrounded;
-                if (groundedPlayer && playerVelocity.y < 0)
-                {
-                    playerVelocity.y = 0f;
-                }
 
-                Vector3 move = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-                controller.Move(move * Time.deltaTime * playerSpeed);
-
-                if (move != Vector3.zero)
-                {
-                    gameObject.transform.forward = move;
-                }
-
-                // Changes the height position of the player..
-
-
-                playerVelocity.y += gravityValue * Time.deltaTime;
-                controller.Move(playerVelocity * Time.deltaTime);
-            }
-            /*        else
-                    {
-                        if (!tooClose)
-                        {
-                            Vector3 desiredPosition = activePlayer.transform.position;
-                            Vector3 smoothedPosition = Vector3.Lerp(this.transform.position, desiredPosition, followSpeed);
-                            Vector3 flattenedPosition = new Vector3(smoothedPosition.x, groundHeight, smoothedPosition.z);
-                            this.transform.position = flattenedPosition;
-                        }
-                    }*/
+            Rb.useGravity = !clinging;
+        }
+        
+        // Rotate towards Movement.
+        if (move != Vector3.zero)
+        {
+            AlignTransformToMovement(transform, move, RotationSpeed, Vector3.up);
         }
     }
 
-    public void Activate()
+    private void FixedUpdate()
     {
-        active = true;
-        canvas.gameObject.SetActive(true);
+        Rb.MovePosition(Rb.position + (MovementSpeed * Time.fixedDeltaTime * move));
     }
 
-    public void Deactivate()
+    private void OnCollisionEnter(Collision collision)
     {
-        active = false;
-        canvas.gameObject.SetActive(false);
-    }
-
-    public bool isActive()
-    {
-        return active;
-    }
-
-    private void OnControllerColliderHit(ControllerColliderHit collision)
-    {
-        if (collision.gameObject.CompareTag("Clingable"))
+        // Only Cling to something if you're off the ground.
+        if (collision.transform.CompareTag("Clingable") && !IsGrounded())
         {
-            Debug.Log("dsadfs");
-            clinging = true;
-            clingPosition = transform.position;
+                Debug.Log("dsadfs");
+                clinging = true;
+                clingPosition = collision.collider.ClosestPoint(transform.position);
+                contactPoint = collision.GetContact(0);
         }
-        else
-        {
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.transform.CompareTag("Clingable"))
+    	{
             clinging = false;
+    	}
+    }
+
+    protected override void Movement(CallbackContext ctx)
+    {
+        if (!active)
+            return;
+
+        move = ctx.ReadValue<Vector2>();
+
+        // Convert 2D to 3D movement.
+        move = new Vector3(move.x, 0f, move.y).normalized;
+    }
+
+    protected override void Jump(CallbackContext ctx)
+    {
+        if (!active)
+            return;
+
+        if ((IsGrounded() || clinging) && !bDidJump)
+        {
+            Rb.velocity += new Vector3(0f, Mathf.Sqrt(jumpHeight * -3f * Physics.gravity.y), 0f);
+
+            if (clinging)
+            {
+                Rb.velocity += contactPoint.normal;
+                clinging = false;
+                Rb.angularVelocity = Vector3.zero;
+            }
+
+            bDidJump = true;
+            Debug.Log("yeet");
         }
+    }
+
+    protected override void PerformAbility(CallbackContext ctx)
+    {
+        if (!active)
+            return;
+
+        // ...
+    }
+
+    void OnGUI()
+    {
+        GUI.Label(new Rect(100, 65, 250, 250), $"Clinging? {(clinging ? "Yes" : "No")}");
     }
 }

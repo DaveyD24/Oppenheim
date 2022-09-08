@@ -11,7 +11,7 @@ public static class BatMathematics
 		return Up * ComputeJumpScalar(DesiredHeight);
 	}
 
-	/// <summary>Calculates the force required to reach JumpHeight.</summary>
+	/// <summary>Calculates the force required to reach DesiredHeight.</summary>
 	public static float ComputeJumpScalar(float DesiredHeight)
 	{
 		/*
@@ -121,24 +121,31 @@ public static class BatMathematics
 		Cosine = Sign * ((((-2.6051615e-07f * A2 + 2.4760495e-05f) * A2 - 0.0013888378f) * A2 + 0.041666638f) * A2 - 0.5f) * A2 + 1.0f;
 	}
 
-	/// <summary>Converts a world direction to be relative to the Camera's forward.</summary>
-	public static Vector3 DirectionRelativeToCamera(Transform Reference, Vector3 Direction, bool bIgnoreYAxis = true)
+	/// <summary>Converts a world direction to be relative to the Reference's forward.</summary>
+	public static Vector3 DirectionRelativeToTransform(Transform Reference, Vector3 Direction, bool bIgnoreYAxis = true)
 	{
-		Vector3 BatCameraForward = Reference.forward;
-		Vector3 BatCameraRight = Reference.right;
+		Vector3 ReferenceForward = Reference.forward;
+		Vector3 ReferenceRight = Reference.right;
 
 		if (bIgnoreYAxis)
-			BatCameraForward.y = BatCameraRight.y = 0f;
+			ReferenceForward.y = ReferenceRight.y = 0f;
 
-		BatCameraForward.Normalize();
-		BatCameraRight.Normalize();
+		ReferenceForward.Normalize();
+		ReferenceRight.Normalize();
 
 		float LeftRight = Direction.x;
 		float ForwardBackward = Direction.z;
 
-		Vector3 RelativeMovementVector = BatCameraForward * ForwardBackward + BatCameraRight * LeftRight;
+		Vector3 RelativeMovementVector = ReferenceForward * ForwardBackward + ReferenceRight * LeftRight;
 
 		return RelativeMovementVector;
+	}
+
+	public static void AlignTransformToMovement(Transform Transform, Vector3 MovementVector, float RotationSpeed, Vector3 UpAxis)
+	{
+		Quaternion RotationNow = Transform.rotation;
+		Quaternion TargetRotation = Quaternion.LookRotation(MovementVector, UpAxis);
+		Transform.rotation = Quaternion.RotateTowards(RotationNow, TargetRotation, RotationSpeed);
 	}
 
 	/// <summary>True if F is close enough to zero.</summary>
