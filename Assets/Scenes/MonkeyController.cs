@@ -112,6 +112,8 @@ public class MonkeyController : PlayerController
 
     private void OnCollisionExit(Collision collision)
     {
+        // Only stop clinging with the Object we stop colliding with was
+        // a Clingable surface.
         if (collision.transform.CompareTag("Clingable"))
     	{
             clinging = false;
@@ -134,14 +136,20 @@ public class MonkeyController : PlayerController
         if (!active)
             return;
 
+        // This check is original and untouched.
         if ((IsGrounded() || clinging) && !bDidJump)
         {
+            // Original: Jump with a modified kinematic equation.
             Rb.velocity += new Vector3(0f, Mathf.Sqrt(jumpHeight * -3f * Physics.gravity.y), 0f);
-
+            
+            // If we were clinging onto something, we want to jump in the opposite direction
+            // as if the Monkey is jumping off the wall.
             if (clinging)
             {
                 Rb.velocity += contactPoint.normal;
                 clinging = false;
+
+                // Stop any weird rotations.
                 Rb.angularVelocity = Vector3.zero;
             }
 
