@@ -9,7 +9,8 @@ public class WaterScript : MonoBehaviour
     {
         if (other.CompareTag("Player") && other.GetComponent<CharacterController>() != null)
         {
-            CharacterController soldier = other.GetComponent<CharacterController>();
+            //CharacterController soldier = other.GetComponent<CharacterController>();
+            SoldierMovement soldier = GetComponent<SoldierMovement>();
             soldier.isSwimming = true;
         }
     }
@@ -18,7 +19,8 @@ public class WaterScript : MonoBehaviour
     {
         if (other.CompareTag("Player") && other.GetComponent<CharacterController>() != null)
         {
-            CharacterController soldier = other.GetComponent<CharacterController>();
+            //CharacterController soldier = other.GetComponent<CharacterController>();
+            SoldierMovement soldier = GetComponent<SoldierMovement>();
             soldier.isSwimming = false;
         }
     }
