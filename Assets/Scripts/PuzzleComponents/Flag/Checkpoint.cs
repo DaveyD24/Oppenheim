@@ -28,7 +28,7 @@ public class Checkpoint : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            int playerId = other.gameObject.transform.root.gameObject.GetComponent<IDStuff>().PlayerIdSO.PlayerID;
+            int playerId = other.gameObject.transform.root.gameObject.GetComponent<PlayerController>().PlayerIdSO.PlayerID;
             if (!seenId.Contains(playerId))
             {
                 seenId.Add(playerId);

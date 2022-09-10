@@ -37003,17 +37003,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 283b6e8a8ea81244190b33581ca13b59, type: 3}
---- !u!114 &987396798 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6638865728829573730, guid: 283b6e8a8ea81244190b33581ca13b59, type: 3}
-  m_PrefabInstance: {fileID: 987396797}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1508538614}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c0c72d7fda9310b4f9d15486cb7db14d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &987396799 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1100799181752514095, guid: 283b6e8a8ea81244190b33581ca13b59, type: 3}
@@ -37048,10 +37037,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab12b6ac92d6f5e418693579cf9789e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  red: {fileID: 1151719949}
-  blue: {fileID: 987396798}
-  green: {fileID: 1856106941}
-  yellow: {fileID: 2036663481}
+  soldier: {fileID: 0}
+  bat: {fileID: 0}
+  monkey: {fileID: 0}
+  car: {fileID: 0}
 --- !u!4 &991315464
 Transform:
   m_ObjectHideFlags: 0
@@ -41825,7 +41814,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1151719949
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -41838,14 +41827,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7bb143e734f0c664194800fd65631dd0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controller: {fileID: 1151719951}
+  Oppenheim: {fileID: 0}
+  <PlayerIdSO>k__BackingField: {fileID: 0}
+  <DefaultPlayerData>k__BackingField: {fileID: 0}
+  <Bouyancy>k__BackingField: 0
+  <MovementSpeed>k__BackingField: 0
+  <RotationSpeed>k__BackingField: 0
+  <Health>k__BackingField: 0
+  GroundCheckPosition: {x: 0, y: 0, z: 0}
+  <GroundCheckRadius>k__BackingField: 0
+  active: 0
+  canvas: {fileID: 2017510458}
   bulletSpawnPoint: {fileID: 620978169}
   bulletPrefab: {fileID: 1859860186272881942, guid: c152a41615db67940a047f2c85d5e16a, type: 3}
   bulletSpeed: 10
-  speed: 6
-  activePlayer: {fileID: 0}
-  oppenheim: {fileID: 1910076771}
-  canvas: {fileID: 2017510458}
 --- !u!4 &1151719950
 Transform:
   m_ObjectHideFlags: 0
@@ -41891,7 +41886,7 @@ Rigidbody:
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 0
-  m_IsKinematic: 1
+  m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
@@ -68338,9 +68333,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fcaa7093491068a42b1584d4e7d2d01b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activePlayer: {fileID: 0}
+  Oppenheim: {fileID: 0}
+  <PlayerIdSO>k__BackingField: {fileID: 0}
+  <DefaultPlayerData>k__BackingField: {fileID: 0}
+  <Bouyancy>k__BackingField: 0
+  <MovementSpeed>k__BackingField: 0
+  <RotationSpeed>k__BackingField: 0
+  <Health>k__BackingField: 0
+  GroundCheckPosition: {x: 0, y: 0, z: 0}
+  <GroundCheckRadius>k__BackingField: 0
+  active: 0
   canvas: {fileID: 632966883}
-  oppenheim: {fileID: 1743137184}
 --- !u!54 &1856106942
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -68353,7 +68356,7 @@ Rigidbody:
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 0
-  m_IsKinematic: 1
+  m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
@@ -74780,17 +74783,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1efbb2aa03f53084d84cfb4d1772d502, type: 3}
---- !u!114 &2036663481 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5583241534940801180, guid: 1efbb2aa03f53084d84cfb4d1772d502, type: 3}
-  m_PrefabInstance: {fileID: 2036663480}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 624635849}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3178a24f59c2d564b9fd5da0eac81b71, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &2036663482 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5400117104511225698, guid: 1efbb2aa03f53084d84cfb4d1772d502, type: 3}

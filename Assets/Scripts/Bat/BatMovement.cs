@@ -12,22 +12,22 @@
 //#define USE_LOOK_YAW
 
 using UnityEngine;
-using static UnityEngine.InputSystem.InputAction;
 using static global::BatMathematics;
+using static UnityEngine.InputSystem.InputAction;
 
 public class BatMovement : MonoBehaviour
 {
-	Bat Bat;
+	private Bat Bat;
 
 	// Airborne settings while this Bat is in the air.
 	// Player Controller values will be used for ground movement.
 
 	[Header("Airborne Settings")]
-	[SerializeField] float TakeoffAcceleration = 850f;
-	[SerializeField] float JumpHeight = 5f;
+	[SerializeField] float takeoffAcceleration = 850f;
+	[SerializeField] float jumpHeight = 5f;
 
-	[SerializeField] float SecondsOfPitchFlight = 1f;
-	float RemainingSeconds;
+	[SerializeField] float secondsOfPitchFlight = 1f;
+	float remainingSeconds;
 
 	[SerializeField] float YawStrength = 2f;
 	[SerializeField] float PitchStrength = 1f;
@@ -54,7 +54,7 @@ public class BatMovement : MonoBehaviour
 		bHasGlidedThisJump = false;
 		bHasCancelledGlideThisJump = false;
 
-		//BatCamera = GameObject.FindGameObjectWithTag("Bat Camera").GetComponent<Camera>();
+		// BatCamera = GameObject.FindGameObjectWithTag("Bat Camera").GetComponent<Camera>();
 		Speedometer = new Speedometer();
 		Speedometer.Initialise();
 	}
@@ -108,7 +108,7 @@ public class BatMovement : MonoBehaviour
 
 	public void MovementBinding(ref CallbackContext Context)
 	{
-		if (Bat.active)
+		if (Bat.Active)
 		{
 			Vector2 Throw = Context.action.ReadValue<Vector2>();
 			HandleMovement(Throw);
@@ -121,7 +121,7 @@ public class BatMovement : MonoBehaviour
 
 	public void JumpBinding(ref CallbackContext Context)
 	{
-		if (Bat.active)
+		if (Bat.Active)
 		{
 			float Throw = Context.action.ReadValue<float>();
 			HandleJump(Throw);
@@ -134,7 +134,7 @@ public class BatMovement : MonoBehaviour
 
 	public void LookBinding(ref CallbackContext Context)
 	{
-		if (Bat.active)
+		if (Bat.Active)
 		{
 			Vector2 Throw = Context.action.ReadValue<Vector2>();
 			HandleLook(Throw);
@@ -213,11 +213,11 @@ public class BatMovement : MonoBehaviour
 
 			if (Throw > .01f)
 			{
-				Bat.Physics.velocity += ComputeJumpVelocity(transform.up, JumpHeight);
+				Bat.Physics.velocity += ComputeJumpVelocity(transform.up, jumpHeight);
 			}
 
 			// Fact - Every time the Bat jumps, it has to take off from the Ground.
-			RemainingSeconds = SecondsOfPitchFlight;
+			remainingSeconds = secondsOfPitchFlight;
 		}
 	}
 
@@ -260,7 +260,7 @@ public class BatMovement : MonoBehaviour
 	void StartGliding()
 	{
 		// F = ma.
-		Bat.Physics.AddForce(Bat.Physics.mass * TakeoffAcceleration * transform.forward);
+		Bat.Physics.AddForce(Bat.Physics.mass * takeoffAcceleration * transform.forward);
 
 		bHasGlidedThisJump = true;
 
@@ -272,7 +272,7 @@ public class BatMovement : MonoBehaviour
 	void ThrowPitch(float Throw)
 	{
 		// The Bat is too tired to Pitch upwards.
-		if (RemainingSeconds <= 0f)
+		if (remainingSeconds <= 0f)
 		{
 			PitchDirection = 0f;
 			return;
@@ -284,7 +284,7 @@ public class BatMovement : MonoBehaviour
 			PitchDirection = PitchStrength;
 
 			// Deduct time only when Pitching upwards.
-			RemainingSeconds -= Time.deltaTime;
+			remainingSeconds -= Time.deltaTime;
 		}
 		else if (Throw > .3f)
 		{

@@ -5,21 +5,42 @@ using UnityEngine;
 public class SwitchManager : MonoBehaviour
 {
 
-    [SerializeField] public PlayerController soldier;
-    [SerializeField] public PlayerController bat;
-    [SerializeField] public PlayerController monkey;
-    [SerializeField] public PlayerController car; // car
+    [field: SerializeField] public PlayerController Soldier { get; private set; }
 
+    [field: SerializeField] public PlayerController Bat { get; private set; }
 
-    // Start is called before the first frame update
-    void Start()
+    [field: SerializeField] public PlayerController Monkey { get; private set; }
+
+    [field: SerializeField] public PlayerController Car { get; private set; }
+
+    public GameObject GetActivePlayer()
     {
-        
+        if (Soldier.IsActive())
+        {
+            return Soldier.gameObject;
+        }
+
+        if (Bat.IsActive())
+        {
+            return Bat.gameObject;
+        }
+
+        if (Monkey.IsActive())
+        {
+            return Monkey.gameObject;
+        }
+
+        if (Car.IsActive())
+        {
+            return Car.gameObject;
+        }
+
+        return null;
     }
 
     private void Awake()
     {
-        monkey.Activate();
+        Monkey.Activate();
     }
 
     // Update is called once per frame
@@ -36,48 +57,33 @@ public class SwitchManager : MonoBehaviour
     private void RotatePlayer()
     {
         // bygr
-        if (bat.IsActive())
+        if (Bat.IsActive())
         {
             DeactivateAll();
-            car.Activate();
+            Car.Activate();
         }
-        else if (car.IsActive())
+        else if (Car.IsActive())
         {
             DeactivateAll();
-            monkey.Activate();
+            Monkey.Activate();
         }
-        else if (monkey.IsActive())
+        else if (Monkey.IsActive())
         {
             DeactivateAll();
-            soldier.Activate();
+            Soldier.Activate();
         }
-        else if (soldier.IsActive())
+        else if (Soldier.IsActive())
         {
             DeactivateAll();
-            bat.Activate();
+            Bat.Activate();
         }
-
     }
 
     private void DeactivateAll()
     {
-        soldier.Deactivate();
-        bat.Deactivate();
-        monkey.Deactivate();
-        car.Deactivate();
-    }
-
-    public GameObject GetActivePlayer()
-    {
-        if (soldier.IsActive())
-            return soldier.gameObject;
-        if (bat.IsActive())
-            return bat.gameObject;
-        if (monkey.IsActive())
-            return monkey.gameObject;
-        if (car.IsActive())
-            return car.gameObject;
-
-        return null;
+        Soldier.Deactivate();
+        Bat.Deactivate();
+        Monkey.Deactivate();
+        Car.Deactivate();
     }
 }

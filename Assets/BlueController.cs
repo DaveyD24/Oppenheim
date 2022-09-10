@@ -13,7 +13,7 @@ public class BlueController : MonoBehaviour
     private float gravityValue = -9.81f;
     private float followSpeed = 0.001f;
 
-    bool active = false;
+    private bool active = false;
     bool tooClose = false;
 
     SwitchManager switchManager;
@@ -28,7 +28,7 @@ public class BlueController : MonoBehaviour
         switchManager = FindObjectOfType<SwitchManager>();
     }
 
-    void Update()
+    private void Update()
     {
         activePlayer = switchManager.GetActivePlayer();
         float distance = Vector3.Distance(this.transform.position, activePlayer.transform.position);
@@ -40,7 +40,6 @@ public class BlueController : MonoBehaviour
         {
             tooClose = false;
         }
-
 
         if (active)
         {

@@ -13,17 +13,20 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Rigidbody))]
 public abstract class PlayerController : MonoBehaviour
 {
+    private Vector3 startPosition;
+    private Quaternion startRotation;
     private float fuel;
 
-    protected Vector3 startPosition;
-    protected Quaternion startRotation;
-
-    [Header("Inherited from Player Controller")]
-    [SerializeField] protected GameObject Oppenheim;
+    [HideInInspector] public bool Active { get; set; } = false;
 
     public Rigidbody Rb { get; private set; }
 
     public float Weight { get; private set; }
+
+    // Not a Property: Use GetGroundCheckPosition() instead.
+    [field: SerializeField] protected Vector3 groundCheckPosition;
+
+    [field: Header("Inherited from Player Controller")]
 
     // A unique object each scene object gets assigned, being largly used to store the players id
     [field: SerializeField] public PlayerIdObject PlayerIdSO { get; private set; }
@@ -38,14 +41,54 @@ public abstract class PlayerController : MonoBehaviour
 
     [field: SerializeField] protected float Health { get; private set; }
 
-    // Not a Property: Use GetGroundCheckPosition() instead.
-    [field: SerializeField] protected Vector3 GroundCheckPosition;
-
     [field: SerializeField] protected float GroundCheckRadius { get; private set; }
 
     protected float CurrentFuel { get => fuel; set => fuel = Mathf.Clamp(value, 0, DefaultPlayerData.MaxFuel); }
 
     protected InputActions Inputs { get; private set; }
+
+
+
+    public virtual bool IsGrounded()
+    {
+        Collider[] groundOverlap = Physics.OverlapSphere(GetGroundCheckPosition(), GroundCheckRadius);
+
+        // A 'Valid Contact' is not this PlayerController.
+        int numberOfValidContacts = groundOverlap.Count(
+            collider => collider.gameObject.transform.root != transform
+        );
+
+        // If we are the Monkey, don't count any Clingable surface as a Valid Contact.
+        if (this is MonkeyController)
+        {
+            numberOfValidContacts -= groundOverlap.Count(
+                collider1 => collider1.gameObject.CompareTag("Clingable"));
+        }
+
+        return numberOfValidContacts > 0;
+    }
+
+    public Vector3 GetGroundCheckPosition()
+    {
+        return transform.position + groundCheckPosition;
+    }
+
+    public void Activate()
+    {
+        Active = true;
+        UIEvents.CanvasStateChanged(PlayerIdSO.PlayerID, true);
+    }
+
+    public void Deactivate()
+    {
+        Active = false;
+        UIEvents.CanvasStateChanged(PlayerIdSO.PlayerID, false);
+    }
+
+    public bool IsActive()
+    {
+        return Active;
+    }
 
     // use Vector2 direction = ctx.ReadValue<Vector2>(); to get the values for each direction of movement
     protected abstract void Movement(InputAction.CallbackContext ctx);
@@ -57,8 +100,8 @@ public abstract class PlayerController : MonoBehaviour
     protected void AdjustFuelValue(float amount)
     {
         CurrentFuel += amount;
-        //UIEvents.OnFuelChanged(PlayerIdSO.PlayerID, CurrentFuel / DefaultPlayerData.MaxFuel);
 
+        // UIEvents.OnFuelChanged(PlayerIdSO.PlayerID, CurrentFuel / DefaultPlayerData.MaxFuel);
         if (CurrentFuel <= 0)
         {
             OnDeath();
@@ -72,7 +115,7 @@ public abstract class PlayerController : MonoBehaviour
             GameEvents.Die();
         }
 
-        //AdjustFuelValue(-DefaultPlayerData.DecreaseFuelAmount.Evaluate(CurrentFuel / DefaultPlayerData.MaxFuel) * Time.deltaTime);
+        // AdjustFuelValue(-DefaultPlayerData.DecreaseFuelAmount.Evaluate(CurrentFuel / DefaultPlayerData.MaxFuel) * Time.deltaTime);
     }
 
     protected virtual void Start()
@@ -101,16 +144,15 @@ public abstract class PlayerController : MonoBehaviour
         Inputs.Player.Move.performed += Movement;
         Inputs.Player.Move.canceled += Movement;
         Inputs.Player.Ability.performed += PerformAbility;
+
         // Inputs.Player.Ability.canceled += PerformAbility;
-
         Inputs.Player.Jump.performed += Jump;
-        // Inputs.Player.Jump.canceled += Jump;
 
+        // Inputs.Player.Jump.canceled += Jump;
         Inputs.Player.Enable();
 
         // assign the nessesary functions to the event system
         GameEvents.OnCollectFuel += MaxFuel;
-        UIEvents.OnShowIntructions += EnableInstructions;
         GameEvents.OnDie += Respawn;
     }
 
@@ -124,9 +166,15 @@ public abstract class PlayerController : MonoBehaviour
 
         Inputs.Player.Disable();
 
-        UIEvents.OnShowIntructions -= EnableInstructions;
         GameEvents.OnCollectFuel -= MaxFuel;
         GameEvents.OnDie -= Respawn;
+    }
+
+
+    protected virtual void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawSphere(GetGroundCheckPosition(), GroundCheckRadius);
     }
 
     private void AddBouyancy()
@@ -148,61 +196,5 @@ public abstract class PlayerController : MonoBehaviour
         {
             AdjustFuelValue(DefaultPlayerData.MaxFuel);
         }
-    }
-
-    public virtual bool IsGrounded()
-    {
-        Collider[] groundOverlap = Physics.OverlapSphere(GetGroundCheckPosition(), GroundCheckRadius);
-
-        // A 'Valid Contact' is not this PlayerController.
-        int numberOfValidContacts = groundOverlap.Count(
-            Collider => Collider.gameObject.transform.root != transform
-        );
-
-        // If we are the Monkey, don't count any Clingable surface as a Valid Contact.
-        if (this is MonkeyController)
-	{
-            numberOfValidContacts -= groundOverlap.Count(
-                Collider => Collider.gameObject.CompareTag("Clingable")
-            );
-	}
-
-        return numberOfValidContacts > 0;
-    }
-
-    public Vector3 GetGroundCheckPosition()
-    {
-        return transform.position + GroundCheckPosition;
-    }
-
-    [HideInInspector] public bool active = false;
-    [SerializeField] Canvas canvas;
-
-    public void Activate()
-    {
-        active = true;
-        canvas.gameObject.SetActive(true);
-    }
-
-    public void Deactivate()
-    {
-        active = false;
-        canvas.gameObject.SetActive(false);
-    }
-
-    public bool IsActive()
-    {
-        return active;
-    }
-
-    private void EnableInstructions()
-    {
-        Oppenheim.SetActive(true);
-    }
-
-    protected virtual void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.cyan;
-        Gizmos.DrawSphere(GetGroundCheckPosition(), GroundCheckRadius);
     }
 }

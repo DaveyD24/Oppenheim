@@ -239,7 +239,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 2
+  m_CollisionDetection: 1
 --- !u!114 &5583241534940801180
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -252,14 +252,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3178a24f59c2d564b9fd5da0eac81b71, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  groundCheckPosition: {x: 0, y: 0, z: 0}
   <PlayerIdSO>k__BackingField: {fileID: 11400000, guid: a6ba5f247f9af9242bb3d3700fe06543, type: 2}
   <DefaultPlayerData>k__BackingField: {fileID: 11400000, guid: edaf631a83ce6ea42aa9463c9228f767, type: 2}
   <Bouyancy>k__BackingField: 0
   <MovementSpeed>k__BackingField: 8000
-  <RotationSpeed>k__BackingField: 45
+  <RotationSpeed>k__BackingField: 70
   <Health>k__BackingField: 0
-  active: 0
-  canvas: {fileID: 0}
+  <GroundCheckRadius>k__BackingField: 0
   axleInfos:
   - <LeftWheel>k__BackingField: {fileID: 5583241534940801187}
     <RightWheel>k__BackingField: {fileID: 5583241534940801188}
@@ -286,18 +286,18 @@ MonoBehaviour:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 300
+      value: 100
       inSlope: 77.26416
-      outSlope: -1777.3369
+      outSlope: -373.847
       tangentMode: 69
       weightedMode: 0
       inWeight: 0
       outWeight: 0.06031998
     - serializedVersion: 3
       time: 0.09846192
-      value: 125
-      inSlope: -1777.3369
-      outSlope: -516.8514
+      value: 63.190308
+      inSlope: -373.847
+      outSlope: -180.57323
       tangentMode: 69
       weightedMode: 0
       inWeight: 0.33333334
@@ -305,7 +305,7 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 0.28226718
       value: 30
-      inSlope: -516.8514
+      inSlope: -180.57323
       outSlope: 0
       tangentMode: 69
       weightedMode: 0
@@ -314,7 +314,7 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 0.6850931
       value: 30
-      inSlope: 0
+      inSlope: -0
       outSlope: -12.244457
       tangentMode: 5
       weightedMode: 0

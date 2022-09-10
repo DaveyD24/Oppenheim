@@ -10,25 +10,50 @@ using UnityEngine.UI;
 public class PlayerUI : MonoBehaviour
 {
     [SerializeField] private PlayerIdObject assigedPlayerID;
-    [SerializeField] private Slider fuelSlider;
+    [SerializeField] private GameObject oppenheim;
+
+    private Canvas canvas;
+
+    // [SerializeField] private Slider fuelSlider;
+    private void Awake()
+    {
+        canvas = gameObject.GetComponent<Canvas>();
+    }
 
     private void OnEnable()
     {
         // assign the fuel UI to be updated whever another class calls the specified Event System Action
         UIEvents.OnFuelChanged += UpdateFuelSlider;
+        UIEvents.OnShowIntructions += ShowInstructions;
+        UIEvents.OnCanvasStateChanged += ActivateCanvas;
     }
 
     private void OnDisable()
     {
         // So the system doesn't error out when no longer in use unassign the method as well
         UIEvents.OnFuelChanged -= UpdateFuelSlider;
+        UIEvents.OnShowIntructions -= ShowInstructions;
+        UIEvents.OnCanvasStateChanged -= ActivateCanvas;
     }
 
     private void UpdateFuelSlider(int playerID, float value)
     {
         if (playerID == assigedPlayerID.PlayerID)
         {
-            fuelSlider.value = value;
+            // fuelSlider.value = value;
+        }
+    }
+
+    private void ShowInstructions()
+    {
+        oppenheim.SetActive(true);
+    }
+
+    private void ActivateCanvas(int playerID, bool value)
+    {
+        if (playerID == assigedPlayerID.PlayerID)
+        {
+            canvas.enabled = value;
         }
     }
 }

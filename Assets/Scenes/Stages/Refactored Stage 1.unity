@@ -390,7 +390,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b98a6b686173fde4582f8634af110aa6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 3912862175779323292}
+  target: {fileID: 1151719950}
   smoothSpeed: 0.125
   offset: {x: 0, y: 4, z: -11}
 --- !u!4 &3331690
@@ -2456,8 +2456,9 @@ GameObject:
   - component: {fileID: 75215930}
   - component: {fileID: 75215932}
   - component: {fileID: 75215931}
+  - component: {fileID: 75215934}
   m_Layer: 5
-  m_Name: YellowCanvas
+  m_Name: CarCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2545,6 +2546,20 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &75215934
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 75215929}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d1b1e2d8bbed114892246b175ec8553, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  assigedPlayerID: {fileID: 11400000, guid: a6ba5f247f9af9242bb3d3700fe06543, type: 2}
+  oppenheim: {fileID: 231979243}
 --- !u!1 &76281544
 GameObject:
   m_ObjectHideFlags: 0
@@ -23646,24 +23661,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 623758735}
   m_Mesh: {fileID: 4300000, guid: ad0f380d466940048bdd16c9160d04aa, type: 3}
---- !u!1 &624635849 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4736310480184235480, guid: 1efbb2aa03f53084d84cfb4d1772d502, type: 3}
-  m_PrefabInstance: {fileID: 2036663480}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &624635851
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 624635849}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 70cf9c8dc316c624fb9632d5450bdb02, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  <PlayerIdSO>k__BackingField: {fileID: 11400000, guid: a6ba5f247f9af9242bb3d3700fe06543, type: 2}
 --- !u!1 &627797470
 GameObject:
   m_ObjectHideFlags: 0
@@ -23796,8 +23793,9 @@ GameObject:
   - component: {fileID: 632966883}
   - component: {fileID: 632966885}
   - component: {fileID: 632966884}
+  - component: {fileID: 632966887}
   m_Layer: 5
-  m_Name: GreenCanvas
+  m_Name: MonkeyCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -23885,6 +23883,20 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &632966887
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 632966882}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d1b1e2d8bbed114892246b175ec8553, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  assigedPlayerID: {fileID: 11400000, guid: 0aca3aa46054d22439aa2cb351a6753d, type: 2}
+  oppenheim: {fileID: 1743137184}
 --- !u!1 &632995275
 GameObject:
   m_ObjectHideFlags: 0
@@ -37038,7 +37050,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6638865728829573730, guid: 283b6e8a8ea81244190b33581ca13b59, type: 3}
   m_PrefabInstance: {fileID: 987396797}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1508538614}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c0c72d7fda9310b4f9d15486cb7db14d, type: 3}
@@ -37078,10 +37090,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab12b6ac92d6f5e418693579cf9789e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  soldier: {fileID: 4397368964726073127}
-  bat: {fileID: 987396798}
-  monkey: {fileID: 1856106941}
-  car: {fileID: 2036663481}
+  <Soldier>k__BackingField: {fileID: 1151719949}
+  <Bat>k__BackingField: {fileID: 987396798}
+  <Monkey>k__BackingField: {fileID: 1856106941}
+  <Car>k__BackingField: {fileID: 2036663481}
 --- !u!4 &991315464
 Transform:
   m_ObjectHideFlags: 0
@@ -41847,15 +41859,13 @@ GameObject:
   - component: {fileID: 1151719952}
   - component: {fileID: 1151719953}
   - component: {fileID: 1151719949}
-  - component: {fileID: 1151719951}
-  - component: {fileID: 1151719956}
   m_Layer: 7
   m_Name: Soldier
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1151719949
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -41868,20 +41878,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7bb143e734f0c664194800fd65631dd0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Oppenheim: {fileID: 1910076771}
+  groundCheckPosition: {x: 0, y: 0, z: 0}
   <PlayerIdSO>k__BackingField: {fileID: 11400000, guid: 1e6de6128901ea94a88896b92e3bf310, type: 2}
   <DefaultPlayerData>k__BackingField: {fileID: 11400000, guid: edaf631a83ce6ea42aa9463c9228f767, type: 2}
   <Bouyancy>k__BackingField: 0
   <MovementSpeed>k__BackingField: 6
   <RotationSpeed>k__BackingField: 5
   <Health>k__BackingField: 0
-  GroundCheckPosition: {x: 0, y: 0, z: 0}
   <GroundCheckRadius>k__BackingField: 0.3
-  active: 0
-  canvas: {fileID: 2017510458}
-  bulletSpawnPoint: {fileID: 620978169}
-  bulletPrefab: {fileID: 1859860186272881942, guid: c152a41615db67940a047f2c85d5e16a, type: 3}
-  bulletSpeed: 10
+  jumpHeight: 1
+  <BulletSpawnPoint>k__BackingField: {fileID: 620978169}
+  <BulletPrefab>k__BackingField: {fileID: 1859860186272881942, guid: c152a41615db67940a047f2c85d5e16a, type: 3}
+  <BulletSpeed>k__BackingField: 10
 --- !u!4 &1151719950
 Transform:
   m_ObjectHideFlags: 0
@@ -41897,24 +41905,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!143 &1151719951
-CharacterController:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1151719948}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Height: 1.1041582
-  m_Radius: 0.6333802
-  m_SlopeLimit: 45
-  m_StepOffset: 0.3
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0
-  m_Center: {x: 0, y: 0.7, z: 0}
 --- !u!54 &1151719952
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -41929,8 +41919,8 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
+  m_Constraints: 112
+  m_CollisionDetection: 1
 --- !u!65 &1151719953
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -41942,8 +41932,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0.6, z: 0}
+  m_Size: {x: 1, y: 2.3254724, z: 1}
+  m_Center: {x: 0, y: 1.2627361, z: 0}
 --- !u!23 &1151719954
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -41994,19 +41984,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1151719948}
   m_Mesh: {fileID: 3987911314198936000, guid: 585ddd83af1d51b42ae7409353cd9699, type: 3}
---- !u!114 &1151719956
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1151719948}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 70cf9c8dc316c624fb9632d5450bdb02, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  <PlayerIdSO>k__BackingField: {fileID: 11400000, guid: 1e6de6128901ea94a88896b92e3bf310, type: 2}
 --- !u!1 &1154236624
 GameObject:
   m_ObjectHideFlags: 0
@@ -55322,24 +55299,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1506604426}
   m_Mesh: {fileID: -8116138440861595531, guid: 89964166cb8819647bfa7965d33aed81, type: 3}
---- !u!1 &1508538614 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 291893582209903765, guid: 283b6e8a8ea81244190b33581ca13b59, type: 3}
-  m_PrefabInstance: {fileID: 987396797}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1508538615
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1508538614}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 70cf9c8dc316c624fb9632d5450bdb02, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  <PlayerIdSO>k__BackingField: {fileID: 11400000, guid: 250a1cc6c2eafb54fb4fa9dcd6298d62, type: 2}
 --- !u!1 &1508983186
 GameObject:
   m_ObjectHideFlags: 0
@@ -59198,7 +59157,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   assigedPlayerID: {fileID: 11400000, guid: a6ba5f247f9af9242bb3d3700fe06543, type: 2}
-  fuelSlider: {fileID: 1120119097}
+  oppenheim: {fileID: 0}
 --- !u!114 &1593087273
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -68354,7 +68313,6 @@ GameObject:
   - component: {fileID: 1856106943}
   - component: {fileID: 1856106942}
   - component: {fileID: 1856106941}
-  - component: {fileID: 1856106947}
   m_Layer: 7
   m_Name: Monkey
   m_TagString: Player
@@ -68374,17 +68332,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fcaa7093491068a42b1584d4e7d2d01b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Oppenheim: {fileID: 1743137184}
+  groundCheckPosition: {x: 0, y: 0, z: 0}
   <PlayerIdSO>k__BackingField: {fileID: 11400000, guid: 0aca3aa46054d22439aa2cb351a6753d, type: 2}
   <DefaultPlayerData>k__BackingField: {fileID: 11400000, guid: edaf631a83ce6ea42aa9463c9228f767, type: 2}
   <Bouyancy>k__BackingField: 0
   <MovementSpeed>k__BackingField: 5
   <RotationSpeed>k__BackingField: 10
   <Health>k__BackingField: 0
-  GroundCheckPosition: {x: 0, y: -0.54, z: 0}
   <GroundCheckRadius>k__BackingField: 0.3
-  active: 1
-  canvas: {fileID: 632966883}
+  jumpWaitTime: 0.1
 --- !u!54 &1856106942
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -68400,7 +68356,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!65 &1856106943
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -68479,19 +68435,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1856106947
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1856106940}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 70cf9c8dc316c624fb9632d5450bdb02, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  <PlayerIdSO>k__BackingField: {fileID: 11400000, guid: 0aca3aa46054d22439aa2cb351a6753d, type: 2}
 --- !u!1 &1860976454
 GameObject:
   m_ObjectHideFlags: 0
@@ -72631,8 +72574,9 @@ GameObject:
   - component: {fileID: 1992788687}
   - component: {fileID: 1992788689}
   - component: {fileID: 1992788688}
+  - component: {fileID: 1992788691}
   m_Layer: 5
-  m_Name: BlueCanvas
+  m_Name: BatCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -72720,6 +72664,20 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &1992788691
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1992788686}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d1b1e2d8bbed114892246b175ec8553, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  assigedPlayerID: {fileID: 11400000, guid: 250a1cc6c2eafb54fb4fa9dcd6298d62, type: 2}
+  oppenheim: {fileID: 1485966575}
 --- !u!1 &1994055262
 GameObject:
   m_ObjectHideFlags: 0
@@ -73697,8 +73655,9 @@ GameObject:
   - component: {fileID: 2017510458}
   - component: {fileID: 2017510460}
   - component: {fileID: 2017510459}
+  - component: {fileID: 2017510462}
   m_Layer: 5
-  m_Name: RedCanvas
+  m_Name: SoldierCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -73786,6 +73745,20 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &2017510462
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2017510457}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d1b1e2d8bbed114892246b175ec8553, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  assigedPlayerID: {fileID: 11400000, guid: 1e6de6128901ea94a88896b92e3bf310, type: 2}
+  oppenheim: {fileID: 1910076771}
 --- !u!1 &2022592585
 GameObject:
   m_ObjectHideFlags: 0
@@ -74716,7 +74689,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4736310480184235480, guid: 1efbb2aa03f53084d84cfb4d1772d502, type: 3}
       propertyPath: m_Name
-      value: Car Root (1)
+      value: Car Root
       objectReference: {fileID: 0}
     - target: {fileID: 5400117104511225698, guid: 1efbb2aa03f53084d84cfb4d1772d502, type: 3}
       propertyPath: m_RootOrder
@@ -74782,38 +74755,6 @@ PrefabInstance:
       propertyPath: Oppenheim
       value: 
       objectReference: {fileID: 231979243}
-    - target: {fileID: 5583241534940801180, guid: 1efbb2aa03f53084d84cfb4d1772d502, type: 3}
-      propertyPath: <DashSpeedCurve>k__BackingField.m_Curve.Array.data[1].time
-      value: 0.09846192
-      objectReference: {fileID: 0}
-    - target: {fileID: 5583241534940801180, guid: 1efbb2aa03f53084d84cfb4d1772d502, type: 3}
-      propertyPath: <DashSpeedCurve>k__BackingField.m_Curve.Array.data[0].value
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 5583241534940801180, guid: 1efbb2aa03f53084d84cfb4d1772d502, type: 3}
-      propertyPath: <DashSpeedCurve>k__BackingField.m_Curve.Array.data[1].value
-      value: 63.190308
-      objectReference: {fileID: 0}
-    - target: {fileID: 5583241534940801180, guid: 1efbb2aa03f53084d84cfb4d1772d502, type: 3}
-      propertyPath: <DashSpeedCurve>k__BackingField.m_Curve.Array.data[1].inSlope
-      value: -373.847
-      objectReference: {fileID: 0}
-    - target: {fileID: 5583241534940801180, guid: 1efbb2aa03f53084d84cfb4d1772d502, type: 3}
-      propertyPath: <DashSpeedCurve>k__BackingField.m_Curve.Array.data[2].inSlope
-      value: -180.57323
-      objectReference: {fileID: 0}
-    - target: {fileID: 5583241534940801180, guid: 1efbb2aa03f53084d84cfb4d1772d502, type: 3}
-      propertyPath: <DashSpeedCurve>k__BackingField.m_Curve.Array.data[3].inSlope
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5583241534940801180, guid: 1efbb2aa03f53084d84cfb4d1772d502, type: 3}
-      propertyPath: <DashSpeedCurve>k__BackingField.m_Curve.Array.data[0].outSlope
-      value: -373.847
-      objectReference: {fileID: 0}
-    - target: {fileID: 5583241534940801180, guid: 1efbb2aa03f53084d84cfb4d1772d502, type: 3}
-      propertyPath: <DashSpeedCurve>k__BackingField.m_Curve.Array.data[1].outSlope
-      value: -180.57323
-      objectReference: {fileID: 0}
     - target: {fileID: 5583241534940801185, guid: 1efbb2aa03f53084d84cfb4d1772d502, type: 3}
       propertyPath: m_ConnectedAnchor.x
       value: 1.209997
@@ -74829,7 +74770,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5583241534940801180, guid: 1efbb2aa03f53084d84cfb4d1772d502, type: 3}
   m_PrefabInstance: {fileID: 2036663480}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 624635849}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3178a24f59c2d564b9fd5da0eac81b71, type: 3}
@@ -80293,12 +80234,12 @@ GameObject:
   - component: {fileID: 4397368964726073130}
   - component: {fileID: 4397368964726073127}
   m_Layer: 0
-  m_Name: Soldier
+  m_Name: Soldier(old)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &4397368964726073127
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -80311,20 +80252,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7bb143e734f0c664194800fd65631dd0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Oppenheim: {fileID: 1910076771}
+  groundCheckPosition: {x: 0, y: 0, z: 0}
   <PlayerIdSO>k__BackingField: {fileID: 11400000, guid: 1e6de6128901ea94a88896b92e3bf310, type: 2}
   <DefaultPlayerData>k__BackingField: {fileID: 11400000, guid: edaf631a83ce6ea42aa9463c9228f767, type: 2}
   <Bouyancy>k__BackingField: 0
   <MovementSpeed>k__BackingField: 6
   <RotationSpeed>k__BackingField: 10
   <Health>k__BackingField: 0
-  GroundCheckPosition: {x: 0, y: -1.25, z: 0}
   <GroundCheckRadius>k__BackingField: 0.15
-  active: 0
-  canvas: {fileID: 2017510458}
-  bulletSpawnPoint: {fileID: 716984597}
-  bulletPrefab: {fileID: 1859860186272881942, guid: c152a41615db67940a047f2c85d5e16a, type: 3}
-  bulletSpeed: 10
+  jumpHeight: 3
+  <BulletSpawnPoint>k__BackingField: {fileID: 0}
+  <BulletPrefab>k__BackingField: {fileID: 0}
+  <BulletSpeed>k__BackingField: 10
 --- !u!65 &4397368964726073128
 BoxCollider:
   m_ObjectHideFlags: 0
