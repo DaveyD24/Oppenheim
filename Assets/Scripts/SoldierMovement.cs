@@ -13,7 +13,7 @@ public class SoldierMovement : PlayerController
     public float bulletSpeed = 10;
 
     CharacterController controller;
-    SwitchManager switchManager;
+    //SwitchManager switchManager;
     private Vector3 playerVelocity;
     private Vector3 move;
     private float jumpHeight = 3f;
@@ -23,7 +23,7 @@ public class SoldierMovement : PlayerController
     {
         base.Start();
 
-        switchManager = FindObjectOfType<SwitchManager>();
+        //switchManager = FindObjectOfType<SwitchManager>();
         startPosition = transform.position;
         startRotation = transform.rotation;
 
@@ -62,30 +62,33 @@ public class SoldierMovement : PlayerController
     {
         base.Update();
 
-        // Move the Soldier in XZ space.
-        controller.Move(MovementSpeed * Time.deltaTime * move);
-
-        // Rotate towards Movement.
-        Vector3 faceDir = move;
-        if (faceDir != Vector3.zero)
+        if (active)
         {
-            AlignTransformToMovement(transform, faceDir, RotationSpeed, Vector3.up);
+            // Move the Soldier in XZ space.
+            controller.Move(MovementSpeed * Time.deltaTime * move);
+
+            // Rotate towards Movement.
+            Vector3 faceDir = move;
+            if (faceDir != Vector3.zero)
+            {
+                AlignTransformToMovement(transform, faceDir, RotationSpeed, Vector3.up);
+            }
+
+            if (controller.isGrounded)
+            {
+                playerVelocity.y = 0f;
+            }
+
+            if (bJumpRequested)
+            {
+                playerVelocity.y += ComputeJumpScalar(jumpHeight);
+                bJumpRequested = false;
+            }
+
+            // Apply Gravity to this Soldier. (This Rigidbody is marked Kinematic; preserving original settings pre-refactor)
+            playerVelocity.y += Physics.gravity.y * Time.deltaTime;
+            controller.Move(Time.deltaTime * playerVelocity);
         }
-
-        if (controller.isGrounded)
-        {
-            playerVelocity.y = 0f;
-        }
-
-        if (bJumpRequested)
-	{
-            playerVelocity.y += ComputeJumpScalar(jumpHeight);
-            bJumpRequested = false;
-	}
-
-        // Apply Gravity to this Soldier. (This Rigidbody is marked Kinematic; preserving original settings pre-refactor)
-        playerVelocity.y += Physics.gravity.y * Time.deltaTime;
-        controller.Move(Time.deltaTime * playerVelocity);
     }
 
     protected override void Movement(CallbackContext ctx)
