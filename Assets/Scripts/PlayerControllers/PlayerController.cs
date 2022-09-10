@@ -182,12 +182,14 @@ public abstract class PlayerController : MonoBehaviour
     {
         active = true;
         FindObjectOfType<Camera>().GetComponent<CameraFollow>().target = this.gameObject.transform;
+        GetComponentInChildren<SpriteRenderer>().enabled = true;
         //canvas.gameObject.SetActive(true);
     }
 
     public void Deactivate()
     {
         active = false;
+        GetComponentInChildren<SpriteRenderer>().enabled = false;
         //canvas.gameObject.SetActive(false);
     }
 
