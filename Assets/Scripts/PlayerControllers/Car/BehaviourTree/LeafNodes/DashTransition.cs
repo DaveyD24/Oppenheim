@@ -34,6 +34,12 @@ public class DashTransition : Node
 
         startAngle = Blackboard.BodyTransform.localRotation;
 
+        if (!bIsEnd)
+        {
+            Blackboard.Rb.velocity = Vector3.zero;
+            Blackboard.Motor = 0;
+        }
+
         base.Init();
     }
 

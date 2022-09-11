@@ -89,6 +89,18 @@ public class CarController : PlayerController
         }
     }
 
+    /// <summary>
+    /// checks if any part of the car is tounching the ground.
+    /// </summary>
+    /// <returns>if the car is tounching the ground or not.</returns>
+    public override bool IsGrounded()
+    {
+        Vector3 centerOffset = transform.position - (transform.up * rayCenterOffset);
+        Debug.DrawRay(transform.position - (transform.up * rayCenterOffset), Vector3.down * 5, Color.black);
+
+        return Physics.Raycast(centerOffset, Vector3.down, distCheckForGround);
+    }
+
     protected override void Start()
     {
         base.Start();
@@ -156,6 +168,13 @@ public class CarController : PlayerController
         }
     }
 
+    protected override void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.green;
+        Gizmos.DrawCube(DashOffset + transform.position, Vector3.one * .25f);
+        Gizmos.color = Color.red;
+    }
+
     /// <summary>
     /// Set the values for the wind particles to be based on the cars speed.
     /// </summary>
@@ -164,7 +183,7 @@ public class CarController : PlayerController
         ParticleSystem.EmissionModule particleEmission = windParticles.emission;
         ParticleSystem.MainModule mainSettings = windParticles.main;
         float velocityDamped = Rb.velocity.magnitude * particelSpeedMultiplier;
-        if(BIsDash)
+        if (BIsDash)
         {
             velocityDamped *= 5;
         }
@@ -305,18 +324,6 @@ public class CarController : PlayerController
         return true;
     }
 
-    /// <summary>
-    /// checks if any part of the car is tounching the ground.
-    /// </summary>
-    /// <returns>if the car is tounching the ground or not.</returns>
-    public override bool IsGrounded()
-    {
-        Vector3 centerOffset = transform.position - (transform.up * rayCenterOffset);
-        Debug.DrawRay(transform.position - (transform.up * rayCenterOffset), Vector3.down * 5, Color.black);
-
-        return Physics.Raycast(centerOffset, Vector3.down, distCheckForGround);
-    }
-
 #if UNITY_EDITOR
     private void OnGUI()
     {
@@ -331,13 +338,6 @@ public class CarController : PlayerController
         return Rb.velocity.magnitude * 3.6f;
     }
 
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.green;
-        Gizmos.DrawCube(DashOffset + transform.position, Vector3.one*.25f);
-        Gizmos.color = Color.red;
-    }
-
     private void BuildDashTree()
     {
         DashTransition dashInit = new DashTransition(this, -1); // play the animation to transition to dashing
@@ -349,59 +349,62 @@ public class CarController : PlayerController
 
     private void ApplyIndicator()
     {
-        if (inputAmount.x > 0.5f)
+        if (Active)
         {
-            // flick on and off the right indicator
-            if (CarMaterials[5] != indicatorMat)
+            if (inputAmount.x > 0.5f)
             {
-                CarMaterials[5] = indicatorMat;
-                BodyMeshRenderer.sharedMaterials = CarMaterials;
-            }
-            else if (CarMaterials[5] != normalLightMat)
-            {
-                CarMaterials[5] = normalLightMat;
-                BodyMeshRenderer.sharedMaterials = CarMaterials;
-            }
+                // flick on and off the right indicator
+                if (CarMaterials[5] != indicatorMat)
+                {
+                    CarMaterials[5] = indicatorMat;
+                    BodyMeshRenderer.sharedMaterials = CarMaterials;
+                }
+                else if (CarMaterials[5] != normalLightMat)
+                {
+                    CarMaterials[5] = normalLightMat;
+                    BodyMeshRenderer.sharedMaterials = CarMaterials;
+                }
 
-            if (CarMaterials[3] != normalLightMat)
-            {
-                CarMaterials[3] = normalLightMat;
-                BodyMeshRenderer.sharedMaterials = CarMaterials;
+                if (CarMaterials[3] != normalLightMat)
+                {
+                    CarMaterials[3] = normalLightMat;
+                    BodyMeshRenderer.sharedMaterials = CarMaterials;
+                }
             }
-        }
-        else if (inputAmount.x < -0.5f)
-        {
-            // flick on and off the left indicator
-            if (CarMaterials[3] != indicatorMat)
+            else if (inputAmount.x < -0.5f)
             {
-                CarMaterials[3] = indicatorMat;
-                BodyMeshRenderer.sharedMaterials = CarMaterials;
-            }
-            else if (CarMaterials[3] != normalLightMat)
-            {
-                CarMaterials[3] = normalLightMat;
-                BodyMeshRenderer.sharedMaterials = CarMaterials;
-            }
+                // flick on and off the left indicator
+                if (CarMaterials[3] != indicatorMat)
+                {
+                    CarMaterials[3] = indicatorMat;
+                    BodyMeshRenderer.sharedMaterials = CarMaterials;
+                }
+                else if (CarMaterials[3] != normalLightMat)
+                {
+                    CarMaterials[3] = normalLightMat;
+                    BodyMeshRenderer.sharedMaterials = CarMaterials;
+                }
 
-            if (CarMaterials[5] != normalLightMat)
-            {
-                CarMaterials[5] = normalLightMat;
-                BodyMeshRenderer.sharedMaterials = CarMaterials;
+                if (CarMaterials[5] != normalLightMat)
+                {
+                    CarMaterials[5] = normalLightMat;
+                    BodyMeshRenderer.sharedMaterials = CarMaterials;
+                }
             }
-        }
-        else
-        {
-            // no indicator pressed
-            if (CarMaterials[5] != normalLightMat)
+            else
             {
-                CarMaterials[5] = normalLightMat;
-                BodyMeshRenderer.sharedMaterials = CarMaterials;
-            }
+                // no indicator pressed
+                if (CarMaterials[5] != normalLightMat)
+                {
+                    CarMaterials[5] = normalLightMat;
+                    BodyMeshRenderer.sharedMaterials = CarMaterials;
+                }
 
-            if (CarMaterials[3] != normalLightMat)
-            {
-                CarMaterials[3] = normalLightMat;
-                BodyMeshRenderer.sharedMaterials = CarMaterials;
+                if (CarMaterials[3] != normalLightMat)
+                {
+                    CarMaterials[3] = normalLightMat;
+                    BodyMeshRenderer.sharedMaterials = CarMaterials;
+                }
             }
         }
     }

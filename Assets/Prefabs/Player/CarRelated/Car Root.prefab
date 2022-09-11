@@ -54,7 +54,7 @@ WheelCollider:
     m_ExtremumValue: 1
     m_AsymptoteSlip: 0.5
     m_AsymptoteValue: 0.75
-    m_Stiffness: 1
+    m_Stiffness: 0.8
   m_SidewaysFriction:
     m_ExtremumSlip: 0.2
     m_ExtremumValue: 1
@@ -116,7 +116,7 @@ WheelCollider:
     m_ExtremumValue: 1
     m_AsymptoteSlip: 0.5
     m_AsymptoteValue: 0.75
-    m_Stiffness: 1
+    m_Stiffness: 0.8
   m_SidewaysFriction:
     m_ExtremumSlip: 0.2
     m_ExtremumValue: 1
@@ -197,7 +197,6 @@ GameObject:
   - component: {fileID: 5400117104511225698}
   - component: {fileID: 5583241534940801186}
   - component: {fileID: 5583241534940801180}
-  - component: {fileID: 2698335066128762238}
   m_Layer: 7
   m_Name: Car Root
   m_TagString: Player
@@ -258,7 +257,7 @@ MonoBehaviour:
   <DefaultPlayerData>k__BackingField: {fileID: 11400000, guid: edaf631a83ce6ea42aa9463c9228f767, type: 2}
   <Bouyancy>k__BackingField: 0
   <MovementSpeed>k__BackingField: 8000
-  <RotationSpeed>k__BackingField: 70
+  <RotationSpeed>k__BackingField: 55
   <Health>k__BackingField: 0
   <GroundCheckRadius>k__BackingField: 0
   axleInfos:
@@ -281,7 +280,7 @@ MonoBehaviour:
   antiRollTorque: 400
   rayCenterOffset: 0
   distCheckForGround: 2.5
-  maxFlippedWait: 0.9
+  maxFlippedWait: 0.75
   <DashSpeedCurve>k__BackingField:
     serializedVersion: 2
     m_Curve:
@@ -313,7 +312,7 @@ MonoBehaviour:
       inWeight: 0.33333334
       outWeight: 0.17636086
     - serializedVersion: 3
-      time: 1.5
+      time: 1.15
       value: 0
       inSlope: -4.455955
       outSlope: -4.455955
@@ -357,23 +356,10 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  <DashOffset>k__BackingField: {x: 0, y: 0, z: 0.4}
+  <DashOffset>k__BackingField: {x: 0, y: 0, z: 0}
   <DashBodyMaterial>k__BackingField: {fileID: -478035346441924844, guid: 87a4ac2e4093d9540b395e877017022b, type: 3}
   windParticles: {fileID: 5583241535451450344}
   particelSpeedMultiplier: 0.0025
---- !u!114 &2698335066128762238
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4736310480184235480}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 70cf9c8dc316c624fb9632d5450bdb02, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  <PlayerIdSO>k__BackingField: {fileID: 11400000, guid: a6ba5f247f9af9242bb3d3700fe06543, type: 2}
 --- !u!1 &5583241534065384394
 GameObject:
   m_ObjectHideFlags: 0
@@ -5763,7 +5749,7 @@ WheelCollider:
     m_ExtremumValue: 1
     m_AsymptoteSlip: 0.5
     m_AsymptoteValue: 0.75
-    m_Stiffness: 1
+    m_Stiffness: 0.8
   m_SidewaysFriction:
     m_ExtremumSlip: 0.2
     m_ExtremumValue: 1
