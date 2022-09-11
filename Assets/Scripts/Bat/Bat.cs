@@ -4,6 +4,13 @@ using static UnityEngine.InputSystem.InputAction;
 [RequireComponent(typeof(BatMovement), typeof(BatEvents))]
 public class Bat : PlayerController
 {
+#if UNITY_EDITOR
+	[Header("EDITOR ONLY")]
+	// True when on a testing scene. Sets this Bat to 'Active' so
+	// that it can be controlled in a scene without a SwitchManager.
+	[SerializeField] bool bIsStandalone;
+#endif
+
 	// Expose Protected Fields.
 	public Rigidbody Physics => Rb;
 
@@ -25,6 +32,11 @@ public class Bat : PlayerController
 		EventsComponent = GetComponent<BatEvents>();
 
 		BindMiscellaneousInputs();
+
+#if UNITY_EDITOR
+		if (bIsStandalone)
+			Activate();
+#endif
 	}
 
 	private void BindMiscellaneousInputs()
