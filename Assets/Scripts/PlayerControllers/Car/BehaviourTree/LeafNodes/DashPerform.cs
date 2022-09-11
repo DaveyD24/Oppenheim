@@ -29,10 +29,10 @@ public class DashPerform : Node
         if (Blackboard.BAnyWheelGrounded)
         {
             Blackboard.Rb.AddForceAtPosition(Blackboard.Rb.transform.forward * currDashSpeed, CalculateDashOffset(), ForceMode.Acceleration);
-            Blackboard.Rb.AddForce(Vector3.down * Blackboard.Weight); // add a downwards force so it does not flip
+            Blackboard.Rb.AddForceAtPosition(Vector3.down * Blackboard.Weight, CalculateDashOffset()); // add a downwards force so it does not flip
         }
 
-        // Blackboard.Motor = currDashSpeed;
+        Blackboard.Motor = currDashSpeed;
         dashCurrentTime += Time.fixedDeltaTime;
         CancleSidewaysVelocity();
 

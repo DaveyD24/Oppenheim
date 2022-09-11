@@ -34,11 +34,7 @@ public class DashTransition : Node
 
         startAngle = Blackboard.BodyTransform.localRotation;
 
-        if (!bIsEnd)
-        {
-            Blackboard.Rb.velocity = Vector3.zero;
-            Blackboard.Motor = 0;
-        }
+        Blackboard.Rb.angularVelocity = Vector3.zero;
 
         base.Init();
     }
@@ -47,7 +43,7 @@ public class DashTransition : Node
     {
         initTime += Time.deltaTime;
 
-        Vector3 currentAngle = startAngle.eulerAngles;
+        Vector3 currentAngle;
         currentAngle = new Vector3(startAngle.eulerAngles.x, startAngle.eulerAngles.y, startAngle.eulerAngles.z + (direction * Blackboard.TransitionRotCurve.Evaluate(initTime)));
 
         Blackboard.BodyTransform.localRotation = Quaternion.Euler(currentAngle);
@@ -77,6 +73,10 @@ public class DashTransition : Node
         else
         {
             Blackboard.CarMaterials[0] = Blackboard.DashBodyMaterial;
+
+            Blackboard.Rb.velocity = Vector3.zero;
+            Blackboard.Rb.angularVelocity = Vector3.zero;
+            Blackboard.Motor = 0;
         }
 
         Blackboard.BodyMeshRenderer.sharedMaterials = Blackboard.CarMaterials;
