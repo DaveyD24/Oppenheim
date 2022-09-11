@@ -8,7 +8,9 @@ namespace EventSystem
     public static class UIEvents
     {
         public static Action<int, float> OnFuelChanged { get; set; }
-        
+
+        public static Action<int, bool> OnCanvasStateChanged { get; set; }
+
         public static Action OnShowIntructions { get; set; }
 
         public static void FuelChanged(int playerID, float currentFuel)
@@ -21,6 +23,12 @@ namespace EventSystem
         {
             // if this Action has one or more methods assigned to it then run this method
             OnShowIntructions?.Invoke();
+        }
+
+        public static void CanvasStateChanged(int playerID, bool value)
+        {
+            // if this Action has one or more methods assigned to it then run this method
+            OnCanvasStateChanged?.Invoke(playerID, value);
         }
     }
 }

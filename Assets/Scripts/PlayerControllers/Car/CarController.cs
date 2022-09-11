@@ -123,7 +123,7 @@ public class CarController : PlayerController
     protected override void PerformAbility(InputAction.CallbackContext ctx)
     {
         // note buggs out and fails if the car's wheels currently are not moving at all, otherwise it is fine
-        if (!BIsDash && BAnyWheelGrounded && active)
+        if (!BIsDash && BAnyWheelGrounded && Active)
         {
             BIsDash = true;
         }
@@ -178,7 +178,7 @@ public class CarController : PlayerController
         Motor = MovementSpeed * inputAmount.y;
         float steering = BIsDash ? 0 : RotationSpeed * inputAmount.x;
 
-        if (active)
+        if (Active)
         {
             PerformDash();
         }
@@ -186,13 +186,13 @@ public class CarController : PlayerController
         int numWheelGrounded = 0;
         foreach (AxleInfo axleInfo in axleInfos)
         {
-            if (axleInfo.Steering && active)
+            if (axleInfo.Steering && Active)
             {
                 axleInfo.LeftWheel.steerAngle = steering;
                 axleInfo.RightWheel.steerAngle = steering;
             }
 
-            if (axleInfo.Motor && active)
+            if (axleInfo.Motor && Active)
             {
                 axleInfo.LeftWheel.motorTorque = Motor;
                 axleInfo.RightWheel.motorTorque = Motor;
@@ -309,7 +309,7 @@ public class CarController : PlayerController
     /// checks if any part of the car is tounching the ground.
     /// </summary>
     /// <returns>if the car is tounching the ground or not.</returns>
-    private bool IsGrounded()
+    public override bool IsGrounded()
     {
         Vector3 centerOffset = transform.position - (transform.up * rayCenterOffset);
         Debug.DrawRay(transform.position - (transform.up * rayCenterOffset), Vector3.down * 5, Color.black);

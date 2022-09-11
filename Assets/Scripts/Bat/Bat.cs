@@ -6,9 +6,12 @@ public class Bat : PlayerController
 {
 	// Expose Protected Fields.
 	public Rigidbody Physics => Rb;
+
 	public float GroundSpeed => MovementSpeed;
+
 	public float YawSpeed => RotationSpeed;
-	//public string Food => FoodTag;
+
+	// public string Food => FoodTag;
 	public BatEvents Events => EventsComponent;
 
 	BatMovement MovementComponent;
@@ -24,7 +27,7 @@ public class Bat : PlayerController
 		BindMiscellaneousInputs();
 	}
 
-    void BindMiscellaneousInputs()
+	private void BindMiscellaneousInputs()
 	{
 		Inputs.Player.Move.canceled += (CallbackContext Context) =>
 		{
@@ -47,20 +50,19 @@ public class Bat : PlayerController
 		};
 	}
 
+	public void AdjustEnergy(float amount)
+	{
+		AdjustFuelValue(amount);
+	}
+
+	public void AdjustHealth(float amount)
+	{
+		// Can't modify Health because it's a protected value with no set method.
+	}
+
 	protected override void Movement(CallbackContext Context) => MovementComponent.MovementBinding(ref Context);
 
 	protected override void Jump(CallbackContext Context) => MovementComponent.JumpBinding(ref Context);
 
 	protected override void PerformAbility(CallbackContext ctx) => MovementComponent.AbilityBinding();
-
-    public void AdjustEnergy(float Amount)
-	{
-		AdjustFuelValue(Amount);
-	}
-
-    public void AdjustHealth(float Amount)
-	{
-		// Can't modify Health because it's a protected value with no set method.
-	}
-
 }

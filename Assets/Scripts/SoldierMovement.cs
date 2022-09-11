@@ -1,150 +1,96 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using EventSystem;
+using UnityEngine;
+using static global::BatMathematics;
+using static UnityEngine.InputSystem.InputAction;
 
-public class SoldierMovement : MonoBehaviour
+public class SoldierMovement : PlayerController
 {
-    private Vector3 startPos;
-    private Quaternion startRot;
-    //public float Rigidbody3D rb;
-    public CharacterController controller;
-    public Transform bulletSpawnPoint;
-    public GameObject bulletPrefab;
-    public float bulletSpeed = 10;
-    public float speed = 6f;
-
-    [SerializeField] private GameObject activePlayer;
-    [SerializeField] private GameObject oppenheim;
-    SwitchManager switchManager;
     private Vector3 playerVelocity;
-    private bool groundedPlayer;
-    private float playerSpeed = 2.0f;
-    private float jumpHeight = 1f;
-    private float gravityValue = -9.81f;
-    private float followSpeed = 0.001f;
-    float groundHeight = 0.580005f;
+    private Vector3 move;
+    [SerializeField] private float jumpHeight = 3f;
 
-    [SerializeField] Canvas canvas;
-    bool active = false;
-    bool tooClose = false;
+    [field: Header("Soldier Movement")]
+    [field: SerializeField] public Transform BulletSpawnPoint { get; set; }
 
-    private void Start()
+    [field: SerializeField] public GameObject BulletPrefab { get; set; }
+
+    [field: SerializeField] public float BulletSpeed { get; set; } = 10;
+
+    protected override void Start()
     {
-        switchManager = FindObjectOfType<SwitchManager>();
-        startPos = transform.position;
-        startRot = transform.rotation;
+        base.Start();
     }
 
-    private void OnEnable()
+    protected override void OnEnable()
     {
-        UIEvents.OnShowIntructions += ShowInfo;
-        GameEvents.OnDie += Respawn;
+        base.OnEnable();
     }
 
-    private void Respawn()
+    protected override void OnDisable()
     {
-        transform.position = startPos;
-        transform.rotation = startRot;
-        playerVelocity = Vector3.zero;
+        base.OnDisable();
     }
 
-    private void ShowInfo()
+    protected override void Update()
     {
-        oppenheim.SetActive(true);
-    }
+        base.Update();
 
-    private void OnDisable()
-    {
-        UIEvents.OnShowIntructions -= ShowInfo;
-        GameEvents.OnDie -= Respawn;
-    }
-
-    private void Update()
-    {
-        if (transform.position.y < 2.0f)
+        // Rotate towards Movement.
+        Vector3 faceDir = move;
+        faceDir.y = 0;
+        if (faceDir != Vector3.zero)
         {
-            GameEvents.Die();
-        }
-
-        activePlayer = switchManager.GetActivePlayer();
-        float distance = Vector3.Distance(this.transform.position, activePlayer.transform.position);
-        if (distance < 2.0f)
-        {
-            tooClose = true;
-        }
-        else
-        {
-            tooClose = false;
-        }
-
-
-        if (active)
-        {
-            groundedPlayer = controller.isGrounded;
-            if (groundedPlayer && playerVelocity.y < 0)
-            {
-                playerVelocity.y = 0f;
-            }
-
-            Vector3 move = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-            controller.Move(move * Time.deltaTime * playerSpeed);
-
-            if (move != Vector3.zero)
-            {
-                gameObject.transform.forward = move;
-            }
-
-            // Changes the height position of the player..
-            if (Input.GetButtonDown("Jump") && groundedPlayer)
-            {
-                playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityValue);
-            }
-
-            groundedPlayer = controller.isGrounded;
-            if (groundedPlayer && playerVelocity.y < 0)
-            {
-                playerVelocity.y = 0f;
-            }
-
-            playerVelocity.y += gravityValue * Time.deltaTime;
-            controller.Move(playerVelocity * Time.deltaTime);
-
-            if (Input.GetKeyDown(KeyCode.X))
-            {
-                var bullet = Instantiate(bulletPrefab, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
-                bullet.GetComponent<Rigidbody>().velocity = bulletSpawnPoint.forward * bulletSpeed;
-            }
-        }
-        else
-        {
-            if (tooClose)
-            {
-                Vector3 desiredPosition = activePlayer.transform.position;
-                Vector3 smoothedPosition = Vector3.Lerp(this.transform.position, desiredPosition, followSpeed);
-                Vector3 flattenedPosition = new Vector3(smoothedPosition.x, groundHeight, smoothedPosition.z);
-                this.transform.position = flattenedPosition;
-            }
+            AlignTransformToMovement(transform, faceDir, RotationSpeed, Vector3.up);
         }
     }
 
-    public void Activate()
+    protected override void Movement(CallbackContext ctx)
     {
-        active = true;
-        canvas.gameObject.SetActive(true);
+        if (!Active)
+        {
+            return;
+        }
+
+        move = ctx.ReadValue<Vector2>();
+
+        // Convert 2D to 3D movement.
+        move.z = move.y;
+        move.y = 0;
+        move.Normalize();
     }
 
-    public void Deactivate()
+    protected override void Jump(CallbackContext ctx)
     {
-        active = false;
-        canvas.gameObject.SetActive(false);
+        if (!Active)
+        {
+            return;
+        }
+
+        // This check is original and untouched.
+        if (IsGrounded())
+        {
+            // Original: Jump with a modified kinematic equation.
+            Rb.velocity += new Vector3(0f, Mathf.Sqrt(jumpHeight * -3f * Physics.gravity.y), 0f);
+
+            // If we were clinging onto something, we want to jump in the opposite direction
+            // as if the Monkey is jumping off the wall.
+            Debug.Log("solider jump");
+        }
     }
 
-    public bool isActive()
+    protected override void PerformAbility(CallbackContext ctx)
     {
-        return active;
+        if (!Active)
+        {
+            return;
+        }
+
+        GameObject bullet = Instantiate(BulletPrefab, BulletSpawnPoint.position, BulletSpawnPoint.rotation);
+        bullet.GetComponent<Rigidbody>().velocity = BulletSpawnPoint.forward * BulletSpeed;
     }
 
-
-
+    private void FixedUpdate()
+    {
+        Rb.MovePosition(Rb.position + (MovementSpeed * Time.fixedDeltaTime * move));
+    }
 }

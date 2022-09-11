@@ -5,21 +5,42 @@ using UnityEngine;
 public class SwitchManager : MonoBehaviour
 {
 
-    [SerializeField] public SoldierMovement red;
-    [SerializeField] public Bat blue;
-    [SerializeField] public MonkeyController green;
-    [SerializeField] public PlayerController yellow; // car
+    [field: SerializeField] public PlayerController Soldier { get; private set; }
 
+    [field: SerializeField] public PlayerController Bat { get; private set; }
 
-    // Start is called before the first frame update
-    void Start()
+    [field: SerializeField] public PlayerController Monkey { get; private set; }
+
+    [field: SerializeField] public PlayerController Car { get; private set; }
+
+    public GameObject GetActivePlayer()
     {
-        
+        if (Soldier.IsActive())
+        {
+            return Soldier.gameObject;
+        }
+
+        if (Bat.IsActive())
+        {
+            return Bat.gameObject;
+        }
+
+        if (Monkey.IsActive())
+        {
+            return Monkey.gameObject;
+        }
+
+        if (Car.IsActive())
+        {
+            return Car.gameObject;
+        }
+
+        return null;
     }
 
     private void Awake()
     {
-        green.Activate();
+        Monkey.Activate();
     }
 
     // Update is called once per frame
@@ -36,48 +57,33 @@ public class SwitchManager : MonoBehaviour
     private void RotatePlayer()
     {
         // bygr
-        if (blue.isActive())
+        if (Bat.IsActive())
         {
             DeactivateAll();
-            yellow.Activate();
+            Car.Activate();
         }
-        else if (yellow.isActive())
+        else if (Car.IsActive())
         {
             DeactivateAll();
-            green.Activate();
+            Monkey.Activate();
         }
-        else if (green.isActive())
+        else if (Monkey.IsActive())
         {
             DeactivateAll();
-            red.Activate();
+            Soldier.Activate();
         }
-        else if (red.isActive())
+        else if (Soldier.IsActive())
         {
             DeactivateAll();
-            blue.Activate();
+            Bat.Activate();
         }
-
     }
 
     private void DeactivateAll()
     {
-        red.Deactivate();
-        blue.Deactivate();
-        green.Deactivate();
-        yellow.Deactivate();
-    }
-
-    public GameObject GetActivePlayer()
-    {
-        if (red.isActive())
-            return red.gameObject;
-        if (blue.isActive())
-            return blue.gameObject;
-        if (green.isActive())
-            return green.gameObject;
-        if (yellow.isActive())
-            return yellow.gameObject;
-
-        return null;
+        Soldier.Deactivate();
+        Bat.Deactivate();
+        Monkey.Deactivate();
+        Car.Deactivate();
     }
 }
