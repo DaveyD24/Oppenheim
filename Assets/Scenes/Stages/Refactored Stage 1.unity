@@ -41878,13 +41878,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7bb143e734f0c664194800fd65631dd0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  groundCheckPosition: {x: 0, y: 0, z: 0}
   <PlayerIdSO>k__BackingField: {fileID: 11400000, guid: 1e6de6128901ea94a88896b92e3bf310, type: 2}
   <DefaultPlayerData>k__BackingField: {fileID: 11400000, guid: edaf631a83ce6ea42aa9463c9228f767, type: 2}
   <Bouyancy>k__BackingField: 0
   <MovementSpeed>k__BackingField: 6
   <RotationSpeed>k__BackingField: 5
   <Health>k__BackingField: 0
+  groundCheckPosition: {x: 0, y: 0, z: 0}
   <GroundCheckRadius>k__BackingField: 0.3
   jumpHeight: 1
   <BulletSpawnPoint>k__BackingField: {fileID: 620978169}
@@ -68332,13 +68332,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fcaa7093491068a42b1584d4e7d2d01b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  groundCheckPosition: {x: 0, y: 0, z: 0}
   <PlayerIdSO>k__BackingField: {fileID: 11400000, guid: 0aca3aa46054d22439aa2cb351a6753d, type: 2}
   <DefaultPlayerData>k__BackingField: {fileID: 11400000, guid: edaf631a83ce6ea42aa9463c9228f767, type: 2}
   <Bouyancy>k__BackingField: 0
   <MovementSpeed>k__BackingField: 5
   <RotationSpeed>k__BackingField: 10
   <Health>k__BackingField: 0
+  groundCheckPosition: {x: 0, y: -0.5, z: 0}
   <GroundCheckRadius>k__BackingField: 0.3
   jumpWaitTime: 0.1
 --- !u!54 &1856106942
@@ -80252,13 +80252,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7bb143e734f0c664194800fd65631dd0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  groundCheckPosition: {x: 0, y: 0, z: 0}
   <PlayerIdSO>k__BackingField: {fileID: 11400000, guid: 1e6de6128901ea94a88896b92e3bf310, type: 2}
   <DefaultPlayerData>k__BackingField: {fileID: 11400000, guid: edaf631a83ce6ea42aa9463c9228f767, type: 2}
   <Bouyancy>k__BackingField: 0
   <MovementSpeed>k__BackingField: 6
   <RotationSpeed>k__BackingField: 10
   <Health>k__BackingField: 0
+  groundCheckPosition: {x: 0, y: 0, z: 0}
   <GroundCheckRadius>k__BackingField: 0.15
   jumpHeight: 3
   <BulletSpawnPoint>k__BackingField: {fileID: 0}

@@ -7,9 +7,13 @@
 #endif
 
 // Enables Yaw control with the Horizontal Axis of InputActions.Move.
-#define USE_MOVE_YAW
+//#define USE_MOVE_YAW
 // Enables Yaw control with the Horizontal Axis of InputActions.Look.
-//#define USE_LOOK_YAW
+#define USE_LOOK_YAW
+
+#if !USE_MOVE_YAW && !USE_LOOK_YAW
+#error NO YAW INPUT IS DEFINED!
+#endif
 
 using UnityEngine;
 using static global::BatMathematics;
@@ -23,11 +27,11 @@ public class BatMovement : MonoBehaviour
 	// Player Controller values will be used for ground movement.
 
 	[Header("Airborne Settings")]
-	[SerializeField] float takeoffAcceleration = 850f;
-	[SerializeField] float jumpHeight = 5f;
+	[SerializeField] float TakeoffAcceleration = 850f;
+	[SerializeField] float JumpHeight = 5f;
 
-	[SerializeField] float secondsOfPitchFlight = 1f;
-	float remainingSeconds;
+	[SerializeField] float SecondsOfPitchFlight = 1f;
+	float RemainingSeconds;
 
 	[SerializeField] float YawStrength = 2f;
 	[SerializeField] float PitchStrength = 1f;
@@ -213,11 +217,11 @@ public class BatMovement : MonoBehaviour
 
 			if (Throw > .01f)
 			{
-				Bat.Physics.velocity += ComputeJumpVelocity(transform.up, jumpHeight);
+				Bat.Physics.velocity += ComputeJumpVelocity(transform.up, JumpHeight);
 			}
 
 			// Fact - Every time the Bat jumps, it has to take off from the Ground.
-			remainingSeconds = secondsOfPitchFlight;
+			RemainingSeconds = SecondsOfPitchFlight;
 		}
 	}
 
@@ -260,7 +264,7 @@ public class BatMovement : MonoBehaviour
 	void StartGliding()
 	{
 		// F = ma.
-		Bat.Physics.AddForce(Bat.Physics.mass * takeoffAcceleration * transform.forward);
+		Bat.Physics.AddForce(Bat.Physics.mass * TakeoffAcceleration * transform.forward);
 
 		bHasGlidedThisJump = true;
 
@@ -272,7 +276,7 @@ public class BatMovement : MonoBehaviour
 	void ThrowPitch(float Throw)
 	{
 		// The Bat is too tired to Pitch upwards.
-		if (remainingSeconds <= 0f)
+		if (RemainingSeconds <= 0f)
 		{
 			PitchDirection = 0f;
 			return;
@@ -284,7 +288,7 @@ public class BatMovement : MonoBehaviour
 			PitchDirection = PitchStrength;
 
 			// Deduct time only when Pitching upwards.
-			remainingSeconds -= Time.deltaTime;
+			RemainingSeconds -= Time.deltaTime;
 		}
 		else if (Throw > .3f)
 		{
@@ -339,7 +343,11 @@ public class BatMovement : MonoBehaviour
 
 	void Realign()
 	{
-		if (Vector3.Dot(transform.up, Vector3.up) < .4f)
+		const float kUpSensitivity = .4f;
+		float Dot = Vector3.Dot(transform.up, Vector3.up);
+
+		// If the Bat is not 'upright' and the Bat is on the Ground.
+		if ((Dot <= kUpSensitivity) && Bat.IsGrounded())
 		{
 			transform.rotation = Quaternion.FromToRotation(transform.up, Vector3.up) * transform.rotation;
 

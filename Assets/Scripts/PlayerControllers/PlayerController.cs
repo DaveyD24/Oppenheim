@@ -23,9 +23,6 @@ public abstract class PlayerController : MonoBehaviour
 
     public float Weight { get; private set; }
 
-    // Not a Property: Use GetGroundCheckPosition() instead.
-    [field: SerializeField] protected Vector3 groundCheckPosition;
-
     [field: Header("Inherited from Player Controller")]
 
     // A unique object each scene object gets assigned, being largly used to store the players id
@@ -40,6 +37,9 @@ public abstract class PlayerController : MonoBehaviour
     [field: SerializeField] protected float RotationSpeed { get; private set; }
 
     [field: SerializeField] protected float Health { get; private set; }
+
+    // Not a Property, is Private: Use GetGroundCheckPosition() instead.
+    [field: SerializeField] Vector3 groundCheckPosition;
 
     [field: SerializeField] protected float GroundCheckRadius { get; private set; }
 
@@ -68,7 +68,7 @@ public abstract class PlayerController : MonoBehaviour
         return numberOfValidContacts > 0;
     }
 
-    public Vector3 GetGroundCheckPosition()
+    public virtual Vector3 GetGroundCheckPosition()
     {
         return transform.position + groundCheckPosition;
     }
@@ -173,7 +173,10 @@ public abstract class PlayerController : MonoBehaviour
 
     protected virtual void OnDrawGizmosSelected()
     {
-        Gizmos.color = Color.cyan;
+        if (!Rb)
+            Rb = GetComponent<Rigidbody>();
+
+        Gizmos.color = new Color(0, 1, 1, .25f);
         Gizmos.DrawSphere(GetGroundCheckPosition(), GroundCheckRadius);
     }
 
