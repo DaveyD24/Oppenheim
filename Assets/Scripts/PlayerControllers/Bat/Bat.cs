@@ -65,4 +65,15 @@ public class Bat : PlayerController
 	protected override void Jump(CallbackContext Context) => MovementComponent.JumpBinding(ref Context);
 
 	protected override void PerformAbility(CallbackContext ctx) => MovementComponent.AbilityBinding();
+
+	public override Vector3 GetGroundCheckPosition()
+	{
+		// Fix Global Down as a Local direction.
+		Vector3 WorldToLocalDown = transform.InverseTransformDirection(-transform.up);
+
+		// Set the origin of the Ground Check to the centre of the Bat.
+		WorldToLocalDown += Rb.centerOfMass;
+
+		return transform.position + WorldToLocalDown;
+	}
 }
