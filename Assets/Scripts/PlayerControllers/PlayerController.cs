@@ -97,18 +97,6 @@ public abstract class PlayerController : MonoBehaviour
 
     protected abstract void PerformAbility(InputAction.CallbackContext ctx);
 
-    protected void NextLineUI(InputAction.CallbackContext ctx)
-    {
-        UIEvents.NextLine();
-    }
-
-    protected void SkipTutUI(InputAction.CallbackContext ctx)
-    {
-        UIEvents.SkipIntro();
-    }
-
-
-
     protected void AdjustFuelValue(float amount)
     {
         CurrentFuel += amount;
@@ -165,9 +153,6 @@ public abstract class PlayerController : MonoBehaviour
         // Inputs.Player.Ability.canceled += PerformAbility;
         Inputs.Player.Jump.performed += Jump;
 
-        Inputs.Player.NextLine.performed += NextLineUI;
-        Inputs.Player.SkipTut.performed += SkipTutUI;
-
         // Inputs.Player.Jump.canceled += Jump;
         Inputs.Player.Enable();
 
@@ -178,14 +163,9 @@ public abstract class PlayerController : MonoBehaviour
 
     protected virtual void OnDisable()
     {
-        Inputs = new InputActions();
-
         Inputs.Player.Move.performed -= Movement;
         Inputs.Player.Ability.performed -= PerformAbility;
         Inputs.Player.Jump.performed -= Jump;
-
-        Inputs.Player.NextLine.performed -= NextLineUI;
-        Inputs.Player.SkipTut.performed -= SkipTutUI;
 
         Inputs.Player.Disable();
 

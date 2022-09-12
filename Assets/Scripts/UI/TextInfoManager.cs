@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using EventSystem;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class TextInfoManager : MonoBehaviour
 {
+    private InputActions Inputs;
+
     private bool isComplete = false;
     [Header("Annoucements")]
     [SerializeField] private List<string> annoucementTxt = new List<string>();
@@ -83,7 +86,12 @@ public class TextInfoManager : MonoBehaviour
         }
     }
 
-    private void SkipIntro()
+    private void KeyNextLine(InputAction.CallbackContext ctx)
+    {
+        NextLine();
+    }
+
+    private void SkipIntro(InputAction.CallbackContext ctx)
     {
         if (!isComplete)
         {
@@ -98,13 +106,19 @@ public class TextInfoManager : MonoBehaviour
 
     private void OnEnable()
     {
-        UIEvents.OnNextLine += NextLine;
-        UIEvents.OnSkipIntro += SkipIntro;
+        Inputs = new InputActions();
+
+        Inputs.Player.NextLine.performed += KeyNextLine;
+        Inputs.Player.SkipTut.performed += SkipIntro;
+
+        Inputs.Player.Enable();
     }
 
     private void OnDisable()
     {
-        UIEvents.OnNextLine -= NextLine;
-        UIEvents.OnSkipIntro -= SkipIntro;
+        Inputs.Player.NextLine.performed -= KeyNextLine;
+        Inputs.Player.SkipTut.performed -= SkipIntro;
+
+        Inputs.Player.Disable();
     }
 }
