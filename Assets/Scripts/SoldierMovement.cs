@@ -40,7 +40,30 @@ public class SoldierMovement : PlayerController
         faceDir.y = 0;
         if (faceDir != Vector3.zero)
         {
-            AlignTransformToMovement(transform, faceDir, RotationSpeed, Vector3.up);
+            // Move the Soldier in XZ space.
+            controller.Move(MovementSpeed * Time.deltaTime * move);
+
+            // Rotate towards Movement.
+            Vector3 faceDir = move;
+            if (faceDir != Vector3.zero)
+            {
+                AlignTransformToMovement(transform, faceDir, RotationSpeed, Vector3.up);
+            }
+
+            if (controller.isGrounded)
+            {
+                playerVelocity.y = 0f;
+            }
+
+            if (bJumpRequested)
+            {
+                playerVelocity.y += ComputeJumpScalar(jumpHeight);
+                bJumpRequested = false;
+            }
+
+            // Apply Gravity to this Soldier. (This Rigidbody is marked Kinematic; preserving original settings pre-refactor)
+            playerVelocity.y += Physics.gravity.y * Time.deltaTime;
+            controller.Move(Time.deltaTime * playerVelocity);
         }
     }
 

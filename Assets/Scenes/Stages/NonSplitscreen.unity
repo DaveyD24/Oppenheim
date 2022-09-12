@@ -28837,10 +28837,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab12b6ac92d6f5e418693579cf9789e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <Soldier>k__BackingField: {fileID: 1593078774}
-  <Bat>k__BackingField: {fileID: 1476296714}
-  <Monkey>k__BackingField: {fileID: 1475211139}
-  <Car>k__BackingField: {fileID: 1882386880}
+  soldier: {fileID: 1593078774}
+  bat: {fileID: 1476296714}
+  monkey: {fileID: 1475211139}
+  car: {fileID: 1882386880}
 --- !u!4 &795354611
 Transform:
   m_ObjectHideFlags: 0
@@ -53073,18 +53073,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1139983328076921930, guid: 1efbb2aa03f53084d84cfb4d1772d502, type: 3}
-      propertyPath: m_RootOrder
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 1417295329194830891, guid: 1efbb2aa03f53084d84cfb4d1772d502, type: 3}
-      propertyPath: m_RootOrder
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 1976258091190683403, guid: 1efbb2aa03f53084d84cfb4d1772d502, type: 3}
-      propertyPath: m_RootOrder
-      value: 10
-      objectReference: {fileID: 0}
     - target: {fileID: 4736310480184235480, guid: 1efbb2aa03f53084d84cfb4d1772d502, type: 3}
       propertyPath: m_Name
       value: Car Root (1)
@@ -53192,10 +53180,6 @@ PrefabInstance:
     - target: {fileID: 5583241534940801185, guid: 1efbb2aa03f53084d84cfb4d1772d502, type: 3}
       propertyPath: m_ConnectedAnchor.z
       value: -0.3140413
-      objectReference: {fileID: 0}
-    - target: {fileID: 7955736023765178542, guid: 1efbb2aa03f53084d84cfb4d1772d502, type: 3}
-      propertyPath: m_RootOrder
-      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1efbb2aa03f53084d84cfb4d1772d502, type: 3}
@@ -53937,15 +53921,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fcaa7093491068a42b1584d4e7d2d01b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Oppenheim: {fileID: 0}
   <PlayerIdSO>k__BackingField: {fileID: 11400000, guid: 0aca3aa46054d22439aa2cb351a6753d, type: 2}
   <DefaultPlayerData>k__BackingField: {fileID: 11400000, guid: edaf631a83ce6ea42aa9463c9228f767, type: 2}
   <Bouyancy>k__BackingField: 0
   <MovementSpeed>k__BackingField: 5
   <RotationSpeed>k__BackingField: 10
   <Health>k__BackingField: 0
-  groundCheckPosition: {x: 0, y: 0, z: 0}
+  GroundCheckPosition: {x: 0, y: -0.54, z: 0}
   <GroundCheckRadius>k__BackingField: 0.3
-  jumpWaitTime: 1
+  active: 1
+  isFarEnoughAway: 0
+  canvas: {fileID: 0}
 --- !u!114 &1475211140
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -58345,18 +58332,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7bb143e734f0c664194800fd65631dd0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Oppenheim: {fileID: 0}
   <PlayerIdSO>k__BackingField: {fileID: 11400000, guid: 1e6de6128901ea94a88896b92e3bf310, type: 2}
   <DefaultPlayerData>k__BackingField: {fileID: 11400000, guid: edaf631a83ce6ea42aa9463c9228f767, type: 2}
   <Bouyancy>k__BackingField: 0
   <MovementSpeed>k__BackingField: 6
   <RotationSpeed>k__BackingField: 10
   <Health>k__BackingField: 0
-  groundCheckPosition: {x: 0, y: 0, z: 0}
+  GroundCheckPosition: {x: 0, y: -1.25, z: 0}
   <GroundCheckRadius>k__BackingField: 0.15
-  jumpHeight: 3
-  <BulletSpawnPoint>k__BackingField: {fileID: 0}
-  <BulletPrefab>k__BackingField: {fileID: 0}
-  <BulletSpeed>k__BackingField: 10
+  active: 0
+  isFarEnoughAway: 0
+  canvas: {fileID: 0}
+  bulletSpawnPoint: {fileID: 1264531830}
+  bulletPrefab: {fileID: 1859860186272881942, guid: c152a41615db67940a047f2c85d5e16a, type: 3}
+  bulletSpeed: 10
 --- !u!4 &1593078775
 Transform:
   m_ObjectHideFlags: 0
@@ -60034,45 +60024,18 @@ MonoBehaviour:
   ScrollSensitivity: 0
   DefaultGimbalRotation: {x: 0, y: 27.75, z: 0}
   DefaultCameraRotation: {x: 29.17, y: 0, z: 0}
-  OrbitSensitivity: 1
-  PreviousMouseDragPosition: {x: 0, y: 0}
-  GimbalRotationInherited: {x: 0, y: 0, z: 0}
-  CameraRotationInherited: {x: 0, y: 0, z: 0}
-  PreviousMousePanPosition: {x: 0, y: 0}
-  OriginalTargetOffset: {x: 0, y: 0, z: 0}
   bInvertX: 0
   bInvertY: 0
   bInvertZ: 0
   OnlyCollideWith:
+    serializedVersion: 2
     m_Bits: 0
   PositionalLagStrength: 0.2
   RotationalLagStrength: 0.2
-  TargetPosition: {x: 0, y: 0, z: 0}
-  TargetRotation: {x: 0, y: 0, z: 0, w: 0}
   bUseCustomProjection: 0
   Plane: {fileID: 0}
   NearClipDistance: 0
   DistanceLimit: 0
-  DefaultProjection:
-    e00: 0
-    e01: 0
-    e02: 0
-    e03: 0
-    e10: 0
-    e11: 0
-    e12: 0
-    e13: 0
-    e20: 0
-    e21: 0
-    e22: 0
-    e23: 0
-    e30: 0
-    e31: 0
-    e32: 0
-    e33: 0
-  bCamFollow: 1
-  camRotSpeed: 100
-  zoomSpeed: 100
 --- !u!1 &1635226638
 GameObject:
   m_ObjectHideFlags: 0
@@ -68334,7 +68297,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   assigedPlayerID: {fileID: 11400000, guid: a6ba5f247f9af9242bb3d3700fe06543, type: 2}
-  oppenheim: {fileID: 0}
+  fuelSlider: {fileID: 1130910578}
 --- !u!114 &1854516047
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -77459,18 +77422,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7bb143e734f0c664194800fd65631dd0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Oppenheim: {fileID: 0}
   <PlayerIdSO>k__BackingField: {fileID: 11400000, guid: 1e6de6128901ea94a88896b92e3bf310, type: 2}
   <DefaultPlayerData>k__BackingField: {fileID: 11400000, guid: edaf631a83ce6ea42aa9463c9228f767, type: 2}
   <Bouyancy>k__BackingField: 0
   <MovementSpeed>k__BackingField: 6
   <RotationSpeed>k__BackingField: 5
   <Health>k__BackingField: 0
-  groundCheckPosition: {x: 0, y: 0, z: 0}
+  GroundCheckPosition: {x: 0, y: 0, z: 0}
   <GroundCheckRadius>k__BackingField: 0.3
-  jumpHeight: 3
-  <BulletSpawnPoint>k__BackingField: {fileID: 0}
-  <BulletPrefab>k__BackingField: {fileID: 0}
-  <BulletSpeed>k__BackingField: 10
+  active: 0
+  isFarEnoughAway: 0
+  canvas: {fileID: 0}
+  bulletSpawnPoint: {fileID: 533912271}
+  bulletPrefab: {fileID: 1859860186272881942, guid: c152a41615db67940a047f2c85d5e16a, type: 3}
+  bulletSpeed: 10
 --- !u!65 &2130834554
 BoxCollider:
   m_ObjectHideFlags: 0

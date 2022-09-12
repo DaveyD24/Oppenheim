@@ -47,6 +47,9 @@ public abstract class PlayerController : MonoBehaviour
 
     protected float CurrentFuel { get => fuel; set => fuel = Mathf.Clamp(value, 0, DefaultPlayerData.MaxFuel); }
 
+    SwitchManager switchManager;
+    float FollowSpeed = 0.001f;
+
     protected InputActions Inputs { get; private set; }
 
     public virtual bool IsGrounded()
@@ -115,12 +118,31 @@ public abstract class PlayerController : MonoBehaviour
             OnDeath();
         }
 
-        // AdjustFuelValue(-DefaultPlayerData.DecreaseFuelAmount.Evaluate(CurrentFuel / DefaultPlayerData.MaxFuel) * Time.deltaTime);
+        if (Vector3.Distance(this.gameObject.transform.position, switchManager.GetActivePlayer().transform.position) > 3.0f)
+        {
+            isFarEnoughAway = true;
+        }
+        else
+        {
+            isFarEnoughAway = false;
+        }
+
+        if (!active && isFarEnoughAway)
+        {
+            Vector3 desiredPosition = switchManager.GetActivePlayer().transform.position;
+            Vector3 smoothedPosition = Vector3.Lerp(this.transform.position, desiredPosition, FollowSpeed);
+            Vector3 flattenedPosition = new Vector3(smoothedPosition.x, this.transform.position.y, smoothedPosition.z);
+            this.transform.position = flattenedPosition;
+            this.transform.LookAt(switchManager.GetActivePlayer().transform);
+        }
+
+        //AdjustFuelValue(-DefaultPlayerData.DecreaseFuelAmount.Evaluate(CurrentFuel / DefaultPlayerData.MaxFuel) * Time.deltaTime);
     }
 
     protected virtual void Start()
     {
         Rb = GetComponent<Rigidbody>();
+        switchManager = FindObjectOfType<SwitchManager>();
         Weight = Rb.mass;
         fuel = DefaultPlayerData.MaxFuel;
 
@@ -178,8 +200,9 @@ public abstract class PlayerController : MonoBehaviour
         if (!Rb)
             Rb = GetComponent<Rigidbody>();
 
-        Gizmos.color = new Color(0, 1, 1, .25f);
+        Gizmos.color = Color.cyan;
         Gizmos.DrawSphere(GetGroundCheckPosition(), GroundCheckRadius);
+        
     }
 
     private void AddBouyancy()
@@ -210,5 +233,23 @@ public abstract class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(5);
         GameEvents.Die();
         DeathWaitTimer = null;
+    }
+
+    [HideInInspector] public bool active = false;
+    public bool isFarEnoughAway = false;
+    [SerializeField] Canvas canvas;
+
+    public void Activate()
+    {
+        active = true;
+        FindObjectOfType<Camera>().GetComponent<SpringArm>().Target = this.gameObject.transform;
+        GetComponentInChildren<SpriteRenderer>().enabled = true;
+        //canvas.gameObject.SetActive(true);
+    }
+
+    protected virtual void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawSphere(GetGroundCheckPosition(), GroundCheckRadius);
     }
 }
