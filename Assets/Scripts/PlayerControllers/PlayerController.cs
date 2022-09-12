@@ -17,6 +17,8 @@ public abstract class PlayerController : MonoBehaviour
     private Quaternion startRotation;
     private float fuel;
 
+    public static IEnumerator DeathWaitTimer { get; private set; }
+
     [HideInInspector] public bool Active { get; set; } = false;
 
     public Rigidbody Rb { get; private set; }
@@ -46,8 +48,6 @@ public abstract class PlayerController : MonoBehaviour
     protected float CurrentFuel { get => fuel; set => fuel = Mathf.Clamp(value, 0, DefaultPlayerData.MaxFuel); }
 
     protected InputActions Inputs { get; private set; }
-
-
 
     public virtual bool IsGrounded()
     {
@@ -97,6 +97,18 @@ public abstract class PlayerController : MonoBehaviour
 
     protected abstract void PerformAbility(InputAction.CallbackContext ctx);
 
+    protected void NextLineUI(InputAction.CallbackContext ctx)
+    {
+        UIEvents.NextLine();
+    }
+
+    protected void SkipTutUI(InputAction.CallbackContext ctx)
+    {
+        UIEvents.SkipIntro();
+    }
+
+
+
     protected void AdjustFuelValue(float amount)
     {
         CurrentFuel += amount;
@@ -112,7 +124,7 @@ public abstract class PlayerController : MonoBehaviour
     {
         if (Rb.transform.position.y < 2.5f)
         {
-            // GameEvents.Die();
+            OnDeath();
         }
 
         // AdjustFuelValue(-DefaultPlayerData.DecreaseFuelAmount.Evaluate(CurrentFuel / DefaultPlayerData.MaxFuel) * Time.deltaTime);
@@ -130,9 +142,14 @@ public abstract class PlayerController : MonoBehaviour
 
     protected virtual void OnDeath()
     {
-        Debug.Log("Player Died");
-
         Inputs.Player.Disable();
+        if (DeathWaitTimer == null)
+        {
+            Debug.Log("Player Died");
+
+            DeathWaitTimer = DeathWait();
+            StartCoroutine(DeathWaitTimer);
+        }
     }
 
     // https://docs.unity3d.com/Packages/com.unity.inputsystem@1.0/manual/Actions.html see here for further details on the input types
@@ -147,6 +164,9 @@ public abstract class PlayerController : MonoBehaviour
 
         // Inputs.Player.Ability.canceled += PerformAbility;
         Inputs.Player.Jump.performed += Jump;
+
+        Inputs.Player.NextLine.performed += NextLineUI;
+        Inputs.Player.SkipTut.performed += SkipTutUI;
 
         // Inputs.Player.Jump.canceled += Jump;
         Inputs.Player.Enable();
@@ -164,12 +184,14 @@ public abstract class PlayerController : MonoBehaviour
         Inputs.Player.Ability.performed -= PerformAbility;
         Inputs.Player.Jump.performed -= Jump;
 
+        Inputs.Player.NextLine.performed -= NextLineUI;
+        Inputs.Player.SkipTut.performed -= SkipTutUI;
+
         Inputs.Player.Disable();
 
         GameEvents.OnCollectFuel -= MaxFuel;
         GameEvents.OnDie -= Respawn;
     }
-
 
     protected virtual void OnDrawGizmosSelected()
     {
@@ -182,12 +204,13 @@ public abstract class PlayerController : MonoBehaviour
         // apply bouyancy while in water
     }
 
-    private void Respawn()
+    protected virtual void Respawn()
     {
         // respawning code...
         Rb.velocity = Vector3.zero;
         Rb.transform.position = startPosition;
         transform.rotation = startRotation;
+        Inputs.Player.Enable();
     }
 
     private void MaxFuel(int playerId)
@@ -196,5 +219,13 @@ public abstract class PlayerController : MonoBehaviour
         {
             AdjustFuelValue(DefaultPlayerData.MaxFuel);
         }
+    }
+
+    private IEnumerator DeathWait()
+    {
+        Debug.Log("Deathingwqertgyhferwrtf");
+        yield return new WaitForSeconds(5);
+        GameEvents.Die();
+        DeathWaitTimer = null;
     }
 }

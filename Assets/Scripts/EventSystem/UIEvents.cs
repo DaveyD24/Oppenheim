@@ -7,6 +7,10 @@ namespace EventSystem
     /// </summary>
     public static class UIEvents
     {
+        public static Action OnNextLine { get; set; }
+
+        public static Action OnSkipIntro { get; set; }
+
         public static Action<int, float> OnFuelChanged { get; set; }
 
         public static Action<int, bool> OnCanvasStateChanged { get; set; }
@@ -23,6 +27,18 @@ namespace EventSystem
         {
             // if this Action has one or more methods assigned to it then run this method
             OnShowIntructions?.Invoke();
+        }
+
+        public static void NextLine()
+        {
+            // if this Action has one or more methods assigned to it then run this method
+            OnNextLine?.Invoke();
+        }
+
+        public static void SkipIntro()
+        {
+            // if this Action has one or more methods assigned to it then run this method
+            OnSkipIntro?.Invoke();
         }
 
         public static void CanvasStateChanged(int playerID, bool value)

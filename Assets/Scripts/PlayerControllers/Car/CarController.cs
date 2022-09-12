@@ -67,7 +67,7 @@ public class CarController : PlayerController
 
     public void ApplyLocalPositionToVisuals(WheelCollider collider)
     {
-        if (collider.transform.childCount == 0)
+        if (collider.transform.childCount == 0 || !collider.gameObject.activeSelf)
         {
             return;
         }
@@ -152,19 +152,25 @@ public class CarController : PlayerController
     protected override void OnDeath()
     {
         base.OnDeath();
+        Debug.Log("Diying all the time");
         foreach (AxleInfo axleInfo in axleInfos)
         {
-            if (axleInfo.LeftWheel != null)
-            {
-                axleInfo.LeftWheel.transform.parent = null;
-                axleInfo.RightWheel.transform.parent = null;
+            axleInfo.LeftWheel.gameObject.SetActive(false);
+            axleInfo.RightWheel.gameObject.SetActive(false);
 
-                axleInfo.LeftWheel.gameObject.AddComponent<Rigidbody>().AddForce(250 * -transform.right);
-                axleInfo.RightWheel.gameObject.AddComponent<Rigidbody>().AddForce(250 * transform.right);
+            axleInfo.LeftWheelDeath.SetActive(true);
+            axleInfo.RightWheelDeath.SetActive(true);
 
-                Destroy(axleInfo.LeftWheel.gameObject.GetComponent<WheelCollider>());
-                Destroy(axleInfo.RightWheel.gameObject.GetComponent<WheelCollider>());
-            }
+            axleInfo.LeftWheelDeath.transform.parent = null;
+            axleInfo.LeftWheelDeath.transform.position = axleInfo.LeftWheel.gameObject.transform.position;
+            axleInfo.LeftWheelDeath.transform.rotation = axleInfo.LeftWheel.gameObject.transform.rotation;
+
+            axleInfo.RightWheelDeath.transform.parent = null;
+            axleInfo.RightWheelDeath.transform.position = axleInfo.RightWheel.gameObject.transform.position;
+            axleInfo.RightWheelDeath.transform.rotation = axleInfo.RightWheel.gameObject.transform.rotation;
+
+            // axleInfo.LeftWheelDeath.GetComponent<Rigidbody>().AddForce(100 * -transform.right);
+            // axleInfo.RightWheelDeath.GetComponent<Rigidbody>().AddForce(100 * transform.right);
         }
     }
 
@@ -173,6 +179,28 @@ public class CarController : PlayerController
         Gizmos.color = Color.green;
         Gizmos.DrawCube(DashOffset + transform.position, Vector3.one * .25f);
         Gizmos.color = Color.red;
+    }
+
+    protected override void Respawn()
+    {
+        base.Respawn();
+        foreach (AxleInfo axleInfo in axleInfos)
+        {
+            if (axleInfo.LeftWheel != null)
+            {
+                axleInfo.LeftWheel.gameObject.SetActive(true);
+                axleInfo.RightWheel.gameObject.SetActive(true);
+
+                axleInfo.LeftWheelDeath.SetActive(false);
+                axleInfo.RightWheelDeath.SetActive(false);
+
+                axleInfo.LeftWheelDeath.GetComponent<Rigidbody>().velocity = Vector3.zero;
+                axleInfo.LeftWheelDeath.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+
+                axleInfo.RightWheelDeath.GetComponent<Rigidbody>().velocity = Vector3.zero;
+                axleInfo.RightWheelDeath.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+            }
+        }
     }
 
     /// <summary>
@@ -205,32 +233,35 @@ public class CarController : PlayerController
         int numWheelGrounded = 0;
         foreach (AxleInfo axleInfo in axleInfos)
         {
-            if (axleInfo.Steering && Active)
+            if (axleInfo.LeftWheel != null && axleInfo.RightWheel != null)
             {
-                axleInfo.LeftWheel.steerAngle = steering;
-                axleInfo.RightWheel.steerAngle = steering;
+                if (axleInfo.Steering && Active)
+                {
+                    axleInfo.LeftWheel.steerAngle = steering;
+                    axleInfo.RightWheel.steerAngle = steering;
+                }
+
+                if (axleInfo.Motor && Active)
+                {
+                    axleInfo.LeftWheel.motorTorque = Motor;
+                    axleInfo.RightWheel.motorTorque = Motor;
+                }
+
+                if (axleInfo.LeftWheel.isGrounded)
+                {
+                    numWheelGrounded++;
+                }
+
+                if (axleInfo.RightWheel.isGrounded)
+                {
+                    numWheelGrounded++;
+                }
+
+                ApplyBreaking(axleInfo);
+
+                ApplyLocalPositionToVisuals(axleInfo.LeftWheel);
+                ApplyLocalPositionToVisuals(axleInfo.RightWheel);
             }
-
-            if (axleInfo.Motor && Active)
-            {
-                axleInfo.LeftWheel.motorTorque = Motor;
-                axleInfo.RightWheel.motorTorque = Motor;
-            }
-
-            if (axleInfo.LeftWheel.isGrounded)
-            {
-                numWheelGrounded++;
-            }
-
-            if (axleInfo.RightWheel.isGrounded)
-            {
-                numWheelGrounded++;
-            }
-
-            ApplyBreaking(axleInfo);
-
-            ApplyLocalPositionToVisuals(axleInfo.LeftWheel);
-            ApplyLocalPositionToVisuals(axleInfo.RightWheel);
         }
 
         BAnyWheelGrounded = numWheelGrounded > 0;
