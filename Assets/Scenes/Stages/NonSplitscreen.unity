@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.4465797, g: 0.4964139, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657993, g: 0.4964143, b: 0.5748183, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -59912,6 +59912,7 @@ GameObject:
   - component: {fileID: 1634060333}
   - component: {fileID: 1634060332}
   - component: {fileID: 1634060331}
+  - component: {fileID: 1634060335}
   m_Layer: 0
   m_Name: Camera
   m_TagString: MainCamera
@@ -59926,7 +59927,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1634060330}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b98a6b686173fde4582f8634af110aa6, type: 3}
   m_Name: 
@@ -59992,13 +59993,49 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1634060330}
-  m_LocalRotation: {x: -0, y: 0.99342287, z: -0, w: -0.11450383}
-  m_LocalPosition: {x: 167.25632, y: 8.210003, z: -492.73242}
+  m_LocalRotation: {x: 0.25181603, y: 0, z: 0, w: 0.96777517}
+  m_LocalPosition: {x: 169.39, y: 12.000231, z: -521.6697}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: -76.85, z: 0}
+--- !u!114 &1634060335
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1634060330}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9eeb29e5a82fb724f8a4df5591aa6f53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bDrawRotationalLines: 0
+  Camera: {fileID: 1634060334}
+  Target: {fileID: 1475211145}
+  TargetOffset: {x: 0, y: 0, z: 0}
+  Distance: 9.19
+  GimbalRotation: {x: 0, y: 39.35, z: 0}
+  CameraRotation: {x: 29.17, y: 0, z: 0}
+  bInheritRotation: 0
+  bEnableScrollToDistance: 0
+  ScrollSensitivity: 0
+  DefaultGimbalRotation: {x: 0, y: 27.75, z: 0}
+  DefaultCameraRotation: {x: 29.17, y: 0, z: 0}
+  bInvertX: 0
+  bInvertY: 0
+  bInvertZ: 0
+  OnlyCollideWith:
+    serializedVersion: 2
+    m_Bits: 0
+  PositionalLagStrength: 0.2
+  RotationalLagStrength: 0.2
+  bUseCustomProjection: 0
+  Plane: {fileID: 0}
+  NearClipDistance: 0
+  DistanceLimit: 0
 --- !u!1 &1635226638
 GameObject:
   m_ObjectHideFlags: 0
