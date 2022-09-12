@@ -58,7 +58,8 @@ public class Bat : PlayerController
 
 		Inputs.Player.Look.canceled += (CallbackContext Context) =>
 		{
-			MovementComponent.HandleLook(Vector2.zero);
+			MovementComponent.LookBinding(ref Context);
+			//MovementComponent.HandleLook(ref Context);
 		};
 	}
 

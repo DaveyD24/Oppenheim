@@ -1,5 +1,4 @@
-﻿
-/* --           Pre-Processor Directives           -- */
+﻿/* --           Pre-Processor Directives           -- */
 
 #if UNITY_EDITOR
 // Show diagnostic data on the top left.
@@ -7,7 +6,7 @@
 #endif
 
 // Enables Yaw control with the Horizontal Axis of InputActions.Move.
-//#define USE_MOVE_YAW
+// #define USE_MOVE_YAW
 // Enables Yaw control with the Horizontal Axis of InputActions.Look.
 #define USE_LOOK_YAW
 
@@ -22,7 +21,8 @@ using static UnityEngine.InputSystem.InputAction;
 public class BatMovement : MonoBehaviour
 {
 	private Bat Bat;
-
+	private Vector2 Throw;
+	private Vector2 ThrowLook;
 	// Airborne settings while this Bat is in the air.
 	// Player Controller values will be used for ground movement.
 
@@ -65,6 +65,53 @@ public class BatMovement : MonoBehaviour
 
 	void Update()
 	{
+		//if (YawDirection != 0f || PitchDirection != 0f)
+		//{
+		//	// Translate World-Velocity to Local Forward.
+		//	Vector3 YawVelocity = RotateVector(Bat.Physics.velocity, transform.up, YawDirection);
+		//	Vector3 CombinedVelocity = RotateVector(YawVelocity, -transform.right, PitchDirection);
+		//	Bat.Physics.velocity = CombinedVelocity; // Combination of Pitch and Yaw.
+
+		//	// Set to Zero if its close enough to Zero.
+		//	Vector3 Velocity = Bat.Physics.velocity;
+		//	ForceZeroIfZero(ref Velocity);
+
+		//	Bat.Physics.velocity = Velocity;
+
+		//	// Not Zero and must be facing in the same general direction.
+		//	if (Velocity != Vector3.zero && Vector3.Dot(transform.forward, Velocity) > .5f)
+		//	{
+		//		// Use transform.up or Vector3.up?
+		//		Quaternion RotationNow = transform.rotation;
+		//		Quaternion TargetRot = Quaternion.LookRotation(Velocity, Vector3.up);
+		//		transform.rotation = Quaternion.RotateTowards(RotationNow, TargetRot, Bat.YawSpeed);
+		//	}
+		//}
+		//else
+		//{
+		//	if (GroundMovement != Vector3.zero)
+		//	{
+		//		// Smoothly rotate the Bat towards where it's moving.
+		//		Vector3 MovementVector = DirectionRelativeToTransform(BatCamera.transform, GroundMovement);
+		//		AlignTransformToMovement(transform, MovementVector, Bat.YawSpeed, Vector3.up);
+		//	}
+		//}
+
+		//SetAnimationState();
+		//Realign();
+	}
+
+	void FixedUpdate()
+	{
+		HandleMovement(Throw);
+		HandleLook(ThrowLook);
+
+		Speedometer.Record();
+
+		HandleGroundMovement();
+
+		Speedometer.Mark(this);
+
 		if (YawDirection != 0f || PitchDirection != 0f)
 		{
 			// Translate World-Velocity to Local Forward.
@@ -101,25 +148,17 @@ public class BatMovement : MonoBehaviour
 		Realign();
 	}
 
-	void FixedUpdate()
-	{
-		Speedometer.Record();
-
-		HandleGroundMovement();
-
-		Speedometer.Mark(this);
-	}
-
 	public void MovementBinding(ref CallbackContext Context)
 	{
 		if (Bat.Active)
 		{
-			Vector2 Throw = Context.action.ReadValue<Vector2>();
-			HandleMovement(Throw);
+			Throw = Context.action.ReadValue<Vector2>();
+			// HandleMovement(Throw);
 		}
 		else
 		{
-			HandleMovement(Vector2.zero);
+			Throw = Vector2.zero;
+			//HandleMovement(Vector2.zero);
 		}
 	}
 
@@ -140,12 +179,12 @@ public class BatMovement : MonoBehaviour
 	{
 		if (Bat.Active)
 		{
-			Vector2 Throw = Context.action.ReadValue<Vector2>();
-			HandleLook(Throw);
+			ThrowLook = Context.action.ReadValue<Vector2>();
 		}
 		else
 		{
-			HandleLook(Vector2.zero);
+			ThrowLook = Vector2.zero;
+			// HandleLook(Vector2.zero);
 		}
 	}
 
@@ -233,7 +272,6 @@ public class BatMovement : MonoBehaviour
 
 		if (IsAirborne())
 		{
-
 			ThrowPitch(Inclination);
 
 #if USE_LOOK_YAW
