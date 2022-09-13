@@ -14,6 +14,10 @@
 #error NO YAW INPUT IS DEFINED!
 #endif
 
+#if USE_MOVE_YAW && USE_LOOK_YAW
+#error LOOK YAW TAKES PRECEDENCE! DEFINE USE_MOVE_YAW XOR USE_LOOK_YAW.
+#endif
+
 using UnityEngine;
 using static global::BatMathematics;
 using static UnityEngine.InputSystem.InputAction;
@@ -21,8 +25,7 @@ using static UnityEngine.InputSystem.InputAction;
 public class BatMovement : MonoBehaviour
 {
 	private Bat Bat;
-	private Vector2 Throw;
-	private Vector2 ThrowLook;
+
 	// Airborne settings while this Bat is in the air.
 	// Player Controller values will be used for ground movement.
 
@@ -33,8 +36,8 @@ public class BatMovement : MonoBehaviour
 	[SerializeField] float SecondsOfPitchFlight = 1f;
 	float RemainingSeconds;
 
-	[SerializeField] float YawStrength = 2f;
-	[SerializeField] float PitchStrength = 1f;
+	[SerializeField, Min(kZeroThreshold)] float YawStrength = 2f;
+	[SerializeField, Min(kZeroThreshold)] float PitchStrength = 1f;
 	float YawDirection = 0f;
 	float PitchDirection = 0f;
 
@@ -42,6 +45,9 @@ public class BatMovement : MonoBehaviour
 	[SerializeField] Vector3 GroundCheckOffset;
 	[SerializeField] float GroundRayDistance = .51f;
 
+	Vector2 Throw;
+	Vector2 ThrowLook;
+	
 	// Ground Variables.
 	Vector3 GroundMovement;
 
@@ -59,60 +65,19 @@ public class BatMovement : MonoBehaviour
 		bHasCancelledGlideThisJump = false;
 
 		// BatCamera = GameObject.FindGameObjectWithTag("Bat Camera").GetComponent<Camera>();
-		Speedometer = new Speedometer();
+
 		Speedometer.Initialise();
-	}
-
-	void Update()
-	{
-		//if (YawDirection != 0f || PitchDirection != 0f)
-		//{
-		//	// Translate World-Velocity to Local Forward.
-		//	Vector3 YawVelocity = RotateVector(Bat.Physics.velocity, transform.up, YawDirection);
-		//	Vector3 CombinedVelocity = RotateVector(YawVelocity, -transform.right, PitchDirection);
-		//	Bat.Physics.velocity = CombinedVelocity; // Combination of Pitch and Yaw.
-
-		//	// Set to Zero if its close enough to Zero.
-		//	Vector3 Velocity = Bat.Physics.velocity;
-		//	ForceZeroIfZero(ref Velocity);
-
-		//	Bat.Physics.velocity = Velocity;
-
-		//	// Not Zero and must be facing in the same general direction.
-		//	if (Velocity != Vector3.zero && Vector3.Dot(transform.forward, Velocity) > .5f)
-		//	{
-		//		// Use transform.up or Vector3.up?
-		//		Quaternion RotationNow = transform.rotation;
-		//		Quaternion TargetRot = Quaternion.LookRotation(Velocity, Vector3.up);
-		//		transform.rotation = Quaternion.RotateTowards(RotationNow, TargetRot, Bat.YawSpeed);
-		//	}
-		//}
-		//else
-		//{
-		//	if (GroundMovement != Vector3.zero)
-		//	{
-		//		// Smoothly rotate the Bat towards where it's moving.
-		//		Vector3 MovementVector = DirectionRelativeToTransform(BatCamera.transform, GroundMovement);
-		//		AlignTransformToMovement(transform, MovementVector, Bat.YawSpeed, Vector3.up);
-		//	}
-		//}
-
-		//SetAnimationState();
-		//Realign();
 	}
 
 	void FixedUpdate()
 	{
+		Speedometer.Record(this);
+
+		HandleGroundMovement();
 		HandleMovement(Throw);
 		HandleLook(ThrowLook);
 
-		Speedometer.Record();
-
-		HandleGroundMovement();
-
-		Speedometer.Mark(this);
-
-		if (YawDirection != 0f || PitchDirection != 0f)
+		if (!IsZero(YawDirection) || !IsZero(PitchDirection))
 		{
 			// Translate World-Velocity to Local Forward.
 			Vector3 YawVelocity = RotateVector(Bat.Physics.velocity, transform.up, YawDirection);
@@ -121,7 +86,7 @@ public class BatMovement : MonoBehaviour
 
 			// Set to Zero if its close enough to Zero.
 			Vector3 Velocity = Bat.Physics.velocity;
-			ForceZeroIfZero(ref Velocity);
+			SetZeroIfZero(ref Velocity);
 
 			Bat.Physics.velocity = Velocity;
 
@@ -146,6 +111,8 @@ public class BatMovement : MonoBehaviour
 
 		SetAnimationState();
 		Realign();
+
+		Speedometer.Mark();
 	}
 
 	public void MovementBinding(ref CallbackContext Context)
@@ -261,6 +228,8 @@ public class BatMovement : MonoBehaviour
 
 			// Fact - Every time the Bat jumps, it has to take off from the Ground.
 			RemainingSeconds = SecondsOfPitchFlight;
+
+			Bat.Events.OnAnimationStateChanged?.Invoke(EAnimationState.WingedFlight);
 		}
 	}
 
@@ -296,6 +265,12 @@ public class BatMovement : MonoBehaviour
 			// Ground Movement relative to the camera.
 			Vector3 CameraRelativeDirection = DirectionRelativeToTransform(BatCamera.transform, GroundMovement);
 			Bat.Physics.MovePosition(Bat.Physics.position + (CameraRelativeDirection * Time.fixedDeltaTime));
+
+			// PitchDirection = YawDirection = 0f;
+			// Apparently this wasn't enough - floating point precision failed and 
+			// sometimes made these 1E-11. These values NEED to be zero whilst Grounded.
+			ForceZero(ref PitchDirection);
+			ForceZero(ref YawDirection);
 		}
 	}
 
@@ -391,6 +366,9 @@ public class BatMovement : MonoBehaviour
 
 			// Stop moving.
 			Bat.Physics.velocity = Bat.Physics.angularVelocity = Vector3.zero;
+
+			// Stop everything else. Switch back to the Stand Idle animation.
+			Bat.Events.OnAnimationStateChanged?.Invoke(EAnimationState.StandIdle);
 		}
 	}
 
@@ -410,7 +388,7 @@ public class BatMovement : MonoBehaviour
 
 	bool IsAirborne()
 	{
-		Ray GroundRay = new Ray(transform.position + GroundCheckOffset, -transform.up);
+		Ray GroundRay = new Ray(transform.position + GroundCheckOffset, Vector3.down);
 		return !Physics.Raycast(GroundRay, GroundRayDistance);
 	}
 
@@ -420,14 +398,15 @@ public class BatMovement : MonoBehaviour
 		GUI.Label(new Rect(10, 10, 250, 250), $"Velocity: {Bat.Physics.velocity:F1}");
 		GUI.Label(new Rect(10, 25, 250, 250), $"Speed: {Bat.Physics.velocity.magnitude:F1}");
 		GUI.Label(new Rect(10, 40, 250, 250), $"Airborne? {(IsAirborne() ? "Yes" : "No")}");
+		GUI.Label(new Rect(10, 55, 250, 250), $"Pitch: {PitchDirection:F9} Yaw: {YawDirection:F9}");
 	}
 #endif
 }
 
 public struct Speedometer
 {
-	public float MetresPerSecond => (ThisFrame - LastFrame).magnitude / Time.deltaTime;
 	public Vector3 Velocity => (ThisFrame - LastFrame) / Time.deltaTime;
+	public float MetresPerSecond => Velocity.magnitude;
 
 	Vector3 LastFrame;
 	Vector3 ThisFrame;
@@ -438,15 +417,15 @@ public struct Speedometer
 	}
 
 	/// <summary>Begins recording Speed.</summary>
-	public void Record()
+	public void Record(MonoBehaviour Behaviour)
 	{
-		LastFrame = ThisFrame;
+		ThisFrame = Behaviour.transform.position;
 	}
 
 	/// <summary>Marks the end of a Speed Recording after <see cref="Time.deltaTime"/>.</summary>
 	/// <param name="Behaviour">The Behaviour to mark a Speed relative to.</param>
-	public void Mark(MonoBehaviour Behaviour)
+	public void Mark()
 	{
-		ThisFrame = Behaviour.transform.position;
+		LastFrame = ThisFrame;
 	}
 }

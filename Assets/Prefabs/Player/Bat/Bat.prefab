@@ -181,6 +181,7 @@ MonoBehaviour:
   <Health>k__BackingField: 1
   groundCheckPosition: {x: 0, y: 1.5, z: 0}
   <GroundCheckRadius>k__BackingField: 1
+  bIsStandalone: 0
 --- !u!114 &356694347851262371
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -199,7 +200,7 @@ MonoBehaviour:
   YawStrength: 2
   PitchStrength: 2
   GroundCheckOffset: {x: 0, y: 0.15, z: 0}
-  GroundRayDistance: 0.51
+  GroundRayDistance: 0.6
   BatCamera: {fileID: 0}
 --- !u!114 &4603439497635631443
 MonoBehaviour:

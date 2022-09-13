@@ -148,10 +148,12 @@ public static class BatMathematics
 		Transform.rotation = Quaternion.RotateTowards(RotationNow, TargetRotation, RotationSpeed);
 	}
 
+	public const float kZeroThreshold = .01f;
+
 	/// <summary>True if F is close enough to zero.</summary>
 	public static bool IsZero(float F)
 	{
-		return Mathf.Abs(F) <= .01f;
+		return Mathf.Abs(F) <= kZeroThreshold;
 	}
 
 	/// <summary>True if V is close enough to zero.</summary>
@@ -163,11 +165,47 @@ public static class BatMathematics
 
 	/// <summary>Sets V to Vector3.zero if it's close enough to zero.</summary>
 	/// <remarks>'Close enough' is define in <see cref="IsZero(float)"/>.</remarks>
-	public static void ForceZeroIfZero(ref Vector3 V)
+	public static void SetZeroIfZero(ref Vector3 V)
 	{
 		// Vector3's == operator is accurate to: 9.99999944 E-11 (0.0000000000999999944)
 		// This is too accurate; define our own threshold.
 		if (IsZero(V))
 			V = Vector3.zero;
+	}
+
+	/// <summary>Uses bitwise operations to force a float to be absolute zero.</summary>
+	/// <param name="F">Reference to the float that needs to be zero.</param>
+	public unsafe static void ForceZero(ref float F)
+	{
+		// Fix pointer to point to the address float F.
+		fixed (float* pF = &F)
+		{
+			int I = *(int*)&pF; // Lossless conversion of float F bits to int I bits.
+			I &= 0x0;           // Bitwise & 0 always equals 0.
+			F = *(float*)&I;    // Treat the bits of I as a float and give it back to F.
+		}
+
+#if UNITY_EDITOR
+		/*
+		 * For future reference, this function was made because PitchDirection and YawDirection
+		 * was not Zero where it needed to be. These two floats are used in BatMovement.FixedUpdate()
+		 * and is needed for aligning the Bat's velocity to where it is facing.
+		 * 
+		 * There are checks (PitchDirection != 0f || YawDirection != 0f): only if this check passes,
+		 * can we align velocities - it also means the Bat is Airborne.
+		 * 
+		 * Problem is: When these checks pass whilst the Bat is clearly Grounded (IsGrounded() == true)
+		 * and not Airborne (IsAirborne() == false) the Bat would not orient itself to where it's going
+		 * *on the Ground*. This looked weird, and this function literally forces the two floats to be
+		 * exactly Zero... well in theory anyway; if you're reading this, it means it, too, failed.
+		 */
+
+		if (float.IsNaN(F))
+			Debug.LogError("Tell Michael he's dumb! F = NaN");
+		if (float.IsInfinity(F))
+			Debug.LogError("Tell Michael he's dumb! F = Infinity");
+		if (float.IsNegativeInfinity(F))
+			Debug.LogError("Tell Michael he's dumb! F = -Infinity");
+#endif
 	}
 }
