@@ -1,9 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class SwitchManager : MonoBehaviour
 {
+    private PlayerInputManager playerInputManager;
+    private int playerAdded = 0;
+    private List<PlayerInput> joinedPlayer = new List<PlayerInput>();
 
     [field: SerializeField] public PlayerController Soldier { get; private set; }
 
@@ -41,6 +45,51 @@ public class SwitchManager : MonoBehaviour
     private void Awake()
     {
         Monkey.Activate();
+        playerInputManager = GetComponent<PlayerInputManager>();
+    }
+
+    private void OnEnable()
+    {
+        playerInputManager.onPlayerJoined += AddPlayer;
+        print(InputSystem.devices.Count + "Total Number of Devices");
+
+        //////////////////int playerNo = 0;
+
+        //////////////////foreach (InputDevice device in InputSystem.devices)
+        //////////////////{
+        //////////////////    PlayerInput player = playerInputManager.JoinPlayer(playerNo++, playerNo++, null, device);
+        //////////////////    AddPlayer(player);
+        //////////////////}
+    }
+
+    private void OnDisable()
+    {
+        playerInputManager.onPlayerJoined -= AddPlayer;
+    }
+
+    private void AddPlayer(PlayerInput player)
+    {
+        joinedPlayer.Add(player);
+        switch (playerAdded)
+        {
+            case 0:
+                Monkey.ActivateInput(player);
+                break;
+            case 1:
+                Car.ActivateInput(player);
+                break;
+            case 2:
+                Soldier.ActivateInput(player);
+                break;
+            case 3:
+                Bat.ActivateInput(player);
+                break;
+            default:
+                break;
+        }
+
+        playerAdded++;
+        Debug.Log("New Player Added");
     }
 
     // Update is called once per frame

@@ -40,25 +40,7 @@ public class SoldierMovement : PlayerController
         faceDir.y = 0;
         if (faceDir != Vector3.zero)
         {
-            // Rotate towards Movement.
-            Vector3 faceDir = move;
-            if (faceDir != Vector3.zero)
-            {
-                AlignTransformToMovement(transform, faceDir, RotationSpeed, Vector3.up);
-            }
-
-            if (controller.isGrounded)
-            {
-                playerVelocity.y = 0f;
-            }
-
-            if (bJumpRequested)
-            {
-                playerVelocity.y += ComputeJumpScalar(jumpHeight);
-                bJumpRequested = false;
-            }
-
-            // Apply Gravity to this Soldier. (This Rigidbody is marked Kinematic; preserving original settings pre-refactor)
+            AlignTransformToMovement(transform, faceDir, RotationSpeed, Vector3.up);
         }
     }
 

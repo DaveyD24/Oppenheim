@@ -1,5 +1,6 @@
 using UnityEngine;
 using static UnityEngine.InputSystem.InputAction;
+using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(BatMovement), typeof(BatEvents))]
 public class Bat : PlayerController
@@ -23,28 +24,32 @@ public class Bat : PlayerController
 
 		MovementComponent = GetComponent<BatMovement>();
 		EventsComponent = GetComponent<BatEvents>();
+	}
 
+	public override void ActivateInput(PlayerInput playerInput)
+	{
+		base.ActivateInput(playerInput);
 		BindMiscellaneousInputs();
 	}
 
 	private void BindMiscellaneousInputs()
 	{
-		Inputs.Player.Move.canceled += (CallbackContext Context) =>
+		player.FindAction("Move").canceled += (CallbackContext Context) =>
 		{
 			MovementComponent.HandleMovement(Vector2.zero);
 		};
 
-		Inputs.Player.Jump.canceled += (CallbackContext Context) =>
+		player.FindAction("Jump").canceled += (CallbackContext Context) =>
 		{
 			MovementComponent.HandleJump(0f);
 		};
 
-		Inputs.Player.Look.performed += (CallbackContext Context) =>
+		player.FindAction("Look").performed += (CallbackContext Context) =>
 		{
 			MovementComponent.LookBinding(ref Context);
 		};
 
-		Inputs.Player.Look.canceled += (CallbackContext Context) =>
+		player.FindAction("Look").canceled += (CallbackContext Context) =>
 		{
 			MovementComponent.HandleLook(Vector2.zero);
 		};
