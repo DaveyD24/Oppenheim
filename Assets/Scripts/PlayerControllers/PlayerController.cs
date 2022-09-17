@@ -47,6 +47,9 @@ public abstract class PlayerController : MonoBehaviour
 
     protected float CurrentFuel { get => fuel; set => fuel = Mathf.Clamp(value, 0, DefaultPlayerData.MaxFuel); }
 
+    SwitchManager switchManager;
+    float FollowSpeed = 0.001f;
+
     protected InputActions Inputs { get; private set; }
 
     public virtual bool IsGrounded()
@@ -116,11 +119,31 @@ public abstract class PlayerController : MonoBehaviour
         }
 
         // AdjustFuelValue(-DefaultPlayerData.DecreaseFuelAmount.Evaluate(CurrentFuel / DefaultPlayerData.MaxFuel) * Time.deltaTime);
+        if (Vector3.Distance(this.gameObject.transform.position, switchManager.GetActivePlayer().transform.position) > 3.0f)
+        {
+            isFarEnoughAway = true;
+        }
+        else
+        {
+            isFarEnoughAway = false;
+        }
+
+        if (!active && isFarEnoughAway)
+        {
+            Vector3 desiredPosition = switchManager.GetActivePlayer().transform.position;
+            Vector3 smoothedPosition = Vector3.Lerp(this.transform.position, desiredPosition, FollowSpeed);
+            Vector3 flattenedPosition = new Vector3(smoothedPosition.x, this.transform.position.y, smoothedPosition.z);
+            this.transform.position = flattenedPosition;
+            this.transform.LookAt(switchManager.GetActivePlayer().transform);
+        }
+
+        //AdjustFuelValue(-DefaultPlayerData.DecreaseFuelAmount.Evaluate(CurrentFuel / DefaultPlayerData.MaxFuel) * Time.deltaTime);
     }
 
     protected virtual void Start()
     {
         Rb = GetComponent<Rigidbody>();
+        switchManager = FindObjectOfType<SwitchManager>();
         Weight = Rb.mass;
         fuel = DefaultPlayerData.MaxFuel;
 
