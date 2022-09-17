@@ -36867,10 +36867,6 @@ PrefabInstance:
       propertyPath: BatCamera
       value: 
       objectReference: {fileID: 340884737}
-    - target: {fileID: 356694347851262371, guid: 283b6e8a8ea81244190b33581ca13b59, type: 3}
-      propertyPath: SecondsOfPitchFlight
-      value: 1e+9
-      objectReference: {fileID: 0}
     - target: {fileID: 711425588696738181, guid: 283b6e8a8ea81244190b33581ca13b59, type: 3}
       propertyPath: m_Layer
       value: 7

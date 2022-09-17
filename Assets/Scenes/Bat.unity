@@ -823,38 +823,6 @@ PrefabInstance:
       propertyPath: BatCamera
       value: 
       objectReference: {fileID: 371066511}
-    - target: {fileID: 356694347851262371, guid: 283b6e8a8ea81244190b33581ca13b59, type: 3}
-      propertyPath: MaxTakeoffAcceleration
-      value: 25
-      objectReference: {fileID: 0}
-    - target: {fileID: 356694347851262371, guid: 283b6e8a8ea81244190b33581ca13b59, type: 3}
-      propertyPath: TakeoffAccelerationCurve.m_Curve.Array.data[0].time
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 356694347851262371, guid: 283b6e8a8ea81244190b33581ca13b59, type: 3}
-      propertyPath: TakeoffAccelerationCurve.m_Curve.Array.data[0].value
-      value: 0.75
-      objectReference: {fileID: 0}
-    - target: {fileID: 356694347851262371, guid: 283b6e8a8ea81244190b33581ca13b59, type: 3}
-      propertyPath: TakeoffAccelerationCurve.m_Curve.Array.data[0].inSlope
-      value: 0.81838703
-      objectReference: {fileID: 0}
-    - target: {fileID: 356694347851262371, guid: 283b6e8a8ea81244190b33581ca13b59, type: 3}
-      propertyPath: TakeoffAccelerationCurve.m_Curve.Array.data[1].inSlope
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 356694347851262371, guid: 283b6e8a8ea81244190b33581ca13b59, type: 3}
-      propertyPath: TakeoffAccelerationCurve.m_Curve.Array.data[0].outSlope
-      value: 0.81838703
-      objectReference: {fileID: 0}
-    - target: {fileID: 356694347851262371, guid: 283b6e8a8ea81244190b33581ca13b59, type: 3}
-      propertyPath: TakeoffAccelerationCurve.m_Curve.Array.data[1].outSlope
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 356694347851262371, guid: 283b6e8a8ea81244190b33581ca13b59, type: 3}
-      propertyPath: TakeoffAccelerationCurve.m_Curve.Array.data[0].outWeight
-      value: 0.035787314
-      objectReference: {fileID: 0}
     - target: {fileID: 1100799181752514095, guid: 283b6e8a8ea81244190b33581ca13b59, type: 3}
       propertyPath: m_RootOrder
       value: 5
