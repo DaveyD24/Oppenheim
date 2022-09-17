@@ -228,7 +228,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -6478536213147159724, guid: 2a5a20613a93fab4081f6f3ba400e374, type: 3}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -277,6 +277,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BoxToAttach: {fileID: 8761743297463002144, guid: b1d35e74830f2bf488386c1b6645c972, type: 3}
   AttachmentPoint: {fileID: 9216583132835852308}
+  bRandomiseColour: 1
+  BalloonColour: {r: 0.428787, g: 1, b: 0, a: 1}
   StandardMaterial: {fileID: 2100000, guid: 37b1002bd53e9a645b47d62e421a8d2f, type: 2}
   Box: {fileID: 3708206240727246916}
 --- !u!1 &8313466736440306672

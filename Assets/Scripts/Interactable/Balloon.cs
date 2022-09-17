@@ -5,13 +5,14 @@ using URandom = UnityEngine.Random; // Differentiate between System.Random and U
 
 public class Balloon : MonoBehaviour
 {
-	public static Action<Balloon> OnBalloonPopped;
-
 	[SerializeField] GameObject BoxToAttach;
 	[SerializeField] Transform AttachmentPoint;
+	[SerializeField] bool bRandomiseColour;
+	[SerializeField] Color BalloonColour;
+
 	[SerializeField, ReadOnly] Material StandardMaterial;
 
-	[SerializeField, ReadOnly] GameObject Box;
+	[SerializeField, Tooltip("The attached Box at the end of the String."), ReadOnly] GameObject Box;
 
 	float RandomBobSpeed;
 
@@ -23,12 +24,6 @@ public class Balloon : MonoBehaviour
 		{
 			SpawnBox();
 		}
-
-		if (TryGetComponent(out MeshRenderer MR))
-		{
-			MR.sharedMaterial = new Material(StandardMaterial);
-			MR.sharedMaterial.SetColor("_Color", URandom.ColorHSV(.6f, 1f, .8f, 1f));
-		}
 	}
 
 	void Update()
@@ -39,6 +34,7 @@ public class Balloon : MonoBehaviour
 
 	void OnTriggerEnter(Collider Other)
 	{
+		// TODO: Set conditions for a Pop.
 		Pop();
 	}
 
@@ -53,10 +49,6 @@ public class Balloon : MonoBehaviour
 		// Enable Physics on the Box.
 		Box.GetOrAddComponent<Rigidbody>().useGravity = true;
 		Box.GetOrAddComponent<BoxCollider>();
-		
-		Debug.Break();
-
-		OnBalloonPopped?.Invoke(this);
 	}
 
 	void SpawnBox()
@@ -71,6 +63,17 @@ public class Balloon : MonoBehaviour
 		if (!Box && AttachmentPoint && BoxToAttach)
 		{
 			SpawnBox();
+		}
+
+		if (!Application.isPlaying && TryGetComponent(out MeshRenderer MR))
+		{
+			MR.sharedMaterial = new Material(StandardMaterial);
+
+			MR.sharedMaterial.SetColor("_Color",
+				bRandomiseColour
+					? URandom.ColorHSV(.1f, .9f, 1f, 1f)
+					: BalloonColour
+			);
 		}
 	}
 }
