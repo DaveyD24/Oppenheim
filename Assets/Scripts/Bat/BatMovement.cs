@@ -18,6 +18,7 @@
 #error LOOK YAW TAKES PRECEDENCE! DEFINE USE_MOVE_YAW XOR USE_LOOK_YAW.
 #endif
 
+using System.Collections;
 using UnityEngine;
 using static global::BatMathematics;
 using static UnityEngine.InputSystem.InputAction;
@@ -30,11 +31,13 @@ public class BatMovement : MonoBehaviour
 	// Player Controller values will be used for ground movement.
 
 	[Header("Airborne Settings")]
-	[SerializeField] float TakeoffAcceleration = 850f;
+	[SerializeField] float MaxTakeoffAcceleration = 50f;
+	[SerializeField] AnimationCurve TakeoffAccelerationCurve;
+	[SerializeField] float TimeToV1 = 1f;
 	[SerializeField] float JumpHeight = 5f;
-
 	[SerializeField] float SecondsOfPitchFlight = 1f;
 	float RemainingSeconds;
+	IEnumerator CurrentGradualFunc;
 
 	[SerializeField, Min(kZeroThreshold)] float YawStrength = 2f;
 	[SerializeField, Min(kZeroThreshold)] float PitchStrength = 1f;
@@ -47,7 +50,7 @@ public class BatMovement : MonoBehaviour
 
 	Vector2 Throw;
 	Vector2 ThrowLook;
-	
+
 	// Ground Variables.
 	Vector3 GroundMovement;
 
@@ -172,7 +175,11 @@ public class BatMovement : MonoBehaviour
 			// Forward Gliding.
 			if (!bHasGlidedThisJump && Vertical > kGlideInputSensitivity)
 			{
-				StartGliding();
+				if (CurrentGradualFunc != null)
+					StopCoroutine(CurrentGradualFunc);
+
+				CurrentGradualFunc = GradualAcceleration();
+				StartCoroutine(CurrentGradualFunc);
 			}
 			else if (!bHasCancelledGlideThisJump && Vertical < -kGlideInputSensitivity)
 			{
@@ -205,8 +212,6 @@ public class BatMovement : MonoBehaviour
 
 			GroundMovement = new Vector3(Throw.x, 0f, Throw.y).normalized;
 			GroundMovement *= Bat.GroundSpeed;
-
-			LockCursor(false);
 		}
 	}
 
@@ -274,38 +279,53 @@ public class BatMovement : MonoBehaviour
 		}
 	}
 
-	void StartGliding()
+	IEnumerator GradualAcceleration()
+	{
+		float rTime = 1f / TimeToV1;
+		float t = 0f;
+
+		while (t <= 1f)
+		{
+			t += Time.fixedDeltaTime * rTime;
+
+			ApplyWingForce(TakeoffAccelerationCurve.Evaluate(t) * MaxTakeoffAcceleration);
+
+			yield return new WaitForFixedUpdate();
+		}
+	}
+
+	void ApplyWingForce(float Force)
 	{
 		// F = ma.
-		Bat.Physics.AddForce(Bat.Physics.mass * TakeoffAcceleration * transform.forward);
+		Bat.Physics.AddForce(Bat.Physics.mass * Force * transform.forward);
 
 		bHasGlidedThisJump = true;
-
-		LockCursor(true);
 	}
 
 	/// <summary>Gives Pitch Input.</summary>
 	/// <param name="Throw">Direction of Pitch; delta. + Downwards. - Upwards.</param>
 	void ThrowPitch(float Throw)
 	{
-		// The Bat is too tired to Pitch upwards.
+		float PitchThrow = PitchStrength;
+
 		if (RemainingSeconds <= 0f)
 		{
-			PitchDirection = 0f;
-			return;
+			// The Bat is too tired to Pitch upwards.
+			// But still allow *some* Pitch input.
+			PitchThrow *= .25f;
 		}
 
 		// Pitch.
 		if (Throw < -.3f)
 		{
-			PitchDirection = PitchStrength;
+			PitchDirection = PitchThrow;
 
 			// Deduct time only when Pitching upwards.
 			RemainingSeconds -= Time.deltaTime;
 		}
 		else if (Throw > .3f)
 		{
-			PitchDirection = -PitchStrength;
+			PitchDirection = -PitchThrow;
 		}
 		else
 		{
@@ -369,20 +389,6 @@ public class BatMovement : MonoBehaviour
 
 			// Stop everything else. Switch back to the Stand Idle animation.
 			Bat.Events.OnAnimationStateChanged?.Invoke(EAnimationState.StandIdle);
-		}
-	}
-
-	static void LockCursor(bool bShouldLock)
-	{
-		if (bShouldLock)
-		{
-			Cursor.lockState = CursorLockMode.Locked;
-			Cursor.visible = bShouldLock;
-		}
-		else
-		{
-			Cursor.lockState = CursorLockMode.None;
-			Cursor.visible = true;
 		}
 	}
 
