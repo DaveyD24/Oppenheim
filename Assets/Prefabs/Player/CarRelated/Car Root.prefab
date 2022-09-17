@@ -252,13 +252,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3178a24f59c2d564b9fd5da0eac81b71, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  groundCheckPosition: {x: 0, y: 0, z: 0}
   <PlayerIdSO>k__BackingField: {fileID: 11400000, guid: a6ba5f247f9af9242bb3d3700fe06543, type: 2}
   <DefaultPlayerData>k__BackingField: {fileID: 11400000, guid: edaf631a83ce6ea42aa9463c9228f767, type: 2}
   <Bouyancy>k__BackingField: 0
   <MovementSpeed>k__BackingField: 8000
   <RotationSpeed>k__BackingField: 70
   <Health>k__BackingField: 0
+  <FallDamageThreshold>k__BackingField: 75
+  groundCheckPosition: {x: 0, y: 0, z: 0}
   <GroundCheckRadius>k__BackingField: 0
   axleInfos:
   - <LeftWheel>k__BackingField: {fileID: 5583241534940801187}

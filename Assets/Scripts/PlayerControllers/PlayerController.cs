@@ -38,6 +38,8 @@ public abstract class PlayerController : MonoBehaviour
 
     [field: SerializeField] protected float Health { get; private set; }
 
+    [field: SerializeField, Min(25f)] protected float FallDamageThreshold { get; private set; }
+
     // Not a Property, is Private: Use GetGroundCheckPosition() instead.
     [field: SerializeField] Vector3 groundCheckPosition;
 
@@ -178,6 +180,21 @@ public abstract class PlayerController : MonoBehaviour
 
         Gizmos.color = new Color(0, 1, 1, .25f);
         Gizmos.DrawSphere(GetGroundCheckPosition(), GroundCheckRadius);
+    }
+
+    protected virtual void OnCollisionEnter(Collision collision)
+    {
+        float relativeVelocity = collision.relativeVelocity.magnitude;
+
+        if (relativeVelocity > 1f)
+        {
+            Debug.Log($"{name} collided with {collision.collider.name} at {relativeVelocity:F2}m/s");
+        }
+
+        if (relativeVelocity > FallDamageThreshold)
+        {
+            GameEvents.Die();
+        }
     }
 
     private void AddBouyancy()

@@ -212,6 +212,13 @@ public class BatMovement : MonoBehaviour
 
 			GroundMovement = new Vector3(Throw.x, 0f, Throw.y).normalized;
 			GroundMovement *= Bat.GroundSpeed;
+
+			// Stop applying gradual forward acceleration.
+			if (CurrentGradualFunc != null)
+			{
+				StopCoroutine(CurrentGradualFunc);
+				CurrentGradualFunc = null;
+			}
 		}
 	}
 

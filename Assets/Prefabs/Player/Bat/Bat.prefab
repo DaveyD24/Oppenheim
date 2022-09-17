@@ -179,6 +179,7 @@ MonoBehaviour:
   <MovementSpeed>k__BackingField: 5
   <RotationSpeed>k__BackingField: 7.5
   <Health>k__BackingField: 1
+  <FallDamageThreshold>k__BackingField: 25
   groundCheckPosition: {x: 0, y: 1.5, z: 0}
   <GroundCheckRadius>k__BackingField: 1
   bIsStandalone: 0
