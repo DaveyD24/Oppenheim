@@ -18,8 +18,10 @@ public abstract class PlayerController : MonoBehaviour
     private float fuel;
     private bool isFarEnoughAway = false;
 
+    private PlayerInput pInput;
+
     // input handleing things
-    public InputActionMap player;
+    public InputActionMap PlayerInput { get; private set; }
 
     public static IEnumerator DeathWaitTimer { get; private set; }
 
@@ -99,6 +101,56 @@ public abstract class PlayerController : MonoBehaviour
         return Active;
     }
 
+    /// <summary>
+    /// Setup the player to use the supplied controllers input.
+    /// </summary>
+    /// <param name="playerInput">The inout method, which is tied to the controller it is using.</param>
+    public virtual void ActivateInput(PlayerInput playerInput)
+    {
+        // setup the inputs to use
+        pInput = playerInput;
+        Inputs = playerInput.actions;
+
+        PlayerInput = Inputs.FindActionMap("Player");
+
+        PlayerInput.FindAction("Move").performed += Movement;
+        PlayerInput.FindAction("Move").canceled += Movement;
+        PlayerInput.FindAction("Ability").performed += PerformAbility;
+
+        // Inputs.Player.Ability.canceled += PerformAbility;
+        PlayerInput.FindAction("Jump").performed += Jump;
+
+
+        PlayerInput.FindAction("RotatePlayer").performed += RotatePlayer;
+        // Inputs.Player.Jump.canceled += Jump;
+        PlayerInput.Enable();
+
+        Active = true;
+        Camera.main.gameObject.GetComponent<SpringArm>().Target = transform;
+    }
+
+    public void RotatePlayer(InputAction.CallbackContext ctx)
+    {
+        GameEvents.RotatePlayer(PlayerIdSO.PlayerID, pInput);
+    }
+
+    public void DeactivateInput()
+    {
+        if (Inputs != null)
+        {
+            PlayerInput.FindAction("Move").performed -= Movement;
+            PlayerInput.FindAction("Move").canceled -= Movement;
+            PlayerInput.FindAction("Ability").performed -= PerformAbility;
+
+            // Inputs.Player.Ability.canceled += PerformAbility;
+            PlayerInput.FindAction("Jump").performed -= Jump;
+            PlayerInput.FindAction("RotatePlayer").performed -= RotatePlayer;
+
+            PlayerInput.Disable();
+            Active = false;
+        }
+    }
+
     // use Vector2 direction = ctx.ReadValue<Vector2>(); to get the values for each direction of movement
     protected abstract void Movement(InputAction.CallbackContext ctx);
 
@@ -159,7 +211,7 @@ public abstract class PlayerController : MonoBehaviour
 
     protected virtual void OnDeath()
     {
-        player.Disable();
+        PlayerInput.Disable();
         if (DeathWaitTimer == null)
         {
             Debug.Log("Player Died");
@@ -179,17 +231,7 @@ public abstract class PlayerController : MonoBehaviour
 
     protected virtual void OnDisable()
     {
-        if (Inputs != null)
-        {
-            player.FindAction("Move").performed -= Movement;
-            player.FindAction("Move").canceled -= Movement;
-            player.FindAction("Ability").performed -= PerformAbility;
-
-            // Inputs.Player.Ability.canceled += PerformAbility;
-            player.FindAction("Jump").performed -= Jump;
-
-            player.Disable();
-        }
+        DeactivateInput();
 
         GameEvents.OnCollectFuel -= MaxFuel;
         GameEvents.OnDie -= Respawn;
@@ -230,31 +272,6 @@ public abstract class PlayerController : MonoBehaviour
 
         return relativeVelocity > FallDamageThreshold;
     }
-    
-    public virtual void ActivateInput(PlayerInput playerInput)
-    {
-        // setup the inputs to use
-        Inputs = playerInput.actions;
-
-        player = Inputs.FindActionMap("Player");
-
-        player.FindAction("Move").performed += Movement;
-        player.FindAction("Move").canceled += Movement;
-        player.FindAction("Ability").performed += PerformAbility;
-
-        // Inputs.Player.Ability.canceled += PerformAbility;
-        player.FindAction("Jump").performed += Jump;
-
-        // Inputs.Player.Jump.canceled += Jump;
-        player.Enable();
-
-        Active = true;
-    }
-
-    private void AddBouyancy()
-    {
-        // apply bouyancy while in water
-    }
 
     protected virtual void Respawn()
     {
@@ -262,10 +279,20 @@ public abstract class PlayerController : MonoBehaviour
         Rb.velocity = Vector3.zero;
         Rb.transform.position = startPosition;
         transform.rotation = startRotation;
-        if (player != null)
+        if (PlayerInput != null)
         {
-            player.Enable();
+            PlayerInput.Enable();
         }
+    }
+
+    private void Awake()
+    {
+        GameEvents.OnAddPlayerSwitch(PlayerIdSO.PlayerID, this);
+    }
+
+    private void AddBouyancy()
+    {
+        // apply bouyancy while in water
     }
 
     private void MaxFuel(int playerId)

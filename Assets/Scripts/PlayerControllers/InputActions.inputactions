@@ -52,6 +52,14 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "RotatePlayer",
+                    "type": "Button",
+                    "id": "09e871df-132b-4c25-8cc0-623b32676f90",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -327,6 +335,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "SkipTut",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "775ff3c4-9236-4180-8fc0-858aad1e3f2d",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "RotatePlayer",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7e7504e0-4027-40ac-8832-3b532f2907b5",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "RotatePlayer",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

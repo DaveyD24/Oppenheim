@@ -65,6 +65,14 @@ public class @InputActions : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""RotatePlayer"",
+                    ""type"": ""Button"",
+                    ""id"": ""09e871df-132b-4c25-8cc0-623b32676f90"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -340,6 +348,28 @@ public class @InputActions : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""SkipTut"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""775ff3c4-9236-4180-8fc0-858aad1e3f2d"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""RotatePlayer"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7e7504e0-4027-40ac-8832-3b532f2907b5"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""RotatePlayer"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -961,6 +991,7 @@ public class @InputActions : IInputActionCollection, IDisposable
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
         m_Player_NextLine = m_Player.FindAction("NextLine", throwIfNotFound: true);
         m_Player_SkipTut = m_Player.FindAction("SkipTut", throwIfNotFound: true);
+        m_Player_RotatePlayer = m_Player.FindAction("RotatePlayer", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1031,6 +1062,7 @@ public class @InputActions : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_Jump;
     private readonly InputAction m_Player_NextLine;
     private readonly InputAction m_Player_SkipTut;
+    private readonly InputAction m_Player_RotatePlayer;
     public struct PlayerActions
     {
         private @InputActions m_Wrapper;
@@ -1041,6 +1073,7 @@ public class @InputActions : IInputActionCollection, IDisposable
         public InputAction @Jump => m_Wrapper.m_Player_Jump;
         public InputAction @NextLine => m_Wrapper.m_Player_NextLine;
         public InputAction @SkipTut => m_Wrapper.m_Player_SkipTut;
+        public InputAction @RotatePlayer => m_Wrapper.m_Player_RotatePlayer;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1068,6 +1101,9 @@ public class @InputActions : IInputActionCollection, IDisposable
                 @SkipTut.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSkipTut;
                 @SkipTut.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSkipTut;
                 @SkipTut.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSkipTut;
+                @RotatePlayer.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRotatePlayer;
+                @RotatePlayer.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRotatePlayer;
+                @RotatePlayer.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRotatePlayer;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -1090,6 +1126,9 @@ public class @InputActions : IInputActionCollection, IDisposable
                 @SkipTut.started += instance.OnSkipTut;
                 @SkipTut.performed += instance.OnSkipTut;
                 @SkipTut.canceled += instance.OnSkipTut;
+                @RotatePlayer.started += instance.OnRotatePlayer;
+                @RotatePlayer.performed += instance.OnRotatePlayer;
+                @RotatePlayer.canceled += instance.OnRotatePlayer;
             }
         }
     }
@@ -1285,6 +1324,7 @@ public class @InputActions : IInputActionCollection, IDisposable
         void OnJump(InputAction.CallbackContext context);
         void OnNextLine(InputAction.CallbackContext context);
         void OnSkipTut(InputAction.CallbackContext context);
+        void OnRotatePlayer(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {
