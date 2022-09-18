@@ -11,11 +11,8 @@ public class SwitchManager : MonoBehaviour
     private int playerAdded = 0;
     private int playerNo = 0;
 
-    private List<KeyValuePair<int, PlayerController>> controlledPlayers = new List<KeyValuePair<int, PlayerController>>();
-    private List<KeyValuePair<int, PlayerController>> uncontrolledPlayers = new List<KeyValuePair<int, PlayerController>>();
-    
-    // private SortedDictionary<int, PlayerController> controlledPlayers = new SortedDictionary<int, PlayerController>();
-    // private SortedDictionary<int, PlayerController> uncontrolledPlayers = new SortedDictionary<int, PlayerController>();
+    private Dictionary<int, PlayerController> controlledPlayers = new Dictionary<int, PlayerController>();
+    private Dictionary<int, PlayerController> uncontrolledPlayers = new Dictionary<int, PlayerController>();
     [SerializeField] private InputActions joinAction;
     // private Dictionary<int, PlayerController> uncontrolledPlayers = new Dictionary<int, PlayerController>();
 
@@ -54,13 +51,15 @@ public class SwitchManager : MonoBehaviour
 
     private void Awake()
     {
-        Monkey.Activate();
+        // Monkey.Activate();
         playerInputManager = GetComponent<PlayerInputManager>();
         InputSystem.DisableDevice(Mouse.current);
     }
 
     private void OnEnable()
     {
+        Monkey.enabled = true; ////////////////////////really random as it gets disabled somehow
+
         joinAction = new InputActions();
         joinAction.JoiningGame.Join.performed += Joining;
 
@@ -145,10 +144,10 @@ public class SwitchManager : MonoBehaviour
 
         int playerToControl = FindUncontrolledPlayer();
 
-        controlledPlayers.Add(uncontrolledPlayers[0]); //new KeyValuePair<int, PlayerController>(playerToControl, uncontrolledPlayers[playerToControl].Value));
-        uncontrolledPlayers.RemoveAt(0);
+        controlledPlayers.Add(playerToControl, uncontrolledPlayers[playerToControl]);
+        uncontrolledPlayers.Remove(playerToControl);
 
-        controlledPlayers[controlledPlayers.Count - 1].Value.ActivateInput(player);
+        controlledPlayers[playerToControl].ActivateInput(player);
 
         playerAdded++;
         Debug.Log("New Player Added: " + playerAdded);
@@ -186,26 +185,16 @@ public class SwitchManager : MonoBehaviour
     {
         if (uncontrolledPlayers.Count > 0)
         {
-            int currentPlayerIndex = 0;
-            for (int i = 0; i > controlledPlayers.Count; i++)
-            {
-                if (controlledPlayers[i].Key == currentPlayerId)
-                {
-                    currentPlayerId = i;
-                    break;
-                }
-            }
+            controlledPlayers[currentPlayerId].DeactivateInput();
 
-            controlledPlayers[currentPlayerIndex].Value.DeactivateInput();
+            int playerToControl = FindUncontrolledPlayer();
 
-            // int playerToControl = uncontrolledPlayers[0];
+            controlledPlayers.Add(playerToControl, uncontrolledPlayers[playerToControl]);
+            uncontrolledPlayers.Remove(playerToControl);
+            controlledPlayers[playerToControl].ActivateInput(playerInput);
 
-            controlledPlayers.Add(uncontrolledPlayers[0]);//playerToControl, uncontrolledPlayers[playerToControl]);
-            uncontrolledPlayers.RemoveAt(0);
-            controlledPlayers[controlledPlayers.Count - 1].Value.ActivateInput(playerInput);
-
-            uncontrolledPlayers.Add(controlledPlayers[currentPlayerIndex]);
-            controlledPlayers.RemoveAt(currentPlayerIndex);
+            uncontrolledPlayers.Add(currentPlayerId, controlledPlayers[currentPlayerId]);
+            controlledPlayers.Remove(currentPlayerId);
 
             // bygr
             ////if (Bat.IsActive())
@@ -236,13 +225,13 @@ public class SwitchManager : MonoBehaviour
         int playerToControl = 0;
 
         // get a random uncontrolled player
-        //foreach (var item in uncontrolledPlayers)
-        //{
-        //    playerToControl = item.Key;
-        //    break;
-        //}
+        foreach (var item in uncontrolledPlayers)
+        {
+            playerToControl = item.Key;
+            break;
+        }
 
-        return uncontrolledPlayers[0].Key;
+        return playerToControl;
     }
 
     private void DeactivateAll()
@@ -255,6 +244,6 @@ public class SwitchManager : MonoBehaviour
 
     private void AddInactive(int playerId, PlayerController playerController)
     {
-        uncontrolledPlayers.Add(new KeyValuePair<int, PlayerController>(playerId, playerController));
+        uncontrolledPlayers.Add(playerId, playerController);
     }
 }

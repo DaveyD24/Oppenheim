@@ -171,28 +171,32 @@ public abstract class PlayerController : MonoBehaviour
 
     protected virtual void Update()
     {
-        if (Rb.transform.position.y < 2.5f)
+        if (transform.position.y < 2)
         {
             OnDeath();
+            Debug.Log("I Died");
         }
 
         // AdjustFuelValue(-DefaultPlayerData.DecreaseFuelAmount.Evaluate(CurrentFuel / DefaultPlayerData.MaxFuel) * Time.deltaTime);
-        if (Vector3.Distance(this.gameObject.transform.position, switchManager.GetActivePlayer().transform.position) > 3.0f)
+        if (switchManager.GetActivePlayer() != null)
         {
-            isFarEnoughAway = true;
-        }
-        else
-        {
-            isFarEnoughAway = false;
-        }
+            if (Vector3.Distance(this.gameObject.transform.position, switchManager.GetActivePlayer().transform.position) > 3.0f)
+            {
+                isFarEnoughAway = true;
+            }
+            else
+            {
+                isFarEnoughAway = false;
+            }
 
-        if (!Active && isFarEnoughAway)
-        {
-            Vector3 desiredPosition = switchManager.GetActivePlayer().transform.position;
-            Vector3 smoothedPosition = Vector3.Lerp(this.transform.position, desiredPosition, FollowSpeed);
-            Vector3 flattenedPosition = new Vector3(smoothedPosition.x, this.transform.position.y, smoothedPosition.z);
-            this.transform.position = flattenedPosition;
-            this.transform.LookAt(switchManager.GetActivePlayer().transform);
+            if (!Active && isFarEnoughAway)
+            {
+                Vector3 desiredPosition = switchManager.GetActivePlayer().transform.position;
+                Vector3 smoothedPosition = Vector3.Lerp(this.transform.position, desiredPosition, FollowSpeed);
+                Vector3 flattenedPosition = new Vector3(smoothedPosition.x, this.transform.position.y, smoothedPosition.z);
+                this.transform.position = flattenedPosition;
+                this.transform.LookAt(switchManager.GetActivePlayer().transform);
+            }
         }
 
         //AdjustFuelValue(-DefaultPlayerData.DecreaseFuelAmount.Evaluate(CurrentFuel / DefaultPlayerData.MaxFuel) * Time.deltaTime);
@@ -211,7 +215,11 @@ public abstract class PlayerController : MonoBehaviour
 
     protected virtual void OnDeath()
     {
-        PlayerInput.Disable();
+        if (PlayerInput != null)
+        {
+            PlayerInput.Disable();
+        }
+
         if (DeathWaitTimer == null)
         {
             Debug.Log("Player Died");
@@ -263,7 +271,8 @@ public abstract class PlayerController : MonoBehaviour
 
     protected void TakeFallDamage(/*float impactVelocity*/ /* This might be needed if we want to decrease health at lower speeds, and kill at higher speeds. */)
     {
-        GameEvents.Die();
+        // bugs out so temporarily disabled
+        // GameEvents.Die();
     }
 
     protected virtual bool ShouldTakeFallDamage(Collision collision, out float relativeVelocity)
