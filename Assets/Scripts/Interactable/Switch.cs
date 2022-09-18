@@ -1,11 +1,17 @@
 using System;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Switch : Interactable
 {
+	public UnityEvent SwitchedOn;
+	public UnityEvent SwitchedOff;
+
 	// Read-only - Can only be modified with OnTriggerEnter.
+	// Use the Inspector Button 'Toggle Switch' during play instead.
 	[ReadOnly] public bool bIsOn = false;
+
 	[SerializeField] Switch[] ReliantSwitches;
 
 	Action<Switch> ReliantListeners;
@@ -22,16 +28,26 @@ public class Switch : Interactable
 	public virtual void OnTriggerEnter(Collider Entered)
 	{
 		// Turn this Switch ON/OFF.
-		ToggleSwitch(!bIsOn);
+		ToggleSwitch();
 
 		// Fires the ON/OFF Broadcasts.
 		CheckBroadcast(Entered);
 	}
 
 	// Trigger this Switch regardless of any reliant Switches.
-	protected virtual void ToggleSwitch(bool bOn)
+	public virtual void ToggleSwitch()
 	{
-		bIsOn = bOn;
+		bIsOn = !bIsOn;
+
+		if (bIsOn)
+		{
+			SwitchedOn?.Invoke();
+		}
+		else
+		{
+			SwitchedOff?.Invoke();
+		}
+
 		ReliantListeners?.Invoke(this);
 	}
 
