@@ -12,8 +12,10 @@ public class AxleInfo
     private TrailRenderer rightSkidTrails;
 
     [field: SerializeField] public WheelCollider LeftWheel { get; private set; }
+    [field: SerializeField] public GameObject LeftWheelDeath { get; private set; }
 
     [field: SerializeField] public WheelCollider RightWheel { get; private set; }
+    [field: SerializeField] public GameObject RightWheelDeath { get; private set; }
 
     [field: SerializeField] public bool Motor { get; private set; } // is this wheel attached to motor?
 

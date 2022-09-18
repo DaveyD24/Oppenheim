@@ -49,6 +49,22 @@ public class @InputActions : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""NextLine"",
+                    ""type"": ""Button"",
+                    ""id"": ""01c44777-c2df-4c9d-840a-0ead628151cd"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""SkipTut"",
+                    ""type"": ""Button"",
+                    ""id"": ""50e1b57c-1fbe-4b7c-966f-d37a1e44207e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -302,6 +318,28 @@ public class @InputActions : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c02f62fc-db73-4b4d-adc0-0e76f5c8b98d"",
+                    ""path"": ""<Keyboard>/c"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""NextLine"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""675f9e29-a543-4fc6-97ce-94f800b7965c"",
+                    ""path"": ""<Keyboard>/v"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SkipTut"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -812,6 +850,44 @@ public class @InputActions : IInputActionCollection, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""JoiningGame"",
+            ""id"": ""8e7edda6-216c-4f0e-a056-ad340569152c"",
+            ""actions"": [
+                {
+                    ""name"": ""Join"",
+                    ""type"": ""Button"",
+                    ""id"": ""85dfe547-ede2-4939-a5a7-5cdb298f0254"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""617148d7-3d11-44ef-8a2f-50c2f9703dfe"",
+                    ""path"": ""<Keyboard>/anyKey"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Join"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b639d3a9-e774-4c3e-909e-04fee80f4f7d"",
+                    ""path"": ""<Gamepad>/start"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Join"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -883,6 +959,8 @@ public class @InputActions : IInputActionCollection, IDisposable
         m_Player_Look = m_Player.FindAction("Look", throwIfNotFound: true);
         m_Player_Ability = m_Player.FindAction("Ability", throwIfNotFound: true);
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
+        m_Player_NextLine = m_Player.FindAction("NextLine", throwIfNotFound: true);
+        m_Player_SkipTut = m_Player.FindAction("SkipTut", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -895,6 +973,9 @@ public class @InputActions : IInputActionCollection, IDisposable
         m_UI_RightClick = m_UI.FindAction("RightClick", throwIfNotFound: true);
         m_UI_TrackedDevicePosition = m_UI.FindAction("TrackedDevicePosition", throwIfNotFound: true);
         m_UI_TrackedDeviceOrientation = m_UI.FindAction("TrackedDeviceOrientation", throwIfNotFound: true);
+        // JoiningGame
+        m_JoiningGame = asset.FindActionMap("JoiningGame", throwIfNotFound: true);
+        m_JoiningGame_Join = m_JoiningGame.FindAction("Join", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -948,6 +1029,8 @@ public class @InputActions : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_Look;
     private readonly InputAction m_Player_Ability;
     private readonly InputAction m_Player_Jump;
+    private readonly InputAction m_Player_NextLine;
+    private readonly InputAction m_Player_SkipTut;
     public struct PlayerActions
     {
         private @InputActions m_Wrapper;
@@ -956,6 +1039,8 @@ public class @InputActions : IInputActionCollection, IDisposable
         public InputAction @Look => m_Wrapper.m_Player_Look;
         public InputAction @Ability => m_Wrapper.m_Player_Ability;
         public InputAction @Jump => m_Wrapper.m_Player_Jump;
+        public InputAction @NextLine => m_Wrapper.m_Player_NextLine;
+        public InputAction @SkipTut => m_Wrapper.m_Player_SkipTut;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -977,6 +1062,12 @@ public class @InputActions : IInputActionCollection, IDisposable
                 @Jump.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJump;
                 @Jump.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJump;
                 @Jump.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJump;
+                @NextLine.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnNextLine;
+                @NextLine.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnNextLine;
+                @NextLine.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnNextLine;
+                @SkipTut.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSkipTut;
+                @SkipTut.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSkipTut;
+                @SkipTut.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSkipTut;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -993,6 +1084,12 @@ public class @InputActions : IInputActionCollection, IDisposable
                 @Jump.started += instance.OnJump;
                 @Jump.performed += instance.OnJump;
                 @Jump.canceled += instance.OnJump;
+                @NextLine.started += instance.OnNextLine;
+                @NextLine.performed += instance.OnNextLine;
+                @NextLine.canceled += instance.OnNextLine;
+                @SkipTut.started += instance.OnSkipTut;
+                @SkipTut.performed += instance.OnSkipTut;
+                @SkipTut.canceled += instance.OnSkipTut;
             }
         }
     }
@@ -1102,6 +1199,39 @@ public class @InputActions : IInputActionCollection, IDisposable
         }
     }
     public UIActions @UI => new UIActions(this);
+
+    // JoiningGame
+    private readonly InputActionMap m_JoiningGame;
+    private IJoiningGameActions m_JoiningGameActionsCallbackInterface;
+    private readonly InputAction m_JoiningGame_Join;
+    public struct JoiningGameActions
+    {
+        private @InputActions m_Wrapper;
+        public JoiningGameActions(@InputActions wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Join => m_Wrapper.m_JoiningGame_Join;
+        public InputActionMap Get() { return m_Wrapper.m_JoiningGame; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(JoiningGameActions set) { return set.Get(); }
+        public void SetCallbacks(IJoiningGameActions instance)
+        {
+            if (m_Wrapper.m_JoiningGameActionsCallbackInterface != null)
+            {
+                @Join.started -= m_Wrapper.m_JoiningGameActionsCallbackInterface.OnJoin;
+                @Join.performed -= m_Wrapper.m_JoiningGameActionsCallbackInterface.OnJoin;
+                @Join.canceled -= m_Wrapper.m_JoiningGameActionsCallbackInterface.OnJoin;
+            }
+            m_Wrapper.m_JoiningGameActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @Join.started += instance.OnJoin;
+                @Join.performed += instance.OnJoin;
+                @Join.canceled += instance.OnJoin;
+            }
+        }
+    }
+    public JoiningGameActions @JoiningGame => new JoiningGameActions(this);
     private int m_KeyboardMouseSchemeIndex = -1;
     public InputControlScheme KeyboardMouseScheme
     {
@@ -1153,6 +1283,8 @@ public class @InputActions : IInputActionCollection, IDisposable
         void OnLook(InputAction.CallbackContext context);
         void OnAbility(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
+        void OnNextLine(InputAction.CallbackContext context);
+        void OnSkipTut(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {
@@ -1166,5 +1298,9 @@ public class @InputActions : IInputActionCollection, IDisposable
         void OnRightClick(InputAction.CallbackContext context);
         void OnTrackedDevicePosition(InputAction.CallbackContext context);
         void OnTrackedDeviceOrientation(InputAction.CallbackContext context);
+    }
+    public interface IJoiningGameActions
+    {
+        void OnJoin(InputAction.CallbackContext context);
     }
 }

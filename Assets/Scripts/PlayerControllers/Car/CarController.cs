@@ -67,7 +67,7 @@ public class CarController : PlayerController
 
     public void ApplyLocalPositionToVisuals(WheelCollider collider)
     {
-        if (collider.transform.childCount == 0)
+        if (collider.transform.childCount == 0 || !collider.gameObject.activeSelf)
         {
             return;
         }
@@ -87,6 +87,18 @@ public class CarController : PlayerController
             ApplyMovement();
             AntiFlip();
         }
+    }
+
+    /// <summary>
+    /// checks if any part of the car is tounching the ground.
+    /// </summary>
+    /// <returns>if the car is tounching the ground or not.</returns>
+    public override bool IsGrounded()
+    {
+        Vector3 centerOffset = transform.position - (transform.up * rayCenterOffset);
+        Debug.DrawRay(transform.position - (transform.up * rayCenterOffset), Vector3.down * 5, Color.black);
+
+        return Physics.Raycast(centerOffset, Vector3.down, distCheckForGround);
     }
 
     protected override void Start()
@@ -140,18 +152,53 @@ public class CarController : PlayerController
     protected override void OnDeath()
     {
         base.OnDeath();
+        Debug.Log("Diying all the time");
+        foreach (AxleInfo axleInfo in axleInfos)
+        {
+            axleInfo.LeftWheel.gameObject.SetActive(false);
+            axleInfo.RightWheel.gameObject.SetActive(false);
+
+            axleInfo.LeftWheelDeath.SetActive(true);
+            axleInfo.RightWheelDeath.SetActive(true);
+
+            axleInfo.LeftWheelDeath.transform.parent = null;
+            axleInfo.LeftWheelDeath.transform.position = axleInfo.LeftWheel.gameObject.transform.position;
+            axleInfo.LeftWheelDeath.transform.rotation = axleInfo.LeftWheel.gameObject.transform.rotation;
+
+            axleInfo.RightWheelDeath.transform.parent = null;
+            axleInfo.RightWheelDeath.transform.position = axleInfo.RightWheel.gameObject.transform.position;
+            axleInfo.RightWheelDeath.transform.rotation = axleInfo.RightWheel.gameObject.transform.rotation;
+
+            // axleInfo.LeftWheelDeath.GetComponent<Rigidbody>().AddForce(100 * -transform.right);
+            // axleInfo.RightWheelDeath.GetComponent<Rigidbody>().AddForce(100 * transform.right);
+        }
+    }
+
+    protected override void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.green;
+        Gizmos.DrawCube(DashOffset + transform.position, Vector3.one * .25f);
+        Gizmos.color = Color.red;
+    }
+
+    protected override void Respawn()
+    {
+        base.Respawn();
         foreach (AxleInfo axleInfo in axleInfos)
         {
             if (axleInfo.LeftWheel != null)
             {
-                axleInfo.LeftWheel.transform.parent = null;
-                axleInfo.RightWheel.transform.parent = null;
+                axleInfo.LeftWheel.gameObject.SetActive(true);
+                axleInfo.RightWheel.gameObject.SetActive(true);
 
-                axleInfo.LeftWheel.gameObject.AddComponent<Rigidbody>().AddForce(250 * -transform.right);
-                axleInfo.RightWheel.gameObject.AddComponent<Rigidbody>().AddForce(250 * transform.right);
+                axleInfo.LeftWheelDeath.SetActive(false);
+                axleInfo.RightWheelDeath.SetActive(false);
 
-                Destroy(axleInfo.LeftWheel.gameObject.GetComponent<WheelCollider>());
-                Destroy(axleInfo.RightWheel.gameObject.GetComponent<WheelCollider>());
+                axleInfo.LeftWheelDeath.GetComponent<Rigidbody>().velocity = Vector3.zero;
+                axleInfo.LeftWheelDeath.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+
+                axleInfo.RightWheelDeath.GetComponent<Rigidbody>().velocity = Vector3.zero;
+                axleInfo.RightWheelDeath.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
             }
         }
     }
@@ -164,6 +211,10 @@ public class CarController : PlayerController
         ParticleSystem.EmissionModule particleEmission = windParticles.emission;
         ParticleSystem.MainModule mainSettings = windParticles.main;
         float velocityDamped = Rb.velocity.magnitude * particelSpeedMultiplier;
+        if (BIsDash)
+        {
+            velocityDamped *= 5;
+        }
 
         particleEmission.rateOverDistance = velocityDamped;
         mainSettings.startSpeed = Rb.velocity.magnitude;
@@ -172,7 +223,7 @@ public class CarController : PlayerController
     private void ApplyMovement()
     {
         Motor = MovementSpeed * inputAmount.y;
-        float steering = RotationSpeed * inputAmount.x;
+        float steering = BIsDash ? 0 : RotationSpeed * inputAmount.x;
 
         if (Active)
         {
@@ -182,32 +233,35 @@ public class CarController : PlayerController
         int numWheelGrounded = 0;
         foreach (AxleInfo axleInfo in axleInfos)
         {
-            if (axleInfo.Steering && Active)
+            if (axleInfo.LeftWheel != null && axleInfo.RightWheel != null)
             {
-                axleInfo.LeftWheel.steerAngle = steering;
-                axleInfo.RightWheel.steerAngle = steering;
+                if (axleInfo.Steering && Active)
+                {
+                    axleInfo.LeftWheel.steerAngle = steering;
+                    axleInfo.RightWheel.steerAngle = steering;
+                }
+
+                if (axleInfo.Motor && Active)
+                {
+                    axleInfo.LeftWheel.motorTorque = Motor;
+                    axleInfo.RightWheel.motorTorque = Motor;
+                }
+
+                if (axleInfo.LeftWheel.isGrounded)
+                {
+                    numWheelGrounded++;
+                }
+
+                if (axleInfo.RightWheel.isGrounded)
+                {
+                    numWheelGrounded++;
+                }
+
+                ApplyBreaking(axleInfo);
+
+                ApplyLocalPositionToVisuals(axleInfo.LeftWheel);
+                ApplyLocalPositionToVisuals(axleInfo.RightWheel);
             }
-
-            if (axleInfo.Motor && Active)
-            {
-                axleInfo.LeftWheel.motorTorque = Motor;
-                axleInfo.RightWheel.motorTorque = Motor;
-            }
-
-            if (axleInfo.LeftWheel.isGrounded)
-            {
-                numWheelGrounded++;
-            }
-
-            if (axleInfo.RightWheel.isGrounded)
-            {
-                numWheelGrounded++;
-            }
-
-            ApplyBreaking(axleInfo);
-
-            ApplyLocalPositionToVisuals(axleInfo.LeftWheel);
-            ApplyLocalPositionToVisuals(axleInfo.RightWheel);
         }
 
         BAnyWheelGrounded = numWheelGrounded > 0;
@@ -301,18 +355,6 @@ public class CarController : PlayerController
         return true;
     }
 
-    /// <summary>
-    /// checks if any part of the car is tounching the ground.
-    /// </summary>
-    /// <returns>if the car is tounching the ground or not.</returns>
-    public override bool IsGrounded()
-    {
-        Vector3 centerOffset = transform.position - (transform.up * rayCenterOffset);
-        Debug.DrawRay(transform.position - (transform.up * rayCenterOffset), Vector3.down * 5, Color.black);
-
-        return Physics.Raycast(centerOffset, Vector3.down, distCheckForGround);
-    }
-
 #if UNITY_EDITOR
     private void OnGUI()
     {
@@ -327,13 +369,6 @@ public class CarController : PlayerController
         return Rb.velocity.magnitude * 3.6f;
     }
 
-   // private void OnDrawGizmosSelected()
-   // {
-   //     gizmos.color = color.green;
-   //     Gizmos.DrawCube(transform.position, Vector3.one);
-   //     Gizmos.color = Color.red;
-   // }
-
     private void BuildDashTree()
     {
         DashTransition dashInit = new DashTransition(this, -1); // play the animation to transition to dashing
@@ -345,59 +380,62 @@ public class CarController : PlayerController
 
     private void ApplyIndicator()
     {
-        if (inputAmount.x > 0.5f)
+        if (Active)
         {
-            // flick on and off the right indicator
-            if (CarMaterials[5] != indicatorMat)
+            if (inputAmount.x > 0.5f)
             {
-                CarMaterials[5] = indicatorMat;
-                BodyMeshRenderer.sharedMaterials = CarMaterials;
-            }
-            else if (CarMaterials[5] != normalLightMat)
-            {
-                CarMaterials[5] = normalLightMat;
-                BodyMeshRenderer.sharedMaterials = CarMaterials;
-            }
+                // flick on and off the right indicator
+                if (CarMaterials[5] != indicatorMat)
+                {
+                    CarMaterials[5] = indicatorMat;
+                    BodyMeshRenderer.sharedMaterials = CarMaterials;
+                }
+                else if (CarMaterials[5] != normalLightMat)
+                {
+                    CarMaterials[5] = normalLightMat;
+                    BodyMeshRenderer.sharedMaterials = CarMaterials;
+                }
 
-            if (CarMaterials[3] != normalLightMat)
-            {
-                CarMaterials[3] = normalLightMat;
-                BodyMeshRenderer.sharedMaterials = CarMaterials;
+                if (CarMaterials[3] != normalLightMat)
+                {
+                    CarMaterials[3] = normalLightMat;
+                    BodyMeshRenderer.sharedMaterials = CarMaterials;
+                }
             }
-        }
-        else if (inputAmount.x < -0.5f)
-        {
-            // flick on and off the left indicator
-            if (CarMaterials[3] != indicatorMat)
+            else if (inputAmount.x < -0.5f)
             {
-                CarMaterials[3] = indicatorMat;
-                BodyMeshRenderer.sharedMaterials = CarMaterials;
-            }
-            else if (CarMaterials[3] != normalLightMat)
-            {
-                CarMaterials[3] = normalLightMat;
-                BodyMeshRenderer.sharedMaterials = CarMaterials;
-            }
+                // flick on and off the left indicator
+                if (CarMaterials[3] != indicatorMat)
+                {
+                    CarMaterials[3] = indicatorMat;
+                    BodyMeshRenderer.sharedMaterials = CarMaterials;
+                }
+                else if (CarMaterials[3] != normalLightMat)
+                {
+                    CarMaterials[3] = normalLightMat;
+                    BodyMeshRenderer.sharedMaterials = CarMaterials;
+                }
 
-            if (CarMaterials[5] != normalLightMat)
-            {
-                CarMaterials[5] = normalLightMat;
-                BodyMeshRenderer.sharedMaterials = CarMaterials;
+                if (CarMaterials[5] != normalLightMat)
+                {
+                    CarMaterials[5] = normalLightMat;
+                    BodyMeshRenderer.sharedMaterials = CarMaterials;
+                }
             }
-        }
-        else
-        {
-            // no indicator pressed
-            if (CarMaterials[5] != normalLightMat)
+            else
             {
-                CarMaterials[5] = normalLightMat;
-                BodyMeshRenderer.sharedMaterials = CarMaterials;
-            }
+                // no indicator pressed
+                if (CarMaterials[5] != normalLightMat)
+                {
+                    CarMaterials[5] = normalLightMat;
+                    BodyMeshRenderer.sharedMaterials = CarMaterials;
+                }
 
-            if (CarMaterials[3] != normalLightMat)
-            {
-                CarMaterials[3] = normalLightMat;
-                BodyMeshRenderer.sharedMaterials = CarMaterials;
+                if (CarMaterials[3] != normalLightMat)
+                {
+                    CarMaterials[3] = normalLightMat;
+                    BodyMeshRenderer.sharedMaterials = CarMaterials;
+                }
             }
         }
     }

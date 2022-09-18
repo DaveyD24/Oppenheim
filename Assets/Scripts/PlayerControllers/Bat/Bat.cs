@@ -1,6 +1,7 @@
 using UnityEngine;
 using static UnityEngine.InputSystem.InputAction;
 using static global::BatMathematics;
+using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(BatMovement), typeof(BatEvents))]
 public class Bat : PlayerController
@@ -31,7 +32,11 @@ public class Bat : PlayerController
 
 		MovementComponent = GetComponent<BatMovement>();
 		EventsComponent = GetComponent<BatEvents>();
+	}
 
+	public override void ActivateInput(PlayerInput playerInput)
+	{
+		base.ActivateInput(playerInput);
 		BindMiscellaneousInputs();
 
 #if UNITY_EDITOR
@@ -42,23 +47,23 @@ public class Bat : PlayerController
 
 	private void BindMiscellaneousInputs()
 	{
-		Inputs.Player.Move.canceled += (CallbackContext Context) =>
+		player.FindAction("Move").canceled += (CallbackContext Context) =>
 		{
 			MovementComponent.HandleMovement(Vector2.zero);
 			MovementComponent.StopGradualAcceleration();
 		};
 
-		Inputs.Player.Jump.canceled += (CallbackContext Context) =>
+		player.FindAction("Jump").canceled += (CallbackContext Context) =>
 		{
 			MovementComponent.HandleJump(0f);
 		};
 
-		Inputs.Player.Look.performed += (CallbackContext Context) =>
+		player.FindAction("Look").performed += (CallbackContext Context) =>
 		{
 			MovementComponent.LookBinding(ref Context);
 		};
 
-		Inputs.Player.Look.canceled += (CallbackContext Context) =>
+		player.FindAction("Look").canceled += (CallbackContext Context) =>
 		{
 			MovementComponent.LookBinding(ref Context);
 			//MovementComponent.HandleLook(ref Context);

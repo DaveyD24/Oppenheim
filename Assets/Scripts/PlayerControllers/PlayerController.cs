@@ -16,6 +16,12 @@ public abstract class PlayerController : MonoBehaviour
     private Vector3 startPosition;
     private Quaternion startRotation;
     private float fuel;
+    private bool isFarEnoughAway = false;
+
+    // input handleing things
+    public InputActionMap player;
+
+    public static IEnumerator DeathWaitTimer { get; private set; }
 
     [HideInInspector] public bool Active { get; set; } = false;
 
@@ -47,9 +53,10 @@ public abstract class PlayerController : MonoBehaviour
 
     protected float CurrentFuel { get => fuel; set => fuel = Mathf.Clamp(value, 0, DefaultPlayerData.MaxFuel); }
 
-    protected InputActions Inputs { get; private set; }
+    SwitchManager switchManager;
+    float FollowSpeed = 0.001f;
 
-
+    protected InputActionAsset Inputs { get; private set; }
 
     public virtual bool IsGrounded()
     {
@@ -114,15 +121,35 @@ public abstract class PlayerController : MonoBehaviour
     {
         if (Rb.transform.position.y < 2.5f)
         {
-            GameEvents.Die();
+            OnDeath();
         }
 
         // AdjustFuelValue(-DefaultPlayerData.DecreaseFuelAmount.Evaluate(CurrentFuel / DefaultPlayerData.MaxFuel) * Time.deltaTime);
+        if (Vector3.Distance(this.gameObject.transform.position, switchManager.GetActivePlayer().transform.position) > 3.0f)
+        {
+            isFarEnoughAway = true;
+        }
+        else
+        {
+            isFarEnoughAway = false;
+        }
+
+        if (!Active && isFarEnoughAway)
+        {
+            Vector3 desiredPosition = switchManager.GetActivePlayer().transform.position;
+            Vector3 smoothedPosition = Vector3.Lerp(this.transform.position, desiredPosition, FollowSpeed);
+            Vector3 flattenedPosition = new Vector3(smoothedPosition.x, this.transform.position.y, smoothedPosition.z);
+            this.transform.position = flattenedPosition;
+            this.transform.LookAt(switchManager.GetActivePlayer().transform);
+        }
+
+        //AdjustFuelValue(-DefaultPlayerData.DecreaseFuelAmount.Evaluate(CurrentFuel / DefaultPlayerData.MaxFuel) * Time.deltaTime);
     }
 
     protected virtual void Start()
     {
         Rb = GetComponent<Rigidbody>();
+        switchManager = FindObjectOfType<SwitchManager>();
         Weight = Rb.mass;
         fuel = DefaultPlayerData.MaxFuel;
 
@@ -132,27 +159,19 @@ public abstract class PlayerController : MonoBehaviour
 
     protected virtual void OnDeath()
     {
-        Debug.Log("Player Died");
+        player.Disable();
+        if (DeathWaitTimer == null)
+        {
+            Debug.Log("Player Died");
 
-        Inputs.Player.Disable();
+            DeathWaitTimer = DeathWait();
+            StartCoroutine(DeathWaitTimer);
+        }
     }
 
     // https://docs.unity3d.com/Packages/com.unity.inputsystem@1.0/manual/Actions.html see here for further details on the input types
     protected virtual void OnEnable()
     {
-        // setup the inputs to use
-        Inputs = new InputActions();
-
-        Inputs.Player.Move.performed += Movement;
-        Inputs.Player.Move.canceled += Movement;
-        Inputs.Player.Ability.performed += PerformAbility;
-
-        // Inputs.Player.Ability.canceled += PerformAbility;
-        Inputs.Player.Jump.performed += Jump;
-
-        // Inputs.Player.Jump.canceled += Jump;
-        Inputs.Player.Enable();
-
         // assign the nessesary functions to the event system
         GameEvents.OnCollectFuel += MaxFuel;
         GameEvents.OnDie += Respawn;
@@ -160,18 +179,21 @@ public abstract class PlayerController : MonoBehaviour
 
     protected virtual void OnDisable()
     {
-        Inputs = new InputActions();
+        if (Inputs != null)
+        {
+            player.FindAction("Move").performed -= Movement;
+            player.FindAction("Move").canceled -= Movement;
+            player.FindAction("Ability").performed -= PerformAbility;
 
-        Inputs.Player.Move.performed -= Movement;
-        Inputs.Player.Ability.performed -= PerformAbility;
-        Inputs.Player.Jump.performed -= Jump;
+            // Inputs.Player.Ability.canceled += PerformAbility;
+            player.FindAction("Jump").performed -= Jump;
 
-        Inputs.Player.Disable();
+            player.Disable();
+        }
 
         GameEvents.OnCollectFuel -= MaxFuel;
         GameEvents.OnDie -= Respawn;
     }
-
 
     protected virtual void OnDrawGizmosSelected()
     {
@@ -208,18 +230,42 @@ public abstract class PlayerController : MonoBehaviour
 
         return relativeVelocity > FallDamageThreshold;
     }
+    
+    public virtual void ActivateInput(PlayerInput playerInput)
+    {
+        // setup the inputs to use
+        Inputs = playerInput.actions;
+
+        player = Inputs.FindActionMap("Player");
+
+        player.FindAction("Move").performed += Movement;
+        player.FindAction("Move").canceled += Movement;
+        player.FindAction("Ability").performed += PerformAbility;
+
+        // Inputs.Player.Ability.canceled += PerformAbility;
+        player.FindAction("Jump").performed += Jump;
+
+        // Inputs.Player.Jump.canceled += Jump;
+        player.Enable();
+
+        Active = true;
+    }
 
     private void AddBouyancy()
     {
         // apply bouyancy while in water
     }
 
-    private void Respawn()
+    protected virtual void Respawn()
     {
         // respawning code...
         Rb.velocity = Vector3.zero;
         Rb.transform.position = startPosition;
         transform.rotation = startRotation;
+        if (player != null)
+        {
+            player.Enable();
+        }
     }
 
     private void MaxFuel(int playerId)
@@ -228,5 +274,13 @@ public abstract class PlayerController : MonoBehaviour
         {
             AdjustFuelValue(DefaultPlayerData.MaxFuel);
         }
+    }
+
+    private IEnumerator DeathWait()
+    {
+        Debug.Log("Deathingwqertgyhferwrtf");
+        yield return new WaitForSeconds(5);
+        GameEvents.Die();
+        DeathWaitTimer = null;
     }
 }
