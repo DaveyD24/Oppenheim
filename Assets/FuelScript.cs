@@ -8,18 +8,22 @@ public class FuelScript : MonoBehaviour
     private Image fuelBar;
     public float currentFuel;
     private float maxFuel = 100f;
-    //PlayerControllerScript player
+    [SerializeField]
+    private Image iconImg;
+    [SerializeField]
+    private Sprite
+    //PlayerControllerScript currentPlayer
 
     private void Start() 
     {
         fuelBar = GetComponent<Image>();
-        //player = FindObjectOfType<PlayerControllerScript>();
+        //currentPlayer = FindObjectOfType<PlayerControllerScript>();
         
     }
 
     private void Update()
     {
-        //currentFuel = player.fuel;
+        //currentFuel = currentPlayer.fuel;
         currentFuel = 50f;
         fuelBar.fillAmount = currentFuel / maxFuel;
     }
