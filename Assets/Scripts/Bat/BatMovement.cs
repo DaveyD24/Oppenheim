@@ -392,7 +392,7 @@ public class BatMovement : MonoBehaviour
 			transform.rotation = Quaternion.FromToRotation(transform.up, Vector3.up) * transform.rotation;
 
 			// Stop moving.
-			Bat.Physics.velocity = Bat.Physics.angularVelocity = Vector3.zero;
+			/*Bat.Physics.velocity = */Bat.Physics.angularVelocity = Vector3.zero;
 
 			// Stop everything else. Switch back to the Stand Idle animation.
 			Bat.Events.OnAnimationStateChanged?.Invoke(EAnimationState.StandIdle);

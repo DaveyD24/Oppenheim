@@ -184,17 +184,29 @@ public abstract class PlayerController : MonoBehaviour
 
     protected virtual void OnCollisionEnter(Collision collision)
     {
-        float relativeVelocity = collision.relativeVelocity.magnitude;
+        bool bTakeFallDamage = ShouldTakeFallDamage(collision, out float relativeVelocity);
 
-        if (relativeVelocity > 1f)
+        if (relativeVelocity > MovementSpeed + 1f)
         {
             Debug.Log($"{name} collided with {collision.collider.name} at {relativeVelocity:F2}m/s");
         }
 
-        if (relativeVelocity > FallDamageThreshold)
+        if (bTakeFallDamage)
         {
-            GameEvents.Die();
+            TakeFallDamage(/*relativeVelocity*/);
         }
+    }
+
+    protected void TakeFallDamage(/*float impactVelocity*/ /* This might be needed if we want to decrease health at lower speeds, and kill at higher speeds. */)
+    {
+        GameEvents.Die();
+    }
+
+    protected virtual bool ShouldTakeFallDamage(Collision collision, out float relativeVelocity)
+    {
+        relativeVelocity = collision.relativeVelocity.magnitude;
+
+        return relativeVelocity > FallDamageThreshold;
     }
 
     private void AddBouyancy()

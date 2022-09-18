@@ -1,5 +1,6 @@
 using UnityEngine;
 using static UnityEngine.InputSystem.InputAction;
+using static global::BatMathematics;
 
 [RequireComponent(typeof(BatMovement), typeof(BatEvents))]
 public class Bat : PlayerController
@@ -73,6 +74,11 @@ public class Bat : PlayerController
 		// Can't modify Health because it's a protected value with no set method.
 	}
 
+	public void FallDamage(/*float ImpactVelocity*/)
+	{
+		TakeFallDamage(/*ImpactVelocity*/);
+	}
+
 	protected override void Movement(CallbackContext Context) => MovementComponent.MovementBinding(ref Context);
 
 	protected override void Jump(CallbackContext Context) => MovementComponent.JumpBinding(ref Context);
@@ -88,5 +94,22 @@ public class Bat : PlayerController
 		WorldToLocalDown += Rb.centerOfMass;
 
 		return transform.position + WorldToLocalDown;
+	}
+
+	protected override bool ShouldTakeFallDamage(Collision collision, out float relativeVelocity)
+	{
+		relativeVelocity = collision.relativeVelocity.magnitude;
+
+		if (relativeVelocity < FallDamageThreshold)
+			return false;
+
+		// Take damage if landing/crashing at an Angle > than 30 degrees of the surface.
+		float Angle = FAngle(transform.up, collision.contacts[0].normal);
+		bool bTakeFallDamage = Angle > 30f;
+
+		if (bTakeFallDamage)
+			Debug.Log($"At Angle: {Angle}");
+
+		return bTakeFallDamage;
 	}
 }
