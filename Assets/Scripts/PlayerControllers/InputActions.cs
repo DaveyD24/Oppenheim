@@ -850,6 +850,44 @@ public class @InputActions : IInputActionCollection, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""JoiningGame"",
+            ""id"": ""8e7edda6-216c-4f0e-a056-ad340569152c"",
+            ""actions"": [
+                {
+                    ""name"": ""Join"",
+                    ""type"": ""Button"",
+                    ""id"": ""85dfe547-ede2-4939-a5a7-5cdb298f0254"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""617148d7-3d11-44ef-8a2f-50c2f9703dfe"",
+                    ""path"": ""<Keyboard>/anyKey"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Join"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b639d3a9-e774-4c3e-909e-04fee80f4f7d"",
+                    ""path"": ""<Gamepad>/start"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Join"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -935,6 +973,9 @@ public class @InputActions : IInputActionCollection, IDisposable
         m_UI_RightClick = m_UI.FindAction("RightClick", throwIfNotFound: true);
         m_UI_TrackedDevicePosition = m_UI.FindAction("TrackedDevicePosition", throwIfNotFound: true);
         m_UI_TrackedDeviceOrientation = m_UI.FindAction("TrackedDeviceOrientation", throwIfNotFound: true);
+        // JoiningGame
+        m_JoiningGame = asset.FindActionMap("JoiningGame", throwIfNotFound: true);
+        m_JoiningGame_Join = m_JoiningGame.FindAction("Join", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -1158,6 +1199,39 @@ public class @InputActions : IInputActionCollection, IDisposable
         }
     }
     public UIActions @UI => new UIActions(this);
+
+    // JoiningGame
+    private readonly InputActionMap m_JoiningGame;
+    private IJoiningGameActions m_JoiningGameActionsCallbackInterface;
+    private readonly InputAction m_JoiningGame_Join;
+    public struct JoiningGameActions
+    {
+        private @InputActions m_Wrapper;
+        public JoiningGameActions(@InputActions wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Join => m_Wrapper.m_JoiningGame_Join;
+        public InputActionMap Get() { return m_Wrapper.m_JoiningGame; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(JoiningGameActions set) { return set.Get(); }
+        public void SetCallbacks(IJoiningGameActions instance)
+        {
+            if (m_Wrapper.m_JoiningGameActionsCallbackInterface != null)
+            {
+                @Join.started -= m_Wrapper.m_JoiningGameActionsCallbackInterface.OnJoin;
+                @Join.performed -= m_Wrapper.m_JoiningGameActionsCallbackInterface.OnJoin;
+                @Join.canceled -= m_Wrapper.m_JoiningGameActionsCallbackInterface.OnJoin;
+            }
+            m_Wrapper.m_JoiningGameActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @Join.started += instance.OnJoin;
+                @Join.performed += instance.OnJoin;
+                @Join.canceled += instance.OnJoin;
+            }
+        }
+    }
+    public JoiningGameActions @JoiningGame => new JoiningGameActions(this);
     private int m_KeyboardMouseSchemeIndex = -1;
     public InputControlScheme KeyboardMouseScheme
     {
@@ -1224,5 +1298,9 @@ public class @InputActions : IInputActionCollection, IDisposable
         void OnRightClick(InputAction.CallbackContext context);
         void OnTrackedDevicePosition(InputAction.CallbackContext context);
         void OnTrackedDeviceOrientation(InputAction.CallbackContext context);
+    }
+    public interface IJoiningGameActions
+    {
+        void OnJoin(InputAction.CallbackContext context);
     }
 }

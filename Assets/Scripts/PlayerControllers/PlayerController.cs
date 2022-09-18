@@ -16,6 +16,10 @@ public abstract class PlayerController : MonoBehaviour
     private Vector3 startPosition;
     private Quaternion startRotation;
     private float fuel;
+    private bool isFarEnoughAway = false;
+
+    // input handleing things
+    public InputActionMap player;
 
     public static IEnumerator DeathWaitTimer { get; private set; }
 
@@ -40,6 +44,8 @@ public abstract class PlayerController : MonoBehaviour
 
     [field: SerializeField] protected float Health { get; private set; }
 
+    [field: SerializeField, Min(25f)] protected float FallDamageThreshold { get; private set; }
+
     // Not a Property, is Private: Use GetGroundCheckPosition() instead.
     [field: SerializeField] Vector3 groundCheckPosition;
 
@@ -50,7 +56,7 @@ public abstract class PlayerController : MonoBehaviour
     SwitchManager switchManager;
     float FollowSpeed = 0.001f;
 
-    protected InputActions Inputs { get; private set; }
+    protected InputActionAsset Inputs { get; private set; }
 
     public virtual bool IsGrounded()
     {
@@ -118,6 +124,7 @@ public abstract class PlayerController : MonoBehaviour
             OnDeath();
         }
 
+        // AdjustFuelValue(-DefaultPlayerData.DecreaseFuelAmount.Evaluate(CurrentFuel / DefaultPlayerData.MaxFuel) * Time.deltaTime);
         if (Vector3.Distance(this.gameObject.transform.position, switchManager.GetActivePlayer().transform.position) > 3.0f)
         {
             isFarEnoughAway = true;
@@ -127,7 +134,7 @@ public abstract class PlayerController : MonoBehaviour
             isFarEnoughAway = false;
         }
 
-        if (!active && isFarEnoughAway)
+        if (!Active && isFarEnoughAway)
         {
             Vector3 desiredPosition = switchManager.GetActivePlayer().transform.position;
             Vector3 smoothedPosition = Vector3.Lerp(this.transform.position, desiredPosition, FollowSpeed);
@@ -152,7 +159,7 @@ public abstract class PlayerController : MonoBehaviour
 
     protected virtual void OnDeath()
     {
-        Inputs.Player.Disable();
+        player.Disable();
         if (DeathWaitTimer == null)
         {
             Debug.Log("Player Died");
@@ -165,19 +172,6 @@ public abstract class PlayerController : MonoBehaviour
     // https://docs.unity3d.com/Packages/com.unity.inputsystem@1.0/manual/Actions.html see here for further details on the input types
     protected virtual void OnEnable()
     {
-        // setup the inputs to use
-        Inputs = new InputActions();
-
-        Inputs.Player.Move.performed += Movement;
-        Inputs.Player.Move.canceled += Movement;
-        Inputs.Player.Ability.performed += PerformAbility;
-
-        // Inputs.Player.Ability.canceled += PerformAbility;
-        Inputs.Player.Jump.performed += Jump;
-
-        // Inputs.Player.Jump.canceled += Jump;
-        Inputs.Player.Enable();
-
         // assign the nessesary functions to the event system
         GameEvents.OnCollectFuel += MaxFuel;
         GameEvents.OnDie += Respawn;
@@ -185,11 +179,17 @@ public abstract class PlayerController : MonoBehaviour
 
     protected virtual void OnDisable()
     {
-        Inputs.Player.Move.performed -= Movement;
-        Inputs.Player.Ability.performed -= PerformAbility;
-        Inputs.Player.Jump.performed -= Jump;
+        if (Inputs != null)
+        {
+            player.FindAction("Move").performed -= Movement;
+            player.FindAction("Move").canceled -= Movement;
+            player.FindAction("Ability").performed -= PerformAbility;
 
-        Inputs.Player.Disable();
+            // Inputs.Player.Ability.canceled += PerformAbility;
+            player.FindAction("Jump").performed -= Jump;
+
+            player.Disable();
+        }
 
         GameEvents.OnCollectFuel -= MaxFuel;
         GameEvents.OnDie -= Respawn;
@@ -200,9 +200,55 @@ public abstract class PlayerController : MonoBehaviour
         if (!Rb)
             Rb = GetComponent<Rigidbody>();
 
-        Gizmos.color = Color.cyan;
+        Gizmos.color = new Color(0, 1, 1, .25f);
         Gizmos.DrawSphere(GetGroundCheckPosition(), GroundCheckRadius);
-        
+    }
+
+    protected virtual void OnCollisionEnter(Collision collision)
+    {
+        bool bTakeFallDamage = ShouldTakeFallDamage(collision, out float relativeVelocity);
+
+        if (relativeVelocity > MovementSpeed + 1f)
+        {
+            Debug.Log($"{name} collided with {collision.collider.name} at {relativeVelocity:F2}m/s");
+        }
+
+        if (bTakeFallDamage)
+        {
+            TakeFallDamage(/*relativeVelocity*/);
+        }
+    }
+
+    protected void TakeFallDamage(/*float impactVelocity*/ /* This might be needed if we want to decrease health at lower speeds, and kill at higher speeds. */)
+    {
+        GameEvents.Die();
+    }
+
+    protected virtual bool ShouldTakeFallDamage(Collision collision, out float relativeVelocity)
+    {
+        relativeVelocity = collision.relativeVelocity.magnitude;
+
+        return relativeVelocity > FallDamageThreshold;
+    }
+    
+    public virtual void ActivateInput(PlayerInput playerInput)
+    {
+        // setup the inputs to use
+        Inputs = playerInput.actions;
+
+        player = Inputs.FindActionMap("Player");
+
+        player.FindAction("Move").performed += Movement;
+        player.FindAction("Move").canceled += Movement;
+        player.FindAction("Ability").performed += PerformAbility;
+
+        // Inputs.Player.Ability.canceled += PerformAbility;
+        player.FindAction("Jump").performed += Jump;
+
+        // Inputs.Player.Jump.canceled += Jump;
+        player.Enable();
+
+        Active = true;
     }
 
     private void AddBouyancy()
@@ -216,7 +262,10 @@ public abstract class PlayerController : MonoBehaviour
         Rb.velocity = Vector3.zero;
         Rb.transform.position = startPosition;
         transform.rotation = startRotation;
-        Inputs.Player.Enable();
+        if (player != null)
+        {
+            player.Enable();
+        }
     }
 
     private void MaxFuel(int playerId)
@@ -233,23 +282,5 @@ public abstract class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(5);
         GameEvents.Die();
         DeathWaitTimer = null;
-    }
-
-    [HideInInspector] public bool active = false;
-    public bool isFarEnoughAway = false;
-    [SerializeField] Canvas canvas;
-
-    public void Activate()
-    {
-        active = true;
-        FindObjectOfType<Camera>().GetComponent<SpringArm>().Target = this.gameObject.transform;
-        GetComponentInChildren<SpriteRenderer>().enabled = true;
-        //canvas.gameObject.SetActive(true);
-    }
-
-    protected virtual void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.cyan;
-        Gizmos.DrawSphere(GetGroundCheckPosition(), GroundCheckRadius);
     }
 }

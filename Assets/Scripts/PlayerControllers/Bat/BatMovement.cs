@@ -1,5 +1,4 @@
-﻿
-/* --           Pre-Processor Directives           -- */
+﻿/* --           Pre-Processor Directives           -- */
 
 #if UNITY_EDITOR
 // Show diagnostic data on the top left.
@@ -7,7 +6,7 @@
 #endif
 
 // Enables Yaw control with the Horizontal Axis of InputActions.Move.
-//#define USE_MOVE_YAW
+// #define USE_MOVE_YAW
 // Enables Yaw control with the Horizontal Axis of InputActions.Look.
 #define USE_LOOK_YAW
 
@@ -15,6 +14,11 @@
 #error NO YAW INPUT IS DEFINED!
 #endif
 
+#if USE_MOVE_YAW && USE_LOOK_YAW
+#error LOOK YAW TAKES PRECEDENCE! DEFINE USE_MOVE_YAW XOR USE_LOOK_YAW.
+#endif
+
+using System.Collections;
 using UnityEngine;
 using static global::BatMathematics;
 using static UnityEngine.InputSystem.InputAction;
@@ -27,20 +31,25 @@ public class BatMovement : MonoBehaviour
 	// Player Controller values will be used for ground movement.
 
 	[Header("Airborne Settings")]
-	[SerializeField] float TakeoffAcceleration = 850f;
+	[SerializeField] float MaxTakeoffAcceleration = 50f;
+	[SerializeField] AnimationCurve TakeoffAccelerationCurve;
+	[SerializeField] float TimeToV1 = 1f;
 	[SerializeField] float JumpHeight = 5f;
-
 	[SerializeField] float SecondsOfPitchFlight = 1f;
 	float RemainingSeconds;
+	IEnumerator CurrentGradualFunc;
 
-	[SerializeField] float YawStrength = 2f;
-	[SerializeField] float PitchStrength = 1f;
+	[SerializeField, Min(kZeroThreshold)] float YawStrength = 2f;
+	[SerializeField, Min(kZeroThreshold)] float PitchStrength = 1f;
 	float YawDirection = 0f;
 	float PitchDirection = 0f;
 
 	[Header("Ground Checks")]
 	[SerializeField] Vector3 GroundCheckOffset;
 	[SerializeField] float GroundRayDistance = .51f;
+
+	Vector2 Throw;
+	Vector2 ThrowLook;
 
 	// Ground Variables.
 	Vector3 GroundMovement;
@@ -59,13 +68,19 @@ public class BatMovement : MonoBehaviour
 		bHasCancelledGlideThisJump = false;
 
 		// BatCamera = GameObject.FindGameObjectWithTag("Bat Camera").GetComponent<Camera>();
-		Speedometer = new Speedometer();
+
 		Speedometer.Initialise();
 	}
 
-	void Update()
+	void FixedUpdate()
 	{
-		if (YawDirection != 0f || PitchDirection != 0f)
+		Speedometer.Record(this);
+
+		HandleGroundMovement();
+		HandleMovement(Throw);
+		HandleLook(ThrowLook);
+
+		if (!IsZero(YawDirection) || !IsZero(PitchDirection))
 		{
 			// Translate World-Velocity to Local Forward.
 			Vector3 YawVelocity = RotateVector(Bat.Physics.velocity, transform.up, YawDirection);
@@ -74,7 +89,7 @@ public class BatMovement : MonoBehaviour
 
 			// Set to Zero if its close enough to Zero.
 			Vector3 Velocity = Bat.Physics.velocity;
-			ForceZeroIfZero(ref Velocity);
+			SetZeroIfZero(ref Velocity);
 
 			Bat.Physics.velocity = Velocity;
 
@@ -99,27 +114,21 @@ public class BatMovement : MonoBehaviour
 
 		SetAnimationState();
 		Realign();
-	}
 
-	void FixedUpdate()
-	{
-		Speedometer.Record();
-
-		HandleGroundMovement();
-
-		Speedometer.Mark(this);
+		Speedometer.Mark();
 	}
 
 	public void MovementBinding(ref CallbackContext Context)
 	{
 		if (Bat.Active)
 		{
-			Vector2 Throw = Context.action.ReadValue<Vector2>();
-			HandleMovement(Throw);
+			Throw = Context.action.ReadValue<Vector2>();
+			// HandleMovement(Throw);
 		}
 		else
 		{
-			HandleMovement(Vector2.zero);
+			Throw = Vector2.zero;
+			//HandleMovement(Vector2.zero);
 		}
 	}
 
@@ -140,12 +149,12 @@ public class BatMovement : MonoBehaviour
 	{
 		if (Bat.Active)
 		{
-			Vector2 Throw = Context.action.ReadValue<Vector2>();
-			HandleLook(Throw);
+			ThrowLook = Context.action.ReadValue<Vector2>();
 		}
 		else
 		{
-			HandleLook(Vector2.zero);
+			ThrowLook = Vector2.zero;
+			// HandleLook(Vector2.zero);
 		}
 	}
 
@@ -166,7 +175,10 @@ public class BatMovement : MonoBehaviour
 			// Forward Gliding.
 			if (!bHasGlidedThisJump && Vertical > kGlideInputSensitivity)
 			{
-				StartGliding();
+				StopGradualAcceleration();
+
+				CurrentGradualFunc = GradualAcceleration();
+				StartCoroutine(CurrentGradualFunc);
 			}
 			else if (!bHasCancelledGlideThisJump && Vertical < -kGlideInputSensitivity)
 			{
@@ -200,7 +212,9 @@ public class BatMovement : MonoBehaviour
 			GroundMovement = new Vector3(Throw.x, 0f, Throw.y).normalized;
 			GroundMovement *= Bat.GroundSpeed;
 
-			LockCursor(false);
+			// Stop applying gradual forward acceleration.
+			StopGradualAcceleration();
+			CurrentGradualFunc = null;
 		}
 	}
 
@@ -222,6 +236,8 @@ public class BatMovement : MonoBehaviour
 
 			// Fact - Every time the Bat jumps, it has to take off from the Ground.
 			RemainingSeconds = SecondsOfPitchFlight;
+
+			Bat.Events.OnAnimationStateChanged?.Invoke(EAnimationState.WingedFlight);
 		}
 	}
 
@@ -233,7 +249,6 @@ public class BatMovement : MonoBehaviour
 
 		if (IsAirborne())
 		{
-
 			ThrowPitch(Inclination);
 
 #if USE_LOOK_YAW
@@ -258,41 +273,68 @@ public class BatMovement : MonoBehaviour
 			// Ground Movement relative to the camera.
 			Vector3 CameraRelativeDirection = DirectionRelativeToTransform(BatCamera.transform, GroundMovement);
 			Bat.Physics.MovePosition(Bat.Physics.position + (CameraRelativeDirection * Time.fixedDeltaTime));
+
+			// PitchDirection = YawDirection = 0f;
+			// Apparently this wasn't enough - floating point precision failed and 
+			// sometimes made these 1E-11. These values NEED to be zero whilst Grounded.
+			ForceZero(ref PitchDirection);
+			ForceZero(ref YawDirection);
 		}
 	}
 
-	void StartGliding()
+	IEnumerator GradualAcceleration()
+	{
+		float rTime = 1f / TimeToV1;
+		float t = 0f;
+
+		while (t <= 1f)
+		{
+			t += Time.fixedDeltaTime * rTime;
+
+			ApplyWingForce(TakeoffAccelerationCurve.Evaluate(t) * MaxTakeoffAcceleration);
+
+			yield return new WaitForFixedUpdate();
+		}
+	}
+
+	void ApplyWingForce(float Force)
 	{
 		// F = ma.
-		Bat.Physics.AddForce(Bat.Physics.mass * TakeoffAcceleration * transform.forward);
+		Bat.Physics.AddForce(Bat.Physics.mass * Force * transform.forward);
 
 		bHasGlidedThisJump = true;
+	}
 
-		LockCursor(true);
+	public void StopGradualAcceleration()
+	{
+		if (CurrentGradualFunc != null)
+			StopCoroutine(CurrentGradualFunc);
 	}
 
 	/// <summary>Gives Pitch Input.</summary>
 	/// <param name="Throw">Direction of Pitch; delta. + Downwards. - Upwards.</param>
 	void ThrowPitch(float Throw)
 	{
-		// The Bat is too tired to Pitch upwards.
+		float PitchThrow = PitchStrength;
+
 		if (RemainingSeconds <= 0f)
 		{
-			PitchDirection = 0f;
-			return;
+			// The Bat is too tired to Pitch upwards.
+			// But still allow *some* Pitch input.
+			PitchThrow *= .25f;
 		}
 
 		// Pitch.
 		if (Throw < -.3f)
 		{
-			PitchDirection = PitchStrength;
+			PitchDirection = PitchThrow;
 
 			// Deduct time only when Pitching upwards.
 			RemainingSeconds -= Time.deltaTime;
 		}
 		else if (Throw > .3f)
 		{
-			PitchDirection = -PitchStrength;
+			PitchDirection = -PitchThrow;
 		}
 		else
 		{
@@ -352,27 +394,16 @@ public class BatMovement : MonoBehaviour
 			transform.rotation = Quaternion.FromToRotation(transform.up, Vector3.up) * transform.rotation;
 
 			// Stop moving.
-			Bat.Physics.velocity = Bat.Physics.angularVelocity = Vector3.zero;
-		}
-	}
+			/*Bat.Physics.velocity = */Bat.Physics.angularVelocity = Vector3.zero;
 
-	static void LockCursor(bool bShouldLock)
-	{
-		if (bShouldLock)
-		{
-			Cursor.lockState = CursorLockMode.Locked;
-			Cursor.visible = bShouldLock;
-		}
-		else
-		{
-			Cursor.lockState = CursorLockMode.None;
-			Cursor.visible = true;
+			// Stop everything else. Switch back to the Stand Idle animation.
+			Bat.Events.OnAnimationStateChanged?.Invoke(EAnimationState.StandIdle);
 		}
 	}
 
 	bool IsAirborne()
 	{
-		Ray GroundRay = new Ray(transform.position + GroundCheckOffset, -transform.up);
+		Ray GroundRay = new Ray(transform.position + GroundCheckOffset, Vector3.down);
 		return !Physics.Raycast(GroundRay, GroundRayDistance);
 	}
 
@@ -382,14 +413,15 @@ public class BatMovement : MonoBehaviour
 		GUI.Label(new Rect(10, 10, 250, 250), $"Velocity: {Bat.Physics.velocity:F1}");
 		GUI.Label(new Rect(10, 25, 250, 250), $"Speed: {Bat.Physics.velocity.magnitude:F1}");
 		GUI.Label(new Rect(10, 40, 250, 250), $"Airborne? {(IsAirborne() ? "Yes" : "No")}");
+		GUI.Label(new Rect(10, 55, 250, 250), $"Pitch: {PitchDirection:F9} Yaw: {YawDirection:F9}");
 	}
 #endif
 }
 
 public struct Speedometer
 {
-	public float MetresPerSecond => (ThisFrame - LastFrame).magnitude / Time.deltaTime;
 	public Vector3 Velocity => (ThisFrame - LastFrame) / Time.deltaTime;
+	public float MetresPerSecond => Velocity.magnitude;
 
 	Vector3 LastFrame;
 	Vector3 ThisFrame;
@@ -400,15 +432,15 @@ public struct Speedometer
 	}
 
 	/// <summary>Begins recording Speed.</summary>
-	public void Record()
+	public void Record(MonoBehaviour Behaviour)
 	{
-		LastFrame = ThisFrame;
+		ThisFrame = Behaviour.transform.position;
 	}
 
 	/// <summary>Marks the end of a Speed Recording after <see cref="Time.deltaTime"/>.</summary>
 	/// <param name="Behaviour">The Behaviour to mark a Speed relative to.</param>
-	public void Mark(MonoBehaviour Behaviour)
+	public void Mark()
 	{
-		ThisFrame = Behaviour.transform.position;
+		LastFrame = ThisFrame;
 	}
 }

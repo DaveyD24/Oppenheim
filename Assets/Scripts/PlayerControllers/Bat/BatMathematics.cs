@@ -148,10 +148,12 @@ public static class BatMathematics
 		Transform.rotation = Quaternion.RotateTowards(RotationNow, TargetRotation, RotationSpeed);
 	}
 
+	public const float kZeroThreshold = .01f;
+
 	/// <summary>True if F is close enough to zero.</summary>
 	public static bool IsZero(float F)
 	{
-		return Mathf.Abs(F) <= .01f;
+		return Mathf.Abs(F) <= kZeroThreshold;
 	}
 
 	/// <summary>True if V is close enough to zero.</summary>
@@ -163,11 +165,117 @@ public static class BatMathematics
 
 	/// <summary>Sets V to Vector3.zero if it's close enough to zero.</summary>
 	/// <remarks>'Close enough' is define in <see cref="IsZero(float)"/>.</remarks>
-	public static void ForceZeroIfZero(ref Vector3 V)
+	public static void SetZeroIfZero(ref Vector3 V)
 	{
 		// Vector3's == operator is accurate to: 9.99999944 E-11 (0.0000000000999999944)
 		// This is too accurate; define our own threshold.
 		if (IsZero(V))
 			V = Vector3.zero;
 	}
+
+	/// <summary>Uses bitwise operations to force a float to be absolute zero.</summary>
+	/// <param name="F">Reference to the float that needs to be zero.</param>
+	public unsafe static void ForceZero(ref float F)
+	{
+		// Fix pointer to point to the address float F.
+		fixed (float* pF = &F)
+		{
+			int I = *(int*)&pF; // Lossless conversion of float F bits to int I bits.
+			I &= 0x0;           // Bitwise & 0 always equals 0.
+			F = *(float*)&I;    // Treat the bits of I as a float and give it back to F.
+		}
+
+#if UNITY_EDITOR
+		/*
+		 * For future reference, this function was made because PitchDirection and YawDirection
+		 * was not Zero where it needed to be. These two floats are used in BatMovement.FixedUpdate()
+		 * and is needed for aligning the Bat's velocity to where it is facing.
+		 * 
+		 * There are checks (PitchDirection != 0f || YawDirection != 0f): only if this check passes,
+		 * can we align velocities - it also means the Bat is Airborne.
+		 * 
+		 * Problem is: When these checks pass whilst the Bat is clearly Grounded (IsGrounded() == true)
+		 * and not Airborne (IsAirborne() == false) the Bat would not orient itself to where it's going
+		 * *on the Ground*. This looked weird, and this function literally forces the two floats to be
+		 * exactly Zero... well in theory anyway; if you're reading this, it means it, too, failed.
+		 */
+
+		if (float.IsNaN(F))
+			Debug.LogError("Tell Michael he's dumb! F = NaN");
+		if (float.IsInfinity(F))
+			Debug.LogError("Tell Michael he's dumb! F = Infinity");
+		if (float.IsNegativeInfinity(F))
+			Debug.LogError("Tell Michael he's dumb! F = -Infinity");
+#endif
+	}
+
+	public static void ClampMin(ref float F, float Min)
+	{
+		if (F < Min)
+			F = Min;
+	}
+
+	#region Fast Approximation Functions
+
+	/// <summary>1 / sqrt(N).</summary>
+	/// <remarks>Modified from: <see href="https://github.com/id-Software/Quake-III-Arena/blob/dbe4ddb10315479fc00086f08e25d968b4b43c49/code/game/q_math.c#L552"/></remarks>
+	/// <param name="N">1 / sqrt(x) where x is N.</param>
+	/// <param name="AdditionalIterations">The number of additional Newton Iterations to perform.</param>
+	/// <returns>An approximation for calculating: 1 / sqrt(N).</returns>
+	public static unsafe float FInverseSqrt(float N, int AdditionalIterations = 1)
+	{
+		int F = *(int*)&N;
+		F = 0x5F3759DF - (F >> 1);
+		float X = *(float*)&F;
+
+		float RSqrt = X * (1.5f - .5f * N * X * X);
+		for (int i = 0; i < AdditionalIterations; ++i)
+			RSqrt *= (1.5f - .5f * N * RSqrt * RSqrt);
+		return RSqrt;
+	}
+
+	/// <summary>Faster version of <see cref="Mathf.Sqrt(float)"/>.</summary>
+	/// <param name="F"></param>
+	/// <param name="Iterations">The number of Newton Iterations to perform.</param>
+	/// <returns>An approximation for the Square Root of F.</returns>
+	public static float FSqrt(float F, int Iterations = 1) => FInverseSqrt(Mathf.Max(F, Vector3.kEpsilon), Iterations) * F;
+
+	/// <summary>Faster version of <see cref="Mathf.Asin(float)"/>.</summary>
+	/// <param name="Angle">The angle to get the inverse Sine of.</param>
+	/// <returns>Inverse Sine of Angle.</returns>
+	public static float FArcSine(float Angle)
+	{
+		bool bIsPositive = Angle >= 0f;
+		float Abs = Mathf.Abs(Angle);
+
+		float OneMinusFAbs = 1f - Abs;
+		ClampMin(ref OneMinusFAbs, 0f);
+
+		float Root = FSqrt(OneMinusFAbs);
+
+		const float kASinHalfPI = 1.5707963050f;
+
+		float Approximation = ((((((-0.0012624911f * Abs + 0.0066700901f) * Abs - 0.0170881256f) * Abs + 0.0308918810f) * Abs - 0.0501743046f) * Abs + 0.0889789874f) * Abs - 0.2145988016f) * Abs + kASinHalfPI;
+		Approximation *= Root;
+
+		return bIsPositive ? kASinHalfPI - Approximation : Approximation - kASinHalfPI;
+	}
+
+	/// <summary>Faster version of <see cref="Vector3.Angle(Vector3, Vector3)"/>.</summary>
+	/// <param name="L">The Vector in which the angular difference is measured.</param>
+	/// <param name="R">The Vector in which the angular difference is measured.</param>
+	/// <returns>The Angle between L and R in degrees.</returns>
+	public static float FAngle(Vector3 L, Vector3 R)
+	{
+		float ZeroOrEpsilon = FSqrt(L.sqrMagnitude * R.sqrMagnitude);
+		if (IsZero(ZeroOrEpsilon))
+		{
+			return 0f;
+		}
+
+		float Radians = Mathf.Clamp(Vector3.Dot(L, R), -1f, 1f);
+		return 90f - FArcSine(Radians) * Mathf.Rad2Deg;
+	}
+
+	#endregion
 }

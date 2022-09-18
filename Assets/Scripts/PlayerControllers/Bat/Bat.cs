@@ -1,5 +1,7 @@
 using UnityEngine;
 using static UnityEngine.InputSystem.InputAction;
+using static global::BatMathematics;
+using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(BatMovement), typeof(BatEvents))]
 public class Bat : PlayerController
@@ -30,7 +32,11 @@ public class Bat : PlayerController
 
 		MovementComponent = GetComponent<BatMovement>();
 		EventsComponent = GetComponent<BatEvents>();
+	}
 
+	public override void ActivateInput(PlayerInput playerInput)
+	{
+		base.ActivateInput(playerInput);
 		BindMiscellaneousInputs();
 
 #if UNITY_EDITOR
@@ -41,24 +47,26 @@ public class Bat : PlayerController
 
 	private void BindMiscellaneousInputs()
 	{
-		Inputs.Player.Move.canceled += (CallbackContext Context) =>
+		player.FindAction("Move").canceled += (CallbackContext Context) =>
 		{
 			MovementComponent.HandleMovement(Vector2.zero);
+			MovementComponent.StopGradualAcceleration();
 		};
 
-		Inputs.Player.Jump.canceled += (CallbackContext Context) =>
+		player.FindAction("Jump").canceled += (CallbackContext Context) =>
 		{
 			MovementComponent.HandleJump(0f);
 		};
 
-		Inputs.Player.Look.performed += (CallbackContext Context) =>
+		player.FindAction("Look").performed += (CallbackContext Context) =>
 		{
 			MovementComponent.LookBinding(ref Context);
 		};
 
-		Inputs.Player.Look.canceled += (CallbackContext Context) =>
+		player.FindAction("Look").canceled += (CallbackContext Context) =>
 		{
-			MovementComponent.HandleLook(Vector2.zero);
+			MovementComponent.LookBinding(ref Context);
+			//MovementComponent.HandleLook(ref Context);
 		};
 	}
 
@@ -70,6 +78,11 @@ public class Bat : PlayerController
 	public void AdjustHealth(float amount)
 	{
 		// Can't modify Health because it's a protected value with no set method.
+	}
+
+	public void FallDamage(/*float ImpactVelocity*/)
+	{
+		TakeFallDamage(/*ImpactVelocity*/);
 	}
 
 	protected override void Movement(CallbackContext Context) => MovementComponent.MovementBinding(ref Context);
@@ -87,5 +100,22 @@ public class Bat : PlayerController
 		WorldToLocalDown += Rb.centerOfMass;
 
 		return transform.position + WorldToLocalDown;
+	}
+
+	protected override bool ShouldTakeFallDamage(Collision collision, out float relativeVelocity)
+	{
+		relativeVelocity = collision.relativeVelocity.magnitude;
+
+		if (relativeVelocity < FallDamageThreshold)
+			return false;
+
+		// Take damage if landing/crashing at an Angle > than 30 degrees of the surface.
+		float Angle = FAngle(transform.up, collision.contacts[0].normal);
+		bool bTakeFallDamage = Angle > 30f;
+
+		if (bTakeFallDamage)
+			Debug.Log($"At Angle: {Angle}");
+
+		return bTakeFallDamage;
 	}
 }

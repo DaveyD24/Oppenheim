@@ -173,14 +173,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0c72d7fda9310b4f9d15486cb7db14d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  groundCheckPosition: {x: 0, y: 0, z: 0}
   <PlayerIdSO>k__BackingField: {fileID: 11400000, guid: 250a1cc6c2eafb54fb4fa9dcd6298d62, type: 2}
   <DefaultPlayerData>k__BackingField: {fileID: 11400000, guid: edaf631a83ce6ea42aa9463c9228f767, type: 2}
   <Bouyancy>k__BackingField: 0
   <MovementSpeed>k__BackingField: 5
   <RotationSpeed>k__BackingField: 7.5
   <Health>k__BackingField: 1
+  <FallDamageThreshold>k__BackingField: 27
   groundCheckPosition: {x: 0, y: 1.5, z: 0}
   <GroundCheckRadius>k__BackingField: 1
+  bIsStandalone: 0
 --- !u!114 &356694347851262371
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -193,13 +196,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a4d4054a63ec4244a516f6277b2c8e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TakeoffAcceleration: 850
+  MaxTakeoffAcceleration: 25
+  TakeoffAccelerationCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.75
+      inSlope: 0.81838703
+      outSlope: 0.81838703
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.035787314
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  TimeToV1: 1
   JumpHeight: 5
   SecondsOfPitchFlight: 1
   YawStrength: 2
   PitchStrength: 2
   GroundCheckOffset: {x: 0, y: 0.15, z: 0}
-  GroundRayDistance: 0.51
+  GroundRayDistance: 0.6
   BatCamera: {fileID: 0}
 --- !u!114 &4603439497635631443
 MonoBehaviour:
