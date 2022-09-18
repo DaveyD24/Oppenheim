@@ -83,9 +83,25 @@ public class SwitchManager : MonoBehaviour
 
     private void Joining(InputAction.CallbackContext ctx)
     {
-        if (playerInputManager.playerCount < playerInputManager.maxPlayerCount)
+        // checks if the device currently trying to connect is already connected or not
+        InputControlList<InputDevice> unpairedDevices = UnityEngine.InputSystem.Users.InputUser.GetUnpairedInputDevices();
+        InputDevice deviceUsing = ctx.control.device;
+        bool bIsbeingUsed = true;
+        foreach (InputDevice device in unpairedDevices)
         {
-            PlayerInput player = playerInputManager.JoinPlayer(playerNo, playerNo, null, ctx.control.device);
+            print(device.name);
+            if (device == deviceUsing)
+            {
+                // as the device is listed as unpaired it can be used
+                bIsbeingUsed = false;
+                break;
+            }
+        }
+
+        // if uncontrolled players exist and this device is not in use, connect it to a player
+        if (playerInputManager.playerCount < playerInputManager.maxPlayerCount && !bIsbeingUsed)
+        {
+            PlayerInput player = playerInputManager.JoinPlayer(playerNo, playerNo, null, ctx.control.device); // a function to auto handle the setup of the new device
             if (player != null)
             {
                 playerNo += 1;
@@ -95,6 +111,10 @@ public class SwitchManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// gets the specific player this input is connected with
+    /// </summary>
+    /// <param name="player">The current device specific control setup using</param>
     private void AddPlayer(PlayerInput player)
     {
         joinedPlayer.Add(player);
