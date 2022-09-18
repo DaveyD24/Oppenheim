@@ -13,13 +13,14 @@ public class FuelScript : MonoBehaviour
     private void Start() 
     {
         fuelBar = GetComponent<Image>();
-        //player = FindObjectOfType<PlayerControllerScript>()
+        //player = FindObjectOfType<PlayerControllerScript>();
         
     }
 
     private void Update()
     {
         //currentFuel = player.fuel;
-        //fuelBar.fillAmount = currentFuel / maxFuel;
+        currentFuel = 50f;
+        fuelBar.fillAmount = currentFuel / maxFuel;
     }
 }
