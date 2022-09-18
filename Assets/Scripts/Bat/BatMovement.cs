@@ -175,8 +175,7 @@ public class BatMovement : MonoBehaviour
 			// Forward Gliding.
 			if (!bHasGlidedThisJump && Vertical > kGlideInputSensitivity)
 			{
-				if (CurrentGradualFunc != null)
-					StopCoroutine(CurrentGradualFunc);
+				StopGradualAcceleration();
 
 				CurrentGradualFunc = GradualAcceleration();
 				StartCoroutine(CurrentGradualFunc);
@@ -214,11 +213,8 @@ public class BatMovement : MonoBehaviour
 			GroundMovement *= Bat.GroundSpeed;
 
 			// Stop applying gradual forward acceleration.
-			if (CurrentGradualFunc != null)
-			{
-				StopCoroutine(CurrentGradualFunc);
-				CurrentGradualFunc = null;
-			}
+			StopGradualAcceleration();
+			CurrentGradualFunc = null;
 		}
 	}
 
@@ -307,6 +303,12 @@ public class BatMovement : MonoBehaviour
 		Bat.Physics.AddForce(Bat.Physics.mass * Force * transform.forward);
 
 		bHasGlidedThisJump = true;
+	}
+
+	public void StopGradualAcceleration()
+	{
+		if (CurrentGradualFunc != null)
+			StopCoroutine(CurrentGradualFunc);
 	}
 
 	/// <summary>Gives Pitch Input.</summary>

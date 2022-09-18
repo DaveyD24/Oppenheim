@@ -45,6 +45,7 @@ public class Bat : PlayerController
 		Inputs.Player.Move.canceled += (CallbackContext Context) =>
 		{
 			MovementComponent.HandleMovement(Vector2.zero);
+			MovementComponent.StopGradualAcceleration();
 		};
 
 		Inputs.Player.Jump.canceled += (CallbackContext Context) =>
