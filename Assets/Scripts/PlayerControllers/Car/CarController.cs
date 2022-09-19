@@ -440,8 +440,10 @@ public class CarController : PlayerController
         }
     }
 
-    private void OnCollisionEnter(Collision collision)
+    protected override void OnCollisionEnter(Collision collision)
     {
+        base.OnCollisionEnter(collision);
+
         if (collision.gameObject.CompareTag("Breakable") && BIsDash)
         {
             // convert this to the event system

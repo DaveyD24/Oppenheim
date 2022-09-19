@@ -30,7 +30,7 @@ public class SpringArm : MonoBehaviour
 	[SerializeField] float ScrollSensitivity;
 	[HideInInspector, SerializeField] Vector3 DefaultGimbalRotation;
 	[HideInInspector, SerializeField] Vector3 DefaultCameraRotation;
-	float OrbitSensitivity = 1f;
+	[SerializeField] float OrbitSensitivity = 1f;
 	Vector2 PreviousMouseDragPosition;
 	Vector3 GimbalRotationInherited;
 	Vector3 CameraRotationInherited;
@@ -43,6 +43,7 @@ public class SpringArm : MonoBehaviour
 	[SerializeField] bool bInvertZ; // Inverse Zoom Controls.
 
 	[Header("Collisions")]
+	[SerializeField] bool bRunCollisionChecks;
 	[SerializeField] LayerMask OnlyCollideWith;
 
 	[Header("Lag Settings")]
@@ -57,10 +58,6 @@ public class SpringArm : MonoBehaviour
 	[SerializeField] float NearClipDistance;
 	[SerializeField] float DistanceLimit;
 	Matrix4x4 DefaultProjection;
-
-	bool bCamFollow = true;
-	float camRotSpeed = 100;
-	float zoomSpeed = 100;
 
 	void Awake()
 	{
@@ -94,16 +91,8 @@ public class SpringArm : MonoBehaviour
 
 	void FixedUpdate()
 	{
-		if (bCamFollow)
-		{
-			Camera.position = Vector3.Lerp(Camera.position, TargetPosition, PositionalLagStrength);
-			Camera.rotation = Quaternion.Slerp(Camera.rotation, TargetRotation, RotationalLagStrength);
-		}
-		else
-		{
-			Camera.position = TargetPosition;
-			Camera.rotation = TargetRotation;
-		}
+		Camera.position = Vector3.Lerp(Camera.position, TargetPosition, PositionalLagStrength);
+		Camera.rotation = Quaternion.Slerp(Camera.rotation, TargetRotation, RotationalLagStrength);
 
 		PlaceCamera();
 	}
@@ -174,7 +163,7 @@ public class SpringArm : MonoBehaviour
 		}
 
 		// If the Spring Arm will collider with something:
-		if (RunCollisionsCheck(ref ArmDirection))
+		if (bRunCollisionChecks && RunCollisionsCheck(ref ArmDirection))
 			return;
 
 		// Make the Position and Rotation for Lag.
@@ -225,7 +214,7 @@ public class SpringArm : MonoBehaviour
 
 	Quaternion GetInheritedRotation()
 	{
-		return Quaternion.Euler(new Vector3(GetInheritedAxis(Target.localEulerAngles.x) + GimbalRotationInherited.y - CameraRotationInherited.x, CameraRotationInherited.y + GetInheritedAxis(Target.localEulerAngles.y)));
+		return Quaternion.Euler(new Vector3(GetInheritedAxis(Target.localEulerAngles.x) + CameraRotationInherited.x, CameraRotationInherited.y + GetInheritedAxis(Target.localEulerAngles.y)));
 	}
 
 	float GetInheritedAxis(float AxisAngle)
@@ -240,7 +229,7 @@ public class SpringArm : MonoBehaviour
 	{
 		if (bEnableScrollToDistance)
 		{
-			Distance += Input.mouseScrollDelta.y * (bInvertZ ? -1f : 1f) * -zoomSpeed / 100;
+			Distance += Input.mouseScrollDelta.y * (bInvertZ ? -1f : 1f) * -ScrollSensitivity;
 
 			Distance = Mathf.Clamp(Distance, 1, 30);
 		}
@@ -252,8 +241,8 @@ public class SpringArm : MonoBehaviour
 
 		if (Input.GetMouseButton(1))
 		{
-			float DeltaX = (MousePosition.x - PreviousMouseDragPosition.x) * camRotSpeed * .01f; //set to a range between 0 - 2
-			float DeltaY = (MousePosition.y - PreviousMouseDragPosition.y) * camRotSpeed * .01f;
+			float DeltaX = (MousePosition.x - PreviousMouseDragPosition.x) * OrbitSensitivity;
+			float DeltaY = (MousePosition.y - PreviousMouseDragPosition.y) * OrbitSensitivity;
 
 			DetermineInverse(ref DeltaX, ref DeltaY);
 
@@ -304,8 +293,8 @@ public class SpringArm : MonoBehaviour
 
 		if (Input.GetMouseButton(2))
 		{
-			float DeltaX = (MousePosition.x - PreviousMousePanPosition.x) * camRotSpeed * .01f;
-			float DeltaY = (MousePosition.y - PreviousMousePanPosition.y) * camRotSpeed * .01f;
+			float DeltaX = (MousePosition.x - PreviousMousePanPosition.x) * OrbitSensitivity;
+			float DeltaY = (MousePosition.y - PreviousMousePanPosition.y) * OrbitSensitivity;
 
 			// Ensure 'Right' and 'Up' is relative to the Camera.
 			TargetOffset -= DeltaX * Time.deltaTime * Camera.right + DeltaY * Time.deltaTime * Camera.up;
@@ -323,6 +312,8 @@ public class SpringArm : MonoBehaviour
 	{
 		if (bUseCustomProjection && Distance > 3)
 		{
+			Plane = Target;
+
 			if (Physics.Linecast(Target.position, Camera.position, out RaycastHit Intercept, 256))
 			{
 				NearClipDistance = Intercept.distance;

@@ -43,8 +43,6 @@ public class SwitchManager : MonoBehaviour
             return Car.gameObject;
         }
 
-        Debug.LogError("No Active Player!");
-
         return null;
     }
 
