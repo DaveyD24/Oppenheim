@@ -34,36 +34,41 @@ public class Bat : PlayerController
 		EventsComponent = GetComponent<BatEvents>();
 	}
 
-	public override void ActivateInput(PlayerInput playerInput)
+	public override void ActivateInput(int playerID, PlayerInput playerInput)
 	{
-		base.ActivateInput(playerInput);
-		BindMiscellaneousInputs();
+		if (playerID == PlayerIdSO.PlayerID)
+		{
+			base.ActivateInput(playerID, playerInput);
+			BindMiscellaneousInputs();
 
 #if UNITY_EDITOR
-		if (bIsStandalone)
-			Activate();
+			if (bIsStandalone)
+			{
+				Activate();
+			}
 #endif
+		}
 	}
 
 	private void BindMiscellaneousInputs()
 	{
-		player.FindAction("Move").canceled += (CallbackContext Context) =>
+		PlayerInput.FindAction("Move").canceled += (CallbackContext Context) =>
 		{
 			MovementComponent.HandleMovement(Vector2.zero);
 			MovementComponent.StopGradualAcceleration();
 		};
 
-		player.FindAction("Jump").canceled += (CallbackContext Context) =>
+		PlayerInput.FindAction("Jump").canceled += (CallbackContext Context) =>
 		{
 			MovementComponent.HandleJump(0f);
 		};
 
-		player.FindAction("Look").performed += (CallbackContext Context) =>
+		PlayerInput.FindAction("Look").performed += (CallbackContext Context) =>
 		{
 			MovementComponent.LookBinding(ref Context);
 		};
 
-		player.FindAction("Look").canceled += (CallbackContext Context) =>
+		PlayerInput.FindAction("Look").canceled += (CallbackContext Context) =>
 		{
 			MovementComponent.LookBinding(ref Context);
 			//MovementComponent.HandleLook(ref Context);

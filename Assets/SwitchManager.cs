@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using EventSystem;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -7,8 +9,12 @@ public class SwitchManager : MonoBehaviour
 {
     private PlayerInputManager playerInputManager;
     private int playerAdded = 0;
-    private List<PlayerInput> joinedPlayer = new List<PlayerInput>();
-    [SerializeField] private InputActions joinAction;
+    private int playerNo = 0;
+
+    private List<int> controlledPlayers = new List<int>();
+    private List<int> uncontrolledPlayers = new List<int>();
+
+    [SerializeField] private InputActions joinAction; // the input for joining as a new controller
 
     [field: SerializeField] public PlayerController Soldier { get; private set; }
 
@@ -44,7 +50,6 @@ public class SwitchManager : MonoBehaviour
 
     private void Awake()
     {
-        Monkey.Activate();
         playerInputManager = GetComponent<PlayerInputManager>();
         InputSystem.DisableDevice(Mouse.current);
     }
@@ -55,31 +60,26 @@ public class SwitchManager : MonoBehaviour
         joinAction.JoiningGame.Join.performed += Joining;
 
         joinAction.JoiningGame.Enable();
+
         // playerInputManager.onPlayerJoined += AddPlayer;
         print(InputSystem.devices.Count + "Total Number of Devices");
 
-        int playerNo = 0;
-
-        // below works but manually when a new player connects does not
-        foreach (InputDevice device in InputSystem.devices)
-        {
-            if (device.displayName != "Mouse")
-            {
-                // PlayerInput player = playerInputManager.JoinPlayer(playerNo++, playerNo++, null, device);
-                // AddPlayer(player);
-            }
-        }
+        GameEvents.OnAddPlayerSwitch += AddInactive;
+        GameEvents.OnRotatePlayer += RotatePlayer;
     }
 
     private void OnDisable()
     {
         joinAction.JoiningGame.Join.performed -= Joining;
-        // playerInputManager.onPlayerJoined -= AddPlayer;
-        // joinAction.performed -= Joining;
+
+        GameEvents.OnAddPlayerSwitch -= AddInactive;
+        GameEvents.OnRotatePlayer -= RotatePlayer;
     }
 
-    private int playerNo = 0;
-
+    /// <summary>
+    /// An input event called to enable a player to join.
+    /// </summary>
+    /// <param name="ctx">the info about the input registered.</param>
     private void Joining(InputAction.CallbackContext ctx)
     {
         // checks if the device currently trying to connect is already connected or not
@@ -111,94 +111,90 @@ public class SwitchManager : MonoBehaviour
     }
 
     /// <summary>
-    /// gets the specific player this input is connected with
+    /// gets the specific player this input is connected with.
     /// </summary>
-    /// <param name="player">The current device specific control setup using</param>
+    /// <param name="player">The current device specific control setup using.</param>
     private void AddPlayer(PlayerInput player)
     {
-        joinedPlayer.Add(player);
+        // controlledPlayers.Add(player);
         print("Device Used to join: " + player.devices[0].name);
-        // InputSystem.DisableDevice(Mouse.current);
-
-        // print(player.devices[1].name);
-        //  player.enabled = false;
 
         player.neverAutoSwitchControlSchemes = true;
-        switch (playerAdded)
-        {
-            case 0:
-                Monkey.ActivateInput(player);
-                break;
-            case 1:
-                Bat.ActivateInput(player);
-                break;
-            case 2:
-                Soldier.ActivateInput(player);
-                break;
-            case 3:
-                Car.ActivateInput(player);
-                break;
-            default:
-                break;
-        }
 
-        playerAdded++;
-        Debug.Log("New Player Added: " + playerAdded);
-        print("Is Joining Enabled: " + player.playerIndex);
-    }
+        (int playerToControl, int playerID) = FindUncontrolledPlayer();
 
-    // Update is called once per frame
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.R))
+        if (playerToControl != -1)
         {
-            RotatePlayer();
-        }
+            controlledPlayers.Add(playerID);
+            uncontrolledPlayers.RemoveAt(playerToControl);
 
-        //if (playerInputManager.playerCount >= playerInputManager.maxPlayerCount && joinAction.JoiningGame.enabled)
-        //{
-        //    joinAction.JoiningGame.Disable();
-        //}
-        //else if (!joinAction.JoiningGame.enabled)
-        //{
-        //    joinAction.JoiningGame.Enable();
-        //}
+            GameEvents.ActivatePlayer(playerID, player);
 
-        // Debug.Log(GetActivePlayer().gameObject.name);
-    }
-
-    private void RotatePlayer()
-    {
-        // bygr
-        if (Bat.IsActive())
-        {
-            DeactivateAll();
-            Car.Activate();
-        }
-        else if (Car.IsActive())
-        {
-            DeactivateAll();
-            Monkey.Activate();
-        }
-        else if (Monkey.IsActive())
-        {
-            DeactivateAll();
-            Soldier.Activate();
-        }
-        else if (Soldier.IsActive())
-        {
-            DeactivateAll();
-            Bat.Activate();
+            playerAdded++;
+            Debug.Log("New Player Added: " + playerAdded);
+            print("Is Joining Enabled: " + player.playerIndex);
         }
 
         SpringArm.Get().Target = GetActivePlayer().transform;
     }
 
-    private void DeactivateAll()
+    /// <summary>
+    /// Switch out the current player for an uncontrolled one.
+    /// </summary>
+    /// <param name="currentPlayerId">The id of the current player which is controlled.</param>
+    /// <param name="playerInput">The input system information this player has.</param>
+    private void RotatePlayer(int currentPlayerId, PlayerInput playerInput)
     {
-        Soldier.Deactivate();
-        Bat.Deactivate();
-        Monkey.Deactivate();
-        Car.Deactivate();
+        if (uncontrolledPlayers.Count > 0)
+        {
+            GameEvents.DeactivatePlayer(currentPlayerId);
+
+            (int playerToControl, int playerID) = FindUncontrolledPlayer();
+            if (playerToControl != -1)
+            {
+                // activate the choosen uncontrolled player
+                controlledPlayers.Add(playerID);
+                uncontrolledPlayers.RemoveAt(playerToControl);
+                GameEvents.ActivatePlayer(playerID, playerInput);
+
+                // deactivate the current controlled player
+                uncontrolledPlayers.Add(currentPlayerId);
+                controlledPlayers.Remove(currentPlayerId);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Find an uncontrolled player.
+    /// </summary>
+    /// <returns>the index of the first uncontrolled player, if it exists.</returns>
+    private (int, int) FindUncontrolledPlayer()
+    {
+        int playerToControl = -1;
+        int playerID = -1;
+        if (uncontrolledPlayers.Count > 0)
+        {
+            playerToControl = 0;
+            playerID = uncontrolledPlayers[playerToControl];
+        }
+
+        return (playerToControl, playerID);
+    }
+
+    // private void DeactivateAll()
+    // {
+    //     Soldier.Deactivate();
+    //     Bat.Deactivate();
+    //     Monkey.Deactivate();
+    //     Car.Deactivate();
+    // }
+
+    /// <summary>
+    /// Adds a new player to the list of inactive players.
+    /// </summary>
+    /// <param name="playerId">The id of the player.</param>
+    private void AddInactive(int playerId)
+    {
+        uncontrolledPlayers.Add(playerId);
     }
 }
