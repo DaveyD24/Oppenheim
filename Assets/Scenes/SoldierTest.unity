@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -598,7 +598,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 5
-  m_FollowOffset: {x: 0, y: 5, z: -18}
+  m_FollowOffset: {x: 0, y: 3.1164572, z: -17.573486}
   m_XDamping: 1
   m_YDamping: 1
   m_ZDamping: 1
@@ -756,6 +756,7 @@ GameObject:
   - component: {fileID: 825682347}
   - component: {fileID: 825682346}
   - component: {fileID: 825682349}
+  - component: {fileID: 825682350}
   m_Layer: 0
   m_Name: Soldier
   m_TagString: Player
@@ -830,10 +831,23 @@ Rigidbody:
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 64
   m_CollisionDetection: 0
+--- !u!65 &825682350
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 825682345}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 2.39, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &840698162
 GameObject:
   m_ObjectHideFlags: 0
@@ -1003,7 +1017,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 5
-  m_FollowOffset: {x: 0, y: 5, z: -18}
+  m_FollowOffset: {x: 0, y: 3.1164572, z: -17.573486}
   m_XDamping: 1
   m_YDamping: 1
   m_ZDamping: 1
@@ -1109,7 +1123,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 2.1213872, y: 1}
+    m_SensorSize: {x: 2.2853403, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -1125,7 +1139,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1372312155}
-  m_LocalRotation: {x: 0.11701424, y: 0.0000722089, z: -0.000008507917, w: 0.99313027}
+  m_LocalRotation: {x: 0.06951034, y: 0.00007256011, z: -0.0000050559074, w: 0.99758124}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1206,7 +1220,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 5
-  m_FollowOffset: {x: 0, y: 5, z: -18}
+  m_FollowOffset: {x: 0, y: 3.1164572, z: -17.573486}
   m_XDamping: 1
   m_YDamping: 1
   m_ZDamping: 1
@@ -1306,7 +1320,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 2.1213872, y: 1}
+    m_SensorSize: {x: 2.2853403, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -1315,7 +1329,7 @@ MonoBehaviour:
         m_Calls: []
   m_LegacyBlendHint: 0
   m_YAxis:
-    Value: 0.5
+    Value: 0.4
     m_SpeedMode: 0
     m_MaxSpeed: 2
     m_AccelTime: 0.2
@@ -1388,7 +1402,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1647198756}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 65.08909, y: 6.043, z: -437.08}
+  m_LocalPosition: {x: 65.08915, y: 4.159457, z: -436.65347}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1866895842}
@@ -1480,7 +1494,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 2.1213872, y: 1}
+    m_SensorSize: {x: 2.2853403, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -1496,7 +1510,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1866895840}
-  m_LocalRotation: {x: 0.13505942, y: 0.00007202515, z: -0.000009817629, w: 0.9908375}
+  m_LocalRotation: {x: 0.08764432, y: 0.000072439005, z: -0.0000063733937, w: 0.99615186}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1517,9 +1531,10 @@ GameObject:
   - component: {fileID: 1889088528}
   - component: {fileID: 1889088527}
   - component: {fileID: 1889088531}
+  - component: {fileID: 1889088532}
   m_Layer: 0
   m_Name: Water
-  m_TagString: Untagged
+  m_TagString: Water
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1613,6 +1628,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8c9b59ffd47ef344a9c917ffe42b3d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!54 &1889088532
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1889088526}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &2094564330
 GameObject:
   m_ObjectHideFlags: 3
@@ -1666,7 +1697,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 2.1213872, y: 1}
+    m_SensorSize: {x: 2.2853403, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -1682,7 +1713,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2094564330}
-  m_LocalRotation: {x: 0.09897816, y: 0.00007232995, z: -0.0000071944137, w: 0.9950896}
+  m_LocalRotation: {x: 0.05140132, y: 0.00007262271, z: -0.0000037378443, w: 0.9986781}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1863,8 +1894,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2122602900}
-  m_LocalRotation: {x: 0.11701425, y: 0.000072209245, z: -0.000008507877, w: 0.99313027}
-  m_LocalPosition: {x: 65.08909, y: 6.043, z: -437.08}
+  m_LocalRotation: {x: 0.06589017, y: 0.000072586765, z: -0.0000047916565, w: 0.99782693}
+  m_LocalPosition: {x: 65.08915, y: 4.159457, z: -436.65347}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}

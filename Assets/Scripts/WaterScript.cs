@@ -7,20 +7,21 @@ public class WaterScript : MonoBehaviour
     // Start is called before the first frame update
     private void OnTriggerEnter(Collider other) 
     {
-        if (other.CompareTag("Player") && other.GetComponent<CharacterController>() != null)
+        if (other.CompareTag("Player"))
         {
+            Debug.Log("xd");
             //CharacterController soldier = other.GetComponent<CharacterController>();
-            SoldierMovement soldier = GetComponent<SoldierMovement>();
+            SoldierMovement soldier = other.GetComponent<SoldierMovement>();
             soldier.isSwimming = true;
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Player") && other.GetComponent<CharacterController>() != null)
+        if (other.CompareTag("Player"))
         {
             //CharacterController soldier = other.GetComponent<CharacterController>();
-            SoldierMovement soldier = GetComponent<SoldierMovement>();
+            SoldierMovement soldier = other.GetComponent<SoldierMovement>();
             soldier.isSwimming = false;
         }
     }

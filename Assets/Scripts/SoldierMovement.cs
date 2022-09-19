@@ -5,7 +5,7 @@ using UnityEngine;
 public class SoldierMovement : MonoBehaviour
 {
     //Swimming
-    public bool isSwimming;
+    public bool isSwimming = false;
     public float swimSpeed;
     public Transform target;
 
@@ -46,7 +46,7 @@ public class SoldierMovement : MonoBehaviour
             //move
             if (direction.magnitude >= 0.1f)
             {
-                Debug.Log("Im moving");
+                //Debug.Log("Im moving");
                 soldierController.Move(direction * speed * Time.deltaTime);
             }
 
@@ -70,6 +70,14 @@ public class SoldierMovement : MonoBehaviour
             if (Input.GetAxisRaw("Vertical") < 0)
             {
                 transform.position -= target.forward * swimSpeed * Time.deltaTime;
+            }
+            if (Input.GetAxisRaw("Horizontal") > 0)
+            {
+                transform.position += target.right * swimSpeed * Time.deltaTime;
+            }
+            if (Input.GetAxisRaw("Horizontal") < 0)
+            {
+                transform.position -= target.right * swimSpeed * Time.deltaTime;
             }
         }
         
