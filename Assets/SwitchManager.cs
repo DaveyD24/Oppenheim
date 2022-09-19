@@ -58,7 +58,7 @@ public class SwitchManager : MonoBehaviour
 
     private void OnEnable()
     {
-        playerInputManager.onPlayerLeft += PlayerLeft;
+        // playerInputManager.onPlayerLeft += PlayerLeft;
 
         joinAction = new InputActions();
         joinAction.JoiningGame.Join.performed += Joining;
@@ -75,7 +75,7 @@ public class SwitchManager : MonoBehaviour
 
     private void OnDisable()
     {
-        playerInputManager.onPlayerLeft -= PlayerLeft;
+        // playerInputManager.onPlayerLeft -= PlayerLeft;
 
         joinAction.JoiningGame.Join.performed -= Joining;
 
