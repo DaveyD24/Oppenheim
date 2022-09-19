@@ -37863,6 +37863,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <PlayerIdSO>k__BackingField: {fileID: 11400000, guid: 1e6de6128901ea94a88896b92e3bf310, type: 2}
   <DefaultPlayerData>k__BackingField: {fileID: 11400000, guid: edaf631a83ce6ea42aa9463c9228f767, type: 2}
+  <TrackingCamera>k__BackingField: {fileID: 0}
   <Bouyancy>k__BackingField: 0
   <MovementSpeed>k__BackingField: 6
   <RotationSpeed>k__BackingField: 5
@@ -53996,6 +53997,51 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1502917509}
   m_Mesh: {fileID: 4300000, guid: 7fe7437dc8388e2409a2bdce2c2d1c3c, type: 3}
+--- !u!1 &1506041541
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1506041543}
+  - component: {fileID: 1506041542}
+  m_Layer: 0
+  m_Name: ViewportSplit
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1506041542
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1506041541}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 588c5b869bc361e469edd9881228f95e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SwitchManager: {fileID: 439040869}
+  TooFarApproxThreshold: 50
+--- !u!4 &1506041543
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1506041541}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 173.09163, y: 7.912304, z: -517.63605}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 13
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1506532026
 GameObject:
   m_ObjectHideFlags: 0

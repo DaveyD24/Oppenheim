@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Linq;
 using EventSystem;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -44,6 +46,22 @@ public class SwitchManager : MonoBehaviour
         }
 
         return null;
+    }
+
+    public void GetAllActivePlayerTransforms(out Transform[] outActivePlayers)
+    {
+        GetPlayers(out PlayerController[] players);
+                
+        int numberActive = players.Count(b => b.IsActive());
+        outActivePlayers = new Transform[numberActive];
+        
+        for (int b = 0, i = 0; b < 4; ++b)
+        {
+            if (players[b])
+            {
+                outActivePlayers[i++] = players[b].transform;
+            }
+        }
     }
 
     private void Awake()
@@ -132,8 +150,6 @@ public class SwitchManager : MonoBehaviour
             Debug.Log("New Player Added: " + playerAdded);
             print("Is Joining Enabled: " + player.playerIndex);
         }
-
-        SpringArm.Get().Target = GetActivePlayer().transform;
     }
 
     /// <summary>
@@ -158,6 +174,13 @@ public class SwitchManager : MonoBehaviour
                 // deactivate the current controlled player
                 uncontrolledPlayers.Add(currentPlayerId);
                 controlledPlayers.Remove(currentPlayerId);
+
+                // Switch Camera Targets.
+                PlayerController outPlayer = GetPlayerByID(currentPlayerId);
+                PlayerController inPlayer = GetPlayerByID(playerID);
+                inPlayer.TrackingCamera = outPlayer.TrackingCamera;
+                inPlayer.TrackingCamera.Target = inPlayer.transform;
+                outPlayer.TrackingCamera = null;
             }
         }
     }
@@ -194,5 +217,23 @@ public class SwitchManager : MonoBehaviour
     private void AddInactive(int playerId)
     {
         uncontrolledPlayers.Add(playerId);
+    }
+
+    /// <summary>Get every Player in the game.</summary>
+    public void GetPlayers(out PlayerController[] outPlayers)
+    {
+        // TODO: Make a non-alloc version.
+        outPlayers = new PlayerController[4];
+
+        outPlayers[0] = Soldier;
+        outPlayers[1] = Bat;
+        outPlayers[2] = Monkey;
+        outPlayers[3] = Car;
+    }
+
+    public PlayerController GetPlayerByID(int playerID)
+    {
+        GetPlayers(out PlayerController[] players);
+        return Array.Find(players, p => p.PlayerIdSO.PlayerID == playerID);
     }
 }

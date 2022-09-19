@@ -9,9 +9,6 @@ public class SpringArm : MonoBehaviour
 	[SerializeField] bool bDrawRotationalLines;
 	[Space(10)]
 #endif
-	static SpringArm Instance;
-
-	//public GameSettings Settings;
 
 	[Header("Target Settings.")]
 	[SerializeField] Transform Camera;
@@ -59,11 +56,6 @@ public class SpringArm : MonoBehaviour
 	[SerializeField] float DistanceLimit;
 	Matrix4x4 DefaultProjection;
 
-	void Awake()
-	{
-		SetInstance();
-	}
-
 	void Start()
 	{
 		DefaultGimbalRotation = GimbalRotation;
@@ -76,6 +68,8 @@ public class SpringArm : MonoBehaviour
 
 		CameraComponent = UnityEngine.Camera.main;
 		DefaultProjection = CameraComponent.projectionMatrix;
+
+		Target.GetComponent<PlayerController>().TrackingCamera = this;
 	}
 
 	void Update()
@@ -100,26 +94,6 @@ public class SpringArm : MonoBehaviour
 	void OnPreCull()
 	{
 		ComputeProjection();
-	}
-
-	void SetInstance()
-	{
-		if (Instance)
-		{
-			Debug.LogWarning("Make sure there is only one " + nameof(SpringArm) + " in the Game!");
-		}
-		else
-		{
-			Instance = this;
-		}
-	}
-
-	public static SpringArm Get()
-	{
-		if (!Instance)
-			Debug.LogError("No Spring Arm attached to the Camera!");
-
-		return Instance;
 	}
 
 	void PlaceCamera()
