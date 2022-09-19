@@ -17,6 +17,7 @@ public abstract class PlayerController : MonoBehaviour
     private Quaternion startRotation;
     private float fuel;
     private bool isFarEnoughAway = false;
+    private SpriteRenderer activeIndicator;
 
     private PlayerInput pInput;
 
@@ -130,6 +131,8 @@ public abstract class PlayerController : MonoBehaviour
 
             Activate();
             Camera.main.gameObject.GetComponent<SpringArm>().Target = transform;
+
+            activeIndicator.enabled = true;
         }
     }
 
@@ -152,6 +155,8 @@ public abstract class PlayerController : MonoBehaviour
 
             PlayerInput.Disable();
             Deactivate();
+
+            activeIndicator.enabled = false;
         }
     }
 
@@ -203,11 +208,12 @@ public abstract class PlayerController : MonoBehaviour
             }
         }
 
-        //AdjustFuelValue(-DefaultPlayerData.DecreaseFuelAmount.Evaluate(CurrentFuel / DefaultPlayerData.MaxFuel) * Time.deltaTime);
+        // AdjustFuelValue(-DefaultPlayerData.DecreaseFuelAmount.Evaluate(CurrentFuel / DefaultPlayerData.MaxFuel) * Time.deltaTime);
     }
 
     protected virtual void Start()
     {
+        activeIndicator = GetComponentInChildren(typeof(SpriteRenderer)) as SpriteRenderer;
         Rb = GetComponent<Rigidbody>();
         switchManager = FindObjectOfType<SwitchManager>();
         Weight = Rb.mass;
@@ -305,6 +311,11 @@ public abstract class PlayerController : MonoBehaviour
         {
             PlayerInput.Enable();
         }
+    }
+
+    private void LoseInput(PlayerInput player)
+    {
+        DeactivateInput(PlayerIdSO.PlayerID);
     }
 
     private void AddBouyancy()

@@ -11,6 +11,7 @@ public class SwitchManager : MonoBehaviour
     private int playerAdded = 0;
     private int playerNo = 0;
 
+    private Dictionary<PlayerInput, int> playerInputConnection = new Dictionary<PlayerInput, int>();
     private List<int> controlledPlayers = new List<int>();
     private List<int> uncontrolledPlayers = new List<int>();
 
@@ -57,12 +58,15 @@ public class SwitchManager : MonoBehaviour
 
     private void OnEnable()
     {
+        playerInputManager.onPlayerLeft += PlayerLeft;
+
         joinAction = new InputActions();
         joinAction.JoiningGame.Join.performed += Joining;
 
         joinAction.JoiningGame.Enable();
 
         // playerInputManager.onPlayerJoined += AddPlayer;
+        // playerInputManager.onPlayerLeft
         print(InputSystem.devices.Count + "Total Number of Devices");
 
         GameEvents.OnAddPlayerSwitch += AddInactive;
@@ -71,6 +75,8 @@ public class SwitchManager : MonoBehaviour
 
     private void OnDisable()
     {
+        playerInputManager.onPlayerLeft -= PlayerLeft;
+
         joinAction.JoiningGame.Join.performed -= Joining;
 
         GameEvents.OnAddPlayerSwitch -= AddInactive;
@@ -126,6 +132,8 @@ public class SwitchManager : MonoBehaviour
 
         if (playerToControl != -1)
         {
+            playerInputConnection.Add(player, playerID);
+
             controlledPlayers.Add(playerID);
             uncontrolledPlayers.RemoveAt(playerToControl);
 
@@ -159,6 +167,8 @@ public class SwitchManager : MonoBehaviour
                 // deactivate the current controlled player
                 uncontrolledPlayers.Add(currentPlayerId);
                 controlledPlayers.Remove(currentPlayerId);
+
+                playerInputConnection[playerInput] = playerID;
             }
         }
     }
@@ -195,5 +205,13 @@ public class SwitchManager : MonoBehaviour
     private void AddInactive(int playerId)
     {
         uncontrolledPlayers.Add(playerId);
+    }
+
+    private void PlayerLeft(PlayerInput playerInput)
+    {
+        // not working yet, but not too vital to have working at the moment
+        Debug.Log("input device has disconnected");
+        GameEvents.DeactivatePlayer(playerInputConnection[playerInput]);
+        playerInputConnection.Remove(playerInput);
     }
 }
