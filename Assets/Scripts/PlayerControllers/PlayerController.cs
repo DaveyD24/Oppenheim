@@ -104,29 +104,33 @@ public abstract class PlayerController : MonoBehaviour
     /// <summary>
     /// Setup the player to use the supplied controllers input.
     /// </summary>
-    /// <param name="playerInput">The inout method, which is tied to the controller it is using.</param>
-    public virtual void ActivateInput(PlayerInput playerInput)
+    /// <param name="playerID">The id of the player which is to be activated.</param>
+    /// <param name="playerInput">The input method, which is tied to the controller it is using.</param>
+    public virtual void ActivateInput(int playerID, PlayerInput playerInput)
     {
-        // setup the inputs to use
-        pInput = playerInput;
-        Inputs = playerInput.actions;
+        if (playerID == PlayerIdSO.PlayerID)
+        {
+            // setup the inputs to use
+            pInput = playerInput;
+            Inputs = playerInput.actions;
 
-        PlayerInput = Inputs.FindActionMap("Player");
+            PlayerInput = Inputs.FindActionMap("Player");
 
-        PlayerInput.FindAction("Move").performed += Movement;
-        PlayerInput.FindAction("Move").canceled += Movement;
-        PlayerInput.FindAction("Ability").performed += PerformAbility;
+            PlayerInput.FindAction("Move").performed += Movement;
+            PlayerInput.FindAction("Move").canceled += Movement;
+            PlayerInput.FindAction("Ability").performed += PerformAbility;
 
-        // Inputs.Player.Ability.canceled += PerformAbility;
-        PlayerInput.FindAction("Jump").performed += Jump;
+            // Inputs.Player.Ability.canceled += PerformAbility;
+            PlayerInput.FindAction("Jump").performed += Jump;
 
+            PlayerInput.FindAction("RotatePlayer").performed += RotatePlayer;
 
-        PlayerInput.FindAction("RotatePlayer").performed += RotatePlayer;
-        // Inputs.Player.Jump.canceled += Jump;
-        PlayerInput.Enable();
+            // Inputs.Player.Jump.canceled += Jump;
+            PlayerInput.Enable();
 
-        Active = true;
-        Camera.main.gameObject.GetComponent<SpringArm>().Target = transform;
+            Activate();
+            Camera.main.gameObject.GetComponent<SpringArm>().Target = transform;
+        }
     }
 
     public void RotatePlayer(InputAction.CallbackContext ctx)
@@ -134,9 +138,9 @@ public abstract class PlayerController : MonoBehaviour
         GameEvents.RotatePlayer(PlayerIdSO.PlayerID, pInput);
     }
 
-    public void DeactivateInput()
+    public void DeactivateInput(int playerID)
     {
-        if (Inputs != null)
+        if (playerID == PlayerIdSO.PlayerID && Inputs != null)
         {
             PlayerInput.FindAction("Move").performed -= Movement;
             PlayerInput.FindAction("Move").canceled -= Movement;
@@ -147,7 +151,7 @@ public abstract class PlayerController : MonoBehaviour
             PlayerInput.FindAction("RotatePlayer").performed -= RotatePlayer;
 
             PlayerInput.Disable();
-            Active = false;
+            Deactivate();
         }
     }
 
@@ -211,6 +215,8 @@ public abstract class PlayerController : MonoBehaviour
 
         startPosition = transform.position;
         startRotation = transform.rotation;
+
+        GameEvents.OnAddPlayerSwitch(PlayerIdSO.PlayerID);
     }
 
     protected virtual void OnDeath()
@@ -235,20 +241,27 @@ public abstract class PlayerController : MonoBehaviour
         // assign the nessesary functions to the event system
         GameEvents.OnCollectFuel += MaxFuel;
         GameEvents.OnDie += Respawn;
+        GameEvents.OnActivatePlayer += ActivateInput;
+        GameEvents.OnDeactivatePlayer += DeactivateInput;
     }
 
     protected virtual void OnDisable()
     {
-        DeactivateInput();
+        DeactivateInput(PlayerIdSO.PlayerID);
 
         GameEvents.OnCollectFuel -= MaxFuel;
         GameEvents.OnDie -= Respawn;
+
+        GameEvents.OnActivatePlayer -= ActivateInput;
+        GameEvents.OnDeactivatePlayer -= DeactivateInput;
     }
 
     protected virtual void OnDrawGizmosSelected()
     {
         if (!Rb)
+        {
             Rb = GetComponent<Rigidbody>();
+        }
 
         Gizmos.color = new Color(0, 1, 1, .25f);
         Gizmos.DrawSphere(GetGroundCheckPosition(), GroundCheckRadius);
@@ -292,11 +305,6 @@ public abstract class PlayerController : MonoBehaviour
         {
             PlayerInput.Enable();
         }
-    }
-
-    private void Awake()
-    {
-        GameEvents.OnAddPlayerSwitch(PlayerIdSO.PlayerID, this);
     }
 
     private void AddBouyancy()

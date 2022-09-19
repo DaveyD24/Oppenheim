@@ -34,15 +34,20 @@ public class Bat : PlayerController
 		EventsComponent = GetComponent<BatEvents>();
 	}
 
-	public override void ActivateInput(PlayerInput playerInput)
+	public override void ActivateInput(int playerID, PlayerInput playerInput)
 	{
-		base.ActivateInput(playerInput);
-		BindMiscellaneousInputs();
+		if (playerID == PlayerIdSO.PlayerID)
+		{
+			base.ActivateInput(playerID, playerInput);
+			BindMiscellaneousInputs();
 
 #if UNITY_EDITOR
-		if (bIsStandalone)
-			Activate();
+			if (bIsStandalone)
+			{
+				Activate();
+			}
 #endif
+		}
 	}
 
 	private void BindMiscellaneousInputs()

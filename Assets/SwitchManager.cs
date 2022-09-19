@@ -11,10 +11,10 @@ public class SwitchManager : MonoBehaviour
     private int playerAdded = 0;
     private int playerNo = 0;
 
-    private Dictionary<int, PlayerController> controlledPlayers = new Dictionary<int, PlayerController>();
-    private Dictionary<int, PlayerController> uncontrolledPlayers = new Dictionary<int, PlayerController>();
-    [SerializeField] private InputActions joinAction;
-    // private Dictionary<int, PlayerController> uncontrolledPlayers = new Dictionary<int, PlayerController>();
+    private List<int> controlledPlayers = new List<int>();
+    private List<int> uncontrolledPlayers = new List<int>();
+
+    [SerializeField] private InputActions joinAction; // the input for joining as a new controller
 
     [field: SerializeField] public PlayerController Soldier { get; private set; }
 
@@ -51,15 +51,12 @@ public class SwitchManager : MonoBehaviour
 
     private void Awake()
     {
-        // Monkey.Activate();
         playerInputManager = GetComponent<PlayerInputManager>();
         InputSystem.DisableDevice(Mouse.current);
     }
 
     private void OnEnable()
     {
-        Monkey.enabled = true; ////////////////////////really random as it gets disabled somehow
-
         joinAction = new InputActions();
         joinAction.JoiningGame.Join.performed += Joining;
 
@@ -124,57 +121,21 @@ public class SwitchManager : MonoBehaviour
         print("Device Used to join: " + player.devices[0].name);
 
         player.neverAutoSwitchControlSchemes = true;
-        // switch (playerAdded)
-        // {
-        //    case 0:
-        //        Monkey.ActivateInput(player);
-        //        break;
-        //    case 1:
-        //        Bat.ActivateInput(player);
-        //        break;
-        //    case 2:
-        //        Soldier.ActivateInput(player);
-        //        break;
-        //    case 3:
-        //        Car.ActivateInput(player);
-        //        break;
-        //    default:
-        //        break;
-        // }
 
-        int playerToControl = FindUncontrolledPlayer();
+        (int playerToControl, int playerID) = FindUncontrolledPlayer();
 
-        controlledPlayers.Add(playerToControl, uncontrolledPlayers[playerToControl]);
-        uncontrolledPlayers.Remove(playerToControl);
-
-        controlledPlayers[playerToControl].ActivateInput(player);
-
-        playerAdded++;
-        Debug.Log("New Player Added: " + playerAdded);
-        print("Is Joining Enabled: " + player.playerIndex);
-    }
-
-    // Update is called once per frame
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.R))
+        if (playerToControl != -1)
         {
-            print(uncontrolledPlayers.Count);
-            // RotatePlayer();
+            controlledPlayers.Add(playerID);
+            uncontrolledPlayers.RemoveAt(playerToControl);
+
+            GameEvents.ActivatePlayer(playerID, player);
+
+            playerAdded++;
+            Debug.Log("New Player Added: " + playerAdded);
+            print("Is Joining Enabled: " + player.playerIndex);
         }
-
-        // if (playerInputManager.playerCount >= playerInputManager.maxPlayerCount && joinAction.JoiningGame.enabled)
-        // {
-        //     joinAction.JoiningGame.Disable();
-        // }
-        // else if (!joinAction.JoiningGame.enabled)
-        // {
-        //     joinAction.JoiningGame.Enable();
-        // }
-
-        // Debug.Log(GetActivePlayer().gameObject.name);
     }
-
 
     /// <summary>
     /// Switch out the current player for an uncontrolled one.
@@ -185,65 +146,54 @@ public class SwitchManager : MonoBehaviour
     {
         if (uncontrolledPlayers.Count > 0)
         {
-            controlledPlayers[currentPlayerId].DeactivateInput();
+            GameEvents.DeactivatePlayer(currentPlayerId);
 
-            int playerToControl = FindUncontrolledPlayer();
+            (int playerToControl, int playerID) = FindUncontrolledPlayer();
+            if (playerToControl != -1)
+            {
+                // activate the choosen uncontrolled player
+                controlledPlayers.Add(playerID);
+                uncontrolledPlayers.RemoveAt(playerToControl);
+                GameEvents.ActivatePlayer(playerID, playerInput);
 
-            controlledPlayers.Add(playerToControl, uncontrolledPlayers[playerToControl]);
-            uncontrolledPlayers.Remove(playerToControl);
-            controlledPlayers[playerToControl].ActivateInput(playerInput);
-
-            uncontrolledPlayers.Add(currentPlayerId, controlledPlayers[currentPlayerId]);
-            controlledPlayers.Remove(currentPlayerId);
-
-            // bygr
-            ////if (Bat.IsActive())
-            ////{
-            ////    DeactivateAll();
-            ////    Car.Activate();
-            ////}
-            ////else if (Car.IsActive())
-            ////{
-            ////    DeactivateAll();
-            ////    Monkey.Activate();
-            ////}
-            ////else if (Monkey.IsActive())
-            ////{
-            ////    DeactivateAll();
-            ////    Soldier.Activate();
-            ////}
-            ////else if (Soldier.IsActive())
-            ////{
-            ////    DeactivateAll();
-            ////    Bat.Activate();
-            ////}
+                // deactivate the current controlled player
+                uncontrolledPlayers.Add(currentPlayerId);
+                controlledPlayers.Remove(currentPlayerId);
+            }
         }
     }
 
-    private int FindUncontrolledPlayer()
+    /// <summary>
+    /// Find an uncontrolled player.
+    /// </summary>
+    /// <returns>the index of the first uncontrolled player, if it exists.</returns>
+    private (int, int) FindUncontrolledPlayer()
     {
-        int playerToControl = 0;
-
-        // get a random uncontrolled player
-        foreach (var item in uncontrolledPlayers)
+        int playerToControl = -1;
+        int playerID = -1;
+        if (uncontrolledPlayers.Count > 0)
         {
-            playerToControl = item.Key;
-            break;
+            playerToControl = 0;
+            playerID = uncontrolledPlayers[playerToControl];
         }
 
-        return playerToControl;
+        return (playerToControl, playerID);
     }
 
-    private void DeactivateAll()
-    {
-        Soldier.Deactivate();
-        Bat.Deactivate();
-        Monkey.Deactivate();
-        Car.Deactivate();
-    }
+    // private void DeactivateAll()
+    // {
+    //     Soldier.Deactivate();
+    //     Bat.Deactivate();
+    //     Monkey.Deactivate();
+    //     Car.Deactivate();
+    // }
 
-    private void AddInactive(int playerId, PlayerController playerController)
+    /// <summary>
+    /// Adds a new player to the list of inactive players.
+    /// </summary>
+    /// <param name="playerId">The id of the player.</param>
+    private void AddInactive(int playerId)
     {
-        uncontrolledPlayers.Add(playerId, playerController);
+        uncontrolledPlayers.Add(playerId);
     }
 }

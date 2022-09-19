@@ -14,9 +14,13 @@ namespace EventSystem
 
         public static Action<int> OnCollectFuel { get; set; }
 
-        public static Action<int, PlayerController> OnAddPlayerSwitch { get; set; }
+        public static Action<int> OnAddPlayerSwitch { get; set; }
 
         public static Action<int, PlayerInput> OnRotatePlayer { get; set; }
+
+        public static Action<int, PlayerInput> OnActivatePlayer { get; set; }
+
+        public static Action<int> OnDeactivatePlayer { get; set; }
 
         public static void DashCarCollide()
         {
@@ -33,14 +37,24 @@ namespace EventSystem
             OnDie?.Invoke();
         }
 
-        public static void AddPlayerSwitch(int playerId, PlayerController playerController)
+        public static void AddPlayerSwitch(int playerId)
         {
-            OnAddPlayerSwitch?.Invoke(playerId, playerController);
+            OnAddPlayerSwitch?.Invoke(playerId);
         }
 
         public static void RotatePlayer(int currentPlayerId, PlayerInput playerInput)
         {
             OnRotatePlayer?.Invoke(currentPlayerId, playerInput);
+        }
+
+        public static void ActivatePlayer(int currentPlayerId, PlayerInput playerInput)
+        {
+            OnActivatePlayer?.Invoke(currentPlayerId, playerInput);
+        }
+
+        public static void DeactivatePlayer(int currentPlayerId)
+        {
+            OnDeactivatePlayer?.Invoke(currentPlayerId);
         }
     }
 }
