@@ -26,8 +26,11 @@ public class SoldierMovement : MonoBehaviour
     void FixedUpdate() {
         if (isSwimming != true)
         {
+            BobScript bobTheBuilder = this.GetComponent<BobScript>();
+            bobTheBuilder.doBob = false;
+
             if (rb.useGravity != true)
-            {
+            {/*
                 rb.useGravity = true;
                 rb.velocity = Vector3.zero;
                 rb.angularVelocity = Vector3.zero;
@@ -36,7 +39,7 @@ public class SoldierMovement : MonoBehaviour
                 // Do positioning, etc
                 soldierTransform.rotation = Quaternion.identity;
                 // Re-enable the physics
-                rb.isKinematic = false;
+                rb.isKinematic = false;*/
             }
             //input
             float horizontal = Input.GetAxisRaw("Horizontal");
@@ -59,6 +62,9 @@ public class SoldierMovement : MonoBehaviour
         }
         else 
         {
+            //Swimming
+            BobScript bobTheBuilder = this.GetComponent<BobScript>();
+            bobTheBuilder.doBob = true;
             if (rb.useGravity == true)
             {
                 rb.useGravity = false;

@@ -23,6 +23,7 @@ public class WaterScript : MonoBehaviour
             //CharacterController soldier = other.GetComponent<CharacterController>();
             SoldierMovement soldier = other.GetComponent<SoldierMovement>();
             soldier.isSwimming = false;
+            Debug.Log("Stahp swimming");
         }
     }
 }
