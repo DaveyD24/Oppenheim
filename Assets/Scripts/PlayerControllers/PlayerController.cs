@@ -269,7 +269,7 @@ public abstract class PlayerController : MonoBehaviour
             Rb = GetComponent<Rigidbody>();
         }
 
-        Gizmos.color = new Color(0, 1, 1, .25f);
+        Gizmos.color = new Color(0, 1, 1, 1);
         Gizmos.DrawSphere(GetGroundCheckPosition(), GroundCheckRadius);
     }
 

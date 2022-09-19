@@ -218,6 +218,6 @@ MonoBehaviour:
   <RotationSpeed>k__BackingField: 10
   <Health>k__BackingField: 0
   <FallDamageThreshold>k__BackingField: 0
-  groundCheckPosition: {x: 0, y: 0, z: 0}
+  groundCheckPosition: {x: 0, y: -0.5, z: 0}
   <GroundCheckRadius>k__BackingField: 0.3
   jumpWaitTime: 1
