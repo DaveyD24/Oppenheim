@@ -24,21 +24,20 @@ public class SwitchManager : MonoBehaviour
         {
             return Soldier.gameObject;
         }
-
-        if (Bat.IsActive())
+        else if (Bat.IsActive())
         {
             return Bat.gameObject;
         }
-
-        if (Monkey.IsActive())
+        else if (Monkey.IsActive())
         {
             return Monkey.gameObject;
         }
-
-        if (Car.IsActive())
+        else if (Car.IsActive())
         {
             return Car.gameObject;
         }
+
+        Debug.LogError("No Active Player!");
 
         return null;
     }
@@ -191,6 +190,8 @@ public class SwitchManager : MonoBehaviour
             DeactivateAll();
             Bat.Activate();
         }
+
+        SpringArm.Get().Target = GetActivePlayer().transform;
     }
 
     private void DeactivateAll()

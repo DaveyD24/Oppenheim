@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657993, g: 0.4964143, b: 0.5748183, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657934, g: 0.4964134, b: 0.57481736, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -13064,13 +13064,14 @@ MonoBehaviour:
     m_Asset: {fileID: 0}
     m_Actions: []
     m_Bindings: []
-  groundCheckPosition: {x: 0, y: 0, z: 0}
   <PlayerIdSO>k__BackingField: {fileID: 11400000, guid: 0aca3aa46054d22439aa2cb351a6753d, type: 2}
   <DefaultPlayerData>k__BackingField: {fileID: 11400000, guid: edaf631a83ce6ea42aa9463c9228f767, type: 2}
   <Bouyancy>k__BackingField: 0
   <MovementSpeed>k__BackingField: 5
   <RotationSpeed>k__BackingField: 10
   <Health>k__BackingField: 0
+  <FallDamageThreshold>k__BackingField: 0
+  groundCheckPosition: {x: 0, y: 0, z: 0}
   <GroundCheckRadius>k__BackingField: 0.3
   jumpWaitTime: 1
 --- !u!54 &334516011
@@ -38804,13 +38805,14 @@ MonoBehaviour:
     m_Asset: {fileID: 0}
     m_Actions: []
     m_Bindings: []
-  groundCheckPosition: {x: 0, y: 0, z: 0}
   <PlayerIdSO>k__BackingField: {fileID: 11400000, guid: 1e6de6128901ea94a88896b92e3bf310, type: 2}
   <DefaultPlayerData>k__BackingField: {fileID: 11400000, guid: edaf631a83ce6ea42aa9463c9228f767, type: 2}
   <Bouyancy>k__BackingField: 0
   <MovementSpeed>k__BackingField: 6
   <RotationSpeed>k__BackingField: 5
   <Health>k__BackingField: 0
+  <FallDamageThreshold>k__BackingField: 0
+  groundCheckPosition: {x: 0, y: 0, z: 0}
   <GroundCheckRadius>k__BackingField: 0.3
   jumpHeight: 3
   <BulletSpawnPoint>k__BackingField: {fileID: 0}
@@ -67713,13 +67715,14 @@ MonoBehaviour:
     m_Asset: {fileID: 0}
     m_Actions: []
     m_Bindings: []
-  groundCheckPosition: {x: 0, y: 0, z: 0}
   <PlayerIdSO>k__BackingField: {fileID: 11400000, guid: 1e6de6128901ea94a88896b92e3bf310, type: 2}
   <DefaultPlayerData>k__BackingField: {fileID: 11400000, guid: edaf631a83ce6ea42aa9463c9228f767, type: 2}
   <Bouyancy>k__BackingField: 0
   <MovementSpeed>k__BackingField: 6
   <RotationSpeed>k__BackingField: 10
   <Health>k__BackingField: 0
+  <FallDamageThreshold>k__BackingField: 0
+  groundCheckPosition: {x: 0, y: 0, z: 0}
   <GroundCheckRadius>k__BackingField: 0.15
   jumpHeight: 3
   <BulletSpawnPoint>k__BackingField: {fileID: 1791920390}

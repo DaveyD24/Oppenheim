@@ -9,7 +9,7 @@ public class SpringArm : MonoBehaviour
 	[SerializeField] bool bDrawRotationalLines;
 	[Space(10)]
 #endif
-	public static SpringArm Instance;
+	static SpringArm Instance;
 
 	//public GameSettings Settings;
 
@@ -17,6 +17,8 @@ public class SpringArm : MonoBehaviour
 	[SerializeField] Transform Camera;
 	public Transform Target;
 	[SerializeField] Vector3 TargetOffset;
+
+	Camera CameraComponent;
 
 	[Header("Spring Arm Settings.")]
 	public float Distance;
@@ -62,28 +64,11 @@ public class SpringArm : MonoBehaviour
 
 	void Awake()
 	{
-		if (Instance)
-		{
-			Debug.LogWarning("Make sure there is only one " + nameof(SpringArm) + " in the Game!");
-		}
-		else
-		{
-			Instance = this;
-		}
+		SetInstance();
 	}
 
 	void Start()
 	{
-		/*if (Settings)
-		{
-			Settings.OnSettingsChanged += ReceiveSettings;
-			Settings.OnReceiveInspectorDefaults?.Invoke(new Settings(bInheritRotation, 1f));
-		}
-		else
-		{
-			Debug.LogWarning("No Settings Object. Not needed if there is no Pause Menu. ");
-		}*/
-
 		DefaultGimbalRotation = GimbalRotation;
 		DefaultCameraRotation = CameraRotation;
 
@@ -92,7 +77,8 @@ public class SpringArm : MonoBehaviour
 
 		OriginalTargetOffset = TargetOffset;
 
-		DefaultProjection = GetComponent<Camera>().projectionMatrix;
+		CameraComponent = UnityEngine.Camera.main;
+		DefaultProjection = CameraComponent.projectionMatrix;
 	}
 
 	void Update()
@@ -104,9 +90,6 @@ public class SpringArm : MonoBehaviour
 			bInheritRotation = !bInheritRotation;
 
 		ScrollDistance();
-
-		//if (Input.GetKey(KeyCode.RightShift) && Input.GetKeyDown(KeyCode.Backslash))
-		//bUseCustomProjection = !bUseCustomProjection;
 	}
 
 	void FixedUpdate()
@@ -128,6 +111,26 @@ public class SpringArm : MonoBehaviour
 	void OnPreCull()
 	{
 		ComputeProjection();
+	}
+
+	void SetInstance()
+	{
+		if (Instance)
+		{
+			Debug.LogWarning("Make sure there is only one " + nameof(SpringArm) + " in the Game!");
+		}
+		else
+		{
+			Instance = this;
+		}
+	}
+
+	public static SpringArm Get()
+	{
+		if (!Instance)
+			Debug.LogError("No Spring Arm attached to the Camera!");
+
+		return Instance;
 	}
 
 	void PlaceCamera()
@@ -243,8 +246,6 @@ public class SpringArm : MonoBehaviour
 		}
 	}
 
-
-
 	void UpdateRotationOnMouse()
 	{
 		Vector3 MousePosition = Input.mousePosition;
@@ -331,11 +332,9 @@ public class SpringArm : MonoBehaviour
 				NearClipDistance = Distance * .5f;
 			}
 
-			Camera C = this.GetComponent<Camera>();
-
 			int Dot = Math.Sign(Vector3.Dot(Plane.forward, Target.position - Camera.position));
-			Vector3 CameraWorldPosition = C.worldToCameraMatrix.MultiplyPoint(Target.position);
-			Vector3 CameraNormal = C.worldToCameraMatrix.MultiplyVector(Plane.forward) * Dot;
+			Vector3 CameraWorldPosition = CameraComponent.worldToCameraMatrix.MultiplyPoint(Target.position);
+			Vector3 CameraNormal = CameraComponent.worldToCameraMatrix.MultiplyVector(Plane.forward) * Dot;
 
 			float CameraDistance = -Vector3.Dot(CameraWorldPosition, CameraNormal) + NearClipDistance;
 
@@ -344,16 +343,16 @@ public class SpringArm : MonoBehaviour
 			{
 				Vector4 clipPlaneCameraSpace = new Vector4(CameraNormal.x, CameraNormal.y, CameraNormal.z, CameraDistance);
 
-				C.projectionMatrix = C.CalculateObliqueMatrix(clipPlaneCameraSpace);
+				CameraComponent.projectionMatrix = CameraComponent.CalculateObliqueMatrix(clipPlaneCameraSpace);
 			}
 			else
 			{
-				C.projectionMatrix = DefaultProjection;
+				CameraComponent.projectionMatrix = DefaultProjection;
 			}
 		}
 		else
 		{
-			this.GetComponent<Camera>().projectionMatrix = DefaultProjection;
+			CameraComponent.projectionMatrix = DefaultProjection;
 		}
 	}
 
@@ -374,8 +373,6 @@ public class SpringArm : MonoBehaviour
 		if (Camera && Target)
 			Debug.DrawLine(TargetPos(), Camera.position, Color.red);
 	}
-
-
 #endif
 
 }
