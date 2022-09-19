@@ -17,6 +17,11 @@ public class WallConstructor : MonoBehaviour
     [SerializeField] private int numSegmentsX;
     [SerializeField] private int numSegmentsY;
     [SerializeField] private int numSegmentsZ;
+
+    [SerializeField] private float xoffsetAmount;
+    [SerializeField] private float yoffsetAmount;
+    [SerializeField] private float zoffsetAmount;
+
     [SerializeField] private float segmentsOffsetX = 0.25f;
     [SerializeField] private float segmentsOffsetY = 0.25f;
     [SerializeField] private float segmentsOffsetZ = 0.25f;
@@ -96,9 +101,9 @@ public class WallConstructor : MonoBehaviour
         // rb.drag = drag;
 
         Vector3 pos = transform.position;
-        float offsetX = width * numSegmentsX / 2;
-        float offsetY = height * numSegmentsY / 2;
-        float offsetZ = depth * numSegmentsZ / 2;
+        float offsetX = 0; // width * numSegmentsX / 2;
+        float offsetY = 0; // height * numSegmentsY / 2;
+        float offsetZ = 0; // depth * numSegmentsZ / 2;
         for (int y = 0; y < numSegmentsY; y++)
         {
             for (int z = 0; z < numSegmentsZ; z++)
@@ -106,7 +111,7 @@ public class WallConstructor : MonoBehaviour
                 float zoffset;
                 if (y % 2 == 0 && bIterateZ)
                 {
-                    zoffset = depth / 2.0f;
+                    zoffset = zoffsetAmount;
                 }
                 else
                 {
@@ -118,7 +123,7 @@ public class WallConstructor : MonoBehaviour
                     float xoffset = 0;
                     if ((z + y) % 2 == 0 && bIterateX)
                     {
-                        xoffset = width / 2.0f;
+                        xoffset = xoffsetAmount;
                     }
                     else
                     {
