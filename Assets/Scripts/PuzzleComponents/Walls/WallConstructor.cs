@@ -75,7 +75,15 @@ public class WallConstructor : MonoBehaviour
                             GameObject randomItem = randomItems[Random.Range(0, randomItems.Count)];
                             Vector3 itemPos = new Vector3(shelvePos.x + (((float)width / (float)numItemsX * x) + shelveItemOffset.x), shelvePos.y + shelveItemOffset.y, shelvePos.z + (((float)shelveDepth / (float)numItemsZ * z) + shelveItemOffset.z));
                             GameObject segment = Instantiate(randomItem, itemPos, randomItem.transform.rotation, spawnedObjs[i].transform.GetChild(j));
-                            segment.transform.localScale = itemScale;
+                            if (segment.name.Contains("Container"))
+                            {
+                                segment.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
+                            }
+                            else
+                            {
+                                segment.transform.localScale = itemScale;
+                            }
+
                             spawnedItems.Add(segment);
                         }
                     }

@@ -97,8 +97,8 @@ GameObject:
   - component: {fileID: 221764831}
   - component: {fileID: 221764832}
   m_Layer: 0
-  m_Name: ABCCubeBox
-  m_TagString: Untagged
+  m_Name: PushableBox
+  m_TagString: Breakable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -117,7 +117,7 @@ Transform:
   - {fileID: 8243702941786768015}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 65, z: 0}
 --- !u!33 &8243702943377809535
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -240,3 +240,10 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 8287db3e51265cf4e9beb5da316b2f64, type: 2}
   - {fileID: 2100000, guid: c8a984c5ee3cbb14c89f707e11e086b0, type: 2}
   - {fileID: 2926557707537190794, guid: feb5bdb9736641142bcd1b457cbe19e1, type: 3}
+  bDoRandMat: 1
+  bDoRandMesh: 1
+  meshFilters:
+  - {fileID: 8243702941786768017}
+  meshRenderers:
+  - {fileID: 8243702943377809534}
+  - {fileID: 8243702941786768016}
