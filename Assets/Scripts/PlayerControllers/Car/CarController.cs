@@ -203,6 +203,20 @@ public class CarController : PlayerController
         }
     }
 
+    protected override void OnCollisionEnter(Collision collision)
+    {
+        base.OnCollisionEnter(collision);
+        if (collision.gameObject.TryGetComponent(out BreakableObj breakableObj) && BIsDash)
+        {
+            breakableObj.OnBreak();
+        }
+
+        if (collision.gameObject.CompareTag("Wall") && BIsDash)
+        {
+            collision.gameObject.GetComponent<Rigidbody>().AddForce(50000 * transform.forward);
+        }
+    }
+
     /// <summary>
     /// Set the values for the wind particles to be based on the cars speed.
     /// </summary>
@@ -322,7 +336,7 @@ public class CarController : PlayerController
             targetRotation.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
 
             // smoothly rotate back up while not being mostly aligned with the up axis
-            while (Vector3.Dot(transform.up, Vector3.up) < 0.9f)
+            while (Vector3.Dot(transform.up, Vector3.up) < 0.9f && this != null)
             {
                 Rb.rotation = Quaternion.RotateTowards(Rb.rotation, targetRotation, antiRollTorque * Time.deltaTime);
                 await System.Threading.Tasks.Task.Yield();
@@ -437,29 +451,6 @@ public class CarController : PlayerController
                     BodyMeshRenderer.sharedMaterials = CarMaterials;
                 }
             }
-        }
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Breakable") && BIsDash)
-        {
-            // convert this to the event system
-            Destroy(collision.gameObject.GetComponent<MeshCollider>());
-            Destroy(collision.gameObject.GetComponent<MeshRenderer>());
-            Destroy(collision.gameObject.GetComponent<MeshFilter>());
-            for (int i = collision.gameObject.transform.childCount - 1; i >= 0; i--)
-            {
-                collision.gameObject.transform.GetChild(i).gameObject.AddComponent<Rigidbody>().AddForce(1500 * transform.forward);
-                collision.gameObject.transform.GetChild(i).gameObject.AddComponent<MeshCollider>().convex = true;
-                collision.gameObject.transform.GetChild(i).gameObject.GetComponent<MeshRenderer>().enabled = true;
-                collision.gameObject.transform.GetChild(i).parent = null;
-            }
-        }
-
-        if (collision.gameObject.CompareTag("Wall") && BIsDash)
-        {
-            collision.gameObject.GetComponent<Rigidbody>().AddForce(50000 * transform.forward);
         }
     }
 }

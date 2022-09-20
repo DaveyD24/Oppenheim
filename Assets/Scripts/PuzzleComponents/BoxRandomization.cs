@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Randomly customizes the breakable and pushable boxes so they can be unique each playthrough.
+/// </summary>
 public class BoxRandomization : MonoBehaviour
 {
     [SerializeField] private Mesh[] textMeshes;
