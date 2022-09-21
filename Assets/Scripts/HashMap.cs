@@ -17,25 +17,35 @@ public class HashMap<TKey, TValue>
 	internal Dictionary<TKey, TValue> Internal_Dictionary;
 	bool bIsConstructed = false;
 
+	public int Num { get => Entries.Length; }
+
 	public bool Construct(out Dictionary<TKey, TValue> HashMap)
 	{
-		HashMap = new Dictionary<TKey, TValue>();
+		Internal_Dictionary = new Dictionary<TKey, TValue>();
+		HashMap = Internal_Dictionary; // Point to the same address.
+
 		foreach (Entry KeyValue in Entries)
 		{
-			if (HashMap.ContainsKey(KeyValue.Key))
+			if (Internal_Dictionary.ContainsKey(KeyValue.Key))
 			{
 				Debug.LogError($"Key: {KeyValue.Key} already exists!");
 				return false;
 			}
 
-			HashMap.Add(KeyValue.Key, KeyValue.Value);
+			Internal_Dictionary.Add(KeyValue.Key, KeyValue.Value);
 		}
 
 		bIsConstructed = true;
-		Internal_Dictionary = HashMap; // Point to the same address.
 
 		return true;
 	}
+
+	// C# Dictionary API.
+	public bool Contains(TKey K) => Internal_Dictionary.ContainsKey(K);
+	public void Push(TKey K, TValue V) => Internal_Dictionary.Add(K, V);
+	public void Pull(TKey K) => Internal_Dictionary.Remove(K);
+	public void Clear() => Internal_Dictionary.Clear();
+	public bool TryGet(TKey K, out TValue V) => Internal_Dictionary.TryGetValue(K, out V);
 
 	public TValue this[TKey K]
 	{
