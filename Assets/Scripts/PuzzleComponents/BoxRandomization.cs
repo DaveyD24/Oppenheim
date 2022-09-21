@@ -18,7 +18,7 @@ public class BoxRandomization : MonoBehaviour
 
     private void Start()
     {
-        Rigidbody rb = GetComponent<Rigidbody>();
+        rb = GetComponent<Rigidbody>();
         if (bDoRandMesh)
         {
             int randLetter = Random.Range(0, textMeshes.Length - 1);

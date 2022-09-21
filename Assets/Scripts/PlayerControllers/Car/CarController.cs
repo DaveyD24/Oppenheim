@@ -336,7 +336,7 @@ public class CarController : PlayerController
             targetRotation.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
 
             // smoothly rotate back up while not being mostly aligned with the up axis
-            while (Vector3.Dot(transform.up, Vector3.up) < 0.9f && this != null)
+            while (this != null && Vector3.Dot(transform.up, Vector3.up) < 0.9f)
             {
                 Rb.rotation = Quaternion.RotateTowards(Rb.rotation, targetRotation, antiRollTorque * Time.deltaTime);
                 await System.Threading.Tasks.Task.Yield();

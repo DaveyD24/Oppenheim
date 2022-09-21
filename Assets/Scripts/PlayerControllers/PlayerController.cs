@@ -115,6 +115,8 @@ public abstract class PlayerController : MonoBehaviour
     {
         if (playerID == PlayerIdSO.PlayerID)
         {
+            activeIndicator.enabled = true;
+
             // setup the inputs to use
             pInput = playerInput;
             Inputs = playerInput.actions;
@@ -175,6 +177,7 @@ public abstract class PlayerController : MonoBehaviour
         // UIEvents.OnFuelChanged(PlayerIdSO.PlayerID, CurrentFuel / DefaultPlayerData.MaxFuel);
         if (CurrentFuel <= 0)
         {
+            Debug.LogError("Player Lost All fuel and Died");
             OnDeath();
         }
     }
@@ -187,7 +190,7 @@ public abstract class PlayerController : MonoBehaviour
             Debug.Log("I Died");
         }
 
-        // AdjustFuelValue(-DefaultPlayerData.DecreaseFuelAmount.Evaluate(CurrentFuel / DefaultPlayerData.MaxFuel) * Time.deltaTime);
+        AdjustFuelValue(-DefaultPlayerData.DecreaseFuelAmount.Evaluate(CurrentFuel / DefaultPlayerData.MaxFuel) * Time.deltaTime * DefaultPlayerData.fuelLoseMultiplier);
         if (switchManager.GetActivePlayer() != null)
         {
             if (Vector3.Distance(this.gameObject.transform.position, switchManager.GetActivePlayer().transform.position) > 3.0f)
