@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 using UnityEngine.Extensions;
 
@@ -28,9 +29,17 @@ public class ViewportSplit : MonoBehaviour
 
 		if (ArePlayersTooFarApart(out List<PlayerController> TooFar))
 		{
-			for (int i = 0; i < TooFar.Count; i++)
-				Debug.Log(TooFar[i].name);
-			Debug.Break();
+#if UNITY_EDITOR
+			if (TooFar.Count != 0)
+			{
+				StringBuilder Debug_TooFar = new StringBuilder();
+				Debug_TooFar.Append("These players are too far: ");
+				for (int i = 0; i < TooFar.Count; i++)
+					Debug_TooFar.Append(TooFar[i].name + " ");
+				Debug.Log(Debug_TooFar.ToString());
+				//Debug.Break();
+			}
+#endif
 		}
 	}
 

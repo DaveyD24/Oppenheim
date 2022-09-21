@@ -78,7 +78,7 @@ public class SwitchManager : MonoBehaviour
         joinAction.JoiningGame.Enable();
 
         // playerInputManager.onPlayerJoined += AddPlayer;
-        print(InputSystem.devices.Count + "Total Number of Devices");
+        //print(InputSystem.devices.Count + "Total Number of Devices");
 
         GameEvents.OnAddPlayerSwitch += AddInactive;
         GameEvents.OnRotatePlayer += RotatePlayer;
@@ -104,7 +104,7 @@ public class SwitchManager : MonoBehaviour
         bool bIsbeingUsed = true;
         foreach (InputDevice device in unpairedDevices)
         {
-            print(device.name);
+            //print(device.name);
             if (device == deviceUsing)
             {
                 // as the device is listed as unpaired it can be used
@@ -133,7 +133,7 @@ public class SwitchManager : MonoBehaviour
     private void AddPlayer(PlayerInput player)
     {
         // controlledPlayers.Add(player);
-        print("Device Used to join: " + player.devices[0].name);
+        //print("Device Used to join: " + player.devices[0].name);
 
         player.neverAutoSwitchControlSchemes = true;
 
@@ -147,8 +147,8 @@ public class SwitchManager : MonoBehaviour
             GameEvents.ActivatePlayer(playerID, player);
 
             playerAdded++;
-            Debug.Log("New Player Added: " + playerAdded);
-            print("Is Joining Enabled: " + player.playerIndex);
+            //Debug.Log("New Player Added: " + playerAdded);
+            //print("Is Joining Enabled: " + player.playerIndex);
         }
     }
 

@@ -18,6 +18,8 @@
 #error LOOK YAW TAKES PRECEDENCE! DEFINE USE_MOVE_YAW XOR USE_LOOK_YAW.
 #endif
 
+#define USE_DOUBLEJUMP_GLIDE
+
 using System.Collections;
 using UnityEngine;
 using static global::BatMathematics;
@@ -172,15 +174,14 @@ public class BatMovement : MonoBehaviour
 			float Vertical = Throw.y;
 			float Horizontal = Throw.x;
 
+#if !USE_DOUBLEJUMP_GLIDE
 			// Forward Gliding.
 			if (!bHasGlidedThisJump && Vertical > kGlideInputSensitivity)
 			{
-				StopGradualAcceleration();
-
-				CurrentGradualFunc = GradualAcceleration();
-				StartCoroutine(CurrentGradualFunc);
-			}
-			else if (!bHasCancelledGlideThisJump && Vertical < -kGlideInputSensitivity)
+				StartGliding();			}
+			else
+#endif
+			if (!bHasCancelledGlideThisJump && Vertical < -kGlideInputSensitivity)
 			{
 				// If the Player Cancels their Glide, decrease velocity but do not affect Gravity.
 				Vector3 Velocity = Bat.Physics.velocity;
@@ -203,7 +204,7 @@ public class BatMovement : MonoBehaviour
 #endif
 
 			// Stop Ground Movement from taking place while Airborne.
-			GroundMovement = Vector3.zero;
+			//GroundMovement = Vector3.zero;
 		}
 		else
 		{
@@ -214,7 +215,6 @@ public class BatMovement : MonoBehaviour
 
 			// Stop applying gradual forward acceleration.
 			StopGradualAcceleration();
-			CurrentGradualFunc = null;
 		}
 	}
 
@@ -239,6 +239,22 @@ public class BatMovement : MonoBehaviour
 
 			Bat.Events.OnAnimationStateChanged?.Invoke(EAnimationState.WingedFlight);
 		}
+#if USE_DOUBLEJUMP_GLIDE
+		else if (!IsZero(Throw))
+		{
+			// Double-Jump mechanism.
+			if (!bHasGlidedThisJump)
+			{
+				// On Double-Jump...
+				StartGliding();
+			}
+			else
+			{
+				// On 2+ Jump...
+				StopGradualAcceleration();
+			}
+		}
+#endif
 	}
 
 	public void HandleLook(Vector2 Throw)
@@ -268,7 +284,7 @@ public class BatMovement : MonoBehaviour
 
 	void HandleGroundMovement()
 	{
-		if (!IsAirborne())
+		if (!IsAirborne() || !bHasGlidedThisJump)
 		{
 			// Ground Movement relative to the camera.
 			Vector3 CameraRelativeDirection = DirectionRelativeToTransform(BatCamera.transform, GroundMovement);
@@ -280,6 +296,15 @@ public class BatMovement : MonoBehaviour
 			ForceZero(ref PitchDirection);
 			ForceZero(ref YawDirection);
 		}
+	}
+
+	void StartGliding()
+	{
+		StopGradualAcceleration();
+
+		CurrentGradualFunc = GradualAcceleration();
+		StartCoroutine(CurrentGradualFunc);
+
 	}
 
 	IEnumerator GradualAcceleration()
@@ -308,7 +333,10 @@ public class BatMovement : MonoBehaviour
 	public void StopGradualAcceleration()
 	{
 		if (CurrentGradualFunc != null)
+		{
 			StopCoroutine(CurrentGradualFunc);
+			CurrentGradualFunc = null;
+		}
 	}
 
 	/// <summary>Gives Pitch Input.</summary>
@@ -394,7 +422,8 @@ public class BatMovement : MonoBehaviour
 			transform.rotation = Quaternion.FromToRotation(transform.up, Vector3.up) * transform.rotation;
 
 			// Stop moving.
-			/*Bat.Physics.velocity = */Bat.Physics.angularVelocity = Vector3.zero;
+			/*Bat.Physics.velocity = */
+			Bat.Physics.angularVelocity = Vector3.zero;
 
 			// Stop everything else. Switch back to the Stand Idle animation.
 			Bat.Events.OnAnimationStateChanged?.Invoke(EAnimationState.StandIdle);

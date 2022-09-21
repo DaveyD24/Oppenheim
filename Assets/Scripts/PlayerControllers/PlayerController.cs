@@ -272,10 +272,10 @@ public abstract class PlayerController : MonoBehaviour
     {
         bool bTakeFallDamage = ShouldTakeFallDamage(collision, out float relativeVelocity);
 
-        if (relativeVelocity > MovementSpeed + 1f)
-        {
-            Debug.Log($"{name} collided with {collision.collider.name} at {relativeVelocity:F2}m/s");
-        }
+        //if (relativeVelocity > MovementSpeed + 1f)
+        //{
+        //    Debug.Log($"{name} collided with {collision.collider.name} at {relativeVelocity:F2}m/s");
+        //}
 
         if (bTakeFallDamage)
         {

@@ -25,7 +25,7 @@ public static class BatMathematics
 
 		float UU = -2f * Physics.gravity.y * DesiredHeight;
 
-		return Mathf.Sqrt(UU);
+		return FSqrt(UU);
 	}
 
 	// Lift Constants.
