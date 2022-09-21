@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using EventSystem;
 using UnityEngine;
+using UnityEngine.Analytics;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
@@ -22,9 +23,9 @@ public abstract class PlayerController : MonoBehaviour
     private PlayerInput pInput;
 
     // input handleing things
-    public InputActionMap PlayerInput { get; private set; }
-
     public static IEnumerator DeathWaitTimer { get; private set; }
+
+    public InputActionMap PlayerInput { get; private set; }
 
     [HideInInspector] public bool Active { get; set; } = false;
 
@@ -39,9 +40,9 @@ public abstract class PlayerController : MonoBehaviour
     // A unique object each scene object gets assigned, being largly used to store the players id
     [field: SerializeField] public PlayerIdObject PlayerIdSO { get; private set; }
 
-    [field: SerializeField] protected DefaultPlayerDataObject DefaultPlayerData { get; private set; }
-
     [field: SerializeField] public SpringArm TrackingCamera { get; set; }
+
+    [field: SerializeField] protected DefaultPlayerDataObject DefaultPlayerData { get; private set; }
 
     [field: SerializeField] protected float Bouyancy { get; private set; }
 
@@ -187,7 +188,6 @@ public abstract class PlayerController : MonoBehaviour
         if (transform.position.y < 2)
         {
             OnDeath();
-            Debug.Log("I Died");
         }
 
         AdjustFuelValue(-DefaultPlayerData.DecreaseFuelAmount.Evaluate(CurrentFuel / DefaultPlayerData.MaxFuel) * Time.deltaTime * DefaultPlayerData.fuelLoseMultiplier);
@@ -217,6 +217,14 @@ public abstract class PlayerController : MonoBehaviour
 
     protected virtual void Start()
     {
+#if UNITY_EDITOR
+        Analytics.initializeOnStartup = false;
+        Analytics.enabled = false;
+#elif !UNITY_EDITOR
+        Analytics.initializeOnStartup = true;
+        Analytics.enabled = true;
+#endif
+
         activeIndicator = GetComponentInChildren(typeof(SpriteRenderer)) as SpriteRenderer;
         Rb = GetComponent<Rigidbody>();
         switchManager = FindObjectOfType<SwitchManager>();
@@ -338,7 +346,17 @@ public abstract class PlayerController : MonoBehaviour
 
     private IEnumerator DeathWait()
     {
-        Debug.Log("Deathingwqertgyhferwrtf");
+        Debug.Log("Player Died");
+
+#if !UNITY_EDITOR
+        Dictionary<string, object> eventData = new Dictionary<string, object>();
+        eventData.Add("Player ID", PlayerIdSO.PlayerID);
+        eventData.Add("Player Position", transform.position);
+        eventData.Add("Player Velocity", Rb.velocity.magnitude);
+        AnalyticsResult analyticsResult = AnalyticsEvent.Custom("PlayerDeath", eventData);
+        Debug.Log("Event Sent Status: " + analyticsResult);
+#endif
+
         yield return new WaitForSeconds(5);
         GameEvents.Die();
         DeathWaitTimer = null;
