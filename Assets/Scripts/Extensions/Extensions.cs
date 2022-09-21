@@ -3,7 +3,7 @@ namespace UnityEngine.Extensions
 {
 	public static class XVector
 	{
-		public static float SquareDistance(Vector3 V1, Vector3 V2)
+		public static float SquareDistance(this Vector3 V1, Vector3 V2)
 		{
 			float X = V1.x - V2.x;
 			float Y = V1.y - V2.y;

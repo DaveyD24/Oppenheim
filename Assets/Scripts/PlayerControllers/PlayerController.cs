@@ -10,7 +10,7 @@ using UnityEngine.UI;
 /// <summary>
 /// A base class for handling the common functionality across all players.
 /// </summary>
-[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(Rigidbody), typeof(AudioController))]
 public abstract class PlayerController : MonoBehaviour
 {
     private Vector3 startPosition;
@@ -30,6 +30,8 @@ public abstract class PlayerController : MonoBehaviour
 
     public Rigidbody Rb { get; private set; }
 
+    public AudioController Audio { get; private set; }
+
     public float Weight { get; private set; }
 
     [field: Header("Inherited from Player Controller")]
@@ -38,6 +40,8 @@ public abstract class PlayerController : MonoBehaviour
     [field: SerializeField] public PlayerIdObject PlayerIdSO { get; private set; }
 
     [field: SerializeField] protected DefaultPlayerDataObject DefaultPlayerData { get; private set; }
+
+    [field: SerializeField] public SpringArm TrackingCamera { get; set; }
 
     [field: SerializeField] protected float Bouyancy { get; private set; }
 
@@ -130,9 +134,6 @@ public abstract class PlayerController : MonoBehaviour
             PlayerInput.Enable();
 
             Activate();
-            Camera.main.gameObject.GetComponent<SpringArm>().Target = transform;
-
-            activeIndicator.enabled = true;
         }
     }
 
@@ -216,6 +217,7 @@ public abstract class PlayerController : MonoBehaviour
         activeIndicator = GetComponentInChildren(typeof(SpriteRenderer)) as SpriteRenderer;
         Rb = GetComponent<Rigidbody>();
         switchManager = FindObjectOfType<SwitchManager>();
+        Audio = GetComponent<AudioController>();
         Weight = Rb.mass;
         fuel = DefaultPlayerData.MaxFuel;
 
@@ -277,10 +279,10 @@ public abstract class PlayerController : MonoBehaviour
     {
         bool bTakeFallDamage = ShouldTakeFallDamage(collision, out float relativeVelocity);
 
-        if (relativeVelocity > MovementSpeed + 1f)
-        {
-            Debug.Log($"{name} collided with {collision.collider.name} at {relativeVelocity:F2}m/s");
-        }
+        //if (relativeVelocity > MovementSpeed + 1f)
+        //{
+        //    Debug.Log($"{name} collided with {collision.collider.name} at {relativeVelocity:F2}m/s");
+        //}
 
         if (bTakeFallDamage)
         {

@@ -129,8 +129,10 @@ public class MonkeyController : PlayerController
         Rb.MovePosition(Rb.position + (MovementSpeed * Time.fixedDeltaTime * move));
     }
 
-    private void OnCollisionEnter(Collision collision)
+    protected override void OnCollisionEnter(Collision collision)
     {
+        base.OnCollisionEnter(collision);
+
         // Only Cling to something if you're off the ground.
         if (collision.transform.CompareTag("Clingable") && !IsGrounded())
         {

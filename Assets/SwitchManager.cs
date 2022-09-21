@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Linq;
 using EventSystem;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -31,23 +33,36 @@ public class SwitchManager : MonoBehaviour
         {
             return Soldier.gameObject;
         }
-
-        if (Bat.IsActive())
+        else if (Bat.IsActive())
         {
             return Bat.gameObject;
         }
-
-        if (Monkey.IsActive())
+        else if (Monkey.IsActive())
         {
             return Monkey.gameObject;
         }
-
-        if (Car.IsActive())
+        else if (Car.IsActive())
         {
             return Car.gameObject;
         }
 
         return null;
+    }
+
+    public void GetAllActivePlayerTransforms(out Transform[] outActivePlayers)
+    {
+        GetPlayers(out PlayerController[] players);
+                
+        int numberActive = players.Count(b => b.IsActive());
+        outActivePlayers = new Transform[numberActive];
+        
+        for (int b = 0, i = 0; b < 4; ++b)
+        {
+            if (players[b])
+            {
+                outActivePlayers[i++] = players[b].transform;
+            }
+        }
     }
 
     private void Awake()
@@ -67,7 +82,7 @@ public class SwitchManager : MonoBehaviour
 
         // playerInputManager.onPlayerJoined += AddPlayer;
         // playerInputManager.onPlayerLeft
-        print(InputSystem.devices.Count + "Total Number of Devices");
+        // print(InputSystem.devices.Count + "Total Number of Devices");
 
         GameEvents.OnAddPlayerSwitch += AddInactive;
         GameEvents.OnRotatePlayer += RotatePlayer;
@@ -95,7 +110,7 @@ public class SwitchManager : MonoBehaviour
         bool bIsbeingUsed = true;
         foreach (InputDevice device in unpairedDevices)
         {
-            print(device.name);
+            //print(device.name);
             if (device == deviceUsing)
             {
                 // as the device is listed as unpaired it can be used
@@ -124,7 +139,7 @@ public class SwitchManager : MonoBehaviour
     private void AddPlayer(PlayerInput player)
     {
         // controlledPlayers.Add(player);
-        print("Device Used to join: " + player.devices[0].name);
+        //print("Device Used to join: " + player.devices[0].name);
 
         player.neverAutoSwitchControlSchemes = true;
 
@@ -140,8 +155,8 @@ public class SwitchManager : MonoBehaviour
             GameEvents.ActivatePlayer(playerID, player);
 
             playerAdded++;
-            Debug.Log("New Player Added: " + playerAdded);
-            print("Is Joining Enabled: " + player.playerIndex);
+            //Debug.Log("New Player Added: " + playerAdded);
+            //print("Is Joining Enabled: " + player.playerIndex);
         }
     }
 
@@ -169,6 +184,12 @@ public class SwitchManager : MonoBehaviour
                 controlledPlayers.Remove(currentPlayerId);
 
                 playerInputConnection[playerInput] = playerID;
+                // Switch Camera Targets.
+                PlayerController outPlayer = GetPlayerByID(currentPlayerId);
+                PlayerController inPlayer = GetPlayerByID(playerID);
+                inPlayer.TrackingCamera = outPlayer.TrackingCamera;
+                inPlayer.TrackingCamera.Target = inPlayer.transform;
+                outPlayer.TrackingCamera = null;
             }
         }
     }
@@ -213,5 +234,23 @@ public class SwitchManager : MonoBehaviour
         Debug.Log("input device has disconnected");
         GameEvents.DeactivatePlayer(playerInputConnection[playerInput]);
         playerInputConnection.Remove(playerInput);
+    }
+    
+    /// <summary>Get every Player in the game.</summary>
+    public void GetPlayers(out PlayerController[] outPlayers)
+    {
+        // TODO: Make a non-alloc version.
+        outPlayers = new PlayerController[4];
+
+        outPlayers[0] = Soldier;
+        outPlayers[1] = Bat;
+        outPlayers[2] = Monkey;
+        outPlayers[3] = Car;
+    }
+
+    public PlayerController GetPlayerByID(int playerID)
+    {
+        GetPlayers(out PlayerController[] players);
+        return Array.Find(players, p => p.PlayerIdSO.PlayerID == playerID);
     }
 }

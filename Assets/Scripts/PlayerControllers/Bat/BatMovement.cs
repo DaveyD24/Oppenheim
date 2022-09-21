@@ -18,6 +18,8 @@
 #error LOOK YAW TAKES PRECEDENCE! DEFINE USE_MOVE_YAW XOR USE_LOOK_YAW.
 #endif
 
+#define USE_DOUBLEJUMP_GLIDE
+
 using System.Collections;
 using UnityEngine;
 using static global::BatMathematics;
@@ -48,6 +50,9 @@ public class BatMovement : MonoBehaviour
 	[SerializeField] Vector3 GroundCheckOffset;
 	[SerializeField] float GroundRayDistance = .51f;
 
+	[Header("Cosmetics")]
+	[SerializeField] TrailRenderer[] WingtipVortex;
+
 	Vector2 Throw;
 	Vector2 ThrowLook;
 
@@ -56,7 +61,9 @@ public class BatMovement : MonoBehaviour
 
 	// Stop the Player from Gliding more than once per Jump.
 	bool bHasGlidedThisJump, bHasCancelledGlideThisJump;
+	bool bHasBeenGivenSlightBoost;
 
+	[Space]
 	[SerializeField] Camera BatCamera;
 	Speedometer Speedometer;
 
@@ -66,6 +73,7 @@ public class BatMovement : MonoBehaviour
 
 		bHasGlidedThisJump = false;
 		bHasCancelledGlideThisJump = false;
+		bHasBeenGivenSlightBoost = false;
 
 		// BatCamera = GameObject.FindGameObjectWithTag("Bat Camera").GetComponent<Camera>();
 
@@ -79,6 +87,7 @@ public class BatMovement : MonoBehaviour
 		HandleGroundMovement();
 		HandleMovement(Throw);
 		HandleLook(ThrowLook);
+		DetermineVortex();
 
 		if (!IsZero(YawDirection) || !IsZero(PitchDirection))
 		{
@@ -104,7 +113,7 @@ public class BatMovement : MonoBehaviour
 		}
 		else
 		{
-			if (GroundMovement != Vector3.zero)
+			if (GroundMovement != Vector3.zero && !IsAirborne())
 			{
 				// Smoothly rotate the Bat towards where it's moving.
 				Vector3 MovementVector = DirectionRelativeToTransform(BatCamera.transform, GroundMovement);
@@ -123,12 +132,10 @@ public class BatMovement : MonoBehaviour
 		if (Bat.Active)
 		{
 			Throw = Context.action.ReadValue<Vector2>();
-			// HandleMovement(Throw);
 		}
 		else
 		{
 			Throw = Vector2.zero;
-			//HandleMovement(Vector2.zero);
 		}
 	}
 
@@ -154,7 +161,6 @@ public class BatMovement : MonoBehaviour
 		else
 		{
 			ThrowLook = Vector2.zero;
-			// HandleLook(Vector2.zero);
 		}
 	}
 
@@ -170,17 +176,32 @@ public class BatMovement : MonoBehaviour
 			const float kGlideInputSensitivity = .5f;
 
 			float Vertical = Throw.y;
-			float Horizontal = Throw.x;
 
+			if (!bHasBeenGivenSlightBoost)
+			{
+				bHasBeenGivenSlightBoost = true;
+
+				Vector3 Forward = transform.forward;
+				Forward.y = 0f;
+				Forward.Normalize();
+				transform.forward = Forward;
+
+				ApplyWingForce(2f, true);
+
+				// When jumping off a ledge, give more Pitch time because otherwise
+				// the Bat is uncontrollable and death is guaranteed.
+				RemainingSeconds = SecondsOfPitchFlight * 10;
+			}
+
+#if !USE_DOUBLEJUMP_GLIDE
 			// Forward Gliding.
 			if (!bHasGlidedThisJump && Vertical > kGlideInputSensitivity)
 			{
-				StopGradualAcceleration();
-
-				CurrentGradualFunc = GradualAcceleration();
-				StartCoroutine(CurrentGradualFunc);
+				StartGliding();
 			}
-			else if (!bHasCancelledGlideThisJump && Vertical < -kGlideInputSensitivity)
+			else
+#endif
+			if (!bHasCancelledGlideThisJump && Vertical < -kGlideInputSensitivity)
 			{
 				// If the Player Cancels their Glide, decrease velocity but do not affect Gravity.
 				Vector3 Velocity = Bat.Physics.velocity;
@@ -198,12 +219,14 @@ public class BatMovement : MonoBehaviour
 			}
 
 #if USE_MOVE_YAW
+			float Horizontal = Throw.x;
+
 			// Keyboard Yaw.
 			ThrowYaw(Horizontal);
 #endif
 
 			// Stop Ground Movement from taking place while Airborne.
-			GroundMovement = Vector3.zero;
+			// Removed for Ledge/Edge bug. // GroundMovement = Vector3.zero;
 		}
 		else
 		{
@@ -214,7 +237,7 @@ public class BatMovement : MonoBehaviour
 
 			// Stop applying gradual forward acceleration.
 			StopGradualAcceleration();
-			CurrentGradualFunc = null;
+			bHasBeenGivenSlightBoost = false;
 		}
 	}
 
@@ -239,6 +262,22 @@ public class BatMovement : MonoBehaviour
 
 			Bat.Events.OnAnimationStateChanged?.Invoke(EAnimationState.WingedFlight);
 		}
+#if USE_DOUBLEJUMP_GLIDE
+		else if (!IsZero(Throw))
+		{
+			// Double-Jump mechanism.
+			if (!bHasGlidedThisJump)
+			{
+				// On Double-Jump...
+				StartGliding();
+			}
+			else
+			{
+				// On 2+ Jump...
+				StopGradualAcceleration();
+			}
+		}
+#endif
 	}
 
 	public void HandleLook(Vector2 Throw)
@@ -268,7 +307,7 @@ public class BatMovement : MonoBehaviour
 
 	void HandleGroundMovement()
 	{
-		if (!IsAirborne())
+		if (!IsAirborne() || !bHasGlidedThisJump)
 		{
 			// Ground Movement relative to the camera.
 			Vector3 CameraRelativeDirection = DirectionRelativeToTransform(BatCamera.transform, GroundMovement);
@@ -280,6 +319,18 @@ public class BatMovement : MonoBehaviour
 			ForceZero(ref PitchDirection);
 			ForceZero(ref YawDirection);
 		}
+	}
+
+	void StartGliding()
+	{
+		StopGradualAcceleration();
+
+		CurrentGradualFunc = GradualAcceleration();
+		StartCoroutine(CurrentGradualFunc);
+
+		RemainingSeconds = SecondsOfPitchFlight;
+
+		Bat.Audio.Play("Whoosh", EAudioPlayOptions.FollowEmitter | EAudioPlayOptions.DestroyOnEnd);
 	}
 
 	IEnumerator GradualAcceleration()
@@ -297,18 +348,21 @@ public class BatMovement : MonoBehaviour
 		}
 	}
 
-	void ApplyWingForce(float Force)
+	void ApplyWingForce(float Force, bool bOverrides = false)
 	{
 		// F = ma.
 		Bat.Physics.AddForce(Bat.Physics.mass * Force * transform.forward);
 
-		bHasGlidedThisJump = true;
+		bHasGlidedThisJump = !bOverrides;
 	}
 
 	public void StopGradualAcceleration()
 	{
 		if (CurrentGradualFunc != null)
+		{
 			StopCoroutine(CurrentGradualFunc);
+			CurrentGradualFunc = null;
+		}
 	}
 
 	/// <summary>Gives Pitch Input.</summary>
@@ -394,10 +448,24 @@ public class BatMovement : MonoBehaviour
 			transform.rotation = Quaternion.FromToRotation(transform.up, Vector3.up) * transform.rotation;
 
 			// Stop moving.
-			/*Bat.Physics.velocity = */Bat.Physics.angularVelocity = Vector3.zero;
+			/*Bat.Physics.velocity = */
+			Bat.Physics.angularVelocity = Vector3.zero;
 
 			// Stop everything else. Switch back to the Stand Idle animation.
 			Bat.Events.OnAnimationStateChanged?.Invoke(EAnimationState.StandIdle);
+		}
+	}
+
+	void DetermineVortex()
+	{
+		ShowVortices(Speedometer.MetresPerSecond > 10f);
+	}
+
+	void ShowVortices(bool bShow)
+	{
+		foreach (TrailRenderer Vortex in WingtipVortex)
+		{
+			Vortex.emitting = bShow;
 		}
 	}
 
@@ -413,7 +481,7 @@ public class BatMovement : MonoBehaviour
 		GUI.Label(new Rect(10, 10, 250, 250), $"Velocity: {Bat.Physics.velocity:F1}");
 		GUI.Label(new Rect(10, 25, 250, 250), $"Speed: {Bat.Physics.velocity.magnitude:F1}");
 		GUI.Label(new Rect(10, 40, 250, 250), $"Airborne? {(IsAirborne() ? "Yes" : "No")}");
-		GUI.Label(new Rect(10, 55, 250, 250), $"Pitch: {PitchDirection:F9} Yaw: {YawDirection:F9}");
+		GUI.Label(new Rect(10, 55, 250, 250), $"Remaining Pitch: {RemainingSeconds}");
 	}
 #endif
 }
