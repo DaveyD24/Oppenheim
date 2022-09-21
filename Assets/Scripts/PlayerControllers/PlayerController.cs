@@ -10,7 +10,7 @@ using UnityEngine.UI;
 /// <summary>
 /// A base class for handling the common functionality across all players.
 /// </summary>
-[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(Rigidbody), typeof(AudioController))]
 public abstract class PlayerController : MonoBehaviour
 {
     private Vector3 startPosition;
@@ -28,6 +28,8 @@ public abstract class PlayerController : MonoBehaviour
     [HideInInspector] public bool Active { get; set; } = false;
 
     public Rigidbody Rb { get; private set; }
+
+    public AudioController Audio { get; private set; }
 
     public float Weight { get; private set; }
 
@@ -211,6 +213,7 @@ public abstract class PlayerController : MonoBehaviour
     {
         Rb = GetComponent<Rigidbody>();
         switchManager = FindObjectOfType<SwitchManager>();
+        Audio = GetComponent<AudioController>();
         Weight = Rb.mass;
         fuel = DefaultPlayerData.MaxFuel;
 

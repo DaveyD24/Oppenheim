@@ -329,6 +329,8 @@ public class BatMovement : MonoBehaviour
 		StartCoroutine(CurrentGradualFunc);
 
 		RemainingSeconds = SecondsOfPitchFlight;
+
+		Bat.Audio.Play("Whoosh", EAudioPlayOptions.FollowEmitter | EAudioPlayOptions.DestroyOnEnd);
 	}
 
 	IEnumerator GradualAcceleration()
