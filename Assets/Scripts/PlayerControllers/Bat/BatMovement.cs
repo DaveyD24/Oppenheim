@@ -50,6 +50,9 @@ public class BatMovement : MonoBehaviour
 	[SerializeField] Vector3 GroundCheckOffset;
 	[SerializeField] float GroundRayDistance = .51f;
 
+	[Header("Cosmetics")]
+	[SerializeField] TrailRenderer[] WingtipVortex;
+
 	Vector2 Throw;
 	Vector2 ThrowLook;
 
@@ -60,6 +63,7 @@ public class BatMovement : MonoBehaviour
 	bool bHasGlidedThisJump, bHasCancelledGlideThisJump;
 	bool bHasBeenGivenSlightBoost;
 
+	[Space]
 	[SerializeField] Camera BatCamera;
 	Speedometer Speedometer;
 
@@ -83,6 +87,7 @@ public class BatMovement : MonoBehaviour
 		HandleGroundMovement();
 		HandleMovement(Throw);
 		HandleLook(ThrowLook);
+		DetermineVortex();
 
 		if (!IsZero(YawDirection) || !IsZero(PitchDirection))
 		{
@@ -446,6 +451,19 @@ public class BatMovement : MonoBehaviour
 
 			// Stop everything else. Switch back to the Stand Idle animation.
 			Bat.Events.OnAnimationStateChanged?.Invoke(EAnimationState.StandIdle);
+		}
+	}
+
+	void DetermineVortex()
+	{
+		ShowVortices(Speedometer.MetresPerSecond > 10f);
+	}
+
+	void ShowVortices(bool bShow)
+	{
+		foreach (TrailRenderer Vortex in WingtipVortex)
+		{
+			Vortex.emitting = bShow;
 		}
 	}
 
