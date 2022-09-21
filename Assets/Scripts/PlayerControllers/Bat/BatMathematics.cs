@@ -1,5 +1,11 @@
 using UnityEngine;
 
+/// <summary>
+/// Purpose-built mathematics function library for the Bat's behaviours and functions.
+/// <br></br>
+/// Includes implementations for Kinematics, Fast Approximations, Aerodynamics,
+/// and Vector Operations.
+/// </summary>
 public static class BatMathematics
 {
 	/// 
@@ -165,12 +171,23 @@ public static class BatMathematics
 
 	/// <summary>Sets V to Vector3.zero if it's close enough to zero.</summary>
 	/// <remarks>'Close enough' is define in <see cref="IsZero(float)"/>.</remarks>
-	public static void SetZeroIfZero(ref Vector3 V)
+	public static void SetZeroIfZero(ref Vector3 V, bool bUseForce = false)
 	{
 		// Vector3's == operator is accurate to: 9.99999944 E-11 (0.0000000000999999944)
 		// This is too accurate; define our own threshold.
 		if (IsZero(V))
-			V = Vector3.zero;
+		{
+			if (!bUseForce)
+			{
+				V = Vector3.zero;
+			}
+			else
+			{
+				ForceZero(ref V.x);
+				ForceZero(ref V.y);
+				ForceZero(ref V.z);
+			}
+		}
 	}
 
 	/// <summary>Uses bitwise operations to force a float to be absolute zero.</summary>

@@ -54027,7 +54027,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SwitchManager: {fileID: 439040869}
-  TooFarApproxThreshold: 50
+  TooFarThreshold: 50
 --- !u!4 &1506041543
 Transform:
   m_ObjectHideFlags: 0
