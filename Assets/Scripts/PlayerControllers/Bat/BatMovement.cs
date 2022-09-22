@@ -225,7 +225,7 @@ public class BatMovement : MonoBehaviour
 #if MOVE_AIRBORNE
 			float Horizontal = Throw.x;
 
-			if (bHasGlidedThisJump)
+			if (bHasGlidedThisJump || bHasBeenGivenSlightBoost)
 			{
 				// Move Pitch.
 				ThrowPitch(Vertical);

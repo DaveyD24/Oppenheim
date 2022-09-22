@@ -87,46 +87,6 @@ public static class BatMathematics
 		);
 	}
 
-	/// <summary>Computes the Sine and Cosine of a given Angle.</summary>
-	public static void SinCos(out float Sine, out float Cosine, float Angle)
-	{
-		const float kInversePI = 1f / Mathf.PI;
-		const float kHalfPI = Mathf.PI * .5f;
-
-		float Quotient = kInversePI * .5f * Angle;
-
-		Quotient = (int)(Quotient + (Angle >= 0f ? .5f : -.5f));
-
-		float A = Angle - 2f * Mathf.PI * Quotient;
-
-		// Map A to [-PI / 2, PI / 2] with Sin(A) = Sin(Value).
-		float Sign;
-		if (A > kHalfPI)
-		{
-			A = Mathf.PI - A;
-			Sign = -1f;
-		}
-		else if (A < -kHalfPI)
-		{
-			A = -Mathf.PI - A;
-			Sign = -1f;
-		}
-		else
-		{
-			Sign = +1f;
-		}
-
-		float A2 = A * A;
-
-		// Fast Sine Cosine Approximations.
-		// 11-degree minimax Sine. https://publik-void.github.io/sin-cos-approximations/#_sin_rel_error_minimized_degree_11
-		// 10-degree minimax Cosine. https://publik-void.github.io/sin-cos-approximations/#_cos_abs_error_minimized_degree_10
-
-		Sine = (((((-2.3889859e-08f * A2 + 2.7525562e-06f) * A2 - 0.00019840874f) * A2 + 0.0083333310f) * A2 - 0.16666667f) * A2 + 1.0f) * A;
-
-		Cosine = Sign * ((((-2.6051615e-07f * A2 + 2.4760495e-05f) * A2 - 0.0013888378f) * A2 + 0.041666638f) * A2 - 0.5f) * A2 + 1.0f;
-	}
-
 	/// <summary>Converts a world direction to be relative to the Reference's forward.</summary>
 	public static Vector3 DirectionRelativeToTransform(Transform Reference, Vector3 Direction, bool bIgnoreYAxis = true)
 	{
@@ -231,6 +191,23 @@ public static class BatMathematics
 		if (F < Min)
 			F = Min;
 	}
+	
+	/// <summary>Checks whether <paramref name="V"/> contains <see cref="float.NaN"/>.</summary>
+	/// <remarks>Used in Antipede.</remarks>
+	/// <returns><see langword="true"/> if at least one vector component is <see cref="float.NaN"/>.</returns>
+	public static bool DiagnosticCheckNaN(Vector3 V)
+	{
+		return DiagnosticCheckNaN(V.x) || DiagnosticCheckNaN(V.y) || DiagnosticCheckNaN(V.z);
+	}
+	
+	/// <summary>Checks whether <paramref name="F"/> is <see cref="float.NaN"/>.</summary>
+	/// <remarks>Used in Antipede.</remarks>
+	/// <returns><see langword="true"/> if <paramref name="F"/> is <see cref="float.NaN"/>.</returns
+	public static bool DiagnosticCheckNaN(float F)
+	{
+		return float.IsNaN(F);
+	}
+
 
 	#region Fast Approximation Functions
 
@@ -256,6 +233,46 @@ public static class BatMathematics
 	/// <param name="Iterations">The number of Newton Iterations to perform.</param>
 	/// <returns>An approximation for the Square Root of F.</returns>
 	public static float FSqrt(float F, int Iterations = 1) => FInverseSqrt(Mathf.Max(F, Vector3.kEpsilon), Iterations) * F;
+
+	/// <summary>Computes the Sine and Cosine of a given Angle.</summary>
+	public static void SinCos(out float Sine, out float Cosine, float Angle)
+	{
+		const float kInversePI = 1f / Mathf.PI;
+		const float kHalfPI = Mathf.PI * .5f;
+
+		float Quotient = kInversePI * .5f * Angle;
+
+		Quotient = (int)(Quotient + (Angle >= 0f ? .5f : -.5f));
+
+		float A = Angle - 2f * Mathf.PI * Quotient;
+
+		// Map A to [-PI / 2, PI / 2] with Sin(A) = Sin(Value).
+		float Sign;
+		if (A > kHalfPI)
+		{
+			A = Mathf.PI - A;
+			Sign = -1f;
+		}
+		else if (A < -kHalfPI)
+		{
+			A = -Mathf.PI - A;
+			Sign = -1f;
+		}
+		else
+		{
+			Sign = +1f;
+		}
+
+		float A2 = A * A;
+
+		// Fast Sine Cosine Approximations.
+		// 11-degree minimax Sine. https://publik-void.github.io/sin-cos-approximations/#_sin_rel_error_minimized_degree_11
+		// 10-degree minimax Cosine. https://publik-void.github.io/sin-cos-approximations/#_cos_abs_error_minimized_degree_10
+
+		Sine = (((((-2.3889859e-08f * A2 + 2.7525562e-06f) * A2 - 0.00019840874f) * A2 + 0.0083333310f) * A2 - 0.16666667f) * A2 + 1.0f) * A;
+
+		Cosine = Sign * ((((-2.6051615e-07f * A2 + 2.4760495e-05f) * A2 - 0.0013888378f) * A2 + 0.041666638f) * A2 - 0.5f) * A2 + 1.0f;
+	}
 
 	/// <summary>Faster version of <see cref="Mathf.Asin(float)"/>.</summary>
 	/// <param name="Angle">The angle to get the inverse Sine of.</param>
