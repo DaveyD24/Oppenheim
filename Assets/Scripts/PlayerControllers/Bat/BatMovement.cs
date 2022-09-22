@@ -325,13 +325,13 @@ public class BatMovement : MonoBehaviour
 #endif
 	}
 
-	void HandleGroundMovement()
+	private void HandleGroundMovement()
 	{
 		if (!IsAirborne() || !bHasGlidedThisJump)
 		{
 			// Ground Movement relative to the camera.
-			Vector3 CameraRelativeDirection = DirectionRelativeToTransform(BatCamera.transform, GroundMovement);
-			Bat.Physics.MovePosition(Bat.Physics.position + (CameraRelativeDirection * Time.fixedDeltaTime));
+			Vector3 cameraRelativeDirection = DirectionRelativeToTransform(BatCamera.transform, GroundMovement);
+			Bat.Physics.MovePosition(Bat.Physics.position + (cameraRelativeDirection * Time.fixedDeltaTime));
 
 			// PitchDirection = YawDirection = 0f;
 			// Apparently this wasn't enough - floating point precision failed and 
@@ -341,7 +341,7 @@ public class BatMovement : MonoBehaviour
 		}
 	}
 
-	void StartGliding()
+	private void StartGliding()
 	{
 		StopGradualAcceleration();
 
@@ -353,7 +353,7 @@ public class BatMovement : MonoBehaviour
 		Bat.Audio.Play("Whoosh", EAudioPlayOptions.FollowEmitter | EAudioPlayOptions.DestroyOnEnd);
 	}
 
-	IEnumerator GradualAcceleration()
+	private IEnumerator GradualAcceleration()
 	{
 		float rTime = 1f / TimeToV1;
 		float t = 0f;
@@ -368,10 +368,10 @@ public class BatMovement : MonoBehaviour
 		}
 	}
 
-	void ApplyWingForce(float Force, bool bOverrides = false)
+	private void ApplyWingForce(float force, bool bOverrides = false)
 	{
 		// F = ma.
-		Bat.Physics.AddForce(Bat.Physics.mass * Force * transform.forward);
+		Bat.Physics.AddForce(Bat.Physics.mass * force * transform.forward);
 
 		bHasGlidedThisJump = !bOverrides;
 	}
@@ -385,20 +385,20 @@ public class BatMovement : MonoBehaviour
 		}
 	}
 
-	void ApplyAirbrakes()
+	private void ApplyAirbrakes()
 	{
 		// If the Player Cancels their Glide, decrease velocity but do not affect Gravity.
-		Vector3 Velocity = Bat.Physics.velocity;
-		Velocity.x *= .25f;
-		Velocity.z *= .25f;
+		Vector3 velocity = Bat.Physics.velocity;
+		velocity.x *= .25f;
+		velocity.z *= .25f;
 
-		Bat.Physics.velocity = Velocity;
+		Bat.Physics.velocity = velocity;
 		bHasCancelledGlideThisJump = true;
 	}
 
 	/// <summary>Gives Pitch Input.</summary>
 	/// <param name="Throw">Direction of Pitch; delta. + Downwards. - Upwards.</param>
-	void ThrowPitch(float Throw)
+	private void ThrowPitch(float Throw)
 	{
 		float PitchThrow = PitchStrength;
 
@@ -430,7 +430,7 @@ public class BatMovement : MonoBehaviour
 
 	/// <summary>Gives Yaw Input.</summary>
 	/// <param name="Throw">Direction of Yaw; delta. + Right. - Left.</param>
-	void ThrowYaw(float Throw)
+	private void ThrowYaw(float Throw)
 	{
 		// Yaw.
 		if (Throw < -.3f)
@@ -448,7 +448,7 @@ public class BatMovement : MonoBehaviour
 		}
 	}
 
-	void SetAnimationState()
+	private void SetAnimationState()
 	{
 		if (!IsAirborne())
 		{

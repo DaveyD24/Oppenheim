@@ -9,6 +9,9 @@ public class MonkeyController : PlayerController
     private float jumpHeight = 2.0f;
     private Vector3 move;
 
+    private Animator animator;
+    private Speedometer speedometer;
+
     private bool clinging = false;
     private ContactPoint contactPoint;
 
@@ -29,6 +32,7 @@ public class MonkeyController : PlayerController
     {
         base.Start();
         currJumpWaitTime = jumpWaitTime;
+        animator = GetComponent<Animator>();
     }
 
     protected override void Update()
@@ -106,6 +110,7 @@ public class MonkeyController : PlayerController
 
             bDidJump = true;
             Debug.Log("yeet");
+            animator.SetTrigger("Jump");
         }
     }
 
@@ -126,7 +131,10 @@ public class MonkeyController : PlayerController
 
     private void FixedUpdate()
     {
+        speedometer.Record(this);
         Rb.MovePosition(Rb.position + (MovementSpeed * Time.fixedDeltaTime * move));
+        DetermineAnimationState();
+        speedometer.Mark();
     }
 
     protected override void OnCollisionEnter(Collision collision)
@@ -150,6 +158,25 @@ public class MonkeyController : PlayerController
         if (collision.transform.CompareTag("Clingable"))
         {
             clinging = false;
+        }
+    }
+
+    private void DetermineAnimationState()
+    {
+        if (!bDidJump)
+        {
+            if (IsZero(speedometer.Velocity))
+            {
+                animator.SetTrigger("Idle");
+            }
+            else if (clinging)
+            {
+                animator.SetTrigger("Climb");
+            }
+            else
+            {
+                animator.SetTrigger("Walk");
+            }
         }
     }
 }

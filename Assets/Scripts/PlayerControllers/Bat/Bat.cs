@@ -71,7 +71,8 @@ public class Bat : PlayerController
 		PlayerInput.FindAction("Look").canceled += (CallbackContext Context) =>
 		{
 			MovementComponent.LookBinding(ref Context);
-			//MovementComponent.HandleLook(ref Context);
+
+			// MovementComponent.HandleLook(ref Context);
 		};
 	}
 
@@ -99,12 +100,12 @@ public class Bat : PlayerController
 	public override Vector3 GetGroundCheckPosition()
 	{
 		// Fix Global Down as a Local direction.
-		Vector3 WorldToLocalDown = transform.InverseTransformDirection(-transform.up);
+		Vector3 worldToLocalDown = transform.InverseTransformDirection(-transform.up);
 
 		// Set the origin of the Ground Check to the centre of the Bat.
-		WorldToLocalDown += Rb.centerOfMass;
+		worldToLocalDown += Rb.centerOfMass;
 
-		return transform.position + WorldToLocalDown;
+		return transform.position + worldToLocalDown;
 	}
 
 	protected override bool ShouldTakeFallDamage(Collision collision, out float relativeVelocity)
@@ -112,14 +113,18 @@ public class Bat : PlayerController
 		relativeVelocity = collision.relativeVelocity.magnitude;
 
 		if (relativeVelocity < FallDamageThreshold)
+		{
 			return false;
+		}
 
 		// Take damage if landing/crashing at an Angle > than 30 degrees of the surface.
-		float Angle = FAngle(transform.up, collision.contacts[0].normal);
-		bool bTakeFallDamage = Angle > 30f;
+		float angle = FAngle(transform.up, collision.contacts[0].normal);
+		bool bTakeFallDamage = angle > 30f;
 
 		if (bTakeFallDamage)
-			Debug.Log($"At Angle: {Angle}");
+		{
+			Debug.Log($"At Angle: {angle}");
+		}
 
 		return bTakeFallDamage;
 	}

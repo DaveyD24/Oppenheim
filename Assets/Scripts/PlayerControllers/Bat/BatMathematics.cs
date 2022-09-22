@@ -62,7 +62,9 @@ public static class BatMathematics
 	public static Vector3 RotateVector(Vector3 Vector, Vector3 Axis, float Angle)
 	{
 		if (IsZero(Angle))
-			return Vector;
+        {
+            return Vector;
+        }
 
 		SinCos(out float S, out float C, Angle * Mathf.Deg2Rad);
 
@@ -134,24 +136,26 @@ public static class BatMathematics
 		Vector3 ReferenceRight = Reference.right;
 
 		if (bIgnoreYAxis)
-			ReferenceForward.y = ReferenceRight.y = 0f;
+        {
+            ReferenceForward.y = ReferenceRight.y = 0f;
+        }
 
-		ReferenceForward.Normalize();
+        ReferenceForward.Normalize();
 		ReferenceRight.Normalize();
 
 		float LeftRight = Direction.x;
 		float ForwardBackward = Direction.z;
 
-		Vector3 RelativeMovementVector = ReferenceForward * ForwardBackward + ReferenceRight * LeftRight;
+		Vector3 RelativeMovementVector = (ReferenceForward * ForwardBackward) + (ReferenceRight * LeftRight);
 
 		return RelativeMovementVector;
 	}
 
-	public static void AlignTransformToMovement(Transform Transform, Vector3 MovementVector, float RotationSpeed, Vector3 UpAxis)
+	public static void AlignTransformToMovement(Transform transform, Vector3 movementVector, float rotationSpeed, Vector3 upAxis)
 	{
-		Quaternion RotationNow = Transform.rotation;
-		Quaternion TargetRotation = Quaternion.LookRotation(MovementVector, UpAxis);
-		Transform.rotation = Quaternion.RotateTowards(RotationNow, TargetRotation, RotationSpeed);
+		Quaternion rotationNow = transform.rotation;
+		Quaternion targetRotation = Quaternion.LookRotation(movementVector, upAxis);
+		transform.rotation = Quaternion.RotateTowards(rotationNow, targetRotation, rotationSpeed);
 	}
 
 	public const float kZeroThreshold = .01f;
@@ -192,7 +196,7 @@ public static class BatMathematics
 
 	/// <summary>Uses bitwise operations to force a float to be absolute zero.</summary>
 	/// <param name="F">Reference to the float that needs to be zero.</param>
-	public unsafe static void ForceZero(ref float F)
+	public static unsafe void ForceZero(ref float F)
 	{
 		// Fix pointer to point to the address float F.
 		fixed (float* pF = &F)
@@ -218,11 +222,19 @@ public static class BatMathematics
 		 */
 
 		if (float.IsNaN(F))
+		{
 			Debug.LogError("Tell Michael he's dumb! F = NaN");
+		}
+
 		if (float.IsInfinity(F))
+		{
 			Debug.LogError("Tell Michael he's dumb! F = Infinity");
+		}
+
 		if (float.IsNegativeInfinity(F))
+		{
 			Debug.LogError("Tell Michael he's dumb! F = -Infinity");
+		}
 #endif
 	}
 

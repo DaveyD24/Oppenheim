@@ -7,6 +7,8 @@ public class SoldierMovement : PlayerController
 {
     private Vector3 playerVelocity;
     private Vector3 move;
+    private Animator animator;
+    private Speedometer speedometer;
     [SerializeField] private float jumpHeight = 3f;
 
     [field: Header("Soldier Movement")]
@@ -19,6 +21,8 @@ public class SoldierMovement : PlayerController
     protected override void Start()
     {
         base.Start();
+        animator = GetComponent<Animator>();
+        speedometer.Initialise();
     }
 
     protected override void OnEnable()
@@ -75,6 +79,8 @@ public class SoldierMovement : PlayerController
             // If we were clinging onto something, we want to jump in the opposite direction
             // as if the Monkey is jumping off the wall.
             Debug.Log("solider jump");
+
+            animator.SetTrigger("Jump");
         }
     }
 
@@ -85,12 +91,29 @@ public class SoldierMovement : PlayerController
             return;
         }
 
+        animator.SetTrigger("Fire");
         GameObject bullet = Instantiate(BulletPrefab, BulletSpawnPoint.position, BulletSpawnPoint.rotation);
         bullet.GetComponent<Rigidbody>().velocity = BulletSpawnPoint.forward * BulletSpeed;
     }
 
     private void FixedUpdate()
     {
+        speedometer.Record(this);
         Rb.MovePosition(Rb.position + (MovementSpeed * Time.fixedDeltaTime * move));
+        DetermineAnimationState();
+
+        speedometer.Mark();
+    }
+
+    private void DetermineAnimationState()
+    {
+        if (IsZero(speedometer.Velocity))
+        {
+            animator.SetTrigger("Idle");
+        }
+        else
+        {
+            animator.SetTrigger("Walk");
+        }
     }
 }
