@@ -1,6 +1,7 @@
 
-
+#if UNITY_EDITOR
 //#define MICHAEL
+#endif
 
 using System.Linq;
 using System.Text;
@@ -12,7 +13,7 @@ using static global::BatMathematics;
 public class ViewportSplit : MonoBehaviour
 {
 	static Dictionary<PlayerController, SpringArm> AdditionalCameras;
-	static Queue<SpringArm> AddedCameraQueue;
+	static Queue<SpringArm> AddedCameraQueue; // Probably not needed if we're having maximum two Players.
 	static SpringArm MainSpringArm;
 	static ViewportSplit Viewport;
 
@@ -72,9 +73,12 @@ public class ViewportSplit : MonoBehaviour
 		{
 			List<PlayerController> IgnoredPlayers = new List<PlayerController>();
 			List<PlayerController> ExcludingIgnored = new List<PlayerController>();
+
 			Get().SwitchManager.GetAllPlayers(out PlayerController[] All);
-			IgnoredPlayers.AddRange(All.Where(PC => TooFar.Contains(PC)));
-			ExcludingIgnored.AddRange(All.Where(PC => !TooFar.Contains(PC)));
+
+			// LINQ expressions.
+			IgnoredPlayers.AddRange(All.Where(PC => TooFar.Contains(PC)));    // SELECT PlayerController WHERE PlayerController EXISTS IN TooFar
+			ExcludingIgnored.AddRange(All.Where(PC => !TooFar.Contains(PC))); // SELECT PlayerController WHERE PlayerController NOT EXISTS IN TooFar
 
 			foreach (PlayerController Player in IgnoredPlayers)
 				MakeNewSpringArm(Player);
@@ -84,15 +88,21 @@ public class ViewportSplit : MonoBehaviour
 		}
 		else
 		{
+			// TODO: Interp from Split to Single Screen.
 			MainSpringArm.CameraComponent.rect = new Rect(0, 0, 1, 1);
 			if (AddedCameraQueue.Count != 0)
 			{
+				/* -- This part probably isn't needed if we're having maximum two Players. -- */
+
 				SpringArm ToRemove = AddedCameraQueue.Dequeue();
 				AdditionalCameras.Clear();
 				Destroy(ToRemove.gameObject);
 			}
 
 			Vector3 AveragePosition = GetAveragePosition();
+
+			// Check for NaN for the start of the Game when there is no
+			// Active Player because division by zero.
 			if (!DiagnosticCheckNaN(AveragePosition))
 			{
 				Average.position = AveragePosition;
@@ -110,6 +120,7 @@ public class ViewportSplit : MonoBehaviour
 		 --        I think it *should* work for 2 Players ONLY.         --
 		 **/
 
+		// We already have a Spring Arm tracking Target, so don't add another.
 		if (AdditionalCameras.ContainsKey(Target))
 			return;
 
@@ -125,6 +136,8 @@ public class ViewportSplit : MonoBehaviour
 		// Split the screen vertically. P1 (Main) on Left. P2 (New) on Right.
 		Rect SplitScreenP1 = new Rect(0f, 0f, .5f, 1f);
 		Rect SplitScreenP2 = new Rect(.5f, 0f, .5f, 1f);
+
+		// TODO: Interp the transition from Single to Split Screen.
 
 		MainSpringArm.CameraComponent.rect = SplitScreenP1;
 		CameraComponent.rect = SplitScreenP2;
