@@ -7993,6 +7993,22 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 168477316}
   m_Mesh: {fileID: 4300000, guid: 7fe7437dc8388e2409a2bdce2c2d1c3c, type: 3}
+--- !u!114 &170292455 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5654260496683680184, guid: 34b351ecfbc2ccf4f95314a24a9de033, type: 3}
+  m_PrefabInstance: {fileID: 3182380755061922207}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bb143e734f0c664194800fd65631dd0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &170292460 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3182380755078358002, guid: 34b351ecfbc2ccf4f95314a24a9de033, type: 3}
+  m_PrefabInstance: {fileID: 3182380755061922207}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &179350946
 GameObject:
   m_ObjectHideFlags: 0
@@ -11899,7 +11915,7 @@ MonoBehaviour:
   numSegmentsX: 2
   numSegmentsY: 2
   numSegmentsZ: 1
-  xoffsetAmount: 1
+  xoffsetAmount: 0
   yoffsetAmount: 0
   zoffsetAmount: 0
   segmentsOffsetX: 1.1
@@ -17217,7 +17233,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab12b6ac92d6f5e418693579cf9789e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <Soldier>k__BackingField: {fileID: 3182380755061922208}
+  <Soldier>k__BackingField: {fileID: 170292455}
   <Bat>k__BackingField: {fileID: 1456616333}
   <Monkey>k__BackingField: {fileID: 4723291045455892488}
   <Car>k__BackingField: {fileID: 1374449639}
@@ -44694,7 +44710,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bDrawRotationalLines: 0
   Camera: {fileID: 1239824856}
-  Target: {fileID: 4677231590970306923}
+  Target: {fileID: 170292460}
   TargetOffset: {x: 0, y: 0, z: 0}
   Distance: 9.19
   GimbalRotation: {x: 0, y: 39.35, z: 0}
@@ -44749,7 +44765,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1239824851}
   m_LocalRotation: {x: 0.25181603, y: 0, z: 0, w: 0.96777517}
-  m_LocalPosition: {x: 169.683, y: 9.934131, z: -520.44336}
+  m_LocalPosition: {x: 160.02, y: 10.091131, z: -522.52734}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -68254,9 +68270,9 @@ MonoBehaviour:
   numSegmentsX: 5
   numSegmentsY: 1
   numSegmentsZ: 5
-  xoffsetAmount: 75
+  xoffsetAmount: 0
   yoffsetAmount: 0
-  zoffsetAmount: 75
+  zoffsetAmount: 0
   segmentsOffsetX: 150
   segmentsOffsetY: 0
   segmentsOffsetZ: 0.25
@@ -77419,6 +77435,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 37524166531051453, guid: 34b351ecfbc2ccf4f95314a24a9de033, type: 3}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 3182380755078332306, guid: 34b351ecfbc2ccf4f95314a24a9de033, type: 3}
       propertyPath: m_Name
       value: Soldier
@@ -77467,24 +77487,12 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5654260496683680184, guid: 34b351ecfbc2ccf4f95314a24a9de033, type: 3}
+      propertyPath: groundCheckPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 34b351ecfbc2ccf4f95314a24a9de033, type: 3}
---- !u!114 &3182380755061922208 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5654260496683680184, guid: 34b351ecfbc2ccf4f95314a24a9de033, type: 3}
-  m_PrefabInstance: {fileID: 3182380755061922207}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7bb143e734f0c664194800fd65631dd0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!4 &4677231590970306923 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 100307860061921644, guid: deef8f80c194f684395af95bdaf24d3b, type: 3}
-  m_PrefabInstance: {fileID: 4723291045455892487}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4723291045455892487
 PrefabInstance:
   m_ObjectHideFlags: 0

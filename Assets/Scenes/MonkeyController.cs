@@ -129,8 +129,10 @@ public class MonkeyController : PlayerController
         GUI.Label(new Rect(100, 65, 250, 250), $"Clinging? {(clinging ? "Yes" : "No")}");
     }
 
-    private void FixedUpdate()
+    protected override void FixedUpdate()
     {
+        base.FixedUpdate();
+
         speedometer.Record(this);
         Rb.MovePosition(Rb.position + (MovementSpeed * Time.fixedDeltaTime * move));
         DetermineAnimationState();

@@ -19,6 +19,7 @@ public abstract class PlayerController : MonoBehaviour
     private float fuel;
     private bool isFarEnoughAway = false;
     private SpriteRenderer activeIndicator;
+    private float beforeCollideSpeed;
 
     private PlayerInput pInput;
 
@@ -190,7 +191,7 @@ public abstract class PlayerController : MonoBehaviour
             OnDeath();
         }
 
-        AdjustFuelValue(-DefaultPlayerData.DecreaseFuelAmount.Evaluate(CurrentFuel / DefaultPlayerData.MaxFuel) * Time.deltaTime * DefaultPlayerData.fuelLoseMultiplier);
+        AdjustFuelValue(-DefaultPlayerData.DecreaseFuelAmount.Evaluate(CurrentFuel / DefaultPlayerData.MaxFuel) * Time.deltaTime * DefaultPlayerData.FuelLoseMultiplier);
         if (switchManager.GetActivePlayer() != null)
         {
             if (Vector3.Distance(this.gameObject.transform.position, switchManager.GetActivePlayer().transform.position) > 3.0f)
@@ -299,12 +300,23 @@ public abstract class PlayerController : MonoBehaviour
         {
             TakeFallDamage(/*relativeVelocity*/);
         }
+
+        if (!collision.gameObject.CompareTag("Player") && beforeCollideSpeed > DefaultPlayerData.dustParticlesCollisionSpeed)
+        {
+            Debug.Log("Collide " + Rb.velocity.magnitude);
+            Instantiate(DefaultPlayerData.DustParticles, collision.GetContact(0).point, Quaternion.identity);
+        }
     }
 
     protected void TakeFallDamage(/*float impactVelocity*/ /* This might be needed if we want to decrease health at lower speeds, and kill at higher speeds. */)
     {
         // bugs out so temporarily disabled
         // GameEvents.Die();
+    }
+
+    protected virtual void FixedUpdate()
+    {
+        beforeCollideSpeed = Rb.velocity.magnitude;
     }
 
     protected virtual bool ShouldTakeFallDamage(Collision collision, out float relativeVelocity)

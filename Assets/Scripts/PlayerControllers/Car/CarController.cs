@@ -80,8 +80,10 @@ public class CarController : PlayerController
     }
 
     // car movement is based on this https://docs.unity3d.com/2022.2/Documentation/Manual/WheelColliderTutorial.html
-    public void FixedUpdate()
+    protected override void FixedUpdate()
     {
+        base.FixedUpdate();
+
         if (CurrentFuel > 0)
         {
             ApplyMovement();

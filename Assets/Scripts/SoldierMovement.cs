@@ -75,7 +75,6 @@ public class SoldierMovement : PlayerController
         {
             // Original: Jump with a modified kinematic equation.
             Rb.velocity += new Vector3(0f, Mathf.Sqrt(jumpHeight * -3f * Physics.gravity.y), 0f);
-
             // If we were clinging onto something, we want to jump in the opposite direction
             // as if the Monkey is jumping off the wall.
             Debug.Log("solider jump");
@@ -96,8 +95,14 @@ public class SoldierMovement : PlayerController
         bullet.GetComponent<Rigidbody>().velocity = BulletSpawnPoint.forward * BulletSpeed;
     }
 
-    private void FixedUpdate()
+    protected override void OnCollisionEnter(Collision collision)
     {
+        base.OnCollisionEnter(collision);
+    }
+
+    protected override void FixedUpdate()
+    {
+        base.FixedUpdate();
         speedometer.Record(this);
         Rb.MovePosition(Rb.position + (MovementSpeed * Time.fixedDeltaTime * move));
         DetermineAnimationState();
