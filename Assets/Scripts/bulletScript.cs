@@ -20,19 +20,9 @@ public class BulletScript : MonoBehaviour
             Destroy(gameObject);
         }
 
-        if (col.gameObject.CompareTag("Breakable"))
+        if (col.gameObject.TryGetComponent(out BreakableObj breakableObj))
         {
-            // convert this to the event system
-            Destroy(col.gameObject.GetComponent<MeshCollider>());
-            Destroy(col.gameObject.GetComponent<MeshRenderer>());
-            Destroy(col.gameObject.GetComponent<MeshFilter>());
-            for (int i = col.gameObject.transform.childCount - 1; i >= 0; i--)
-            {
-                col.gameObject.transform.GetChild(i).gameObject.AddComponent<Rigidbody>().AddForce(1500 * transform.forward);
-                col.gameObject.transform.GetChild(i).gameObject.AddComponent<MeshCollider>().convex = true;
-                col.gameObject.transform.GetChild(i).gameObject.GetComponent<MeshRenderer>().enabled = true;
-                col.gameObject.transform.GetChild(i).parent = null;
-            }
+            breakableObj.OnBreak();
         }
 
         if (col.gameObject.CompareTag("Wall"))

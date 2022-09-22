@@ -9,6 +9,11 @@ public class Balloon : MonoBehaviour
 	[SerializeField] Transform AttachmentPoint;
 	[SerializeField] bool bRandomiseColour;
 	[SerializeField] Color BalloonColour;
+	[Header("Rigidbody Values")]
+	[SerializeField] private float boxMass;
+	[SerializeField] private float boxDrag = 1;
+	[SerializeField] private float boxAngularDrag = 1.5f;
+	[SerializeField] private bool bAddNewPhysics = false;
 
 	[SerializeField, ReadOnly] Material StandardMaterial;
 
@@ -47,8 +52,19 @@ public class Balloon : MonoBehaviour
 		Box.transform.parent = null;
 
 		// Enable Physics on the Box.
-		Box.GetOrAddComponent<Rigidbody>().useGravity = true;
-		Box.GetOrAddComponent<BoxCollider>();
+		if (bAddNewPhysics)
+		{
+			Rigidbody rb = Box.GetOrAddComponent<Rigidbody>();
+			rb.useGravity = true;
+			rb.mass = boxMass;
+			rb.angularDrag = boxAngularDrag;
+			rb.drag = boxDrag;
+			Box.GetOrAddComponent<BoxCollider>();
+		}
+		else
+        {
+			Box.GetComponent<Rigidbody>().isKinematic = false;
+        }
 	}
 
 	void SpawnBox()

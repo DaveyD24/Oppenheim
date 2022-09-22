@@ -279,6 +279,10 @@ MonoBehaviour:
   AttachmentPoint: {fileID: 9216583132835852308}
   bRandomiseColour: 1
   BalloonColour: {r: 0.428787, g: 1, b: 0, a: 1}
+  boxMass: 0
+  boxDrag: 1
+  boxAngularDrag: 0
+  bAddNewPhysics: 0
   StandardMaterial: {fileID: 2100000, guid: 37b1002bd53e9a645b47d62e421a8d2f, type: 2}
   Box: {fileID: 3708206240727246916}
 --- !u!1 &8313466736440306672

@@ -593,7 +593,6 @@ GameObject:
   - component: {fileID: 5400117104511225698}
   - component: {fileID: 5583241534940801186}
   - component: {fileID: 5583241534940801180}
-  - component: {fileID: 1374449642}
   m_Layer: 7
   m_Name: Car Root
   m_TagString: Player
@@ -769,19 +768,6 @@ MonoBehaviour:
   <DashBodyMaterial>k__BackingField: {fileID: -478035346441924844, guid: 87a4ac2e4093d9540b395e877017022b, type: 3}
   windParticles: {fileID: 5583241535451450344}
   particelSpeedMultiplier: 0.0025
---- !u!114 &1374449642
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4736310480184235480}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 70cf9c8dc316c624fb9632d5450bdb02, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  <PlayerIdSO>k__BackingField: {fileID: 11400000, guid: a6ba5f247f9af9242bb3d3700fe06543, type: 2}
 --- !u!1 &5583241534065384394
 GameObject:
   m_ObjectHideFlags: 0

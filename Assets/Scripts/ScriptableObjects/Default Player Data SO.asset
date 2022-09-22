@@ -36,6 +36,6 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  <FuelLoseMultiplier>k__BackingField: 0.1
+  <FuelLoseMultiplier>k__BackingField: 0.00001
   <DustParticles>k__BackingField: {fileID: 6197338229895351634, guid: e071970770248be4bba934296afbcfc6, type: 3}
   <dustParticlesCollisionSpeed>k__BackingField: 5

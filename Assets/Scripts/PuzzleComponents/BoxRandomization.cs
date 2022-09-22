@@ -60,34 +60,37 @@ public class BoxRandomization : MonoBehaviour
     /// </summary>
     private void OneDirectionMove()
     {
-        Vector3 velocity = rb.velocity;
-        if (velocity.magnitude > 1)
+        if (rb != null)
         {
-            float xVelocity = Mathf.Abs(rb.velocity.x);
-            float zVelocity = Mathf.Abs(rb.velocity.z);
-            // determine the direction with the most force and freeze the other
-            if (xVelocity > zVelocity)
+            Vector3 velocity = rb.velocity;
+            if (velocity.magnitude > 1)
             {
-                velocity.z = 0;
-                rb.constraints = RigidbodyConstraints.None;
-                rb.constraints = RigidbodyConstraints.FreezePositionZ;
+                float xVelocity = Mathf.Abs(rb.velocity.x);
+                float zVelocity = Mathf.Abs(rb.velocity.z);
+                // determine the direction with the most force and freeze the other
+                if (xVelocity > zVelocity)
+                {
+                    velocity.z = 0;
+                    rb.constraints = RigidbodyConstraints.None;
+                    rb.constraints = RigidbodyConstraints.FreezePositionZ;
+                }
+                else
+                {
+                    rb.constraints = RigidbodyConstraints.None;
+                    rb.constraints = RigidbodyConstraints.FreezePositionX;
+                    velocity.x = 0;
+                }
+
+                rb.angularVelocity = new Vector3(0, 0, 0);
+                rb.velocity = velocity;
             }
             else
             {
                 rb.constraints = RigidbodyConstraints.None;
-                rb.constraints = RigidbodyConstraints.FreezePositionX;
-                velocity.x = 0;
             }
 
-            rb.angularVelocity = new Vector3(0, 0, 0);
-            rb.velocity = velocity;
+            rb.freezeRotation = true;
         }
-        else
-        {
-            rb.constraints = RigidbodyConstraints.None;
-        }
-
-        rb.freezeRotation = true;
     }
 
     private void Update()
