@@ -6,18 +6,19 @@
 #endif
 
 // Enables Yaw control with the Horizontal Axis of InputActions.Move.
-// #define USE_MOVE_YAW
+#define MOVE_AIRBORNE
 // Enables Yaw control with the Horizontal Axis of InputActions.Look.
-#define USE_LOOK_YAW
+//#define LOOK_AIRBORNE
 
-#if !USE_MOVE_YAW && !USE_LOOK_YAW
-#error NO YAW INPUT IS DEFINED!
+#if !MOVE_AIRBORNE && !LOOK_AIRBORNE
+#error No Airborne Input is defined!
 #endif
 
-#if USE_MOVE_YAW && USE_LOOK_YAW
-#error LOOK YAW TAKES PRECEDENCE! DEFINE USE_MOVE_YAW XOR USE_LOOK_YAW.
+#if MOVE_AIRBORNE && LOOK_AIRBORNE
+#error LOOK_AIRBORNE takes precedence over MOVE_AIRBORNE! Define MOVE_AIRBORNE ^ LOOK_AIRBORNE.
 #endif
 
+// Enables Gliding upon double jump.
 #define USE_DOUBLEJUMP_GLIDE
 
 using System.Collections;
@@ -53,7 +54,7 @@ public class BatMovement : MonoBehaviour
 	[Header("Cosmetics")]
 	[SerializeField] TrailRenderer[] WingtipVortex;
 
-	Vector2 Throw;
+	Vector2 ThrowMove;
 	Vector2 ThrowLook;
 
 	// Ground Variables.
@@ -85,7 +86,7 @@ public class BatMovement : MonoBehaviour
 		Speedometer.Record(this);
 
 		HandleGroundMovement();
-		HandleMovement(Throw);
+		HandleMovement(ThrowMove);
 		HandleLook(ThrowLook);
 		DetermineVortex();
 
@@ -131,11 +132,11 @@ public class BatMovement : MonoBehaviour
 	{
 		if (Bat.Active)
 		{
-			Throw = Context.action.ReadValue<Vector2>();
+			ThrowMove = Context.action.ReadValue<Vector2>();
 		}
 		else
 		{
-			Throw = Vector2.zero;
+			ThrowMove = Vector2.zero;
 		}
 	}
 
@@ -143,8 +144,7 @@ public class BatMovement : MonoBehaviour
 	{
 		if (Bat.Active)
 		{
-			float Throw = Context.action.ReadValue<float>();
-			HandleJump(Throw);
+			HandleJump(Context.action.ReadValue<float>());
 		}
 		else
 		{
@@ -154,6 +154,11 @@ public class BatMovement : MonoBehaviour
 
 	public void LookBinding(ref CallbackContext Context)
 	{
+		/**
+		--      This does nothing if we're not using LOOK_AIRBORNE.     --
+		--               Can always be changed, if needed.              --
+		**/
+#if LOOK_AIRBORNE
 		if (Bat.Active)
 		{
 			ThrowLook = Context.action.ReadValue<Vector2>();
@@ -162,6 +167,7 @@ public class BatMovement : MonoBehaviour
 		{
 			ThrowLook = Vector2.zero;
 		}
+#endif
 	}
 
 	public void AbilityBinding() { }
@@ -171,9 +177,6 @@ public class BatMovement : MonoBehaviour
 		if (IsAirborne())
 		{
 			// Airborne Motion and Controls.
-
-			// Gliding Sensitivity for Gamepad Compatibility.
-			const float kGlideInputSensitivity = .5f;
 
 			float Vertical = Throw.y;
 
@@ -193,37 +196,44 @@ public class BatMovement : MonoBehaviour
 				RemainingSeconds = SecondsOfPitchFlight * 10;
 			}
 
+#if !MOVE_AIRBORNE
+			// Gliding Sensitivity for Gamepad Compatibility.
+			const float kGlideInputSensitivity = .5f;
 #if !USE_DOUBLEJUMP_GLIDE
+
 			// Forward Gliding.
 			if (!bHasGlidedThisJump && Vertical > kGlideInputSensitivity)
 			{
 				StartGliding();
 			}
 			else
-#endif
+#endif // !USE_DOUBLEJUMP_GLIDE
 			if (!bHasCancelledGlideThisJump && Vertical < -kGlideInputSensitivity)
 			{
-				// If the Player Cancels their Glide, decrease velocity but do not affect Gravity.
-				Vector3 Velocity = Bat.Physics.velocity;
-				Velocity.x *= .25f;
-				Velocity.z *= .25f;
-
-				Bat.Physics.velocity = Velocity;
-				bHasCancelledGlideThisJump = true;
+				ApplyAirbrakes();
 			}
-			else if (!bHasCancelledGlideThisJump)
+			else
+#endif // !MOVE_AIRBORNE
+			// Generate Lift.
+			if (!bHasCancelledGlideThisJump)
 			{
 				// Provide Lift while the Player has not cancelled their Glide.
 				float Lift = ComputeLift(Bat.Physics);
 				Bat.Physics.AddForce(transform.up * Lift);
 			}
 
-#if USE_MOVE_YAW
+#if MOVE_AIRBORNE
 			float Horizontal = Throw.x;
 
-			// Keyboard Yaw.
+			if (bHasGlidedThisJump)
+			{
+				// Move Pitch.
+				ThrowPitch(Vertical);
+			}
+
+			// Move Yaw.
 			ThrowYaw(Horizontal);
-#endif
+#endif // MOVE_AIRBORNE
 
 			// Stop Ground Movement from taking place while Airborne.
 			// Removed for Ledge/Edge bug. // GroundMovement = Vector3.zero;
@@ -275,6 +285,10 @@ public class BatMovement : MonoBehaviour
 			{
 				// On 2+ Jump...
 				StopGradualAcceleration();
+
+#if MOVE_AIRBORNE
+				ApplyAirbrakes();
+#endif
 			}
 		}
 #endif
@@ -282,18 +296,23 @@ public class BatMovement : MonoBehaviour
 
 	public void HandleLook(Vector2 Throw)
 	{
+		/**
+		--      This does nothing if we're not using LOOK_AIRBORNE.     --
+		--               Can always be changed, if needed.              --
+		**/
+
+#if LOOK_AIRBORNE
 		Throw.Normalize();
 		float Azimuth = Throw.x;
 		float Inclination = Throw.y;
 
 		if (IsAirborne())
 		{
+			// Look Pitch.
 			ThrowPitch(Inclination);
 
-#if USE_LOOK_YAW
 			// Look Yaw.
 			ThrowYaw(Azimuth);
-#endif
 		}
 		else
 		{
@@ -303,6 +322,7 @@ public class BatMovement : MonoBehaviour
 			 * Should be handled with a Spring Arm or similar component.
 			 */
 		}
+#endif
 	}
 
 	void HandleGroundMovement()
@@ -363,6 +383,17 @@ public class BatMovement : MonoBehaviour
 			StopCoroutine(CurrentGradualFunc);
 			CurrentGradualFunc = null;
 		}
+	}
+
+	void ApplyAirbrakes()
+	{
+		// If the Player Cancels their Glide, decrease velocity but do not affect Gravity.
+		Vector3 Velocity = Bat.Physics.velocity;
+		Velocity.x *= .25f;
+		Velocity.z *= .25f;
+
+		Bat.Physics.velocity = Velocity;
+		bHasCancelledGlideThisJump = true;
 	}
 
 	/// <summary>Gives Pitch Input.</summary>
