@@ -40,8 +40,6 @@ public abstract class PlayerController : MonoBehaviour
 
     [field: SerializeField] protected DefaultPlayerDataObject DefaultPlayerData { get; private set; }
 
-    [field: SerializeField] public SpringArm TrackingCamera { get; set; }
-
     [field: SerializeField] protected float Bouyancy { get; private set; }
 
     [field: SerializeField] protected float MovementSpeed { get; private set; }

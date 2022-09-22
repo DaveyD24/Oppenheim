@@ -37864,7 +37864,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <PlayerIdSO>k__BackingField: {fileID: 11400000, guid: 1e6de6128901ea94a88896b92e3bf310, type: 2}
   <DefaultPlayerData>k__BackingField: {fileID: 11400000, guid: edaf631a83ce6ea42aa9463c9228f767, type: 2}
-  <TrackingCamera>k__BackingField: {fileID: 0}
   <Bouyancy>k__BackingField: 0
   <MovementSpeed>k__BackingField: 6
   <RotationSpeed>k__BackingField: 5
@@ -37983,7 +37982,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HashMap:
-    Items: []
+    Entries: []
 --- !u!1 &1086681651
 GameObject:
   m_ObjectHideFlags: 0
@@ -43648,9 +43647,10 @@ MonoBehaviour:
   Camera: {fileID: 1239824856}
   Target: {fileID: 334516015}
   TargetOffset: {x: 0, y: 0, z: 0}
-  Distance: 9.19
-  GimbalRotation: {x: 0, y: 20, z: 0}
-  CameraRotation: {x: 12.7, y: 0, z: 0}
+  CameraComponent: {fileID: 0}
+  Distance: 26
+  GimbalRotation: {x: 0, y: 30, z: 0}
+  CameraRotation: {x: 26, y: 0, z: 0}
   bInheritRotation: 0
   bEnableScrollToDistance: 1
   ScrollSensitivity: 1
@@ -43663,7 +43663,7 @@ MonoBehaviour:
   bRunCollisionChecks: 0
   OnlyCollideWith:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 119
   PositionalLagStrength: 0.2
   RotationalLagStrength: 0.2
   bUseCustomProjection: 0
@@ -43700,8 +43700,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1239824851}
-  m_LocalRotation: {x: 0.11060166, y: 0, z: 0, w: 0.99386483}
-  m_LocalPosition: {x: 169.39, y: 8.742027, z: -522.6038}
+  m_LocalRotation: {x: 0.22495104, y: 0, z: 0, w: 0.97437006}
+  m_LocalPosition: {x: 169.39, y: 17.395554, z: -537.16345}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -54042,7 +54042,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SwitchManager: {fileID: 439040869}
-  TooFarThreshold: 50
+  TooFarThreshold: 7
+  MinMaxCameraDistance: {x: 0, y: 0}
 --- !u!4 &1506041543
 Transform:
   m_ObjectHideFlags: 0
@@ -54051,7 +54052,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1506041541}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 173.09163, y: 7.912304, z: -517.63605}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}

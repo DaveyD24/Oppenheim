@@ -119,7 +119,7 @@ public class Bat : PlayerController
 		bool bTakeFallDamage = Angle > 30f;
 
 		if (bTakeFallDamage)
-			Debug.Log($"At Angle: {Angle}");
+			Debug.Log($"Collision with {collision.gameObject.name} at {Angle:F0} degrees at {relativeVelocity:F0}m/s");
 
 		return bTakeFallDamage;
 	}
