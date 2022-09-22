@@ -488,7 +488,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4673714698768582070
 Transform:
   m_ObjectHideFlags: 0
@@ -578,6 +578,7 @@ GameObject:
   - component: {fileID: 6425183591515642569}
   - component: {fileID: 3014050958951108867}
   - component: {fileID: 5234025148975142635}
+  - component: {fileID: 1163200387225307289}
   m_Layer: 7
   m_Name: Bip001
   m_TagString: Untagged
@@ -630,6 +631,18 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.075, y: 0.075, z: 0.075}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1163200387225307289
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2902199806600590732}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 583eea8e117d15f499a0697b86c01a39, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2935513821207482644
 GameObject:
   m_ObjectHideFlags: 0
@@ -1205,7 +1218,7 @@ MonoBehaviour:
   <MovementSpeed>k__BackingField: 6
   <RotationSpeed>k__BackingField: 10
   <Health>k__BackingField: 0
-  <FallDamageThreshold>k__BackingField: 0
+  <FallDamageThreshold>k__BackingField: 25
   groundCheckPosition: {x: 0, y: 0, z: 0}
   <GroundCheckRadius>k__BackingField: 0.15
   jumpHeight: 3
@@ -2430,7 +2443,7 @@ Transform:
   m_GameObject: {fileID: 6629699980124174944}
   m_LocalRotation: {x: 0.000000042321766, y: -4.836095e-10, z: 1, w: 1.7551058e-15}
   m_LocalPosition: {x: -0.12457292, y: -0.00000029802322, z: 0.00000006475884}
-  m_LocalScale: {x: -0.99999994, y: -1, z: -0.99999994}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 101201355902491349}
   m_RootOrder: 0

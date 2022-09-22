@@ -186,7 +186,7 @@ public abstract class PlayerController : MonoBehaviour
 
     protected virtual void Update()
     {
-        if (transform.position.y < 2)
+        if (transform.position.y < 2.5f)
         {
             OnDeath();
         }
@@ -312,6 +312,7 @@ public abstract class PlayerController : MonoBehaviour
     {
         // too sensitive at the moment
         // GameEvents.Die();
+        OnDeath();
     }
 
     protected virtual void FixedUpdate()
