@@ -77435,9 +77435,9 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 37524166531051453, guid: 34b351ecfbc2ccf4f95314a24a9de033, type: 3}
-      propertyPath: m_RootOrder
-      value: 2
+    - target: {fileID: 1937797457676110068, guid: 34b351ecfbc2ccf4f95314a24a9de033, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3182380755078332306, guid: 34b351ecfbc2ccf4f95314a24a9de033, type: 3}
       propertyPath: m_Name
@@ -77485,10 +77485,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3182380755078358002, guid: 34b351ecfbc2ccf4f95314a24a9de033, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5654260496683680184, guid: 34b351ecfbc2ccf4f95314a24a9de033, type: 3}
-      propertyPath: groundCheckPosition.y
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

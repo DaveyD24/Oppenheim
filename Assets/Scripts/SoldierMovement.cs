@@ -10,6 +10,9 @@ public class SoldierMovement : PlayerController
     private Animator animator;
     private Speedometer speedometer;
     [SerializeField] private float jumpHeight = 3f;
+    [SerializeField] private GameObject ragdol;
+    [SerializeField] private GameObject baseMesh;
+    private BoxCollider boxCollider;
 
     [field: Header("Soldier Movement")]
     [field: SerializeField] public Transform BulletSpawnPoint { get; set; }
@@ -23,6 +26,7 @@ public class SoldierMovement : PlayerController
         base.Start();
         animator = GetComponent<Animator>();
         speedometer.Initialise();
+        boxCollider = gameObject.GetComponent<BoxCollider>();
     }
 
     protected override void OnEnable()
@@ -108,6 +112,25 @@ public class SoldierMovement : PlayerController
         DetermineAnimationState();
 
         speedometer.Mark();
+    }
+
+    protected override void OnDeath()
+    {
+        base.OnDeath();
+        baseMesh.SetActive(false);
+        boxCollider.enabled = false;
+        ragdol.SetActive(true);
+        Rb.isKinematic = true;
+        ragdol.transform.position = transform.position;
+    }
+
+    protected override void Respawn()
+    {
+        baseMesh.SetActive(true);
+        boxCollider.enabled = true;
+        ragdol.SetActive(false);
+        Rb.isKinematic = false;
+        base.Respawn();
     }
 
     private void DetermineAnimationState()

@@ -10,8 +10,11 @@ public class Bat : PlayerController
 	[Header("EDITOR ONLY")]
 	// True when on a testing scene. Sets this Bat to 'Active' so
 	// that it can be controlled in a scene without a SwitchManager.
-	[SerializeField] bool bIsStandalone;
+	[SerializeField] private bool bIsStandalone;
 #endif
+	[SerializeField] private GameObject ragdol;
+	[SerializeField] private GameObject baseMesh;
+	private BoxCollider boxCollider;
 
 	// Expose Protected Fields.
 	public Rigidbody Physics => Rb;
@@ -32,6 +35,7 @@ public class Bat : PlayerController
 
 		MovementComponent = GetComponent<BatMovement>();
 		EventsComponent = GetComponent<BatEvents>();
+		boxCollider = gameObject.GetComponent<BoxCollider>();
 	}
 
 	public override void ActivateInput(int playerID, PlayerInput playerInput)
@@ -127,5 +131,26 @@ public class Bat : PlayerController
 		}
 
 		return bTakeFallDamage;
+	}
+
+	protected override void OnDeath()
+	{
+		base.OnDeath();
+		baseMesh.SetActive(false);
+		boxCollider.enabled = false;
+		ragdol.SetActive(true);
+		Rb.isKinematic = true;
+		ragdol.transform.position = transform.position;
+		MovementComponent.HandleMovement(Vector2.zero);
+		MovementComponent.StopGradualAcceleration();
+	}
+
+	protected override void Respawn()
+	{
+		baseMesh.SetActive(true);
+		boxCollider.enabled = true;
+		ragdol.SetActive(false);
+		Rb.isKinematic = false;
+		base.Respawn();
 	}
 }

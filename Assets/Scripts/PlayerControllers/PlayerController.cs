@@ -310,7 +310,7 @@ public abstract class PlayerController : MonoBehaviour
 
     protected void TakeFallDamage(/*float impactVelocity*/ /* This might be needed if we want to decrease health at lower speeds, and kill at higher speeds. */)
     {
-        // bugs out so temporarily disabled
+        // too sensitive at the moment
         // GameEvents.Die();
     }
 

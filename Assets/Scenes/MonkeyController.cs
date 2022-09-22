@@ -20,6 +20,9 @@ public class MonkeyController : PlayerController
     private bool bDidJump = false;
     private float currJumpWaitTime = 1;
     [SerializeField] private float jumpWaitTime = 1;
+    [SerializeField] private GameObject ragdol;
+    [SerializeField] private GameObject baseMesh;
+    private BoxCollider boxCollider;
 
     private enum State
     {
@@ -33,6 +36,7 @@ public class MonkeyController : PlayerController
         base.Start();
         currJumpWaitTime = jumpWaitTime;
         animator = GetComponent<Animator>();
+        boxCollider = gameObject.GetComponent<BoxCollider>();
     }
 
     protected override void Update()
@@ -122,6 +126,25 @@ public class MonkeyController : PlayerController
         }
 
         // ...
+    }
+
+    protected override void OnDeath()
+    {
+        base.OnDeath();
+        baseMesh.SetActive(false);
+        boxCollider.enabled = false;
+        ragdol.SetActive(true);
+        Rb.isKinematic = true;
+        ragdol.transform.position = transform.position;
+    }
+
+    protected override void Respawn()
+    {
+        baseMesh.SetActive(true);
+        boxCollider.enabled = true;
+        ragdol.SetActive(false);
+        Rb.isKinematic = false;
+        base.Respawn();
     }
 
     private void OnGUI()
