@@ -6,15 +6,17 @@ public class AButton : Interactable
 	[SerializeField, Min(0f)] float RequiredMassToActivate;
 	[SerializeField, Tooltip("True if this button should NOT deactivate once activated.")] bool bIsPersistent;
 
+	bool bIsOn = false;
 	IOData IO;
 
 	void OnTriggerEnter(Collider Entered)
 	{
 		float Mass = IO.Enter(Entered.gameObject).Mass;
 		
-		if (Mass >= RequiredMassToActivate)
+		if (!bIsOn && Mass >= RequiredMassToActivate)
 		{
 			BroadcastActive(Entered);
+			bIsOn = true;
 		}
 	}
 
@@ -22,9 +24,10 @@ public class AButton : Interactable
 	{
 		IO.Exit(Exited.gameObject);
 
-		if (!bIsPersistent)
+		if (bIsOn && !bIsPersistent)
 		{
 			BroadcastDeactive(Exited);
+			bIsOn = false;
 		}
 	}
 }

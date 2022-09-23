@@ -155,7 +155,7 @@ public class CarController : PlayerController
         SetWindParticles();
     }
 
-    protected override void OnDeath()
+    public override void OnDeath()
     {
         base.OnDeath();
         foreach (AxleInfo axleInfo in axleInfos)

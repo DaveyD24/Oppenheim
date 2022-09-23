@@ -132,7 +132,7 @@ public class MonkeyController : PlayerController
         // ...
     }
 
-    protected override void OnDeath()
+    public override void OnDeath()
     {
         base.OnDeath();
         baseMesh.SetActive(false);

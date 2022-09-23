@@ -133,7 +133,7 @@ public class Bat : PlayerController
 		return bTakeFallDamage;
 	}
 
-	protected override void OnDeath()
+	public override void OnDeath()
 	{
 		base.OnDeath();
 		baseMesh.SetActive(false);

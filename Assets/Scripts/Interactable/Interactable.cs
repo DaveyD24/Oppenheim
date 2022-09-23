@@ -28,12 +28,12 @@ public class Interactable : MonoBehaviour
 
 	public void BroadcastActive(Collider Sender)
 	{
-		OnActivated?.Invoke(this, Sender.gameObject);
+		OnActivated?.Invoke(this, Sender ? Sender.gameObject : null);
 	}
 
 	public void BroadcastDeactive(Collider Sender)
 	{
-		OnDeactivated?.Invoke(this, Sender.gameObject);
+		OnDeactivated?.Invoke(this, Sender ? Sender.gameObject : null);
 	}
 }
 

@@ -246,7 +246,7 @@ public class SoldierMovement : PlayerController
 
     bool bHasPlayedScream = false;
 
-    protected override void OnDeath()
+    public override void OnDeath()
     {
         base.OnDeath();
         baseMesh.SetActive(false);

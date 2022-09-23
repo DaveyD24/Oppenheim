@@ -9,6 +9,8 @@ public class BobScript : MonoBehaviour
     Vector3 startPosition;
     public bool doBob = false;
 
+    [HideInInspector] public float yPosition;
+
     // Start is called before the first frame update
     private void Start()
     {
@@ -25,7 +27,7 @@ public class BobScript : MonoBehaviour
             float newY = Mathf.Sin(Time.time * speed);
 
             // set the object's Y to the new calculated Y
-            transform.position = new Vector3(transform.position.x, (newY * height) + 19.63294f, transform.position.z);
+            transform.position = new Vector3(transform.position.x, (newY * height) + yPosition, transform.position.z);
         }
     }
 }

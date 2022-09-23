@@ -233,7 +233,7 @@ public abstract class PlayerController : MonoBehaviour
         GameEvents.OnAddPlayerSwitch(PlayerIdSO.PlayerID);
     }
 
-    protected virtual void OnDeath()
+    public virtual void OnDeath()
     {
         if (PlayerInput != null)
         {
