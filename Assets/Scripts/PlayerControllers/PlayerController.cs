@@ -351,16 +351,16 @@ public abstract class PlayerController : MonoBehaviour
 
     private IEnumerator DeathWait()
     {
-        Debug.Log("Player Died");
+        // Debug.Log("Player Died");
 
+#if !UNITY_EDITOR
         Dictionary<string, object> eventData = new Dictionary<string, object>();
         eventData.Add("PlayerID", PlayerIdSO.PlayerID);
-        eventData.Add("PlayerPositionX", Mathf.RoundToInt(transform.position.x));
-        eventData.Add("PlayerPositionY", Mathf.RoundToInt(transform.position.y));
-        eventData.Add("PlayerPositionZ", Mathf.RoundToInt(transform.position.z));
+        eventData.Add("Position", transform.position.ToString());
         eventData.Add("PlayerVelocity", Rb.velocity.magnitude);
         AnalyticsService.Instance.CustomData("PlayerDeath", eventData);
         AnalyticsService.Instance.Flush();
+#endif
 
         yield return new WaitForSeconds(5);
         GameEvents.Die();

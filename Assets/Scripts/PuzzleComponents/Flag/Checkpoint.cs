@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Services.Analytics;
+using Unity.Services.Core;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -56,7 +58,14 @@ public class Checkpoint : MonoBehaviour
         if (seenId.Count >= 4)
         {
             RespawnPosition = transform.position;
-            SceneManager.LoadScene("WinScene");
+
+            // SceneManager.LoadScene("WinScene");
+#if !UNITY_EDITOR
+		Dictionary<string, object> eventData = new Dictionary<string, object>();
+		eventData.Add("Position", transform.position.ToString());
+		AnalyticsService.Instance.CustomData("CheckpointActivated", eventData);
+		AnalyticsService.Instance.Flush();
+#endif
         }
     }
 

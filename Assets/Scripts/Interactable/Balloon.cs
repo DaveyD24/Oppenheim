@@ -1,11 +1,15 @@
 using System;
+using System.Collections.Generic;
+using Unity.Services.Analytics;
+using Unity.Services.Core;
 using UnityEngine;
 using UnityEngine.Extensions;
 using URandom = UnityEngine.Random; // Differentiate between System.Random and UnityEngine.Random.
 
 public class Balloon : MonoBehaviour
 {
-	[SerializeField] GameObject BoxToAttach;
+	[SerializeField] private GameObject boxToAttach;
+	[SerializeField] private LineRenderer lineRenderer;
 	[SerializeField] Transform AttachmentPoint;
 	[SerializeField] bool bRandomiseColour;
 	[SerializeField] Color BalloonColour;
@@ -29,12 +33,17 @@ public class Balloon : MonoBehaviour
 		{
 			// SpawnBox();
 		}
+
+		lineRenderer = GetComponent<LineRenderer>();
+		lineRenderer.positionCount = 2;
+		lineRenderer.SetPosition(0, boxToAttach.transform.position);
 	}
 
 	void Update()
 	{
 		// Bob up and down like a Balloon.
 		transform.position += new Vector3(0f, Mathf.Sin(Time.time * RandomBobSpeed) * Time.deltaTime, 0f);
+		GroundRay();
 	}
 
 	void OnTriggerEnter(Collider Other)
@@ -47,37 +56,51 @@ public class Balloon : MonoBehaviour
 	public void Pop()
 	{
 		// Detach the Box from the String.
-		BoxToAttach.transform.parent = null;
+		boxToAttach.transform.parent = null;
 
 		// Enable Physics on the Box.
 		if (bAddNewPhysics)
 		{
-			Rigidbody rb = BoxToAttach.GetOrAddComponent<Rigidbody>();
+			Rigidbody rb = boxToAttach.GetOrAddComponent<Rigidbody>();
 			rb.useGravity = true;
 			rb.mass = boxMass;
 			rb.angularDrag = boxAngularDrag;
 			rb.drag = boxDrag;
-			BoxToAttach.GetOrAddComponent<BoxCollider>();
+			boxToAttach.GetOrAddComponent<BoxCollider>();
 		}
 		else
         {
-			BoxToAttach.GetComponent<Rigidbody>().isKinematic = false;
+			boxToAttach.GetComponent<Rigidbody>().isKinematic = false;
         }
+
+#if !UNITY_EDITOR
+		Dictionary<string, object> eventData = new Dictionary<string, object>();
+		eventData.Add("Position", transform.position.ToString());
+		AnalyticsService.Instance.CustomData("BalloonPop", eventData);
+		AnalyticsService.Instance.Flush();
+#endif
 
 		// Mark this Balloon for destruction.
 		Destroy(gameObject);
 	}
 
-	void SpawnBox()
+	private void SpawnBox()
 	{
-		Box = Instantiate(BoxToAttach, AttachmentPoint.position, transform.rotation);
+		Box = Instantiate(boxToAttach, AttachmentPoint.position, transform.rotation);
 		Box.transform.parent = AttachmentPoint;
 	}
 
-	void OnValidate()
+	private void GroundRay()
+    {
+		RaycastHit hit;
+		Physics.Raycast(transform.position, Vector3.down * 100, out hit);
+		lineRenderer.SetPosition(1, hit.point);
+	}
+
+	private void OnValidate()
 	{
 		// Spawn a Box in Editor.
-		if (!Box && AttachmentPoint && BoxToAttach)
+		if (!Box && AttachmentPoint && boxToAttach)
 		{
 			SpawnBox();
 		}
