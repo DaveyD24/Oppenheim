@@ -327,7 +327,9 @@ public class SpringArm : MonoBehaviour
 	{
 		SpringArmSettings RetVal;
 
+#if UNITY_EDITOR
 		RetVal.bDrawRotationalLines = bDrawRotationalLines;
+#endif
 
 		RetVal.TPosition = transform.position;
 		RetVal.TRotation = transform.rotation;
@@ -378,7 +380,9 @@ public class SpringArm : MonoBehaviour
 
 	public void SetSettings(SpringArmSettings Settings, Transform Target, Camera Component)
 	{
+#if UNITY_EDITOR
 		bDrawRotationalLines = Settings.bDrawRotationalLines;
+#endif
 
 		transform.position = Settings.TPosition;
 		transform.rotation = Settings.TRotation;
@@ -447,7 +451,9 @@ public class SpringArm : MonoBehaviour
 
 public struct SpringArmSettings
 {
+#if UNITY_EDITOR
 	public bool bDrawRotationalLines;
+#endif
 
 	public Vector3 TPosition;
 	public Quaternion TRotation;
