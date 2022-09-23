@@ -689,35 +689,38 @@ MonoBehaviour:
   rayCenterOffset: 0
   distCheckForGround: 2.5
   maxFlippedWait: 0.75
+  <PlayerLayer>k__BackingField:
+    serializedVersion: 2
+    m_Bits: 196
   <DashSpeedCurve>k__BackingField:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
-      time: 0
-      value: 80
+      time: -0.0036027562
+      value: 45
       inSlope: 77.26416
-      outSlope: -373.847
-      tangentMode: 5
+      outSlope: 0
+      tangentMode: 69
       weightedMode: 0
       inWeight: 0
       outWeight: 0.048531495
     - serializedVersion: 3
       time: 0.09846192
-      value: 63.190308
-      inSlope: -373.847
-      outSlope: -67.213936
-      tangentMode: 65
+      value: 45
+      inSlope: -0
+      outSlope: -7.2146707
+      tangentMode: 5
       weightedMode: 0
       inWeight: 0.33333334
-      outWeight: 0.33333334
+      outWeight: 0.16964881
     - serializedVersion: 3
       time: 0.78567517
       value: 17
-      inSlope: -180.57323
+      inSlope: -48.493904
       outSlope: -1.156637
       tangentMode: 1
       weightedMode: 0
-      inWeight: 0.33333334
+      inWeight: 0.13616554
       outWeight: 0.17636086
     - serializedVersion: 3
       time: 1.15
@@ -767,7 +770,7 @@ MonoBehaviour:
   <DashOffset>k__BackingField: {x: 0, y: 0, z: 0.01}
   <DashBodyMaterial>k__BackingField: {fileID: -478035346441924844, guid: 87a4ac2e4093d9540b395e877017022b, type: 3}
   windParticles: {fileID: 5583241535451450344}
-  particelSpeedMultiplier: 0.0025
+  particelSpeedMultiplier: 0.005
 --- !u!1 &5583241534065384394
 GameObject:
   m_ObjectHideFlags: 0
@@ -6079,7 +6082,7 @@ HingeJoint:
   m_Anchor: {x: 1.21, y: 0.31403217, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 1.209997, y: 0, z: -0.3140413}
+  m_ConnectedAnchor: {x: 1.2100585, y: 0, z: -0.3140414}
   m_UseSpring: 1
   m_Spring:
     spring: 20

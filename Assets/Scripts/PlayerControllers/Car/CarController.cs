@@ -35,6 +35,8 @@ public class CarController : PlayerController
 
     [field: Header("Dash Settings")]
     [field: Space(1)]
+    [field: SerializeField] public LayerMask PlayerLayer { get; private set; }
+
     [field: SerializeField] public AnimationCurve DashSpeedCurve { get; private set; }
 
     [field: SerializeField] public AnimationCurve TransitionRotCurve { get; private set; }
@@ -327,7 +329,7 @@ public class CarController : PlayerController
 
     private async void AntiFlip()
     {
-        if (Vector3.Dot(transform.up, Vector3.up) < 0.9f && bIsGrounded && !IsCarMoving())
+        if (Vector3.Dot(transform.up, Vector3.up) < 0.75f && bIsGrounded && !IsCarMoving())
         {
             // push the car off the ground so that when it rotates back as it falls down it has no ground friction to worry about
             Rb.AddForce(Vector3.up * popUpForce, ForceMode.Acceleration);
