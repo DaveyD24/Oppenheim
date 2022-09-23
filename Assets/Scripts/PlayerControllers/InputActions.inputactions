@@ -60,6 +60,14 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "HideControls",
+                    "type": "Button",
+                    "id": "29784a6d-6dc4-41a6-a63e-c94dd51d627f",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -329,11 +337,33 @@
                 },
                 {
                     "name": "",
+                    "id": "eafc7e69-cfe8-490a-82ec-0cb5e664edf8",
+                    "path": "<Gamepad>/leftShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "NextLine",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "675f9e29-a543-4fc6-97ce-94f800b7965c",
                     "path": "<Keyboard>/v",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
+                    "action": "SkipTut",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "4d53b210-ee3a-4ccb-8290-ea4dc8d39e62",
+                    "path": "<Gamepad>/rightShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
                     "action": "SkipTut",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -357,6 +387,28 @@
                     "processors": "",
                     "groups": "Gamepad",
                     "action": "RotatePlayer",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5648c274-3aee-4a0a-a4b0-20ceb2ecc4c3",
+                    "path": "<Keyboard>/h",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "HideControls",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b91ad9a3-4b85-4db5-8b2a-9284eb3d9f2c",
+                    "path": "<Gamepad>/select",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "HideControls",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

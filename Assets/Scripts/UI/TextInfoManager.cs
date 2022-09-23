@@ -11,6 +11,9 @@ public class TextInfoManager : MonoBehaviour
     private InputActions Inputs;
 
     private bool isComplete = false;
+    [SerializeField] private GameObject generalControls;
+    [SerializeField] private GameObject introControls;
+
     [Header("Annoucements")]
     [SerializeField] private List<string> annoucementTxt = new List<string>();
     [SerializeField] private float charWaitTime = 0.1f;
@@ -60,7 +63,7 @@ public class TextInfoManager : MonoBehaviour
             lineAt++;
             currentTxt.text = string.Empty;
             charAt = 0;
-            Debug.Log(currentList.Count + "waesrdfgthdfrdwaesfrdgd" + lineAt);
+            // Debug.Log(currentList.Count + "waesrdfgthdfrdwaesfrdgd" + lineAt);
             if (lineAt < currentList.Count)
             {
                 charAt = 0;
@@ -82,6 +85,8 @@ public class TextInfoManager : MonoBehaviour
                 speechBubbleObj.SetActive(false);
                 UIEvents.ShowInstructions();
                 isComplete = true;
+                introControls.SetActive(false);
+                generalControls.SetActive(true);
             }
         }
     }
@@ -101,6 +106,8 @@ public class TextInfoManager : MonoBehaviour
             speechBubbleObj.SetActive(false);
             UIEvents.ShowInstructions();
             isComplete = true;
+            introControls.SetActive(false);
+            generalControls.SetActive(true);
         }
     }
 

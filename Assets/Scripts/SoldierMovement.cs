@@ -164,7 +164,6 @@ public class SoldierMovement : PlayerController
             Rb.velocity += new Vector3(0f, Mathf.Sqrt(jumpHeight * -3f * Physics.gravity.y), 0f);
             // If we were clinging onto something, we want to jump in the opposite direction
             // as if the Monkey is jumping off the wall.
-            Debug.Log("solider jump");
 
             animator.SetTrigger("Jump");
         }

@@ -16,6 +16,9 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Rigidbody), typeof(AudioController))]
 public abstract class PlayerController : MonoBehaviour
 {
+    [SerializeField] private GameObject controlObj;
+    [SerializeField] private Slider fuelSlider;
+    private bool bControlsHidden = false;
     private Vector3 startPosition;
     private Quaternion startRotation;
     private float fuel;
@@ -95,12 +98,20 @@ public abstract class PlayerController : MonoBehaviour
     {
         Active = true;
         UIEvents.CanvasStateChanged(PlayerIdSO.PlayerID, true);
+        if (!bControlsHidden)
+        {
+            controlObj.SetActive(true);
+        }
     }
 
     public void Deactivate()
     {
         Active = false;
         UIEvents.CanvasStateChanged(PlayerIdSO.PlayerID, false);
+        if (controlObj != null)
+        {
+            controlObj.SetActive(false);
+        }
     }
 
     public bool IsActive()
@@ -132,6 +143,8 @@ public abstract class PlayerController : MonoBehaviour
             // Inputs.Player.Ability.canceled += PerformAbility;
             PlayerInput.FindAction("Jump").performed += Jump;
 
+            PlayerInput.FindAction("HideControls").performed += ControlsVisibility;
+
             PlayerInput.FindAction("RotatePlayer").performed += RotatePlayer;
 
             // Inputs.Player.Jump.canceled += Jump;
@@ -157,6 +170,7 @@ public abstract class PlayerController : MonoBehaviour
             // Inputs.Player.Ability.canceled += PerformAbility;
             PlayerInput.FindAction("Jump").performed -= Jump;
             PlayerInput.FindAction("RotatePlayer").performed -= RotatePlayer;
+            PlayerInput.FindAction("HideControls").performed -= ControlsVisibility;
 
             PlayerInput.Disable();
             Deactivate();
@@ -172,15 +186,22 @@ public abstract class PlayerController : MonoBehaviour
 
     protected abstract void PerformAbility(InputAction.CallbackContext ctx);
 
+    private void ControlsVisibility(InputAction.CallbackContext ctx)
+    {
+        controlObj.SetActive(!controlObj.activeSelf);
+    }
+
     protected void AdjustFuelValue(float amount)
     {
         CurrentFuel += amount;
+        // Debug.Log(CurrentFuel + " " + amount);
+        fuelSlider.value = CurrentFuel;
 
         // UIEvents.OnFuelChanged(PlayerIdSO.PlayerID, CurrentFuel / DefaultPlayerData.MaxFuel);
         if (CurrentFuel <= 0)
         {
             Debug.LogError("Player Lost All fuel and Died");
-            // OnDeath();
+            OnDeath();
         }
     }
 
@@ -192,7 +213,11 @@ public abstract class PlayerController : MonoBehaviour
             OnDeath();
         }
 
-        AdjustFuelValue(-DefaultPlayerData.DecreaseFuelAmount.Evaluate(CurrentFuel / DefaultPlayerData.MaxFuel) * Time.deltaTime * DefaultPlayerData.FuelLoseMultiplier);
+        if (Active)
+        {
+            // AdjustFuelValue(-DefaultPlayerData.DecreaseFuelAmount.Evaluate(CurrentFuel / DefaultPlayerData.MaxFuel) * Time.deltaTime * DefaultPlayerData.FuelLoseMultiplier);
+        }
+
         if (switchManager.GetActivePlayer() != null)
         {
             if (Vector3.Distance(this.gameObject.transform.position, switchManager.GetActivePlayer().transform.position) > 3.0f)
@@ -225,7 +250,7 @@ public abstract class PlayerController : MonoBehaviour
         switchManager = FindObjectOfType<SwitchManager>();
         Audio = GetComponent<AudioController>();
         Weight = Rb.mass;
-        fuel = DefaultPlayerData.MaxFuel;
+        CurrentFuel = DefaultPlayerData.MaxFuel;
 
         startPosition = transform.position;
         startRotation = transform.rotation;

@@ -15,7 +15,7 @@ public class bulletScript : MonoBehaviour
 
     private void OnCollisionEnter(Collision col)
     {
-        Debug.Log("Hit");
+        // Debug.Log("Hit");
         if (col.gameObject.CompareTag("Destroyable"))
         {
             Destroy(col.gameObject);

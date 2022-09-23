@@ -73,6 +73,14 @@ public class @InputActions : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""HideControls"",
+                    ""type"": ""Button"",
+                    ""id"": ""29784a6d-6dc4-41a6-a63e-c94dd51d627f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -342,11 +350,33 @@ public class @InputActions : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""eafc7e69-cfe8-490a-82ec-0cb5e664edf8"",
+                    ""path"": ""<Gamepad>/leftShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""NextLine"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""675f9e29-a543-4fc6-97ce-94f800b7965c"",
                     ""path"": ""<Keyboard>/v"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
+                    ""action"": ""SkipTut"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4d53b210-ee3a-4ccb-8290-ea4dc8d39e62"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
                     ""action"": ""SkipTut"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -370,6 +400,28 @@ public class @InputActions : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
                     ""action"": ""RotatePlayer"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5648c274-3aee-4a0a-a4b0-20ceb2ecc4c3"",
+                    ""path"": ""<Keyboard>/h"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""HideControls"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b91ad9a3-4b85-4db5-8b2a-9284eb3d9f2c"",
+                    ""path"": ""<Gamepad>/select"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""HideControls"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -992,6 +1044,7 @@ public class @InputActions : IInputActionCollection, IDisposable
         m_Player_NextLine = m_Player.FindAction("NextLine", throwIfNotFound: true);
         m_Player_SkipTut = m_Player.FindAction("SkipTut", throwIfNotFound: true);
         m_Player_RotatePlayer = m_Player.FindAction("RotatePlayer", throwIfNotFound: true);
+        m_Player_HideControls = m_Player.FindAction("HideControls", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1063,6 +1116,7 @@ public class @InputActions : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_NextLine;
     private readonly InputAction m_Player_SkipTut;
     private readonly InputAction m_Player_RotatePlayer;
+    private readonly InputAction m_Player_HideControls;
     public struct PlayerActions
     {
         private @InputActions m_Wrapper;
@@ -1074,6 +1128,7 @@ public class @InputActions : IInputActionCollection, IDisposable
         public InputAction @NextLine => m_Wrapper.m_Player_NextLine;
         public InputAction @SkipTut => m_Wrapper.m_Player_SkipTut;
         public InputAction @RotatePlayer => m_Wrapper.m_Player_RotatePlayer;
+        public InputAction @HideControls => m_Wrapper.m_Player_HideControls;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1104,6 +1159,9 @@ public class @InputActions : IInputActionCollection, IDisposable
                 @RotatePlayer.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRotatePlayer;
                 @RotatePlayer.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRotatePlayer;
                 @RotatePlayer.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRotatePlayer;
+                @HideControls.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnHideControls;
+                @HideControls.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnHideControls;
+                @HideControls.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnHideControls;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -1129,6 +1187,9 @@ public class @InputActions : IInputActionCollection, IDisposable
                 @RotatePlayer.started += instance.OnRotatePlayer;
                 @RotatePlayer.performed += instance.OnRotatePlayer;
                 @RotatePlayer.canceled += instance.OnRotatePlayer;
+                @HideControls.started += instance.OnHideControls;
+                @HideControls.performed += instance.OnHideControls;
+                @HideControls.canceled += instance.OnHideControls;
             }
         }
     }
@@ -1325,6 +1386,7 @@ public class @InputActions : IInputActionCollection, IDisposable
         void OnNextLine(InputAction.CallbackContext context);
         void OnSkipTut(InputAction.CallbackContext context);
         void OnRotatePlayer(InputAction.CallbackContext context);
+        void OnHideControls(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {
