@@ -207,7 +207,7 @@ GameObject:
   - component: {fileID: 4603439497635631443}
   - component: {fileID: 7416210237573453966}
   - component: {fileID: 1340159501527262271}
-  - component: {fileID: 8837302069686310694}
+  - component: {fileID: 997098492960105755}
   m_Layer: 7
   m_Name: Bat
   m_TagString: Player
@@ -465,7 +465,7 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &8837302069686310694
+--- !u!114 &997098492960105755
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -478,7 +478,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HashMap:
-    Entries: []
+    Entries:
+    - Key: Whoosh
+      Value:
+        Clip: {fileID: 8300000, guid: 4b63ba6daca9f5345b0ec7ee24558b65, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 0
+        bLoop: 0
+        Priority: 128
+        Volume: 1
+        Pitch: 1
+        StereoPan: 0
+        SpatialBlend: 0.75
+        ReverbZoneMix: 1
 --- !u!1 &711425588696738181
 GameObject:
   m_ObjectHideFlags: 0

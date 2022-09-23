@@ -593,6 +593,7 @@ GameObject:
   - component: {fileID: 5400117104511225698}
   - component: {fileID: 5583241534940801186}
   - component: {fileID: 5583241534940801180}
+  - component: {fileID: 3386755762071850918}
   m_Layer: 7
   m_Name: Car Root
   m_TagString: Player
@@ -771,6 +772,48 @@ MonoBehaviour:
   <DashBodyMaterial>k__BackingField: {fileID: -478035346441924844, guid: 87a4ac2e4093d9540b395e877017022b, type: 3}
   windParticles: {fileID: 5583241535451450344}
   particelSpeedMultiplier: 0.005
+--- !u!114 &3386755762071850918
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4736310480184235480}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdf51a863cc80a541bd21546cf8cfb67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HashMap:
+    Entries:
+    - Key: Rev
+      Value:
+        Clip: {fileID: 8300000, guid: bf2cc5182f38cb54a99f6608b8d371e5, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 0
+        bLoop: 0
+        Priority: 128
+        Volume: 1
+        Pitch: 1
+        StereoPan: 0
+        SpatialBlend: 0.75
+        ReverbZoneMix: 1
+    - Key: Skid
+      Value:
+        Clip: {fileID: 8300000, guid: 65f2286e406b7914897f60cc42a19630, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 0
+        bLoop: 0
+        Priority: 128
+        Volume: 1
+        Pitch: 1
+        StereoPan: 0
+        SpatialBlend: 0.75
+        ReverbZoneMix: 1
 --- !u!1 &5583241534065384394
 GameObject:
   m_ObjectHideFlags: 0
