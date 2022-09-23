@@ -11,14 +11,15 @@ public class FuelScript : MonoBehaviour
     [SerializeField]
     private Image iconImg;
     [SerializeField]
-    private Sprite
+    private Sprite monkeyIcon, soldierIcon, carIcon, batIcon;
+
     //PlayerControllerScript currentPlayer
 
     private void Start() 
     {
         fuelBar = GetComponent<Image>();
         //currentPlayer = FindObjectOfType<PlayerControllerScript>();
-        
+        iconImg.sprite = monkeyIcon;
     }
 
     private void Update()
@@ -26,5 +27,23 @@ public class FuelScript : MonoBehaviour
         //currentFuel = currentPlayer.fuel;
         currentFuel = 50f;
         fuelBar.fillAmount = currentFuel / maxFuel;
+
+        /*
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            iconImg.sprite = monkeyIcon;
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha2)
+        {
+            iconImg.sprite = soldierIcon;
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha3)
+        {
+            iconImg.sprite = carIcon;
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            iconImg.sprite = batIcon;
+        }*/
     }
 }
