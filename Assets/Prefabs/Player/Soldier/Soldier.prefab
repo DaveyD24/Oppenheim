@@ -893,6 +893,7 @@ GameObject:
   - component: {fileID: 37524166531051451}
   - component: {fileID: 37524166531051450}
   - component: {fileID: 37524166531051452}
+  - component: {fileID: 3286839062827261886}
   m_Layer: 0
   m_Name: Soldier
   m_TagString: Untagged
@@ -972,6 +973,62 @@ MonoBehaviour:
   <BulletSpawnPoint>k__BackingField: {fileID: 37524166595905504}
   <BulletPrefab>k__BackingField: {fileID: 1859860186272881942, guid: c152a41615db67940a047f2c85d5e16a, type: 3}
   <BulletSpeed>k__BackingField: 10
+--- !u!114 &3286839062827261886
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 37524166531051455}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdf51a863cc80a541bd21546cf8cfb67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HashMap:
+    Entries:
+    - Key: GunCock
+      Value:
+        Clip: {fileID: 8300000, guid: 9d43ddf5bf3b2e24eaebf5a72e1adbc2, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 0
+        bLoop: 0
+        Priority: 128
+        Volume: 1
+        Pitch: 1
+        StereoPan: 0
+        SpatialBlend: 0.75
+        ReverbZoneMix: 1
+    - Key: Shot
+      Value:
+        Clip: {fileID: 8300000, guid: 4247f3a5af3b6544085125a2e8521b01, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 0
+        bLoop: 0
+        Priority: 128
+        Volume: 1
+        Pitch: 1
+        StereoPan: 0
+        SpatialBlend: 0.75
+        ReverbZoneMix: 1
+    - Key: Scream
+      Value:
+        Clip: {fileID: 8300000, guid: 244e3420fa443ee46bb6bdbb4ff3072e, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 0
+        bLoop: 0
+        Priority: 128
+        Volume: 1
+        Pitch: 1
+        StereoPan: 0
+        SpatialBlend: 0.75
+        ReverbZoneMix: 1
 --- !u!1 &37524166595905507
 GameObject:
   m_ObjectHideFlags: 0

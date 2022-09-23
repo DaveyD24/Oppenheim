@@ -108,6 +108,7 @@ GameObject:
   - component: {fileID: 4603439497635631443}
   - component: {fileID: 7416210237573453966}
   - component: {fileID: 1340159501527262271}
+  - component: {fileID: 997098492960105755}
   m_Layer: 7
   m_Name: Bat
   m_TagString: Player
@@ -362,6 +363,34 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &997098492960105755
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 291893582209903765}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdf51a863cc80a541bd21546cf8cfb67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HashMap:
+    Entries:
+    - Key: Whoosh
+      Value:
+        Clip: {fileID: 8300000, guid: 4b63ba6daca9f5345b0ec7ee24558b65, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 0
+        bLoop: 0
+        Priority: 128
+        Volume: 1
+        Pitch: 1
+        StereoPan: 0
+        SpatialBlend: 0.75
+        ReverbZoneMix: 1
 --- !u!1 &711425588696738181
 GameObject:
   m_ObjectHideFlags: 0
