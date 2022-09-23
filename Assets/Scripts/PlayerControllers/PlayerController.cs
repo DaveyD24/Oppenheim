@@ -43,8 +43,6 @@ public abstract class PlayerController : MonoBehaviour
     // A unique object each scene object gets assigned, being largly used to store the players id
     [field: SerializeField] public PlayerIdObject PlayerIdSO { get; private set; }
 
-    [field: SerializeField] public SpringArm TrackingCamera { get; set; }
-
     [field: SerializeField] protected DefaultPlayerDataObject DefaultPlayerData { get; private set; }
 
     [field: SerializeField] protected float Bouyancy { get; private set; }

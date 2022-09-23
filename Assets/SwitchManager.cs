@@ -1,7 +1,5 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Linq;
 using EventSystem;
 using UnityEngine;
@@ -48,19 +46,14 @@ public class SwitchManager : MonoBehaviour
         return null;
     }
 
-    public void GetAllActivePlayerTransforms(out Transform[] outActivePlayers)
+    public void GetAllActivePlayerTransforms(out Transform[] outActivePlayerTransforms)
     {
-        GetPlayers(out PlayerController[] players);
-
-        int numberActive = players.Count(b => b.IsActive());
-        outActivePlayers = new Transform[numberActive];
-
-        for (int b = 0, i = 0; b < 4; ++b)
+        List<PlayerController> active = GetActivePlayers();
+        outActivePlayerTransforms = new Transform[active.Count];
+        
+        for (int i = 0; i < active.Count; ++i)
         {
-            if (players[b])
-            {
-                outActivePlayers[i++] = players[b].transform;
-            }
+                outActivePlayerTransforms[i++] = active[i].transform;
         }
     }
 
@@ -176,15 +169,6 @@ public class SwitchManager : MonoBehaviour
                 // deactivate the current controlled player
                 uncontrolledPlayers.Add(currentPlayerId);
                 controlledPlayers.Remove(currentPlayerId);
-
-                playerInputConnection[playerInput] = playerID;
-
-                // Switch Camera Targets.
-                PlayerController outPlayer = GetPlayerByID(currentPlayerId);
-                PlayerController inPlayer = GetPlayerByID(playerID);
-                inPlayer.TrackingCamera = outPlayer.TrackingCamera;
-                inPlayer.TrackingCamera.Target = inPlayer.transform;
-                outPlayer.TrackingCamera = null;
             }
         }
     }
@@ -232,7 +216,7 @@ public class SwitchManager : MonoBehaviour
     }
     
     /// <summary>Get every Player in the game.</summary>
-    public void GetPlayers(out PlayerController[] outPlayers)
+    public void GetAllPlayers(out PlayerController[] outPlayers)
     {
         // TODO: Make a non-alloc version.
         outPlayers = new PlayerController[4];
@@ -243,9 +227,19 @@ public class SwitchManager : MonoBehaviour
         outPlayers[3] = Car;
     }
 
+    public List<PlayerController> GetActivePlayers()
+    {
+        List<PlayerController> retVal = new List<PlayerController>();
+
+        GetAllPlayers(out PlayerController[] all);
+        retVal.AddRange(all.Where(pc => pc.IsActive()));
+        
+        return retVal;
+    }
+
     public PlayerController GetPlayerByID(int playerID)
     {
-        GetPlayers(out PlayerController[] players);
+        GetAllPlayers(out PlayerController[] players);
         return Array.Find(players, p => p.PlayerIdSO.PlayerID == playerID);
     }
 }
