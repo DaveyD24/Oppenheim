@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BulletScript : MonoBehaviour
+public class bulletScript : MonoBehaviour
 {
     [field: SerializeField] public float Life { get; set; } = 3;
 

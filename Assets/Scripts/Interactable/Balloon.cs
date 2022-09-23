@@ -27,7 +27,7 @@ public class Balloon : MonoBehaviour
 
 		if (!Box)
 		{
-			SpawnBox();
+			// SpawnBox();
 		}
 	}
 
@@ -41,30 +41,31 @@ public class Balloon : MonoBehaviour
 	{
 		// TODO: Set conditions for a Pop.
 		Pop();
+		Debug.Log("popping");
 	}
 
 	public void Pop()
 	{
-		// Mark this Balloon for destruction.
-		Destroy(gameObject);
-
 		// Detach the Box from the String.
-		Box.transform.parent = null;
+		BoxToAttach.transform.parent = null;
 
 		// Enable Physics on the Box.
 		if (bAddNewPhysics)
 		{
-			Rigidbody rb = Box.GetOrAddComponent<Rigidbody>();
+			Rigidbody rb = BoxToAttach.GetOrAddComponent<Rigidbody>();
 			rb.useGravity = true;
 			rb.mass = boxMass;
 			rb.angularDrag = boxAngularDrag;
 			rb.drag = boxDrag;
-			Box.GetOrAddComponent<BoxCollider>();
+			BoxToAttach.GetOrAddComponent<BoxCollider>();
 		}
 		else
         {
-			Box.GetComponent<Rigidbody>().isKinematic = false;
+			BoxToAttach.GetComponent<Rigidbody>().isKinematic = false;
         }
+
+		// Mark this Balloon for destruction.
+		Destroy(gameObject);
 	}
 
 	void SpawnBox()

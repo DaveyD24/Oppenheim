@@ -75,7 +75,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0f4a2821826f534096683dbfdc68c96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <Life>k__BackingField: 3
+  <Life>k__BackingField: 6
 --- !u!1 &4338799911509632212
 GameObject:
   m_ObjectHideFlags: 0

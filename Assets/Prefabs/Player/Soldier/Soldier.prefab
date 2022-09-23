@@ -1112,6 +1112,7 @@ GameObject:
   - component: {fileID: 1171002862872116425}
   - component: {fileID: 5654260496683680184}
   - component: {fileID: 5002497366165462985}
+  - component: {fileID: 7418030357996614338}
   m_Layer: 7
   m_Name: Soldier
   m_TagString: Player
@@ -1219,13 +1220,17 @@ MonoBehaviour:
   <Health>k__BackingField: 0
   <FallDamageThreshold>k__BackingField: 25
   groundCheckPosition: {x: 0, y: 0, z: 0}
-  <GroundCheckRadius>k__BackingField: 0.15
+  <GroundCheckRadius>k__BackingField: 0.3
   jumpHeight: 1
   ragdol: {fileID: 1937797457676110068}
   baseMesh: {fileID: 3182380755078332304}
   <BulletSpawnPoint>k__BackingField: {fileID: 683507821935103832}
   <BulletPrefab>k__BackingField: {fileID: 1859860186272881942, guid: c152a41615db67940a047f2c85d5e16a, type: 3}
   <BulletSpeed>k__BackingField: 10
+  isSwimming: 0
+  swimSpeed: 2
+  target: {fileID: 3182380755078358000}
+  soldierTransform: {fileID: 0}
 --- !u!114 &5002497366165462985
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1240,6 +1245,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HashMap:
     Entries: []
+--- !u!114 &7418030357996614338
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3182380755078332306}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64538bea4cb40ba45b706dde108fdd65, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  doBob: 0
 --- !u!1 &3182380755078332308
 GameObject:
   m_ObjectHideFlags: 0
