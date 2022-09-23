@@ -1212,7 +1212,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <PlayerIdSO>k__BackingField: {fileID: 11400000, guid: 1e6de6128901ea94a88896b92e3bf310, type: 2}
-  <TrackingCamera>k__BackingField: {fileID: 0}
   <DefaultPlayerData>k__BackingField: {fileID: 11400000, guid: edaf631a83ce6ea42aa9463c9228f767, type: 2}
   <Bouyancy>k__BackingField: 0
   <MovementSpeed>k__BackingField: 6
@@ -1221,7 +1220,7 @@ MonoBehaviour:
   <FallDamageThreshold>k__BackingField: 25
   groundCheckPosition: {x: 0, y: 0, z: 0}
   <GroundCheckRadius>k__BackingField: 0.15
-  jumpHeight: 3
+  jumpHeight: 1
   ragdol: {fileID: 1937797457676110068}
   baseMesh: {fileID: 3182380755078332304}
   <BulletSpawnPoint>k__BackingField: {fileID: 683507821935103832}

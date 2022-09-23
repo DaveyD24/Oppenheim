@@ -23,15 +23,9 @@ public class ViewportSplit : MonoBehaviour
 
 	static Transform Average;
 
-	public static ViewportSplit Get()
+	void Awake()
 	{
-		return viewport;
-	}
-
-	public static Vector3 GetAveragePosition(PlayerController[] players)
-	{
-		Vector3 positions = Vector3.zero;
-		for (int i = 0; i < 4; ++i)
+		if (!Viewport)
 		{
 			Viewport = this;
 
@@ -43,11 +37,9 @@ public class ViewportSplit : MonoBehaviour
 		{
 			Debug.LogError($"Ensure there is only one {nameof(ViewportSplit)} in the game!");
 		}
-
-		switchManager = gameObject.GetComponent<SwitchManager>();
 	}
 
-	private void Update()
+	void Update()
 	{
 #if UNITY_EDITOR
 		if (ArePlayersTooFarApart(out HashSet<PlayerController> TooFar))

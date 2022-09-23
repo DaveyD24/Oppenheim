@@ -180,7 +180,7 @@ public abstract class PlayerController : MonoBehaviour
         if (CurrentFuel <= 0)
         {
             Debug.LogError("Player Lost All fuel and Died");
-            OnDeath();
+            // OnDeath();
         }
     }
 
@@ -188,6 +188,7 @@ public abstract class PlayerController : MonoBehaviour
     {
         if (transform.position.y < 2.5f)
         {
+            Debug.Log("PLayer got too low and died");
             OnDeath();
         }
 
@@ -203,14 +204,15 @@ public abstract class PlayerController : MonoBehaviour
                 isFarEnoughAway = false;
             }
 
-            if (!Active && isFarEnoughAway)
-            {
-                Vector3 desiredPosition = switchManager.GetActivePlayer().transform.position;
-                Vector3 smoothedPosition = Vector3.Lerp(this.transform.position, desiredPosition, FollowSpeed);
-                Vector3 flattenedPosition = new Vector3(smoothedPosition.x, this.transform.position.y, smoothedPosition.z);
-                this.transform.position = flattenedPosition;
-                this.transform.LookAt(switchManager.GetActivePlayer().transform);
-            }
+            // if (!Active && isFarEnoughAway)
+            // {
+            //     Vector3 desiredPosition = switchManager.GetActivePlayer().transform.position;
+            //     Vector3 smoothedPosition = Vector3.MoveTowards(this.transform.position, desiredPosition, FollowSpeed);
+            //     Vector3 flattenedPosition = new Vector3(smoothedPosition.x, this.transform.position.y, smoothedPosition.z);
+            //
+            //     Rb.MovePosition(flattenedPosition);
+            //     this.transform.LookAt(switchManager.GetActivePlayer().transform);
+            // }
         }
 
         // AdjustFuelValue(-DefaultPlayerData.DecreaseFuelAmount.Evaluate(CurrentFuel / DefaultPlayerData.MaxFuel) * Time.deltaTime);
