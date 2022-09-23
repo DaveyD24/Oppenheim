@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(AudioController))]
 public class BreakableObj : MonoBehaviour
 {
     [Tooltip("Should this item break into pieces when broken, or should it just disapear")]
@@ -12,6 +13,13 @@ public class BreakableObj : MonoBehaviour
     [SerializeField] private Material[] particleColour;
     [Tooltip("the power to add to the shattered objects items when it is broken")]
     [SerializeField] private float shatterPower = 1500;
+
+    [ReadOnly] public AudioController Audio;
+
+    void Start()
+    {
+        Audio = GetComponent<AudioController>();
+    }
 
     public void OnBreak()
     {
@@ -28,6 +36,8 @@ public class BreakableObj : MonoBehaviour
                 gameObject.transform.GetChild(i).gameObject.GetComponent<MeshRenderer>().enabled = true;
                 gameObject.transform.GetChild(i).parent = null;
             }
+
+            Audio.Play("Glass", EAudioPlayOptions.AtTransformPosition | EAudioPlayOptions.DestroyOnEnd);
         }
         else
         {

@@ -37,6 +37,8 @@ public class MonkeyController : PlayerController
         currJumpWaitTime = jumpWaitTime;
         animator = GetComponent<Animator>();
         boxCollider = gameObject.GetComponent<BoxCollider>();
+
+        Audio.Play(RandomSound(), EAudioPlayOptions.AtTransformPosition | EAudioPlayOptions.DestroyOnEnd);
     }
 
     protected override void Update()
@@ -115,6 +117,8 @@ public class MonkeyController : PlayerController
             bDidJump = true;
             Debug.Log("yeet");
             animator.SetTrigger("Jump");
+
+            Audio.Play(RandomSound(), EAudioPlayOptions.FollowEmitter | EAudioPlayOptions.DestroyOnEnd);
         }
     }
 
@@ -203,5 +207,12 @@ public class MonkeyController : PlayerController
                 animator.SetTrigger("Walk");
             }
         }
+    }
+
+    string RandomSound()
+    {
+        bool bRandomBool = Random.Range(0f, 1f) < .5f;
+
+        return bRandomBool ? "Scream":"OOH AHH";
     }
 }

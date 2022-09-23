@@ -2192,7 +2192,6 @@ GameObject:
   - component: {fileID: 391941921291405598}
   - component: {fileID: 5372531572079954038}
   - component: {fileID: 2527731378979109223}
-  - component: {fileID: 4724987415001989497}
   - component: {fileID: 1586942486836073262}
   - component: {fileID: 8298377501420551179}
   m_Layer: 7
@@ -2268,20 +2267,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &4724987415001989497
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 733961236116143062}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cdf51a863cc80a541bd21546cf8cfb67, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  HashMap:
-    Entries: []
 --- !u!114 &1586942486836073262
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2295,7 +2280,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <PlayerIdSO>k__BackingField: {fileID: 11400000, guid: 0aca3aa46054d22439aa2cb351a6753d, type: 2}
-  <TrackingCamera>k__BackingField: {fileID: 0}
   <DefaultPlayerData>k__BackingField: {fileID: 11400000, guid: edaf631a83ce6ea42aa9463c9228f767, type: 2}
   <Bouyancy>k__BackingField: 0
   <MovementSpeed>k__BackingField: 5
@@ -2320,7 +2304,35 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HashMap:
-    Entries: []
+    Entries:
+    - Key: OOH AHH
+      Value:
+        Clip: {fileID: 8300000, guid: 6c5486d04e708a248813edb5c59f7b81, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 0
+        bLoop: 0
+        Priority: 128
+        Volume: 1
+        Pitch: 1
+        StereoPan: 0
+        SpatialBlend: 0.75
+        ReverbZoneMix: 1
+    - Key: Scream
+      Value:
+        Clip: {fileID: 8300000, guid: d024beac5b9dee249bec9c0ad6a8d5d9, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 0
+        bLoop: 0
+        Priority: 128
+        Volume: 1
+        Pitch: 1
+        StereoPan: 0
+        SpatialBlend: 0.75
+        ReverbZoneMix: 1
 --- !u!1 &950156442964063554
 GameObject:
   m_ObjectHideFlags: 0

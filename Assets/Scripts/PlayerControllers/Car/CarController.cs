@@ -142,6 +142,8 @@ public class CarController : PlayerController
         if (!BIsDash && BAnyWheelGrounded && Active)
         {
             BIsDash = true;
+
+            Audio.PlayUnique("Rev", EAudioPlayOptions.FollowEmitter | EAudioPlayOptions.DestroyOnEnd);
         }
     }
 
@@ -310,6 +312,8 @@ public class CarController : PlayerController
             axleInfo.SetSkidTrails();
             axleInfo.RightWheel.brakeTorque = breakTorque;
             axleInfo.LeftWheel.brakeTorque = breakTorque;
+
+            Audio.PlayUnique("Skid", EAudioPlayOptions.FollowEmitter | EAudioPlayOptions.DestroyOnEnd);
         }
         else
         {

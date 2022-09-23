@@ -637,6 +637,7 @@ GameObject:
   - component: {fileID: 2000252588876086800}
   - component: {fileID: 5561501060379223907}
   - component: {fileID: 2377107997284046353}
+  - component: {fileID: 1492451350785929428}
   m_Layer: 0
   m_Name: GlassWall.003
   m_TagString: Breakable
@@ -728,6 +729,34 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -191457729177721039, guid: ef04801b6dae50a4aaf23b4eba0cac39, type: 3}
+--- !u!114 &1492451350785929428
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3268294984861303375}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdf51a863cc80a541bd21546cf8cfb67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HashMap:
+    Entries:
+    - Key: Glass
+      Value:
+        Clip: {fileID: 8300000, guid: 81d2cf56468fb314eb75ba98f2f6cc42, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 0
+        bLoop: 0
+        Priority: 1
+        Volume: 1
+        Pitch: 1
+        StereoPan: 0
+        SpatialBlend: 0.75
+        ReverbZoneMix: 1
 --- !u!1 &3532375900765093530
 GameObject:
   m_ObjectHideFlags: 0

@@ -1109,7 +1109,6 @@ GameObject:
   - component: {fileID: 3182380755085610030}
   - component: {fileID: 5431318624597131224}
   - component: {fileID: 2158208246382839816}
-  - component: {fileID: 1171002862872116425}
   - component: {fileID: 5654260496683680184}
   - component: {fileID: 5002497366165462985}
   - component: {fileID: 7418030357996614338}
@@ -1186,20 +1185,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 2.5843582, z: 1}
   m_Center: {x: 0, y: 1.3040247, z: 0}
---- !u!114 &1171002862872116425
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3182380755078332306}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cdf51a863cc80a541bd21546cf8cfb67, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  HashMap:
-    Entries: []
 --- !u!114 &5654260496683680184
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1244,7 +1229,49 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HashMap:
-    Entries: []
+    Entries:
+    - Key: GunCock
+      Value:
+        Clip: {fileID: 8300000, guid: 9d43ddf5bf3b2e24eaebf5a72e1adbc2, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 0
+        bLoop: 0
+        Priority: 128
+        Volume: 1
+        Pitch: 1
+        StereoPan: 0
+        SpatialBlend: 0.75
+        ReverbZoneMix: 1
+    - Key: Shot
+      Value:
+        Clip: {fileID: 8300000, guid: 4247f3a5af3b6544085125a2e8521b01, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 0
+        bLoop: 0
+        Priority: 128
+        Volume: 1
+        Pitch: 1
+        StereoPan: 0
+        SpatialBlend: 0.75
+        ReverbZoneMix: 1
+    - Key: Scream
+      Value:
+        Clip: {fileID: 8300000, guid: 244e3420fa443ee46bb6bdbb4ff3072e, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 0
+        bLoop: 0
+        Priority: 128
+        Volume: 1
+        Pitch: 1
+        StereoPan: 0
+        SpatialBlend: 0.75
+        ReverbZoneMix: 1
 --- !u!114 &7418030357996614338
 MonoBehaviour:
   m_ObjectHideFlags: 0

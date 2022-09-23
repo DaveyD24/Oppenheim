@@ -27,6 +27,8 @@ public class SoldierMovement : PlayerController
         animator = GetComponent<Animator>();
         speedometer.Initialise();
         boxCollider = gameObject.GetComponent<BoxCollider>();
+
+        Audio.Play("GunCock", EAudioPlayOptions.AtTransformPosition | EAudioPlayOptions.DestroyOnEnd);
     }
 
     protected override void OnEnable()
@@ -178,6 +180,8 @@ public class SoldierMovement : PlayerController
         animator.SetTrigger("Fire");
         GameObject bullet = Instantiate(BulletPrefab, BulletSpawnPoint.position, BulletSpawnPoint.rotation);
         bullet.GetComponent<Rigidbody>().velocity = BulletSpawnPoint.forward * BulletSpeed;
+
+        Audio.Play("Shot", EAudioPlayOptions.AtTransformPosition | EAudioPlayOptions.DestroyOnEnd);
     }
 
     protected override void OnCollisionEnter(Collision collision)
@@ -240,6 +244,8 @@ public class SoldierMovement : PlayerController
         speedometer.Mark();
     }
 
+    bool bHasPlayedScream = false;
+
     protected override void OnDeath()
     {
         base.OnDeath();
@@ -248,6 +254,12 @@ public class SoldierMovement : PlayerController
         ragdol.SetActive(true);
         Rb.isKinematic = true;
         ragdol.transform.position = transform.position;
+
+        if (!bHasPlayedScream)
+        {
+            Audio.PlayUnique("Scream", EAudioPlayOptions.AtTransformPosition | EAudioPlayOptions.DestroyOnEnd);
+            bHasPlayedScream = true;
+        }
     }
 
     protected override void Respawn()
@@ -256,6 +268,7 @@ public class SoldierMovement : PlayerController
         boxCollider.enabled = true;
         ragdol.SetActive(false);
         Rb.isKinematic = false;
+        bHasPlayedScream = false;
         base.Respawn();
     }
 

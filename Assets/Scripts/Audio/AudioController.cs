@@ -10,10 +10,44 @@ public class AudioController : MonoBehaviour
 {
 	[SerializeField] HashMap<string, AudioData> HashMap;
 	Dictionary<string, AudioData> Map;
+	Dictionary<int, AudioSource> Unique;
 
 	void Awake()
 	{
 		HashMap.Construct(out Map);
+		Unique = new Dictionary<int, AudioSource>();
+	}
+
+	public AudioSource PlayUnique(string SoundName, EAudioPlayOptions Options)
+	{
+		int HashCode = SoundName.GetHashCode();
+		bool bAllowedToPlay = true;
+
+		if (Unique.ContainsKey(HashCode))
+		{
+			AudioSource Source = Unique[HashCode];
+			if (!Source || !Source.isPlaying)
+			{
+				Unique.Remove(HashCode);
+			}
+			else
+			{
+				bAllowedToPlay = false;
+			}
+		}
+
+		if (!bAllowedToPlay)
+			return null;
+
+		MaskOptions(Options, out byte OptionsAsByte, out bool bDesroyOnEnd);
+
+		if (IsIllegalInput(OptionsAsByte))
+			return null;
+
+		AudioSource UniqueSource = DetermineAudioSignature(SoundName, OptionsAsByte, bDesroyOnEnd);
+		Unique.Add(HashCode, UniqueSource);
+
+		return UniqueSource;
 	}
 
 	/// <summary>Plays <paramref name="SoundName"/> with <paramref name="Options"/>.</summary>
@@ -26,23 +60,16 @@ public class AudioController : MonoBehaviour
 	/// <returns>The <see cref="AudioSource"/> used to play <paramref name="SoundName"/>.</returns>
 	public AudioSource Play(string SoundName, EAudioPlayOptions Options)
 	{
-		byte OptionsAsByte = (byte)Options;
-		bool bDestroyOnEnd = OptionsAsByte >> 3 == 1;
+		MaskOptions(Options, out byte OptionsAsByte, out bool bDestroyOnEnd);
 
-		OptionsAsByte &= 7;
-
-		if ((OptionsAsByte & 7) == 0)
-		{
-			Debug.LogError("Invalid Options! Must define ONE of Global, AtTransformPosition, or FollowEmitter.");
+		if (IsIllegalInput(OptionsAsByte))
 			return null;
-		}
 
-		if ((OptionsAsByte & (OptionsAsByte - 1)) != 0)
-		{
-			Debug.LogError("Invalid Options! Must define ONE of Global, AtTransformPosition, or FollowEmitter.");
-			return null;
-		}
+		return DetermineAudioSignature(SoundName, OptionsAsByte, bDestroyOnEnd);
+	}
 
+	public AudioSource DetermineAudioSignature(string SoundName, byte OptionsAsByte, bool bDestroyOnEnd)
+	{
 		if ((OptionsAsByte & (byte)EAudioPlayOptions.Global) == (byte)EAudioPlayOptions.Global)
 		{
 			return Play(SoundName);
@@ -59,6 +86,30 @@ public class AudioController : MonoBehaviour
 
 		Debug.LogError($"Could not play {SoundName}!");
 		return null;
+	}
+
+	static bool IsIllegalInput(byte OptionsAsByte)
+	{
+		if ((OptionsAsByte & 7) == 0)
+		{
+			Debug.LogError("Invalid Options! Must define ONE of Global, AtTransformPosition, or FollowEmitter.");
+			return true;
+		}
+
+		if ((OptionsAsByte & (OptionsAsByte - 1)) != 0)
+		{
+			Debug.LogError("Invalid Options! Must define ONE of Global, AtTransformPosition, or FollowEmitter.");
+			return true;
+		}
+
+		return false;
+	}
+
+	static void MaskOptions(EAudioPlayOptions Options, out byte OptionsAsByte, out bool bDestroyOnEnd)
+	{
+		OptionsAsByte = (byte)Options;
+		bDestroyOnEnd = OptionsAsByte >> 3 == 1;
+		OptionsAsByte &= 7;
 	}
 
 	/// <summary>Plays <paramref name="SoundName"/> globally (3D Spatial Sound is set to 2D).</summary>
@@ -140,7 +191,7 @@ public class AudioController : MonoBehaviour
 		}
 
 		Data = null;
-		Debug.LogError($"{name}'s Audio Controller could not find Sound {Name}!");
+		Debug.LogError($"{name}'s Audio Controller could not find the Sound: \"{Name}\"!");
 		return false;
 	}
 }

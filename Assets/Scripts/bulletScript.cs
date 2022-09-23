@@ -6,6 +6,8 @@ public class bulletScript : MonoBehaviour
 {
     [field: SerializeField] public float Life { get; set; } = 3;
 
+    [ReadOnly] public AudioController Audio;
+
     private void Awake()
     {
         Destroy(gameObject, Life);
@@ -23,6 +25,11 @@ public class bulletScript : MonoBehaviour
         if (col.gameObject.TryGetComponent(out BreakableObj breakableObj))
         {
             breakableObj.OnBreak();
+
+            if (Audio)
+            {
+                Audio.Play("Glass", EAudioPlayOptions.AtTransformPosition | EAudioPlayOptions.DestroyOnEnd);
+            }
         }
 
         if (col.gameObject.CompareTag("Wall"))
