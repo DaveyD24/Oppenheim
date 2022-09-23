@@ -3,8 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using EventSystem;
+using Unity;
+using Unity.Services.Analytics;
+using Unity.Services.Core;
 using UnityEngine;
-using UnityEngine.Analytics;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
@@ -218,14 +220,6 @@ public abstract class PlayerController : MonoBehaviour
 
     protected virtual void Start()
     {
-#if UNITY_EDITOR
-        Analytics.initializeOnStartup = false;
-        Analytics.enabled = false;
-#elif !UNITY_EDITOR
-        Analytics.initializeOnStartup = true;
-        Analytics.enabled = true;
-#endif
-
         activeIndicator = GetComponentInChildren(typeof(SpriteRenderer)) as SpriteRenderer;
         Rb = GetComponent<Rigidbody>();
         switchManager = FindObjectOfType<SwitchManager>();
@@ -291,11 +285,10 @@ public abstract class PlayerController : MonoBehaviour
     {
         bool bTakeFallDamage = ShouldTakeFallDamage(collision, out float relativeVelocity);
 
-        //if (relativeVelocity > MovementSpeed + 1f)
-        //{
-        //    Debug.Log($"{name} collided with {collision.collider.name} at {relativeVelocity:F2}m/s");
-        //}
-
+        // if (relativeVelocity > MovementSpeed + 1f)
+        // {
+        //     Debug.Log($"{name} collided with {collision.collider.name} at {relativeVelocity:F2}m/s");
+        // }
         if (bTakeFallDamage)
         {
             TakeFallDamage(/*relativeVelocity*/);
@@ -303,7 +296,6 @@ public abstract class PlayerController : MonoBehaviour
 
         if (!collision.gameObject.CompareTag("Player") && beforeCollideSpeed > DefaultPlayerData.dustParticlesCollisionSpeed)
         {
-            Debug.Log("Collide " + Rb.velocity.magnitude);
             Instantiate(DefaultPlayerData.DustParticles, collision.GetContact(0).point, Quaternion.identity);
         }
     }
@@ -361,14 +353,14 @@ public abstract class PlayerController : MonoBehaviour
     {
         Debug.Log("Player Died");
 
-#if !UNITY_EDITOR
         Dictionary<string, object> eventData = new Dictionary<string, object>();
-        eventData.Add("Player ID", PlayerIdSO.PlayerID);
-        eventData.Add("Player Position", transform.position);
-        eventData.Add("Player Velocity", Rb.velocity.magnitude);
-        AnalyticsResult analyticsResult = AnalyticsEvent.Custom("PlayerDeath", eventData);
-        Debug.Log("Event Sent Status: " + analyticsResult);
-#endif
+        eventData.Add("PlayerID", PlayerIdSO.PlayerID);
+        eventData.Add("PlayerPositionX", Mathf.RoundToInt(transform.position.x));
+        eventData.Add("PlayerPositionY", Mathf.RoundToInt(transform.position.y));
+        eventData.Add("PlayerPositionZ", Mathf.RoundToInt(transform.position.z));
+        eventData.Add("PlayerVelocity", Rb.velocity.magnitude);
+        AnalyticsService.Instance.CustomData("PlayerDeath", eventData);
+        AnalyticsService.Instance.Flush();
 
         yield return new WaitForSeconds(5);
         GameEvents.Die();
