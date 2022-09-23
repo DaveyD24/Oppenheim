@@ -10,6 +10,7 @@ TagManager:
   - Bat Camera
   - Mango
   - Wall
+  - Water
   layers:
   - Default
   - TransparentFX

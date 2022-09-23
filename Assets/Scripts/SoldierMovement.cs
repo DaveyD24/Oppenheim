@@ -50,6 +50,89 @@ public class SoldierMovement : PlayerController
         {
             AlignTransformToMovement(transform, faceDir, RotationSpeed, Vector3.up);
         }
+    //Swimming
+    public bool isSwimming = false;
+    public float swimSpeed;
+    public Transform target;
+
+    //public float Rigidbody3D rb;
+    public CharacterController soldierController;
+    public Transform bulletSpawnPoint;
+    public GameObject bulletPrefab;
+    public float bulletSpeed = 10;
+    public float speed = 6f;
+    public Transform soldierTransform;
+    Rigidbody rb;
+
+    void Awake()
+    {
+        rb = GetComponent<Rigidbody>();
+    }
+
+    void FixedUpdate() {
+        if (isSwimming != true)
+        {
+            BobScript bobTheBuilder = this.GetComponent<BobScript>();
+            bobTheBuilder.doBob = false;
+
+            if (rb.useGravity != true)
+            {/*
+                rb.useGravity = true;
+                rb.velocity = Vector3.zero;
+                rb.angularVelocity = Vector3.zero;
+                // "Pause" the physics
+                rb.isKinematic = true;
+                // Do positioning, etc
+                soldierTransform.rotation = Quaternion.identity;
+                // Re-enable the physics
+                rb.isKinematic = false;*/
+            }
+            //input
+            float horizontal = Input.GetAxisRaw("Horizontal");
+            float vertical = Input.GetAxisRaw("Vertical");
+            Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
+
+            //move
+            if (direction.magnitude >= 0.1f)
+            {
+                //Debug.Log("Im moving");
+                soldierController.Move(direction * speed * Time.deltaTime);
+            }
+
+            //shoot
+            if (Input.GetKeyDown(KeyCode.F))
+            {
+                var bullet = Instantiate(bulletPrefab, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
+                bullet.GetComponent<Rigidbody>().velocity = bulletSpawnPoint.forward * bulletSpeed;
+            }
+        }
+        else 
+        {
+            //Swimming
+            BobScript bobTheBuilder = this.GetComponent<BobScript>();
+            bobTheBuilder.doBob = true;
+            if (rb.useGravity == true)
+            {
+                rb.useGravity = false;
+            }
+            if (Input.GetAxisRaw("Vertical") > 0) 
+            {
+                transform.position += target.forward * swimSpeed * Time.deltaTime;
+            }
+            if (Input.GetAxisRaw("Vertical") < 0)
+            {
+                transform.position -= target.forward * swimSpeed * Time.deltaTime;
+            }
+            if (Input.GetAxisRaw("Horizontal") > 0)
+            {
+                transform.position += target.right * swimSpeed * Time.deltaTime;
+            }
+            if (Input.GetAxisRaw("Horizontal") < 0)
+            {
+                transform.position -= target.right * swimSpeed * Time.deltaTime;
+            }
+        }
+        
     }
 
     protected override void Movement(CallbackContext ctx)
