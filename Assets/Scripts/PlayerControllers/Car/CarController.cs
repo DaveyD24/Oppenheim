@@ -156,7 +156,6 @@ public class CarController : PlayerController
     protected override void OnDeath()
     {
         base.OnDeath();
-        Debug.Log("Diying all the time");
         foreach (AxleInfo axleInfo in axleInfos)
         {
             axleInfo.LeftWheel.gameObject.SetActive(false);
