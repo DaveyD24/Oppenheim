@@ -11,6 +11,7 @@ TagManager:
   - Mango
   - Wall
   - Water
+  - Blueprint
   layers:
   - Default
   - TransparentFX
