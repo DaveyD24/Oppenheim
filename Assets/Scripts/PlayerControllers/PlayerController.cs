@@ -9,6 +9,7 @@ using Unity.Services.Core;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// A base class for handling the common functionality across all players.
@@ -322,6 +323,11 @@ public abstract class PlayerController : MonoBehaviour
         if (!collision.gameObject.CompareTag("Player") && beforeCollideSpeed > DefaultPlayerData.dustParticlesCollisionSpeed)
         {
             Instantiate(DefaultPlayerData.DustParticles, collision.GetContact(0).point, Quaternion.identity);
+        }
+
+        if(collision.gameObject.CompareTag("Blueprint"))
+        {
+            SceneManager.LoadScene("WinScene");
         }
     }
 
