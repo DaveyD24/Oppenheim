@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 
 public class CarController : PlayerController
 {
-    [SerializeField] private List<AxleInfo> axleInfos; // the information about each individual axle
+    [SerializeField] public List<AxleInfo> axleInfos; // the information about each individual axle
     private bool bIsGrounded = true;
 
     private Node dashTopNode;
@@ -62,6 +62,8 @@ public class CarController : PlayerController
     public Transform BodyTransform { get; private set; }
 
     public bool BIsDash { get; set; }
+
+    public bool BAllowEndBreaking { get; set; } = false;
 
     public bool BAnyWheelGrounded { get; private set; } = true;
 
@@ -301,19 +303,28 @@ public class CarController : PlayerController
     private void ApplyBreaking(AxleInfo axleInfo)
     {
         // do breaking
-        if (!BIsDash && Motor == 0 && Mathf.Round(Rb.velocity.magnitude) > 0.25f)
+        if ((!BIsDash || BAllowEndBreaking) && Motor == 0)
         {
-            if (CarMaterials[4] != illumimatedTailLights)
+            if (Rb.velocity.magnitude > 0.25f)
             {
-                CarMaterials[4] = illumimatedTailLights;
-                BodyMeshRenderer.sharedMaterials = CarMaterials;
+                if (CarMaterials[4] != illumimatedTailLights)
+                {
+                    CarMaterials[4] = illumimatedTailLights;
+                    BodyMeshRenderer.sharedMaterials = CarMaterials;
+                }
+
+                axleInfo.RightWheel.brakeTorque = breakTorque;
+                axleInfo.LeftWheel.brakeTorque = breakTorque;
             }
 
-            axleInfo.SetSkidTrails();
-            axleInfo.RightWheel.brakeTorque = breakTorque;
-            axleInfo.LeftWheel.brakeTorque = breakTorque;
-
-            Audio.PlayUnique("Skid", EAudioPlayOptions.FollowEmitter | EAudioPlayOptions.DestroyOnEnd);
+            if (Rb.velocity.magnitude > 3.45f)
+            {
+                axleInfo.SetSkidTrails();
+                if (BAnyWheelGrounded)
+                {
+                    Audio.PlayUnique("Skid", EAudioPlayOptions.FollowEmitter | EAudioPlayOptions.DestroyOnEnd);
+                }
+            }
         }
         else
         {

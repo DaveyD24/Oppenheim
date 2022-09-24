@@ -16,6 +16,8 @@ public class DashTransition : Node
 
     private Material defaultMat;
 
+    Vector3 forwardMove;
+
     public DashTransition(CarController blackboard, int direction, bool isEnd = false)
     {
         this.Blackboard = blackboard;
@@ -25,16 +27,19 @@ public class DashTransition : Node
 
         defaultMat = Blackboard.CarMaterials[0];
         maxTime = Blackboard.TransitionRotCurve[Blackboard.TransitionRotCurve.length - 1].time;
+        startAngle = Blackboard.BodyTransform.localRotation;
     }
 
     public override void Init()
     {
         Blackboard.Rb.mass = Blackboard.Weight / 2.5f;
         initTime = 0;
+        forwardMove = Blackboard.transform.forward;
 
-        startAngle = Blackboard.BodyTransform.localRotation;
-
-        Blackboard.Rb.angularVelocity = Vector3.zero;
+        if (bIsEnd)
+        {
+            Blackboard.BAllowEndBreaking = true;
+        }
 
         base.Init();
     }
@@ -48,6 +53,8 @@ public class DashTransition : Node
 
         Blackboard.BodyTransform.localRotation = Quaternion.Euler(currentAngle);
 
+        AllignToGround();
+        Blackboard.Rb.angularVelocity = Vector3.zero;
         if (Blackboard.BAnyWheelGrounded)
         {
             // Blackboard.Rb.AddForce(Vector3.down * Blackboard.Weight); // add a downwards force so it does not flip
@@ -68,19 +75,42 @@ public class DashTransition : Node
         if (bIsEnd)
         {
             Blackboard.BIsDash = false;
+            Blackboard.BAllowEndBreaking = false;
             Blackboard.CarMaterials[0] = defaultMat;
         }
         else
         {
             Blackboard.CarMaterials[0] = Blackboard.DashBodyMaterial;
 
-            Blackboard.Rb.velocity = Vector3.zero;
             Blackboard.Rb.angularVelocity = Vector3.zero;
             Blackboard.Motor = 0;
         }
 
+        // Blackboard.Rb.velocity = Vector3.zero;
+        Blackboard.Rb.angularVelocity = Vector3.zero;
         Blackboard.BodyMeshRenderer.sharedMaterials = Blackboard.CarMaterials;
 
         base.End();
+    }
+
+    private void AllignToGround()
+    {
+        RaycastHit ground;
+        if (Physics.Raycast(Blackboard.Rb.transform.position, -Vector3.up, out ground, 10.0f, ~Blackboard.PlayerLayer))
+        {
+            Vector3 lookDir = forwardMove;
+            Vector3 up = ground.normal;
+
+            lookDir.y = 0; // ignore all vertical height, so appears to be on flat ground
+            lookDir.Normalize();
+
+            // remove the up amount from the vector
+            float d = Vector3.Dot(lookDir, up); // get the amount of the direction which was up, relative to the grounds normal
+            lookDir -= d * up; // removes any upwards values, so the vectors now 90 degress to the normal and still heading in the right direction
+            lookDir.Normalize();
+
+            // convert the directional vector into a rotation
+            Blackboard.Rb.transform.forward = lookDir;
+        }
     }
 }

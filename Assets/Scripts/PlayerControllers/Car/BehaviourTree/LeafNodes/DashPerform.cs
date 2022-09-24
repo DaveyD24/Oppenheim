@@ -34,7 +34,8 @@ public class DashPerform : Node
         if (Blackboard.BAnyWheelGrounded)
         {
             Blackboard.Rb.AddForceAtPosition(forwardForceDir * currDashSpeed, CalculateDashOffset(), ForceMode.Acceleration);
-            Blackboard.Rb.AddForceAtPosition(Vector3.down * Blackboard.Weight, CalculateDashOffset()); // add a downwards force so it does not flip
+
+            // Blackboard.Rb.AddForceAtPosition(Vector3.down * Blackboard.Weight, CalculateDashOffset()); // add a downwards force so it does not flip
         }
 
         Blackboard.Motor = currDashSpeed;
@@ -105,7 +106,6 @@ public class DashPerform : Node
             lookDir.Normalize();
 
             // convert the directional vector into a rotation
-            Quaternion targetRotation = Quaternion.LookRotation(lookDir, up);
             Blackboard.Rb.transform.forward = lookDir;
             forwardForceDir = lookDir;
         }

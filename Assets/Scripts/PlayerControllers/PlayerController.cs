@@ -102,6 +102,7 @@ public abstract class PlayerController : MonoBehaviour
         if (!bControlsHidden)
         {
             controlObj.SetActive(true);
+            bControlsHidden = false;
         }
     }
 
@@ -190,6 +191,7 @@ public abstract class PlayerController : MonoBehaviour
     private void ControlsVisibility(InputAction.CallbackContext ctx)
     {
         controlObj.SetActive(!controlObj.activeSelf);
+        bControlsHidden = !bControlsHidden;
     }
 
     protected void AdjustFuelValue(float amount)
