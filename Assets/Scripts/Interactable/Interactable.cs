@@ -7,6 +7,7 @@ public class Interactable : MonoBehaviour
 {
 	/// <summary>Event which fires when something Enters the Interactable Collider.</summary>
 	public UnityEvent<Interactable, GameObject> OnActivated;
+
 	/// <summary>Event which fires when something Exits the Interactable Collider.</summary>
 	public UnityEvent<Interactable, GameObject> OnDeactivated;
 
@@ -14,17 +15,21 @@ public class Interactable : MonoBehaviour
 	{
 		get
 		{
-			if (!BoxCollider)
-				BoxCollider = GetComponent<BoxCollider>();
-			return BoxCollider;
+			if (!boxCollider)
+			{
+				boxCollider = GetComponent<BoxCollider>();
+			}
+
+			return boxCollider;
 		}
+
 		private set
 		{
-			BoxCollider = value;
+			boxCollider = value;
 		}
 	}
 
-	BoxCollider BoxCollider;
+	private BoxCollider boxCollider;
 
 	public void BroadcastActive(Collider Sender)
 	{
