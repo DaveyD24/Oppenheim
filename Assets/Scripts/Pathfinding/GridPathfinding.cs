@@ -5,7 +5,7 @@ using UnityEngine;
 public class GridPathfinding : MonoBehaviour
 {
     private NavigationNode[,,] grid;
-
+    [SerializeField] MeshFilter meshFilter;
     [Tooltip("The width of the grid which can be searched")]
     [SerializeField] private int width;
     [Tooltip("The height of the grid which can be searched")]
@@ -53,12 +53,15 @@ public class GridPathfinding : MonoBehaviour
         List<Vector3> path = APathfinding(transform.position, goalObject.transform.position);
         lineRenderer.positionCount = path.Count;
 
-        for (int i = path.Count - 1; i >= 0; i--)
+        for (int i = 0; i < path.Count; i++)
         {
             lineRenderer.SetPosition(i, path[i]);
         }
+
         lineRenderer.SetPosition(0, goalObject.transform.position);
         lineRenderer.SetPosition(lineRenderer.positionCount - 1, transform.position);
+
+        CreateMeshPath.MakeCube(meshFilter, path);
     }
 
     private void OnDrawGizmos()
