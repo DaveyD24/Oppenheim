@@ -7,6 +7,18 @@ using UnityEngine.InputSystem;
 public class Bat : PlayerController
 {
 #if UNITY_EDITOR
+	[field: Header("Start Reset")]
+	[field: ContextMenuItem("Set Start Transform", "SetStartTransform")]
+#pragma warning disable SA1202 // Elements should be ordered by access
+	[field: SerializeField] public Vector3 StageStartPosition { get; set; }
+
+	[field: ContextMenuItem("Move to Start", "MoveToStartTransform")]
+	[field: SerializeField] public Quaternion StageStartRotation { get; set; }
+#pragma warning restore SA1202 // Elements should be ordered by access
+
+#endif
+
+#if UNITY_EDITOR
 	[Header("EDITOR ONLY")]
 	// True when on a testing scene. Sets this Bat to 'Active' so
 	// that it can be controlled in a scene without a SwitchManager.
@@ -152,4 +164,18 @@ public class Bat : PlayerController
 		Rb.isKinematic = false;
 		base.Respawn();
 	}
+
+#if UNITY_EDITOR
+	private void SetStartTransform()
+	{
+		StageStartPosition = transform.position;
+		StageStartRotation = transform.rotation;
+	}
+
+	private void MoveToStartTransform()
+	{
+		transform.rotation = StageStartRotation;
+		transform.position = StageStartPosition;
+	}
+#endif
 }

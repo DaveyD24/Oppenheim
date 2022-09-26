@@ -6,14 +6,15 @@ public class Forklift : MonoBehaviour
 {
     [SerializeField] private float moveSpeed;
 
-    private const float minHeight = 36.5f;
-    private const float maxHeight = 52.5f;
+    [SerializeField] private float minHeight = 36.5f;
+    [SerializeField] private float maxHeight = 52.5f;
+    [SerializeField] private bool bDoScaleInstead = false;
 
-    Transform liftPos;
-    Vector3 pos;
-    Tween moveTween;
+    private Transform liftPos;
+    private Vector3 startPos;
+    private Tween moveTween;
 
-    IEnumerator moveWait;
+    private IEnumerator moveWait;
 
     public void MoveUp()
     {
@@ -36,18 +37,40 @@ public class Forklift : MonoBehaviour
     private void Start()
     {
         liftPos = transform.GetChild(0);
-        pos = liftPos.position;
+        if (bDoScaleInstead)
+        {
+            startPos = liftPos.transform.localScale;
+        }
+        else
+        {
+            startPos = liftPos.position;
+        }
     }
 
     private void Update()
     {
         if (moveTween != null)
         {
-            liftPos.position = moveTween.UpdatePosition();
+            if (bDoScaleInstead)
+            {
+                liftPos.transform.localScale = moveTween.UpdatePosition();
+            }
+            else
+            {
+                liftPos.position = moveTween.UpdatePosition();
+            }
 
             if (moveTween.IsComplete())
             {
-                liftPos.position = moveTween.EndPos;
+                if (bDoScaleInstead)
+                {
+                    liftPos.transform.localScale = moveTween.EndPos;
+                }
+                else
+                {
+                    liftPos.position = moveTween.EndPos;
+                }
+
                 moveTween = null;
             }
         }
@@ -60,11 +83,11 @@ public class Forklift : MonoBehaviour
 
         if (!bIsUpMove)
         {
-            moveTween = new Tween(new Vector3(pos.x, maxHeight, pos.z), new Vector3(pos.x, minHeight, pos.z), Time.time, moveSpeed);
+                moveTween = new Tween(new Vector3(startPos.x, maxHeight, startPos.z), new Vector3(startPos.x, minHeight, startPos.z), Time.time, moveSpeed);
         }
         else
         {
-            moveTween = new Tween(new Vector3(pos.x, minHeight, pos.z), new Vector3(pos.x, maxHeight, pos.z), Time.time, moveSpeed);
+                moveTween = new Tween(new Vector3(startPos.x, minHeight, startPos.z), new Vector3(startPos.x, maxHeight, startPos.z), Time.time, moveSpeed);
         }
 
         moveWait = null;

@@ -5,6 +5,17 @@ using static UnityEngine.InputSystem.InputAction;
 
 public class MonkeyController : PlayerController
 {
+#if UNITY_EDITOR
+    [field: Header("Start Reset")]
+    [field: ContextMenuItem("Set Start Transform", "SetStartTransform")]
+#pragma warning disable SA1202 // Elements should be ordered by access
+    [field: SerializeField] public Vector3 StageStartPosition { get; set; }
+
+    [field: ContextMenuItem("Move to Start", "MoveToStartTransform")]
+    [field: SerializeField] public Quaternion StageStartRotation { get; set; }
+#pragma warning restore SA1202 // Elements should be ordered by access
+
+#endif
 
     private float jumpHeight = 2.0f;
     private Vector3 move;
@@ -198,13 +209,13 @@ public class MonkeyController : PlayerController
     {
         if (!bDidJump)
         {
-            if (IsZero(speedometer.Velocity))
-            {
-                animator.SetTrigger("Idle");
-            }
-            else if (clinging)
+            if (clinging)
             {
                 animator.SetTrigger("Climb");
+            }
+            else if (IsZero(speedometer.Velocity))
+            {
+                animator.SetTrigger("Idle");
             }
             else
             {
@@ -213,10 +224,24 @@ public class MonkeyController : PlayerController
         }
     }
 
-    string RandomSound()
+    private string RandomSound()
     {
         bool bRandomBool = Random.Range(0f, 1f) < .5f;
 
-        return bRandomBool ? "Scream":"OOH AHH";
+        return bRandomBool ? "Scream" : "OOH AHH";
     }
+
+#if UNITY_EDITOR
+    private void SetStartTransform()
+    {
+        StageStartPosition = transform.position;
+        StageStartRotation = transform.rotation;
+    }
+
+    private void MoveToStartTransform()
+    {
+        transform.rotation = StageStartRotation;
+        transform.position = StageStartPosition;
+    }
+#endif
 }

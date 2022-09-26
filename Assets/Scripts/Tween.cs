@@ -53,6 +53,11 @@ public class Tween
         return (Time.time - StartTime) / Duration >= 1;
     }
 
+    public float UpdateValue()
+    {
+        float timeFraction = (Time.time - StartTime) / Duration;
+        return Mathf.Lerp(StartPosCircular, EndPosCircular, timeFraction);
+    }
     public Vector3 UpdatePosition()
     {
         float timeFraction = (Time.time - StartTime) / Duration;

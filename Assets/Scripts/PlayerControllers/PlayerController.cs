@@ -8,8 +8,8 @@ using Unity.Services.Analytics;
 using Unity.Services.Core;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 /// <summary>
 /// A base class for handling the common functionality across all players.
@@ -19,6 +19,7 @@ public abstract class PlayerController : MonoBehaviour
 {
     [SerializeField] private GameObject controlObj;
     [SerializeField] private Slider fuelSlider;
+
     private bool bControlsHidden = false;
     private Vector3 startPosition;
     private Quaternion startRotation;
