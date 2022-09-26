@@ -258,7 +258,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 291893582209903765}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: d31ee60016f595a4b939ed263a92a705, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -286,7 +286,7 @@ MonoBehaviour:
   <Health>k__BackingField: 1
   <FallDamageThreshold>k__BackingField: 27
   groundCheckPosition: {x: 0, y: 1.5, z: 0}
-  <GroundCheckRadius>k__BackingField: 1
+  <GroundCheckRadius>k__BackingField: 0.5
   bIsStandalone: 0
   ragdol: {fileID: 1259981665220065791}
   baseMesh: {fileID: 1051679150067098337}
@@ -330,8 +330,8 @@ MonoBehaviour:
   TimeToV1: 1
   JumpHeight: 5
   SecondsOfPitchFlight: 1
-  YawStrength: 2
-  PitchStrength: 2
+  YawDeltaAngle: 2
+  PitchDeltaAngle: 2
   GroundCheckOffset: {x: 0, y: 0.15, z: 0}
   GroundRayDistance: 0.6
   WingtipVortex:

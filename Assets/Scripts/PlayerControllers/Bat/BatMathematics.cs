@@ -121,25 +121,25 @@ public static class BatMathematics
 	public const float kZeroThreshold = .01f;
 
 	/// <summary>True if F is close enough to zero.</summary>
-	public static bool IsZero(float F)
+	public static bool IsZero(float F, float Threshold = kZeroThreshold)
 	{
-		return Mathf.Abs(F) <= kZeroThreshold;
+		return Mathf.Abs(F) <= Threshold;
 	}
 
 	/// <summary>True if V is close enough to zero.</summary>
 	/// <remarks>'Close enough' is define in <see cref="IsZero(float)"/>.</remarks>
-	public static bool IsZero(Vector3 V)
+	public static bool IsZero(Vector3 V, float Threshold = kZeroThreshold)
 	{
-		return IsZero(V.x) && IsZero(V.y) && IsZero(V.z);
+		return IsZero(V.x, Threshold) && IsZero(V.y, Threshold) && IsZero(V.z, Threshold);
 	}
 
 	/// <summary>Sets V to Vector3.zero if it's close enough to zero.</summary>
 	/// <remarks>'Close enough' is define in <see cref="IsZero(float)"/>.</remarks>
-	public static void SetZeroIfZero(ref Vector3 V, bool bUseForce = false)
+	public static void SetZeroIfZero(ref Vector3 V, bool bUseForce = false, float Threshold = kZeroThreshold)
 	{
 		// Vector3's == operator is accurate to: 9.99999944 E-11 (0.0000000000999999944)
 		// This is too accurate; define our own threshold.
-		if (IsZero(V))
+		if (IsZero(V, Threshold))
 		{
 			if (!bUseForce)
 			{
@@ -152,6 +152,13 @@ public static class BatMathematics
 				ForceZero(ref V.z);
 			}
 		}
+	}
+
+	public static void ForceZero(ref Vector3 V)
+	{
+		ForceZero(ref V.x);
+		ForceZero(ref V.y);
+		ForceZero(ref V.z);
 	}
 
 	/// <summary>Uses bitwise operations to force a float to be absolute zero.</summary>
@@ -168,11 +175,11 @@ public static class BatMathematics
 
 #if UNITY_EDITOR
 		/*
-		 * For future reference, this function was made because PitchDirection and YawDirection
+		 * For future reference, this function was made because PitchDelta and YawDelta
 		 * was not Zero where it needed to be. These two floats are used in BatMovement.FixedUpdate()
 		 * and is needed for aligning the Bat's velocity to where it is facing.
 		 * 
-		 * There are checks (PitchDirection != 0f || YawDirection != 0f): only if this check passes,
+		 * There are checks (PitchDelta != 0f || YawDelta != 0f): only if this check passes,
 		 * can we align velocities - it also means the Bat is Airborne.
 		 * 
 		 * Problem is: When these checks pass whilst the Bat is clearly Grounded (IsGrounded() == true)

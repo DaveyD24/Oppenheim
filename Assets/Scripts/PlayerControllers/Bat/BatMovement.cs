@@ -42,10 +42,10 @@ public class BatMovement : MonoBehaviour
 	float RemainingSeconds;
 	IEnumerator CurrentGradualFunc;
 
-	[SerializeField, Min(kZeroThreshold)] float YawStrength = 2f;
-	[SerializeField, Min(kZeroThreshold)] float PitchStrength = 1f;
-	float YawDirection = 0f;
-	float PitchDirection = 0f;
+	[SerializeField, Min(kZeroThreshold)] float YawDeltaAngle = 2f;
+	[SerializeField, Min(kZeroThreshold)] float PitchDeltaAngle = 2f;
+	float YawDelta = 0f;
+	float PitchDelta = 0f;
 
 	[Header("Ground Checks")]
 	[SerializeField] Vector3 GroundCheckOffset;
@@ -63,6 +63,7 @@ public class BatMovement : MonoBehaviour
 	// Stop the Player from Gliding more than once per Jump.
 	bool bHasGlidedThisJump, bHasCancelledGlideThisJump;
 	bool bHasBeenGivenSlightBoost;
+	bool bHasDoubleJumped;
 
 	[Space]
 	[SerializeField] Camera BatCamera;
@@ -90,11 +91,11 @@ public class BatMovement : MonoBehaviour
 		HandleLook(ThrowLook);
 		DetermineVortex();
 
-		if (!IsZero(YawDirection) || !IsZero(PitchDirection))
+		if (!IsZero(YawDelta) || !IsZero(PitchDelta))
 		{
 			// Translate World-Velocity to Local Forward.
-			Vector3 YawVelocity = RotateVector(Bat.Physics.velocity, transform.up, YawDirection);
-			Vector3 CombinedVelocity = RotateVector(YawVelocity, -transform.right, PitchDirection);
+			Vector3 YawVelocity = RotateVector(Bat.Physics.velocity, transform.up, YawDelta);
+			Vector3 CombinedVelocity = RotateVector(YawVelocity, -transform.right, PitchDelta);
 			Bat.Physics.velocity = CombinedVelocity; // Combination of Pitch and Yaw.
 
 			// Set to Zero if its close enough to Zero.
@@ -229,10 +230,11 @@ public class BatMovement : MonoBehaviour
 			{
 				// Move Pitch.
 				ThrowPitch(Vertical);
+
+				// Move Yaw.
+				ThrowYaw(Horizontal);
 			}
 
-			// Move Yaw.
-			ThrowYaw(Horizontal);
 #endif // MOVE_AIRBORNE
 
 			// Stop Ground Movement from taking place while Airborne.
@@ -248,6 +250,8 @@ public class BatMovement : MonoBehaviour
 			// Stop applying gradual forward acceleration.
 			StopGradualAcceleration();
 			bHasBeenGivenSlightBoost = false;
+
+			Bat.Physics.angularVelocity = Vector3.zero;
 		}
 	}
 
@@ -257,20 +261,22 @@ public class BatMovement : MonoBehaviour
 		{
 			// Grounded.
 
-			YawDirection = PitchDirection = 0f;
+			YawDelta = PitchDelta = 0f;
 
 			bHasGlidedThisJump = false;
 			bHasCancelledGlideThisJump = false;
 
 			if (Throw > .01f)
 			{
-				Bat.Physics.velocity += ComputeJumpVelocity(transform.up, JumpHeight);
+				Bat.Physics.velocity += ComputeJumpVelocity(Vector3.up, JumpHeight);
 			}
 
 			// Fact - Every time the Bat jumps, it has to take off from the Ground.
 			RemainingSeconds = SecondsOfPitchFlight;
 
 			Bat.Events.OnAnimationStateChanged?.Invoke(EAnimationState.WingedFlight);
+
+			bHasDoubleJumped = false;
 		}
 #if USE_DOUBLEJUMP_GLIDE
 		else if (!IsZero(Throw))
@@ -280,12 +286,13 @@ public class BatMovement : MonoBehaviour
 			{
 				// On Double-Jump...
 				StartGliding();
+
+				bHasDoubleJumped = true;
 			}
 			else
 			{
 				// On 2+ Jump...
 				StopGradualAcceleration();
-
 #if MOVE_AIRBORNE
 				ApplyAirbrakes();
 #endif
@@ -333,11 +340,11 @@ public class BatMovement : MonoBehaviour
 			Vector3 cameraRelativeDirection = DirectionRelativeToTransform(BatCamera.transform, GroundMovement);
 			Bat.Physics.MovePosition(Bat.Physics.position + (cameraRelativeDirection * Time.fixedDeltaTime));
 
-			// PitchDirection = YawDirection = 0f;
+			// PitchDelta = YawDelta = 0f;
 			// Apparently this wasn't enough - floating point precision failed and 
 			// sometimes made these 1E-11. These values NEED to be zero whilst Grounded.
-			ForceZero(ref PitchDirection);
-			ForceZero(ref YawDirection);
+			ForceZero(ref PitchDelta);
+			ForceZero(ref YawDelta);
 		}
 	}
 
@@ -400,7 +407,19 @@ public class BatMovement : MonoBehaviour
 	/// <param name="Throw">Direction of Pitch; delta. + Downwards. - Upwards.</param>
 	private void ThrowPitch(float Throw)
 	{
-		float PitchThrow = PitchStrength;
+#if MOVE_AIRBORNE && USE_DOUBLEJUMP_GLIDE
+		if (!bHasDoubleJumped)
+		{
+			return;
+		}
+#else
+		if (!bHasGlidedThisJump)
+		{
+			return;
+		}
+#endif
+
+		float PitchThrow = PitchDeltaAngle;
 
 		if (RemainingSeconds <= 0f)
 		{
@@ -412,19 +431,19 @@ public class BatMovement : MonoBehaviour
 		// Pitch.
 		if (Throw < -.3f)
 		{
-			PitchDirection = PitchThrow;
+			PitchDelta = PitchThrow;
 
 			// Deduct time only when Pitching upwards.
 			RemainingSeconds -= Time.deltaTime;
 		}
 		else if (Throw > .3f)
 		{
-			PitchDirection = -PitchThrow;
+			PitchDelta = -PitchThrow;
 		}
 		else
 		{
 			Bat.Physics.angularVelocity = Vector3.zero;
-			PitchDirection = 0f;
+			PitchDelta = 0f;
 		}
 	}
 
@@ -432,19 +451,31 @@ public class BatMovement : MonoBehaviour
 	/// <param name="Throw">Direction of Yaw; delta. + Right. - Left.</param>
 	private void ThrowYaw(float Throw)
 	{
+#if MOVE_AIRBORNE && USE_DOUBLEJUMP_GLIDE
+		if (!bHasDoubleJumped)
+		{
+			return;
+		}
+#else
+		if (!bHasGlidedThisJump)
+		{
+			return;
+		}
+#endif
+
 		// Yaw.
 		if (Throw < -.3f)
 		{
-			YawDirection = -YawStrength;
+			YawDelta = -YawDeltaAngle;
 		}
 		else if (Throw > .3f)
 		{
-			YawDirection = YawStrength;
+			YawDelta = YawDeltaAngle;
 		}
 		else
 		{
 			Bat.Physics.angularVelocity = Vector3.zero;
-			YawDirection = 0f;
+			YawDelta = 0f;
 		}
 	}
 
@@ -453,7 +484,7 @@ public class BatMovement : MonoBehaviour
 		if (!IsAirborne())
 		{
 			// If we're not moving, we're in the Stand Idle State.
-			Bat.Events.OnAnimationStateChanged?.Invoke(!IsZero(Speedometer.Velocity)
+			Bat.Events.OnAnimationStateChanged?.Invoke(!IsZero(Speedometer.Velocity, .5f)
 				? EAnimationState.Walking
 				: EAnimationState.StandIdle);
 		}
@@ -485,6 +516,20 @@ public class BatMovement : MonoBehaviour
 			// Stop everything else. Switch back to the Stand Idle animation.
 			Bat.Events.OnAnimationStateChanged?.Invoke(EAnimationState.StandIdle);
 		}
+	}
+
+	/// <summary>Forces all movement components to Zero.</summary>
+	public void ForceStopAllMovement()
+	{
+		ForceZero(ref PitchDelta);
+		ForceZero(ref YawDelta);
+		ForceZero(ref GroundMovement);
+		ForceZero(ref ThrowMove.x);
+		ForceZero(ref ThrowMove.y);
+		ForceZero(ref ThrowLook.x);
+		ForceZero(ref ThrowLook.y);
+
+		StopGradualAcceleration();
 	}
 
 	void DetermineVortex()

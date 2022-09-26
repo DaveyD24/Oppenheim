@@ -141,8 +141,7 @@ public class Bat : PlayerController
 		ragdol.SetActive(true);
 		Rb.isKinematic = true;
 		ragdol.transform.position = transform.position;
-		MovementComponent.HandleMovement(Vector2.zero);
-		MovementComponent.StopGradualAcceleration();
+		MovementComponent.ForceStopAllMovement();
 	}
 
 	protected override void Respawn()
