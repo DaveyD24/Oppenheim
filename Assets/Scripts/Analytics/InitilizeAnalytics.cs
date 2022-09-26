@@ -8,6 +8,7 @@ public class InitilizeAnalytics : MonoBehaviour
 {
     private async void Start()
     {
+#if !UNITY_EDITOR
         try
         {
             await UnityServices.InitializeAsync();
@@ -19,5 +20,8 @@ public class InitilizeAnalytics : MonoBehaviour
 
             // Something went wrong when checking the GeoIP, check the e.Reason and handle appropriately.
         }
+#else
+        await AnalyticsService.Instance.SetAnalyticsEnabled(false);
+#endif
     }
 }
