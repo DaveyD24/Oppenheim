@@ -1,7 +1,5 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Linq;
 using EventSystem;
 using UnityEngine;
@@ -10,9 +8,9 @@ using UnityEngine.InputSystem;
 public class SwitchManager : MonoBehaviour
 {
     private PlayerInputManager playerInputManager;
-    private int playerAdded = 0;
     private int playerNo = 0;
 
+    private Dictionary<PlayerInput, int> playerInputConnection = new Dictionary<PlayerInput, int>();
     private List<int> controlledPlayers = new List<int>();
     private List<int> uncontrolledPlayers = new List<int>();
 
@@ -48,19 +46,14 @@ public class SwitchManager : MonoBehaviour
         return null;
     }
 
-    public void GetAllActivePlayerTransforms(out Transform[] outActivePlayers)
+    public void GetAllActivePlayerTransforms(out Transform[] outActivePlayerTransforms)
     {
-        GetPlayers(out PlayerController[] players);
-                
-        int numberActive = players.Count(b => b.IsActive());
-        outActivePlayers = new Transform[numberActive];
+        List<PlayerController> active = GetActivePlayers();
+        outActivePlayerTransforms = new Transform[active.Count];
         
-        for (int b = 0, i = 0; b < 4; ++b)
+        for (int i = 0; i < active.Count; ++i)
         {
-            if (players[b])
-            {
-                outActivePlayers[i++] = players[b].transform;
-            }
+                outActivePlayerTransforms[i++] = active[i].transform;
         }
     }
 
@@ -72,20 +65,22 @@ public class SwitchManager : MonoBehaviour
 
     private void OnEnable()
     {
+        // playerInputManager.onPlayerLeft += PlayerLeft;
         joinAction = new InputActions();
         joinAction.JoiningGame.Join.performed += Joining;
 
         joinAction.JoiningGame.Enable();
 
         // playerInputManager.onPlayerJoined += AddPlayer;
-        //print(InputSystem.devices.Count + "Total Number of Devices");
-
+        // playerInputManager.onPlayerLeft
+        // print(InputSystem.devices.Count + "Total Number of Devices");
         GameEvents.OnAddPlayerSwitch += AddInactive;
         GameEvents.OnRotatePlayer += RotatePlayer;
     }
 
     private void OnDisable()
     {
+        // playerInputManager.onPlayerLeft -= PlayerLeft;
         joinAction.JoiningGame.Join.performed -= Joining;
 
         GameEvents.OnAddPlayerSwitch -= AddInactive;
@@ -104,7 +99,7 @@ public class SwitchManager : MonoBehaviour
         bool bIsbeingUsed = true;
         foreach (InputDevice device in unpairedDevices)
         {
-            //print(device.name);
+            // print(device.name);
             if (device == deviceUsing)
             {
                 // as the device is listed as unpaired it can be used
@@ -133,22 +128,22 @@ public class SwitchManager : MonoBehaviour
     private void AddPlayer(PlayerInput player)
     {
         // controlledPlayers.Add(player);
-        //print("Device Used to join: " + player.devices[0].name);
-
+        // print("Device Used to join: " + player.devices[0].name);
         player.neverAutoSwitchControlSchemes = true;
 
         (int playerToControl, int playerID) = FindUncontrolledPlayer();
 
         if (playerToControl != -1)
         {
+            playerInputConnection.Add(player, playerID);
+
             controlledPlayers.Add(playerID);
             uncontrolledPlayers.RemoveAt(playerToControl);
 
             GameEvents.ActivatePlayer(playerID, player);
 
-            playerAdded++;
-            //Debug.Log("New Player Added: " + playerAdded);
-            //print("Is Joining Enabled: " + player.playerIndex);
+            // Debug.Log("New Player Added: " + playerAdded);
+            // print("Is Joining Enabled: " + player.playerIndex);
         }
     }
 
@@ -174,13 +169,6 @@ public class SwitchManager : MonoBehaviour
                 // deactivate the current controlled player
                 uncontrolledPlayers.Add(currentPlayerId);
                 controlledPlayers.Remove(currentPlayerId);
-
-                // Switch Camera Targets.
-                PlayerController outPlayer = GetPlayerByID(currentPlayerId);
-                PlayerController inPlayer = GetPlayerByID(playerID);
-                inPlayer.TrackingCamera = outPlayer.TrackingCamera;
-                inPlayer.TrackingCamera.Target = inPlayer.transform;
-                outPlayer.TrackingCamera = null;
             }
         }
     }
@@ -219,8 +207,16 @@ public class SwitchManager : MonoBehaviour
         uncontrolledPlayers.Add(playerId);
     }
 
+    private void PlayerLeft(PlayerInput playerInput)
+    {
+        // not working yet, but not too vital to have working at the moment
+        Debug.Log("input device has disconnected");
+        GameEvents.DeactivatePlayer(playerInputConnection[playerInput]);
+        playerInputConnection.Remove(playerInput);
+    }
+    
     /// <summary>Get every Player in the game.</summary>
-    public void GetPlayers(out PlayerController[] outPlayers)
+    public void GetAllPlayers(out PlayerController[] outPlayers)
     {
         // TODO: Make a non-alloc version.
         outPlayers = new PlayerController[4];
@@ -231,9 +227,19 @@ public class SwitchManager : MonoBehaviour
         outPlayers[3] = Car;
     }
 
+    public List<PlayerController> GetActivePlayers()
+    {
+        List<PlayerController> retVal = new List<PlayerController>();
+
+        GetAllPlayers(out PlayerController[] all);
+        retVal.AddRange(all.Where(pc => pc.IsActive()));
+        
+        return retVal;
+    }
+
     public PlayerController GetPlayerByID(int playerID)
     {
-        GetPlayers(out PlayerController[] players);
+        GetAllPlayers(out PlayerController[] players);
         return Array.Find(players, p => p.PlayerIdSO.PlayerID == playerID);
     }
 }

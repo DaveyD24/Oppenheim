@@ -29,7 +29,6 @@ public class FuelCollectible : MonoBehaviour
         GameEvents.CollectFuel(playerId.PlayerID);
         Instantiate(collectParticles, transform.position, Quaternion.identity);
         Debug.Log("Fuel Collection");
-
         // collection particle system and sound effect
         Destroy(gameObject);
     }

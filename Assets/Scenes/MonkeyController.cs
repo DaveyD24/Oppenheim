@@ -9,6 +9,9 @@ public class MonkeyController : PlayerController
     private float jumpHeight = 2.0f;
     private Vector3 move;
 
+    private Animator animator;
+    private Speedometer speedometer;
+
     private bool clinging = false;
     private ContactPoint contactPoint;
 
@@ -17,6 +20,10 @@ public class MonkeyController : PlayerController
     private bool bDidJump = false;
     private float currJumpWaitTime = 1;
     [SerializeField] private float jumpWaitTime = 1;
+    [SerializeField] private GameObject ragdol;
+    [SerializeField] private GameObject baseMesh;
+    [SerializeField] private GameObject monkeyCamera;
+    private BoxCollider boxCollider;
 
     private enum State
     {
@@ -29,6 +36,10 @@ public class MonkeyController : PlayerController
     {
         base.Start();
         currJumpWaitTime = jumpWaitTime;
+        animator = GetComponent<Animator>();
+        boxCollider = gameObject.GetComponent<BoxCollider>();
+
+        Audio.Play(RandomSound(), EAudioPlayOptions.AtTransformPosition | EAudioPlayOptions.DestroyOnEnd);
     }
 
     protected override void Update()
@@ -63,7 +74,8 @@ public class MonkeyController : PlayerController
         // Rotate towards Movement.
         if (move != Vector3.zero)
         {
-            AlignTransformToMovement(transform, move, RotationSpeed, Vector3.up);
+            Vector3 cameraRelativeDirection = DirectionRelativeToTransform(monkeyCamera.transform, move);
+            AlignTransformToMovement(transform, cameraRelativeDirection, RotationSpeed, Vector3.up);
         }
     }
 
@@ -106,6 +118,9 @@ public class MonkeyController : PlayerController
 
             bDidJump = true;
             Debug.Log("yeet");
+            animator.SetTrigger("Jump");
+
+            Audio.Play(RandomSound(), EAudioPlayOptions.FollowEmitter | EAudioPlayOptions.DestroyOnEnd);
         }
     }
 
@@ -119,14 +134,40 @@ public class MonkeyController : PlayerController
         // ...
     }
 
+    public override void OnDeath()
+    {
+        base.OnDeath();
+        baseMesh.SetActive(false);
+        boxCollider.enabled = false;
+        ragdol.SetActive(true);
+        Rb.isKinematic = true;
+        ragdol.transform.position = transform.position;
+    }
+
+    protected override void Respawn()
+    {
+        baseMesh.SetActive(true);
+        boxCollider.enabled = true;
+        ragdol.SetActive(false);
+        Rb.isKinematic = false;
+        base.Respawn();
+    }
+
     private void OnGUI()
     {
         GUI.Label(new Rect(100, 65, 250, 250), $"Clinging? {(clinging ? "Yes" : "No")}");
     }
 
-    private void FixedUpdate()
+    protected override void FixedUpdate()
     {
-        Rb.MovePosition(Rb.position + (MovementSpeed * Time.fixedDeltaTime * move));
+        base.FixedUpdate();
+
+        speedometer.Record(this);
+
+        Vector3 cameraRelativeDirection = DirectionRelativeToTransform(monkeyCamera.transform, move);
+        Rb.MovePosition(Rb.position + (MovementSpeed * Time.fixedDeltaTime * cameraRelativeDirection));
+        DetermineAnimationState();
+        speedometer.Mark();
     }
 
     protected override void OnCollisionEnter(Collision collision)
@@ -151,5 +192,31 @@ public class MonkeyController : PlayerController
         {
             clinging = false;
         }
+    }
+
+    private void DetermineAnimationState()
+    {
+        if (!bDidJump)
+        {
+            if (IsZero(speedometer.Velocity))
+            {
+                animator.SetTrigger("Idle");
+            }
+            else if (clinging)
+            {
+                animator.SetTrigger("Climb");
+            }
+            else
+            {
+                animator.SetTrigger("Walk");
+            }
+        }
+    }
+
+    string RandomSound()
+    {
+        bool bRandomBool = Random.Range(0f, 1f) < .5f;
+
+        return bRandomBool ? "Scream":"OOH AHH";
     }
 }

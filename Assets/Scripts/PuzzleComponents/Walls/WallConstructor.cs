@@ -17,6 +17,11 @@ public class WallConstructor : MonoBehaviour
     [SerializeField] private int numSegmentsX;
     [SerializeField] private int numSegmentsY;
     [SerializeField] private int numSegmentsZ;
+
+    [SerializeField] private float xoffsetAmount;
+    [SerializeField] private float yoffsetAmount;
+    [SerializeField] private float zoffsetAmount;
+
     [SerializeField] private float segmentsOffsetX = 0.25f;
     [SerializeField] private float segmentsOffsetY = 0.25f;
     [SerializeField] private float segmentsOffsetZ = 0.25f;
@@ -70,7 +75,15 @@ public class WallConstructor : MonoBehaviour
                             GameObject randomItem = randomItems[Random.Range(0, randomItems.Count)];
                             Vector3 itemPos = new Vector3(shelvePos.x + (((float)width / (float)numItemsX * x) + shelveItemOffset.x), shelvePos.y + shelveItemOffset.y, shelvePos.z + (((float)shelveDepth / (float)numItemsZ * z) + shelveItemOffset.z));
                             GameObject segment = Instantiate(randomItem, itemPos, randomItem.transform.rotation, spawnedObjs[i].transform.GetChild(j));
-                            segment.transform.localScale = itemScale;
+                            if (segment.name.Contains("Container"))
+                            {
+                                segment.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
+                            }
+                            else
+                            {
+                                segment.transform.localScale = itemScale;
+                            }
+
                             spawnedItems.Add(segment);
                         }
                     }
@@ -96,9 +109,9 @@ public class WallConstructor : MonoBehaviour
         // rb.drag = drag;
 
         Vector3 pos = transform.position;
-        float offsetX = width * numSegmentsX / 2;
-        float offsetY = height * numSegmentsY / 2;
-        float offsetZ = depth * numSegmentsZ / 2;
+        float offsetX = 0; // width * numSegmentsX / 2;
+        float offsetY = 0; // height * numSegmentsY / 2;
+        float offsetZ = 0; // depth * numSegmentsZ / 2;
         for (int y = 0; y < numSegmentsY; y++)
         {
             for (int z = 0; z < numSegmentsZ; z++)
@@ -106,7 +119,7 @@ public class WallConstructor : MonoBehaviour
                 float zoffset;
                 if (y % 2 == 0 && bIterateZ)
                 {
-                    zoffset = depth / 2.0f;
+                    zoffset = zoffsetAmount;
                 }
                 else
                 {
@@ -118,7 +131,7 @@ public class WallConstructor : MonoBehaviour
                     float xoffset = 0;
                     if ((z + y) % 2 == 0 && bIterateX)
                     {
-                        xoffset = width / 2.0f;
+                        xoffset = xoffsetAmount;
                     }
                     else
                     {

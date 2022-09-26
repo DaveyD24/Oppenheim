@@ -62,7 +62,9 @@ public static class BatMathematics
 	public static Vector3 RotateVector(Vector3 Vector, Vector3 Axis, float Angle)
 	{
 		if (IsZero(Angle))
-			return Vector;
+        {
+            return Vector;
+        }
 
 		SinCos(out float S, out float C, Angle * Mathf.Deg2Rad);
 
@@ -86,6 +88,170 @@ public static class BatMathematics
 			(OMC * ZX - YS) * Vector.x + (OMC * YZ + XS) * Vector.y + (OMC * ZZ + C) * Vector.z
 		);
 	}
+
+	/// <summary>Converts a world direction to be relative to the Reference's forward.</summary>
+	public static Vector3 DirectionRelativeToTransform(Transform reference, Vector3 direction, bool bIgnoreYAxis = true)
+	{
+		Vector3 referenceForward = reference.forward;
+		Vector3 referenceRight = reference.right;
+
+		if (bIgnoreYAxis)
+		{
+			referenceForward.y = referenceRight.y = 0f;
+		}
+
+		referenceForward.Normalize();
+		referenceRight.Normalize();
+
+		float leftRight = direction.x;
+		float forwardBackward = direction.z;
+
+		Vector3 relativeMovementVector = (referenceForward * forwardBackward) + (referenceRight * leftRight);
+
+		return relativeMovementVector;
+	}
+
+	public static void AlignTransformToMovement(Transform transform, Vector3 movementVector, float rotationSpeed, Vector3 upAxis)
+	{
+		Quaternion rotationNow = transform.rotation;
+		Quaternion targetRotation = Quaternion.LookRotation(movementVector, upAxis);
+		transform.rotation = Quaternion.RotateTowards(rotationNow, targetRotation, rotationSpeed);
+	}
+
+	public const float kZeroThreshold = .01f;
+
+	/// <summary>True if F is close enough to zero.</summary>
+	public static bool IsZero(float F, float Threshold = kZeroThreshold)
+	{
+		return Mathf.Abs(F) <= Threshold;
+	}
+
+	/// <summary>True if V is close enough to zero.</summary>
+	/// <remarks>'Close enough' is define in <see cref="IsZero(float)"/>.</remarks>
+	public static bool IsZero(Vector3 V, float Threshold = kZeroThreshold)
+	{
+		return IsZero(V.x, Threshold) && IsZero(V.y, Threshold) && IsZero(V.z, Threshold);
+	}
+
+	/// <summary>Sets V to Vector3.zero if it's close enough to zero.</summary>
+	/// <remarks>'Close enough' is define in <see cref="IsZero(float)"/>.</remarks>
+	public static void SetZeroIfZero(ref Vector3 V, bool bUseForce = false, float Threshold = kZeroThreshold)
+	{
+		// Vector3's == operator is accurate to: 9.99999944 E-11 (0.0000000000999999944)
+		// This is too accurate; define our own threshold.
+		if (IsZero(V, Threshold))
+		{
+			if (!bUseForce)
+			{
+				V = Vector3.zero;
+			}
+			else
+			{
+				ForceZero(ref V.x);
+				ForceZero(ref V.y);
+				ForceZero(ref V.z);
+			}
+		}
+	}
+
+	public static void ForceZero(ref Vector3 V)
+	{
+		ForceZero(ref V.x);
+		ForceZero(ref V.y);
+		ForceZero(ref V.z);
+	}
+
+	/// <summary>Uses bitwise operations to force a float to be absolute zero.</summary>
+	/// <param name="F">Reference to the float that needs to be zero.</param>
+	public static unsafe void ForceZero(ref float F)
+	{
+		// Fix pointer to point to the address float F.
+		fixed (float* pF = &F)
+		{
+			int I = *(int*)&pF; // Lossless conversion of float F bits to int I bits.
+			I &= 0x0;           // Bitwise & 0 always equals 0.
+			F = *(float*)&I;    // Treat the bits of I as a float and give it back to F.
+		}
+
+#if UNITY_EDITOR
+		/*
+		 * For future reference, this function was made because PitchDelta and YawDelta
+		 * was not Zero where it needed to be. These two floats are used in BatMovement.FixedUpdate()
+		 * and is needed for aligning the Bat's velocity to where it is facing.
+		 * 
+		 * There are checks (PitchDelta != 0f || YawDelta != 0f): only if this check passes,
+		 * can we align velocities - it also means the Bat is Airborne.
+		 * 
+		 * Problem is: When these checks pass whilst the Bat is clearly Grounded (IsGrounded() == true)
+		 * and not Airborne (IsAirborne() == false) the Bat would not orient itself to where it's going
+		 * *on the Ground*. This looked weird, and this function literally forces the two floats to be
+		 * exactly Zero... well in theory anyway; if you're reading this, it means it, too, failed.
+		 */
+
+		if (float.IsNaN(F))
+		{
+			Debug.LogError("Tell Michael he's dumb! F = NaN");
+		}
+
+		if (float.IsInfinity(F))
+		{
+			Debug.LogError("Tell Michael he's dumb! F = Infinity");
+		}
+
+		if (float.IsNegativeInfinity(F))
+		{
+			Debug.LogError("Tell Michael he's dumb! F = -Infinity");
+		}
+#endif
+	}
+
+	public static void ClampMin(ref float F, float Min)
+	{
+		if (F < Min)
+			F = Min;
+	}
+	
+	/// <summary>Checks whether <paramref name="V"/> contains <see cref="float.NaN"/>.</summary>
+	/// <remarks>Used in Antipede.</remarks>
+	/// <returns><see langword="true"/> if at least one vector component is <see cref="float.NaN"/>.</returns>
+	public static bool DiagnosticCheckNaN(Vector3 V)
+	{
+		return DiagnosticCheckNaN(V.x) || DiagnosticCheckNaN(V.y) || DiagnosticCheckNaN(V.z);
+	}
+	
+	/// <summary>Checks whether <paramref name="F"/> is <see cref="float.NaN"/>.</summary>
+	/// <remarks>Used in Antipede.</remarks>
+	/// <returns><see langword="true"/> if <paramref name="F"/> is <see cref="float.NaN"/>.</returns
+	public static bool DiagnosticCheckNaN(float F)
+	{
+		return float.IsNaN(F);
+	}
+
+
+	#region Fast Approximation Functions
+
+	/// <summary>1 / sqrt(N).</summary>
+	/// <remarks>Modified from: <see href="https://github.com/id-Software/Quake-III-Arena/blob/dbe4ddb10315479fc00086f08e25d968b4b43c49/code/game/q_math.c#L552"/></remarks>
+	/// <param name="N">1 / sqrt(x) where x is N.</param>
+	/// <param name="AdditionalIterations">The number of additional Newton Iterations to perform.</param>
+	/// <returns>An approximation for calculating: 1 / sqrt(N).</returns>
+	public static unsafe float FInverseSqrt(float N, int AdditionalIterations = 1)
+	{
+		int F = *(int*)&N;
+		F = 0x5F3759DF - (F >> 1);
+		float X = *(float*)&F;
+
+		float RSqrt = X * (1.5f - .5f * N * X * X);
+		for (int i = 0; i < AdditionalIterations; ++i)
+			RSqrt *= (1.5f - .5f * N * RSqrt * RSqrt);
+		return RSqrt;
+	}
+
+	/// <summary>Faster version of <see cref="Mathf.Sqrt(float)"/>.</summary>
+	/// <param name="F"></param>
+	/// <param name="Iterations">The number of Newton Iterations to perform.</param>
+	/// <returns>An approximation for the Square Root of F.</returns>
+	public static float FSqrt(float F, int Iterations = 1) => FInverseSqrt(Mathf.Max(F, Vector3.kEpsilon), Iterations) * F;
 
 	/// <summary>Computes the Sine and Cosine of a given Angle.</summary>
 	public static void SinCos(out float Sine, out float Cosine, float Angle)
@@ -126,136 +292,6 @@ public static class BatMathematics
 
 		Cosine = Sign * ((((-2.6051615e-07f * A2 + 2.4760495e-05f) * A2 - 0.0013888378f) * A2 + 0.041666638f) * A2 - 0.5f) * A2 + 1.0f;
 	}
-
-	/// <summary>Converts a world direction to be relative to the Reference's forward.</summary>
-	public static Vector3 DirectionRelativeToTransform(Transform Reference, Vector3 Direction, bool bIgnoreYAxis = true)
-	{
-		Vector3 ReferenceForward = Reference.forward;
-		Vector3 ReferenceRight = Reference.right;
-
-		if (bIgnoreYAxis)
-			ReferenceForward.y = ReferenceRight.y = 0f;
-
-		ReferenceForward.Normalize();
-		ReferenceRight.Normalize();
-
-		float LeftRight = Direction.x;
-		float ForwardBackward = Direction.z;
-
-		Vector3 RelativeMovementVector = ReferenceForward * ForwardBackward + ReferenceRight * LeftRight;
-
-		return RelativeMovementVector;
-	}
-
-	public static void AlignTransformToMovement(Transform Transform, Vector3 MovementVector, float RotationSpeed, Vector3 UpAxis)
-	{
-		Quaternion RotationNow = Transform.rotation;
-		Quaternion TargetRotation = Quaternion.LookRotation(MovementVector, UpAxis);
-		Transform.rotation = Quaternion.RotateTowards(RotationNow, TargetRotation, RotationSpeed);
-	}
-
-	public const float kZeroThreshold = .01f;
-
-	/// <summary>True if F is close enough to zero.</summary>
-	public static bool IsZero(float F)
-	{
-		return Mathf.Abs(F) <= kZeroThreshold;
-	}
-
-	/// <summary>True if V is close enough to zero.</summary>
-	/// <remarks>'Close enough' is define in <see cref="IsZero(float)"/>.</remarks>
-	public static bool IsZero(Vector3 V)
-	{
-		return IsZero(V.x) && IsZero(V.y) && IsZero(V.z);
-	}
-
-	/// <summary>Sets V to Vector3.zero if it's close enough to zero.</summary>
-	/// <remarks>'Close enough' is define in <see cref="IsZero(float)"/>.</remarks>
-	public static void SetZeroIfZero(ref Vector3 V, bool bUseForce = false)
-	{
-		// Vector3's == operator is accurate to: 9.99999944 E-11 (0.0000000000999999944)
-		// This is too accurate; define our own threshold.
-		if (IsZero(V))
-		{
-			if (!bUseForce)
-			{
-				V = Vector3.zero;
-			}
-			else
-			{
-				ForceZero(ref V.x);
-				ForceZero(ref V.y);
-				ForceZero(ref V.z);
-			}
-		}
-	}
-
-	/// <summary>Uses bitwise operations to force a float to be absolute zero.</summary>
-	/// <param name="F">Reference to the float that needs to be zero.</param>
-	public unsafe static void ForceZero(ref float F)
-	{
-		// Fix pointer to point to the address float F.
-		fixed (float* pF = &F)
-		{
-			int I = *(int*)&pF; // Lossless conversion of float F bits to int I bits.
-			I &= 0x0;           // Bitwise & 0 always equals 0.
-			F = *(float*)&I;    // Treat the bits of I as a float and give it back to F.
-		}
-
-#if UNITY_EDITOR
-		/*
-		 * For future reference, this function was made because PitchDirection and YawDirection
-		 * was not Zero where it needed to be. These two floats are used in BatMovement.FixedUpdate()
-		 * and is needed for aligning the Bat's velocity to where it is facing.
-		 * 
-		 * There are checks (PitchDirection != 0f || YawDirection != 0f): only if this check passes,
-		 * can we align velocities - it also means the Bat is Airborne.
-		 * 
-		 * Problem is: When these checks pass whilst the Bat is clearly Grounded (IsGrounded() == true)
-		 * and not Airborne (IsAirborne() == false) the Bat would not orient itself to where it's going
-		 * *on the Ground*. This looked weird, and this function literally forces the two floats to be
-		 * exactly Zero... well in theory anyway; if you're reading this, it means it, too, failed.
-		 */
-
-		if (float.IsNaN(F))
-			Debug.LogError("Tell Michael he's dumb! F = NaN");
-		if (float.IsInfinity(F))
-			Debug.LogError("Tell Michael he's dumb! F = Infinity");
-		if (float.IsNegativeInfinity(F))
-			Debug.LogError("Tell Michael he's dumb! F = -Infinity");
-#endif
-	}
-
-	public static void ClampMin(ref float F, float Min)
-	{
-		if (F < Min)
-			F = Min;
-	}
-
-	#region Fast Approximation Functions
-
-	/// <summary>1 / sqrt(N).</summary>
-	/// <remarks>Modified from: <see href="https://github.com/id-Software/Quake-III-Arena/blob/dbe4ddb10315479fc00086f08e25d968b4b43c49/code/game/q_math.c#L552"/></remarks>
-	/// <param name="N">1 / sqrt(x) where x is N.</param>
-	/// <param name="AdditionalIterations">The number of additional Newton Iterations to perform.</param>
-	/// <returns>An approximation for calculating: 1 / sqrt(N).</returns>
-	public static unsafe float FInverseSqrt(float N, int AdditionalIterations = 1)
-	{
-		int F = *(int*)&N;
-		F = 0x5F3759DF - (F >> 1);
-		float X = *(float*)&F;
-
-		float RSqrt = X * (1.5f - .5f * N * X * X);
-		for (int i = 0; i < AdditionalIterations; ++i)
-			RSqrt *= (1.5f - .5f * N * RSqrt * RSqrt);
-		return RSqrt;
-	}
-
-	/// <summary>Faster version of <see cref="Mathf.Sqrt(float)"/>.</summary>
-	/// <param name="F"></param>
-	/// <param name="Iterations">The number of Newton Iterations to perform.</param>
-	/// <returns>An approximation for the Square Root of F.</returns>
-	public static float FSqrt(float F, int Iterations = 1) => FInverseSqrt(Mathf.Max(F, Vector3.kEpsilon), Iterations) * F;
 
 	/// <summary>Faster version of <see cref="Mathf.Asin(float)"/>.</summary>
 	/// <param name="Angle">The angle to get the inverse Sine of.</param>

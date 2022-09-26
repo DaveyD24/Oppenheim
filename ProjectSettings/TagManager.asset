@@ -10,6 +10,8 @@ TagManager:
   - Bat Camera
   - Mango
   - Wall
+  - Water
+  - Blueprint
   layers:
   - Default
   - TransparentFX
@@ -19,7 +21,7 @@ TagManager:
   - UI
   - IgnorePlayer
   - Player
-  - 
+  - CameraCollide
   - 
   - 
   - 

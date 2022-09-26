@@ -10,6 +10,9 @@ public class DashPerform : Node
     private float dashCurrentTime = 0;
     private float dashMaxTime;
 
+    private Vector3 forwardMove;
+    private Vector3 forwardForceDir;
+
     public DashPerform(CarController blackboard)
     {
         this.Blackboard = blackboard;
@@ -20,16 +23,19 @@ public class DashPerform : Node
     {
         base.Init();
         dashCurrentTime = 0;
+        forwardMove = Blackboard.Rb.transform.forward;
     }
 
     public override ENodeState Evaluate()
     {
         float currDashSpeed = Blackboard.DashSpeedCurve.Evaluate(dashCurrentTime);
 
+        AllignToGround();
         if (Blackboard.BAnyWheelGrounded)
         {
-            Blackboard.Rb.AddForceAtPosition(Blackboard.Rb.transform.forward * currDashSpeed, CalculateDashOffset(), ForceMode.Acceleration);
-            Blackboard.Rb.AddForceAtPosition(Vector3.down * Blackboard.Weight, CalculateDashOffset()); // add a downwards force so it does not flip
+            Blackboard.Rb.AddForceAtPosition(forwardForceDir * currDashSpeed, CalculateDashOffset(), ForceMode.Acceleration);
+
+            // Blackboard.Rb.AddForceAtPosition(Vector3.down * Blackboard.Weight, CalculateDashOffset()); // add a downwards force so it does not flip
         }
 
         Blackboard.Motor = currDashSpeed;
@@ -78,5 +84,30 @@ public class DashPerform : Node
         localAngleVelocity.y = 0;
         localAngleVelocity.z = 0;
         Blackboard.Rb.angularVelocity = Blackboard.transform.TransformDirection(localAngleVelocity);
+    }
+
+    /// <summary>
+    /// Get the forward direction so that the car's dash always aligns with the grounds normal.
+    /// </summary>
+    private void AllignToGround()
+    {
+        RaycastHit ground;
+        if (Physics.Raycast(Blackboard.Rb.transform.position, -Vector3.up, out ground, 10.0f, ~Blackboard.PlayerLayer))
+        {
+            Vector3 lookDir = forwardMove;
+            Vector3 up = ground.normal;
+
+            lookDir.y = 0; // ignore all vertical height, so appears to be on flat ground
+            lookDir.Normalize();
+
+            // remove the up amount from the vector
+            float d = Vector3.Dot(lookDir, up); // get the amount of the direction which was up, relative to the grounds normal
+            lookDir -= d * up; // removes any upwards values, so the vectors now 90 degress to the normal and still heading in the right direction
+            lookDir.Normalize();
+
+            // convert the directional vector into a rotation
+            Blackboard.Rb.transform.forward = lookDir;
+            forwardForceDir = lookDir;
+        }
     }
 }

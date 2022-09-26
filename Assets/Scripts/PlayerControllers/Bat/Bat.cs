@@ -10,8 +10,11 @@ public class Bat : PlayerController
 	[Header("EDITOR ONLY")]
 	// True when on a testing scene. Sets this Bat to 'Active' so
 	// that it can be controlled in a scene without a SwitchManager.
-	[SerializeField] bool bIsStandalone;
+	[SerializeField] private bool bIsStandalone;
 #endif
+	[SerializeField] private GameObject ragdol;
+	[SerializeField] private GameObject baseMesh;
+	private BoxCollider boxCollider;
 
 	// Expose Protected Fields.
 	public Rigidbody Physics => Rb;
@@ -32,6 +35,7 @@ public class Bat : PlayerController
 
 		MovementComponent = GetComponent<BatMovement>();
 		EventsComponent = GetComponent<BatEvents>();
+		boxCollider = gameObject.GetComponent<BoxCollider>();
 	}
 
 	public override void ActivateInput(int playerID, PlayerInput playerInput)
@@ -71,7 +75,8 @@ public class Bat : PlayerController
 		PlayerInput.FindAction("Look").canceled += (CallbackContext Context) =>
 		{
 			MovementComponent.LookBinding(ref Context);
-			//MovementComponent.HandleLook(ref Context);
+
+			// MovementComponent.HandleLook(ref Context);
 		};
 	}
 
@@ -99,12 +104,12 @@ public class Bat : PlayerController
 	public override Vector3 GetGroundCheckPosition()
 	{
 		// Fix Global Down as a Local direction.
-		Vector3 WorldToLocalDown = transform.InverseTransformDirection(-transform.up);
+		Vector3 worldToLocalDown = transform.InverseTransformDirection(-transform.up);
 
 		// Set the origin of the Ground Check to the centre of the Bat.
-		WorldToLocalDown += Rb.centerOfMass;
+		worldToLocalDown += Rb.centerOfMass;
 
-		return transform.position + WorldToLocalDown;
+		return transform.position + worldToLocalDown;
 	}
 
 	protected override bool ShouldTakeFallDamage(Collision collision, out float relativeVelocity)
@@ -112,15 +117,39 @@ public class Bat : PlayerController
 		relativeVelocity = collision.relativeVelocity.magnitude;
 
 		if (relativeVelocity < FallDamageThreshold)
+		{
 			return false;
+		}
 
 		// Take damage if landing/crashing at an Angle > than 30 degrees of the surface.
-		float Angle = FAngle(transform.up, collision.contacts[0].normal);
-		bool bTakeFallDamage = Angle > 30f;
+		float angle = FAngle(transform.up, collision.contacts[0].normal);
+		bool bTakeFallDamage = angle > 30f;
 
 		if (bTakeFallDamage)
-			Debug.Log($"At Angle: {Angle}");
+		{
+			Debug.Log($"Collision with {collision.gameObject.name} at {angle:F0} degrees at {relativeVelocity:F0}m/s");
+		}
 
 		return bTakeFallDamage;
+	}
+
+	public override void OnDeath()
+	{
+		base.OnDeath();
+		baseMesh.SetActive(false);
+		boxCollider.enabled = false;
+		ragdol.SetActive(true);
+		Rb.isKinematic = true;
+		ragdol.transform.position = transform.position;
+		MovementComponent.ForceStopAllMovement();
+	}
+
+	protected override void Respawn()
+	{
+		baseMesh.SetActive(true);
+		boxCollider.enabled = true;
+		ragdol.SetActive(false);
+		Rb.isKinematic = false;
+		base.Respawn();
 	}
 }
