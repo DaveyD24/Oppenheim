@@ -12,6 +12,7 @@ public class SoldierMovement : PlayerController
     [SerializeField] private float jumpHeight = 3f;
     [SerializeField] private GameObject ragdol;
     [SerializeField] private GameObject baseMesh;
+    [SerializeField] private GameObject soldierCamera;
     private BoxCollider boxCollider;
 
     [field: Header("Soldier Movement")]
@@ -46,19 +47,21 @@ public class SoldierMovement : PlayerController
         base.Update();
 
         // Rotate towards Movement.
-        Vector3 faceDir = move;
+        Vector3 cameraRelativeDirection = DirectionRelativeToTransform(soldierCamera.transform, move);
+        Vector3 faceDir = cameraRelativeDirection;
         faceDir.y = 0;
         if (faceDir != Vector3.zero)
         {
             AlignTransformToMovement(transform, faceDir, RotationSpeed, Vector3.up);
         }
     }
-    //Swimming
+
+    // Swimming
     public bool isSwimming = false;
     public float swimSpeed;
     public Transform target;
 
-    //public float Rigidbody3D rb;
+    // public float Rigidbody3D rb;
     public Transform soldierTransform;
 
     void Awake()
@@ -193,6 +196,7 @@ public class SoldierMovement : PlayerController
         base.FixedUpdate();
         speedometer.Record(this);
 
+        Vector3 cameraRelativeDirection = DirectionRelativeToTransform(soldierCamera.transform, move);
         if (isSwimming)
         {
             // Swimming
@@ -205,23 +209,23 @@ public class SoldierMovement : PlayerController
 
             if (move.z > 0.25f)
             {
-                Rb.transform.position += transform.forward * swimSpeed * Time.deltaTime;
+                Rb.transform.position += cameraRelativeDirection * swimSpeed * Time.deltaTime;
                 Debug.Log("Swim Left");
             }
 
             if (move.z < -0.25f)
             {
-                Rb.transform.position += transform.forward * swimSpeed * Time.deltaTime;
+                Rb.transform.position += cameraRelativeDirection * swimSpeed * Time.deltaTime;
             }
 
             if (move.x > 0.25f)
             {
-                Rb.transform.position += transform.forward * swimSpeed * Time.deltaTime;
+                Rb.transform.position += cameraRelativeDirection * swimSpeed * Time.deltaTime;
             }
 
             if (move.x < -0.25f)
             {
-                Rb.transform.position += transform.forward * swimSpeed * Time.deltaTime;
+                Rb.transform.position += cameraRelativeDirection * swimSpeed * Time.deltaTime;
             }
         }
         else
@@ -233,10 +237,8 @@ public class SoldierMovement : PlayerController
                 Rb.useGravity = true;
             }
         }
-        // else
-        //{
-            Rb.MovePosition(Rb.position + (MovementSpeed * Time.fixedDeltaTime * move));
-        //}
+
+        Rb.MovePosition(Rb.position + (MovementSpeed * Time.fixedDeltaTime * cameraRelativeDirection));
 
         DetermineAnimationState();
 

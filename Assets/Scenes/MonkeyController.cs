@@ -22,6 +22,7 @@ public class MonkeyController : PlayerController
     [SerializeField] private float jumpWaitTime = 1;
     [SerializeField] private GameObject ragdol;
     [SerializeField] private GameObject baseMesh;
+    [SerializeField] private GameObject monkeyCamera;
     private BoxCollider boxCollider;
 
     private enum State
@@ -73,7 +74,8 @@ public class MonkeyController : PlayerController
         // Rotate towards Movement.
         if (move != Vector3.zero)
         {
-            AlignTransformToMovement(transform, move, RotationSpeed, Vector3.up);
+            Vector3 cameraRelativeDirection = DirectionRelativeToTransform(monkeyCamera.transform, move);
+            AlignTransformToMovement(transform, cameraRelativeDirection, RotationSpeed, Vector3.up);
         }
     }
 
@@ -161,7 +163,9 @@ public class MonkeyController : PlayerController
         base.FixedUpdate();
 
         speedometer.Record(this);
-        Rb.MovePosition(Rb.position + (MovementSpeed * Time.fixedDeltaTime * move));
+
+        Vector3 cameraRelativeDirection = DirectionRelativeToTransform(monkeyCamera.transform, move);
+        Rb.MovePosition(Rb.position + (MovementSpeed * Time.fixedDeltaTime * cameraRelativeDirection));
         DetermineAnimationState();
         speedometer.Mark();
     }

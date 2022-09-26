@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class GridPathfinding : MonoBehaviour
 {
+#if UNITY_EDITOR
     private NavigationNode[,,] grid;
-    [SerializeField] MeshFilter meshFilter;
+    // [SerializeField] MeshFilter meshFilter;
     [Tooltip("The width of the grid which can be searched")]
     [SerializeField] private int width;
     [Tooltip("The height of the grid which can be searched")]
@@ -17,7 +18,6 @@ public class GridPathfinding : MonoBehaviour
     [Tooltip("The offset of the grid from the world origin")]
     [SerializeField] private Vector3 offset;
     [SerializeField] private LayerMask groundLayer;
-    [SerializeField] private bool bCenterOnParent = false;
     [ContextMenuItem("Generate the Grid", "GenerateGrid")]
     [SerializeField] private bool bShowGrid = false;
 
@@ -61,7 +61,7 @@ public class GridPathfinding : MonoBehaviour
         lineRenderer.SetPosition(0, goalObject.transform.position);
         lineRenderer.SetPosition(lineRenderer.positionCount - 1, transform.position);
 
-        CreateMeshPath.MakeCube(meshFilter, path);
+        // CreateMeshPath.MakeCube(meshFilter, path); temporarily disable and fix up for sprint 4
     }
 
     private void OnDrawGizmos()
@@ -87,21 +87,14 @@ public class GridPathfinding : MonoBehaviour
 
     Vector3 PointToWorld(int x, int y, int z)
     {
-        Vector3 pointOffset = bCenterOnParent ? transform.position : offset;
+        Vector3 pointOffset = offset;
 
         return new Vector3(x * tileSize, y * tileSize, z * tileSize) + pointOffset;
     }
 
     public void WorldToPoint(Vector3 worldPoint)
     {
-        if (bCenterOnParent)
-        {
-            worldPoint -= transform.position;
-        }
-        else
-        {
-            worldPoint -= offset;
-        }
+        worldPoint -= offset;
 
         int x = Mathf.CeilToInt(worldPoint.x / tileSize);
         int y = Mathf.CeilToInt(worldPoint.y / tileSize);
@@ -300,4 +293,5 @@ public class GridPathfinding : MonoBehaviour
             }
         }
     }
+#endif
 }

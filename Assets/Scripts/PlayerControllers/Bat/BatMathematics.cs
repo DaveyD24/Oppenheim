@@ -90,25 +90,25 @@ public static class BatMathematics
 	}
 
 	/// <summary>Converts a world direction to be relative to the Reference's forward.</summary>
-	public static Vector3 DirectionRelativeToTransform(Transform Reference, Vector3 Direction, bool bIgnoreYAxis = true)
+	public static Vector3 DirectionRelativeToTransform(Transform reference, Vector3 direction, bool bIgnoreYAxis = true)
 	{
-		Vector3 ReferenceForward = Reference.forward;
-		Vector3 ReferenceRight = Reference.right;
+		Vector3 referenceForward = reference.forward;
+		Vector3 referenceRight = reference.right;
 
 		if (bIgnoreYAxis)
-        {
-            ReferenceForward.y = ReferenceRight.y = 0f;
-        }
+		{
+			referenceForward.y = referenceRight.y = 0f;
+		}
 
-        ReferenceForward.Normalize();
-		ReferenceRight.Normalize();
+		referenceForward.Normalize();
+		referenceRight.Normalize();
 
-		float LeftRight = Direction.x;
-		float ForwardBackward = Direction.z;
+		float leftRight = direction.x;
+		float forwardBackward = direction.z;
 
-		Vector3 RelativeMovementVector = (ReferenceForward * ForwardBackward) + (ReferenceRight * LeftRight);
+		Vector3 relativeMovementVector = (referenceForward * forwardBackward) + (referenceRight * leftRight);
 
-		return RelativeMovementVector;
+		return relativeMovementVector;
 	}
 
 	public static void AlignTransformToMovement(Transform transform, Vector3 movementVector, float rotationSpeed, Vector3 upAxis)
