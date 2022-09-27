@@ -64,9 +64,7 @@ public class BatMovement : MonoBehaviour
 	bool bHasGlidedThisJump, bHasCancelledGlideThisJump;
 	bool bHasBeenGivenSlightBoost;
 	bool bHasDoubleJumped;
-
-	[Space]
-	[SerializeField] Camera BatCamera;
+	
 	Speedometer Speedometer;
 
 	void Start()
@@ -84,6 +82,11 @@ public class BatMovement : MonoBehaviour
 
 	void FixedUpdate()
 	{
+		if (!Bat.TrackingCamera)
+		{
+			return;
+		}
+
 		Speedometer.Record(this);
 
 		HandleGroundMovement();
@@ -105,7 +108,7 @@ public class BatMovement : MonoBehaviour
 			Bat.Physics.velocity = Velocity;
 
 			// Not Zero and must be facing in the same general direction.
-			if (Velocity != Vector3.zero && Vector3.Dot(transform.forward, Velocity) > .5f)
+			if (Velocity != Vector3.zero && Vector3.Dot(transform.forward, Velocity) > .1f)
 			{
 				// Use transform.up or Vector3.up?
 				Quaternion RotationNow = transform.rotation;
@@ -118,7 +121,7 @@ public class BatMovement : MonoBehaviour
 			if (GroundMovement != Vector3.zero && !IsAirborne())
 			{
 				// Smoothly rotate the Bat towards where it's moving.
-				Vector3 MovementVector = DirectionRelativeToTransform(BatCamera.transform, GroundMovement);
+				Vector3 MovementVector = DirectionRelativeToTransform(Bat.TrackingCamera.transform, GroundMovement);
 				AlignTransformToMovement(transform, MovementVector, Bat.YawSpeed, Vector3.up);
 			}
 		}
@@ -337,7 +340,7 @@ public class BatMovement : MonoBehaviour
 		if (!IsAirborne() || !bHasGlidedThisJump)
 		{
 			// Ground Movement relative to the camera.
-			Vector3 cameraRelativeDirection = DirectionRelativeToTransform(BatCamera.transform, GroundMovement);
+			Vector3 cameraRelativeDirection = DirectionRelativeToTransform(Bat.TrackingCamera.transform, GroundMovement);
 			Bat.Physics.MovePosition(Bat.Physics.position + (cameraRelativeDirection * Time.fixedDeltaTime));
 
 			// PitchDelta = YawDelta = 0f;

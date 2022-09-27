@@ -13,7 +13,7 @@ public class SwitchManager : MonoBehaviour
     private List<int> controlledPlayers = new List<int>();
     private List<int> uncontrolledPlayers = new List<int>();
 
-    private int numberOfDevicesJoined = 0;
+    private int numberOfPlayers = 0;
 
     [SerializeField] private InputActions joinAction; // the input for joining as a new controller
 
@@ -141,7 +141,7 @@ public class SwitchManager : MonoBehaviour
             controlledPlayers.Add(playerID);
             uncontrolledPlayers.RemoveAt(playerToControl);
 
-            GetPlayerByID(playerID).HumanPlayerIndex = (EPlayer)(++numberOfDevicesJoined);
+            GetPlayerByID(playerID).HumanPlayerIndex = (EPlayer)(++numberOfPlayers);
 
             GameEvents.ActivatePlayer(playerID, player);
 
@@ -221,7 +221,11 @@ public class SwitchManager : MonoBehaviour
         Debug.Log("input device has disconnected");
         GameEvents.DeactivatePlayer(playerInputConnection[playerInput]);
         playerInputConnection.Remove(playerInput);
+
+        --numberOfPlayers;
     }
+
+    public int GetNumberOfPlayers() => numberOfPlayers;
     
     /// <summary>Get every Player in the game.</summary>
     public void GetAllPlayers(out PlayerController[] outPlayers)

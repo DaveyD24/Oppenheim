@@ -97,14 +97,23 @@ public class ViewportSplit : MonoBehaviour
 			foreach (PlayerController PC in All)
 				PC.TrackingCamera = MainSpringArm;
 
-			Vector3 AveragePosition = GetAveragePosition();
-
-			// Check for NaN for the start of the Game when there is no
-			// Active Player because division by zero.
-			if (!DiagnosticCheckNaN(AveragePosition))
+			int NumberOfPlayers = Get().SwitchManager.GetNumberOfPlayers();
+			if (NumberOfPlayers > 1)
 			{
-				Average.position = AveragePosition;
-				MainSpringArm.Target = Average;
+				Vector3 AveragePosition = GetAveragePosition();
+
+				// Check for NaN for the start of the Game when there is no
+				// Active Player because division by zero.
+				if (!DiagnosticCheckNaN(AveragePosition))
+				{
+					Average.position = AveragePosition;
+					MainSpringArm.Target = Average;
+				}
+			}
+			else if (NumberOfPlayers == 1)
+			{
+				PlayerController OnlyActive = All.First(PC => PC.Active);
+				MainSpringArm.Target = OnlyActive.transform;
 			}
 		}
 	}

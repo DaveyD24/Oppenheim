@@ -66,7 +66,7 @@ public abstract class PlayerController : MonoBehaviour
 
     [field: SerializeField] protected float GroundCheckRadius { get; private set; }
 
-    [field: SerializeField] public SpringArm TrackingCamera { get; set; }
+    [field: SerializeField, ReadOnly] public SpringArm TrackingCamera { get; set; }
 
     protected float CurrentFuel { get => fuel; set => fuel = Mathf.Clamp(value, 0, DefaultPlayerData.MaxFuel); }
 
