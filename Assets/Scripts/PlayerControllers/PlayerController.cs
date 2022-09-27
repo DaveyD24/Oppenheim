@@ -42,6 +42,8 @@ public abstract class PlayerController : MonoBehaviour
 
     public float Weight { get; private set; }
 
+    [ReadOnly] public EPlayer HumanPlayerIndex = EPlayer.None;
+
     [field: Header("Inherited from Player Controller")]
 
     // A unique object each scene object gets assigned, being largly used to store the players id
@@ -63,6 +65,8 @@ public abstract class PlayerController : MonoBehaviour
     [field: SerializeField] Vector3 groundCheckPosition;
 
     [field: SerializeField] protected float GroundCheckRadius { get; private set; }
+
+    [field: SerializeField] public SpringArm TrackingCamera { get; set; }
 
     protected float CurrentFuel { get => fuel; set => fuel = Mathf.Clamp(value, 0, DefaultPlayerData.MaxFuel); }
 
@@ -399,4 +403,13 @@ public abstract class PlayerController : MonoBehaviour
         GameEvents.Die();
         DeathWaitTimer = null;
     }
+}
+
+public enum EPlayer
+{
+        None = 0,
+        P1 = 1,
+        P2 = 2,
+        P3 = 3,
+        P4 = 4,
 }
