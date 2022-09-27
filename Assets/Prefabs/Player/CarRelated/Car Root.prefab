@@ -761,6 +761,7 @@ GameObject:
   - component: {fileID: 5583241534940801186}
   - component: {fileID: 5583241534940801180}
   - component: {fileID: 3386755762071850918}
+  - component: {fileID: 2905989151779824795}
   m_Layer: 7
   m_Name: Car Root
   m_TagString: Player
@@ -824,6 +825,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   controlObj: {fileID: 0}
   fuelSlider: {fileID: 7063030429204434947}
+  HumanPlayerIndex: 0
   <PlayerIdSO>k__BackingField: {fileID: 11400000, guid: a6ba5f247f9af9242bb3d3700fe06543, type: 2}
   <DefaultPlayerData>k__BackingField: {fileID: 11400000, guid: edaf631a83ce6ea42aa9463c9228f767, type: 2}
   <Bouyancy>k__BackingField: 0
@@ -833,6 +835,7 @@ MonoBehaviour:
   <FallDamageThreshold>k__BackingField: 75
   groundCheckPosition: {x: 0, y: 0, z: 0}
   <GroundCheckRadius>k__BackingField: 0
+  <TrackingCamera>k__BackingField: {fileID: 0}
   axleInfos:
   - <LeftWheel>k__BackingField: {fileID: 5583241534940801187}
     <LeftWheelDeath>k__BackingField: {fileID: 4575432284750187239}
@@ -982,6 +985,24 @@ MonoBehaviour:
         StereoPan: 0
         SpatialBlend: 0.75
         ReverbZoneMix: 1
+--- !u!114 &2905989151779824795
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4736310480184235480}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 4
+  outlineColor: {r: 0, g: 0.384619, b: 1, a: 1}
+  outlineWidth: 2
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
 --- !u!1 &4856805270559710510
 GameObject:
   m_ObjectHideFlags: 0

@@ -2194,6 +2194,7 @@ GameObject:
   - component: {fileID: 2527731378979109223}
   - component: {fileID: 1586942486836073262}
   - component: {fileID: 8298377501420551179}
+  - component: {fileID: 2582253947113007348}
   m_Layer: 7
   m_Name: Gibbon
   m_TagString: Player
@@ -2282,6 +2283,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   controlObj: {fileID: 0}
   fuelSlider: {fileID: 3436435821522737857}
+  HumanPlayerIndex: 0
   <PlayerIdSO>k__BackingField: {fileID: 11400000, guid: 0aca3aa46054d22439aa2cb351a6753d, type: 2}
   <DefaultPlayerData>k__BackingField: {fileID: 11400000, guid: edaf631a83ce6ea42aa9463c9228f767, type: 2}
   <Bouyancy>k__BackingField: 0
@@ -2291,10 +2293,10 @@ MonoBehaviour:
   <FallDamageThreshold>k__BackingField: 25
   groundCheckPosition: {x: 0, y: -0.5, z: 0}
   <GroundCheckRadius>k__BackingField: 0.3
+  <TrackingCamera>k__BackingField: {fileID: 0}
   jumpWaitTime: 1
   ragdol: {fileID: 1896944643}
   baseMesh: {fileID: 8507196184706660832}
-  monkeyCamera: {fileID: 0}
 --- !u!114 &8298377501420551179
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2337,6 +2339,24 @@ MonoBehaviour:
         StereoPan: 0
         SpatialBlend: 0.75
         ReverbZoneMix: 1
+--- !u!114 &2582253947113007348
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 733961236116143062}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 4
+  outlineColor: {r: 0.6721401, g: 0, b: 1, a: 1}
+  outlineWidth: 2
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
 --- !u!1 &950156442964063554
 GameObject:
   m_ObjectHideFlags: 0

@@ -254,7 +254,7 @@ public class SpringArm : MonoBehaviour
 	{
 		if (bInvertX)
 			Inverse(ref DeltaX);
-		else if (bInvertY)
+		if (bInvertY)
 			Inverse(ref DeltaY);
 
 		static void Inverse(ref float F) => F *= -1f;
@@ -286,30 +286,30 @@ public class SpringArm : MonoBehaviour
 	{
 		if (bUseCustomProjection && Distance > 3)
 		{
-			Debug.Log(name +"__");
-			Plane = Target;
+			Plane = Camera;
 
-			if (Physics.Linecast(Target.position, Camera.position, out RaycastHit Intercept, 256))
+			if (Physics.Linecast(Target.position, Camera.position, out RaycastHit Intercept, OnlyCollideWith))
 			{
 				NearClipDistance = Intercept.distance;
 			}
 			else
 			{
-				NearClipDistance = Distance * .5f;
+				CameraComponent.projectionMatrix = DefaultProjection;
+				return;
 			}
 
-			int Dot = Math.Sign(Vector3.Dot(Plane.forward, Target.position - Camera.position));
+			int Dot = Math.Sign(Vector3.Dot(Plane.forward, (Target.position - Camera.position).normalized));
 			Vector3 CameraWorldPosition = CameraComponent.worldToCameraMatrix.MultiplyPoint(Target.position);
-			Vector3 CameraNormal = CameraComponent.worldToCameraMatrix.MultiplyVector(Plane.forward) * Dot;
+			Vector3 CameraNormal = CameraComponent.worldToCameraMatrix.MultiplyVector((Target.position - Camera.position).normalized) * 1;
 
 			float CameraDistance = -Vector3.Dot(CameraWorldPosition, CameraNormal) + NearClipDistance;
 
 			// If the Camera is too close to the Target, don't use oblique projection.
 			if (Mathf.Abs(CameraDistance) > DistanceLimit)
 			{
-				Vector4 clipPlaneCameraSpace = new Vector4(CameraNormal.x, CameraNormal.y, CameraNormal.z, CameraDistance);
+				Vector4 ClipPlaneCameraSpace = new Vector4(CameraNormal.x, CameraNormal.y, CameraNormal.z, CameraDistance);
 
-				CameraComponent.projectionMatrix = CameraComponent.CalculateObliqueMatrix(clipPlaneCameraSpace);
+				CameraComponent.projectionMatrix = CameraComponent.CalculateObliqueMatrix(ClipPlaneCameraSpace);
 			}
 			else
 			{
@@ -318,10 +318,11 @@ public class SpringArm : MonoBehaviour
 		}
 		else
 		{
-			Debug.Log(name + " HUH?");
 			CameraComponent.projectionMatrix = DefaultProjection;
 		}
 	}
+
+	#region Settings
 
 	public SpringArmSettings GetSettings()
 	{
@@ -427,6 +428,8 @@ public class SpringArm : MonoBehaviour
 		DistanceLimit = Settings.DistanceLimit;
 		DefaultProjection = Settings.DefaultProjection;
 	}
+
+	#endregion
 
 #if UNITY_EDITOR
 	void OnValidate()
