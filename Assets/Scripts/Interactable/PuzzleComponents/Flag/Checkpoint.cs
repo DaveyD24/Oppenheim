@@ -9,6 +9,8 @@ public class Checkpoint : MonoBehaviour
 {
     public static Vector3 RespawnPosition { get; private set; }
 
+    public static bool BUseCheckpointPos { get; private set; }
+
     private List<int> seenId = new List<int>();
     private float flagUpAmount;
     private Transform flagTransform;
@@ -17,6 +19,7 @@ public class Checkpoint : MonoBehaviour
     [SerializeField] private AnimationCurve movementSpeedCurve;
     [SerializeField] private float minY;
     [SerializeField] private float maxY;
+    [SerializeField] private ParticleSystem activateParticles;
 
     private Tween flagMoveTween;
 
@@ -58,6 +61,11 @@ public class Checkpoint : MonoBehaviour
         if (seenId.Count >= 4)
         {
             RespawnPosition = transform.position;
+            activateParticles.Play();
+            if (!BUseCheckpointPos)
+            {
+                BUseCheckpointPos = true;
+            }
 
             // SceneManager.LoadScene("WinScene");
 #if !UNITY_EDITOR

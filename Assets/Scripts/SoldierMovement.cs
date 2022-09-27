@@ -286,6 +286,10 @@ public class SoldierMovement : PlayerController
     public override void OnDeath()
     {
         base.OnDeath();
+        move = Vector3.zero;
+        isSwimming = false;
+        bDidJump = false;
+
         baseMesh.SetActive(false);
         boxCollider.enabled = false;
         ragdol.SetActive(true);
@@ -306,6 +310,10 @@ public class SoldierMovement : PlayerController
         ragdol.SetActive(false);
         Rb.isKinematic = false;
         bHasPlayedScream = false;
+
+        move = Vector3.zero;
+        isSwimming = false;
+        bDidJump = false;
         base.Respawn();
     }
 

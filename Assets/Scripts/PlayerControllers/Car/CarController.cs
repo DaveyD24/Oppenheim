@@ -176,6 +176,12 @@ public class CarController : PlayerController
     public override void OnDeath()
     {
         base.OnDeath();
+        inputAmount = Vector2.zero;
+        if (BIsDash)
+        {
+            BCancelDash = true;
+        }
+
         foreach (AxleInfo axleInfo in axleInfos)
         {
             axleInfo.LeftWheel.gameObject.SetActive(false);
@@ -207,6 +213,12 @@ public class CarController : PlayerController
     protected override void Respawn()
     {
         base.Respawn();
+        inputAmount = Vector2.zero;
+        if (BIsDash)
+        {
+            BCancelDash = true;
+        }
+
         foreach (AxleInfo axleInfo in axleInfos)
         {
             if (axleInfo.LeftWheel != null)

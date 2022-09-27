@@ -363,8 +363,24 @@ public abstract class PlayerController : MonoBehaviour
     {
         // respawning code...
         Rb.velocity = Vector3.zero;
-        Rb.transform.position = startPosition;
-        transform.rotation = startRotation;
+        Rb.angularVelocity = Vector3.zero;
+
+        if (!Checkpoint.BUseCheckpointPos)
+        {
+            Rb.transform.position = startPosition;
+            transform.rotation = startRotation;
+        }
+        else
+        {
+            // calculate the radius around the checkpoint at which the players are to spawn
+            Vector3 centrePos = Checkpoint.RespawnPosition;
+            float currentAngle = (90 * PlayerIdSO.PlayerID * Mathf.PI) / 180.0f;
+            Vector3 playerPos = centrePos + new Vector3(Mathf.Cos(currentAngle) * DefaultPlayerData.RadiusFromCheckpiont, DefaultPlayerData.CheckpointYOffset, Mathf.Sin(currentAngle) * DefaultPlayerData.RadiusFromCheckpiont);
+
+            Rb.transform.position = playerPos;
+            transform.rotation = Quaternion.identity;
+        }
+
         if (PlayerInput != null)
         {
             PlayerInput.Enable();

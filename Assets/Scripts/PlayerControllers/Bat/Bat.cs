@@ -149,12 +149,13 @@ public class Bat : PlayerController
 	public override void OnDeath()
 	{
 		base.OnDeath();
+		MovementComponent.ForceStopAllMovement();
+
 		baseMesh.SetActive(false);
 		boxCollider.enabled = false;
 		ragdol.SetActive(true);
 		Rb.isKinematic = true;
 		ragdol.transform.position = transform.position;
-		MovementComponent.ForceStopAllMovement();
 	}
 
 	protected override void Respawn()
@@ -163,6 +164,7 @@ public class Bat : PlayerController
 		boxCollider.enabled = true;
 		ragdol.SetActive(false);
 		Rb.isKinematic = false;
+		MovementComponent.ForceStopAllMovement();
 		base.Respawn();
 	}
 

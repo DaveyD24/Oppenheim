@@ -529,6 +529,9 @@ public class BatMovement : MonoBehaviour
 		ForceZero(ref ThrowMove.y);
 		ForceZero(ref ThrowLook.x);
 		ForceZero(ref ThrowLook.y);
+		ThrowMove = Vector2.zero;
+		ThrowLook = Vector2.zero;
+		GroundMovement = Vector3.zero;
 
 		StopGradualAcceleration();
 	}

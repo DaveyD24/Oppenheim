@@ -155,6 +155,10 @@ public class MonkeyController : PlayerController
     public override void OnDeath()
     {
         base.OnDeath();
+        move = Vector3.zero;
+        clinging = false;
+        bDidJump = false;
+
         baseMesh.SetActive(false);
         boxCollider.enabled = false;
         ragdol.SetActive(true);
@@ -168,6 +172,10 @@ public class MonkeyController : PlayerController
         boxCollider.enabled = true;
         ragdol.SetActive(false);
         Rb.isKinematic = false;
+
+        move = Vector3.zero;
+        clinging = false;
+        bDidJump = false;
         base.Respawn();
     }
 
