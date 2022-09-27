@@ -4,7 +4,6 @@
 #endif
 
 using System.Linq;
-using System.Text;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Extensions;
@@ -46,6 +45,7 @@ public class ViewportSplit : MonoBehaviour
 		}
 	}
 
+	/// <returns>The <see langword="static"/> reference to the only <see cref="ViewportSplit"/>.</returns>
 	public static ViewportSplit Get()
 	{
 		return Viewport;
@@ -56,7 +56,7 @@ public class ViewportSplit : MonoBehaviour
 	public static void SetCameraPositions()
 	{
 		// If we need to split the Viewport.
-		if (ArePlayersTooFarApart(out _))
+		if (ArePlayersTooFarApart())
 		{
 			List<PlayerController> Active = Get().SwitchManager.GetActivePlayers();
 
@@ -170,6 +170,37 @@ public class ViewportSplit : MonoBehaviour
 		return Positions / (float)Players.Length;
 	}
 
+	/// <remarks>
+	/// Too far is defined as:<br></br>
+	/// <code>
+	/// distance(v, Player.Position) &gt; <see cref="TooFarThreshold"/>
+	/// <br></br>
+	/// Where v = Average Position of all Active Players.
+	/// </code>
+	/// I.e., A Player is too far if distance between v and the Player's position is
+	/// greater than <see cref="TooFarThreshold"/>.
+	/// </remarks>
+	/// <returns>
+	/// <see langword="true"/> if at least one Active Player is <see cref="TooFarThreshold"/>
+	/// from their Average Position.
+	/// </returns>
+	public static bool ArePlayersTooFarApart()
+	{
+		List<PlayerController> ActivePlayers = Get().SwitchManager.GetActivePlayers();
+
+		Vector3 Mean = GetAveragePosition(ActivePlayers.ToArray());
+		float T = Get().TooFarThreshold;
+		float T2 = T * T;
+
+		for (int i = 0; i < ActivePlayers.Count; ++i)
+			if (Mean.SquareDistance(ActivePlayers[i].transform.position) > T2)
+				return true;
+
+		return false;
+	}
+
+	/// <inheritdoc cref="ArePlayersTooFarApart"/>
+	/// <param name="PlayersTooFar">Out HashSet of the Players that are considered 'Too Far'.</param>
 	public static bool ArePlayersTooFarApart(out HashSet<PlayerController> PlayersTooFar)
 	{
 		PlayersTooFar = new HashSet<PlayerController>();

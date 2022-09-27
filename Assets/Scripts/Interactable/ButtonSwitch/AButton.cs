@@ -1,6 +1,7 @@
 using UnityEngine;
 
-/// The naming of this class is to avoid <see cref="UnityEngine.UI.Button"/>.
+/// The naming of this class is to avoid <see cref="UnityEngine.UI.Button"/>
+/// and <see cref="Button"/> and definitely did not draw inspiration from UE.
 public class AButton : Interactable
 {
 	[SerializeField, Min(0f)] float RequiredMassToActivate;
