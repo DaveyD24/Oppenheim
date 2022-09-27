@@ -42,8 +42,9 @@ public class DashPerform : Node
         dashCurrentTime += Time.fixedDeltaTime;
         CancleSidewaysVelocity();
 
-        if (dashCurrentTime >= dashMaxTime)
+        if (dashCurrentTime >= dashMaxTime || Blackboard.BCancelDash)
         {
+            Blackboard.BCancelDash = false;
             return ENodeState.Success;
         }
 

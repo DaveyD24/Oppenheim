@@ -128,7 +128,6 @@ public class MonkeyController : PlayerController
             }
 
             bDidJump = true;
-            Debug.Log("yeet");
             animator.SetTrigger("Jump");
 
             Audio.Play(RandomSound(), EAudioPlayOptions.FollowEmitter | EAudioPlayOptions.DestroyOnEnd);

@@ -77,6 +77,11 @@ public class DashTransition : Node
             Blackboard.BIsDash = false;
             Blackboard.BAllowEndBreaking = false;
             Blackboard.CarMaterials[0] = defaultMat;
+
+            if (Blackboard.BCancelDash)
+            {
+                Blackboard.BCancelDash = false;
+            }
         }
         else
         {

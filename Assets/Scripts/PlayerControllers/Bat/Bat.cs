@@ -1,7 +1,8 @@
+using EventSystem;
 using UnityEngine;
-using static UnityEngine.InputSystem.InputAction;
-using static global::BatMathematics;
 using UnityEngine.InputSystem;
+using static global::BatMathematics;
+using static UnityEngine.InputSystem.InputAction;
 
 [RequireComponent(typeof(BatMovement), typeof(BatEvents))]
 public class Bat : PlayerController

@@ -214,7 +214,7 @@ public class SwitchManager : MonoBehaviour
         GameEvents.DeactivatePlayer(playerInputConnection[playerInput]);
         playerInputConnection.Remove(playerInput);
     }
-    
+
     /// <summary>Get every Player in the game.</summary>
     public void GetAllPlayers(out PlayerController[] outPlayers)
     {

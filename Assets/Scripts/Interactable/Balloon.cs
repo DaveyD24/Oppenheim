@@ -71,7 +71,8 @@ public class Balloon : MonoBehaviour
 		else
         {
 			boxToAttach.GetComponent<Rigidbody>().isKinematic = false;
-        }
+			boxToAttach.AddComponent<BoxCollider>();
+		}
 
 #if !UNITY_EDITOR
 		Dictionary<string, object> eventData = new Dictionary<string, object>();
@@ -95,6 +96,7 @@ public class Balloon : MonoBehaviour
 		RaycastHit hit;
 		Physics.Raycast(transform.position, Vector3.down * 100, out hit);
 		lineRenderer.SetPosition(1, hit.point);
+		lineRenderer.SetPosition(0, boxToAttach.transform.position);
 	}
 
 	private void OnValidate()
@@ -105,15 +107,11 @@ public class Balloon : MonoBehaviour
 			SpawnBox();
 		}
 
-		if (!Application.isPlaying && TryGetComponent(out MeshRenderer MR))
+		if (!Application.isPlaying && TryGetComponent(out MeshRenderer mR))
 		{
-			MR.sharedMaterial = new Material(StandardMaterial);
+			mR.sharedMaterial = new Material(StandardMaterial);
 
-			MR.sharedMaterial.SetColor("_Color",
-				bRandomiseColour
-					? URandom.ColorHSV(.1f, .9f, 1f, 1f)
-					: BalloonColour
-			);
+			mR.sharedMaterial.SetColor("_Color", bRandomiseColour ? URandom.ColorHSV(.1f, .9f, 1f, 1f) : BalloonColour);
 		}
 	}
 }

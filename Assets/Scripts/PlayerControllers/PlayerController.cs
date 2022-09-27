@@ -328,7 +328,7 @@ public abstract class PlayerController : MonoBehaviour
             Instantiate(DefaultPlayerData.DustParticles, collision.GetContact(0).point, Quaternion.identity);
         }
 
-        if(collision.gameObject.CompareTag("Blueprint"))
+        if (collision.gameObject.CompareTag("Blueprint"))
         {
             SceneManager.LoadScene("WinScene");
         }

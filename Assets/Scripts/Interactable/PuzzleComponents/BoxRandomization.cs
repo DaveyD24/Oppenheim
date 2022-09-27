@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using EventSystem;
 
 /// <summary>
 /// Randomly customizes the breakable and pushable boxes so they can be unique each playthrough.
@@ -15,6 +16,7 @@ public class BoxRandomization : MonoBehaviour
     [SerializeField] private MeshFilter[] meshFilters;
     [SerializeField] private MeshRenderer[] meshRenderers;
     private Rigidbody rb;
+    // [SerializeField] private GameObject solidColliderObj;
 
     private void Start()
     {
@@ -52,6 +54,8 @@ public class BoxRandomization : MonoBehaviour
             Quaternion rot = Quaternion.Euler(Random.Range(0, 4) * 90, Random.Range(0, 4) * 90, Random.Range(0, 4) * 90);
             transform.rotation = rot;
         }
+
+        // Physics.IgnoreCollision(GetComponent<Collider>(), solidColliderObj.GetComponent<Collider>());
     }
 
     /// <summary>
@@ -67,6 +71,7 @@ public class BoxRandomization : MonoBehaviour
             {
                 float xVelocity = Mathf.Abs(rb.velocity.x);
                 float zVelocity = Mathf.Abs(rb.velocity.z);
+
                 // determine the direction with the most force and freeze the other
                 if (xVelocity > zVelocity)
                 {
@@ -96,5 +101,32 @@ public class BoxRandomization : MonoBehaviour
     private void Update()
     {
         OneDirectionMove();
+
+        // Debug.Log(solidColliderObj);
+        // solidColliderObj.transform.position = transform.position;
+        // solidColliderObj.transform.rotation = transform.rotation;
     }
+
+    // private void OnEnable()
+    // {
+    //    GameEvents.OnColliderIgnore += IgnoreParentCollisions;
+    // }
+
+    // private void OnDisable()
+    // {
+    //    GameEvents.OnColliderIgnore -= IgnoreParentCollisions;
+    // }
+
+    ///// <summary>
+    ///// Set this object to ignore physics collisions with all players execpt the car, so that the car is the only one which can move it.
+    ///// </summary>
+    ///// <param name="colliderIgnoring">The player collider to ignore.</param>
+    ///// <param name="bIgnoreChild">Does it ignore the parent(collider with rigidbody) or the child(collider without rigidbody).</param>
+    // private void IgnoreParentCollisions(Collider colliderIgnoring, bool bIgnoreChild)
+    // {
+    //     Collider collider = bIgnoreChild ? GetComponent<Collider>() : solidColliderObj.GetComponent<Collider>();
+    //     Physics.IgnoreCollision(collider, colliderIgnoring, true);
+    //
+    //     Debug.Log("Collision Ignored");
+    // }
 }

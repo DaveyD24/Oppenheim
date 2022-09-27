@@ -2,6 +2,7 @@ namespace EventSystem
 {
     using System;
     using UnityEngine.InputSystem;
+    using System.Collections.Generic;
 
     /// <summary>
     /// A base class handleing all game events where two or more objects need to communicate with each other.
@@ -13,6 +14,8 @@ namespace EventSystem
         public static Action OnDie { get; set; }
 
         public static Action<int> OnCollectFuel { get; set; }
+
+        // public static Action<UnityEngine.Collider, bool> OnColliderIgnore { get; set; }
 
         public static Action<int> OnAddPlayerSwitch { get; set; }
 
@@ -56,5 +59,10 @@ namespace EventSystem
         {
             OnDeactivatePlayer?.Invoke(currentPlayerId);
         }
+
+        // public static void ColliderIgnore(UnityEngine.Collider ignoreCollider, bool bIgnoreChild = false)
+        // {
+        //    OnColliderIgnore?.Invoke(ignoreCollider, bIgnoreChild);
+        // }
     }
 }

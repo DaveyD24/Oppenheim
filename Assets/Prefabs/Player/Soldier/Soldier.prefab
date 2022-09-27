@@ -1359,9 +1359,13 @@ MonoBehaviour:
   <FallDamageThreshold>k__BackingField: 25
   groundCheckPosition: {x: 0, y: 0, z: 0}
   <GroundCheckRadius>k__BackingField: 0.3
+  <StageStartPosition>k__BackingField: {x: 159.9148, y: 5.5, z: -506.90985}
+  <StageStartRotation>k__BackingField: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
+  jumpWaitTime: 1
   jumpHeight: 1
   ragdol: {fileID: 1937797457676110068}
   baseMesh: {fileID: 3182380755078332304}
+  soldierCamera: {fileID: 0}
   <BulletSpawnPoint>k__BackingField: {fileID: 683507821935103832}
   <BulletPrefab>k__BackingField: {fileID: 1859860186272881942, guid: c152a41615db67940a047f2c85d5e16a, type: 3}
   <BulletSpeed>k__BackingField: 10

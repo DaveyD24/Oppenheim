@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using EventSystem;
 
 public class CarController : PlayerController
 {
@@ -56,6 +57,8 @@ public class CarController : PlayerController
     [field: SerializeField] public Vector3 DashOffset { get; private set; }
 
     [field: SerializeField] public Material DashBodyMaterial { get; private set; }
+
+    [SerializeField] public bool BCancelDash { get; set; } = false;
 
     [Header("Wind Particles")]
     [Space(1)]
@@ -232,7 +235,10 @@ public class CarController : PlayerController
 
         if (collision.gameObject.CompareTag("Wall") && BIsDash)
         {
-            collision.gameObject.GetComponent<Rigidbody>().AddForce(50000 * transform.forward);
+            Vector3 boxLevelPos = new Vector3(transform.position.x, collision.gameObject.transform.position.y, transform.position.z);
+            Vector3 direction = (collision.gameObject.transform.position - boxLevelPos).normalized;
+            collision.gameObject.GetComponent<PushableBox>().ApplyMovementForce(direction);
+            BCancelDash = true;
         }
     }
 

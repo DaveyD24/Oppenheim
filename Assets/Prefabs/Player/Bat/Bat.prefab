@@ -287,6 +287,8 @@ MonoBehaviour:
   <FallDamageThreshold>k__BackingField: 27
   groundCheckPosition: {x: 0, y: 1.5, z: 0}
   <GroundCheckRadius>k__BackingField: 0.5
+  <StageStartPosition>k__BackingField: {x: 159.804, y: 5.833921, z: -493.00803}
+  <StageStartRotation>k__BackingField: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
   bIsStandalone: 0
   ragdol: {fileID: 1259981665220065791}
   baseMesh: {fileID: 1051679150067098337}

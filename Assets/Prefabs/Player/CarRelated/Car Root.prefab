@@ -804,7 +804,7 @@ Rigidbody:
   serializedVersion: 2
   m_Mass: 30
   m_Drag: 0.2
-  m_AngularDrag: 0.05
+  m_AngularDrag: 0.1
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
@@ -833,6 +833,8 @@ MonoBehaviour:
   <FallDamageThreshold>k__BackingField: 75
   groundCheckPosition: {x: 0, y: 0, z: 0}
   <GroundCheckRadius>k__BackingField: 0
+  <StageStartPosition>k__BackingField: {x: 169.4487, y: 6.209071, z: -499.92566}
+  <StageStartRotation>k__BackingField: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
   axleInfos:
   - <LeftWheel>k__BackingField: {fileID: 5583241534940801187}
     <LeftWheelDeath>k__BackingField: {fileID: 4575432284750187239}
@@ -849,7 +851,7 @@ MonoBehaviour:
   indicatorMat: {fileID: 2100000, guid: 99b51c67b4a1109438cc9f4d00af213e, type: 2}
   normalLightMat: {fileID: -2499569385991133865, guid: 87a4ac2e4093d9540b395e877017022b, type: 3}
   indicatorFrequency: 0.5
-  breakTorque: 30
+  breakTorque: 10
   tailLights: {fileID: 3055996272150503839, guid: 87a4ac2e4093d9540b395e877017022b, type: 3}
   illumimatedTailLights: {fileID: 2100000, guid: f542b70cbeae5da46a195e88ad395722, type: 2}
   trail: {fileID: 2909080915507810006, guid: 2f5c050b1de117f469a6f2a317adad9d, type: 3}
@@ -6631,10 +6633,6 @@ GameObject:
   - component: {fileID: 6149659789847779514}
   - component: {fileID: 7046104975227103426}
   - component: {fileID: 5583241534940801179}
-  - component: {fileID: 5583241534940801178}
-  - component: {fileID: 5583241534940801177}
-  - component: {fileID: 5583241534940801176}
-  - component: {fileID: 5583241534940801191}
   m_Layer: 7
   m_Name: Body
   m_TagString: Player
@@ -6727,58 +6725,6 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 4089790053925118277, guid: 87a4ac2e4093d9540b395e877017022b, type: 3}
---- !u!65 &5583241534940801178
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6651721284131984051}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 0
-  serializedVersion: 2
-  m_Size: {x: 1.0185394, y: 0.66805893, z: 1.013423}
-  m_Center: {x: 0.003791809, y: -1.8727971, z: -0.70762813}
---- !u!65 &5583241534940801177
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6651721284131984051}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 0
-  serializedVersion: 2
-  m_Size: {x: 1.0185394, y: 0.7313519, z: 1.013423}
-  m_Center: {x: 0.003791809, y: 1.3333211, z: -0.7076262}
---- !u!65 &5583241534940801176
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6651721284131984051}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 0
-  serializedVersion: 2
-  m_Size: {x: 1.0185394, y: 0.9846184, z: 0.6860401}
-  m_Center: {x: 0.003791809, y: -0.2623451, z: -0.5439262}
---- !u!65 &5583241534940801191
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6651721284131984051}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 0
-  serializedVersion: 2
-  m_Size: {x: 2.9263048, y: 5.491088, z: 1.6290071}
-  m_Center: {x: 0, y: -0.11344529, z: 0.61416453}
 --- !u!1 &7358331414480166392
 GameObject:
   m_ObjectHideFlags: 0

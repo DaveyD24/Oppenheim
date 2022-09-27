@@ -17,6 +17,10 @@ public class SoldierMovement : PlayerController
 
 #endif
 
+    private bool bDidJump = false;
+    private float currJumpWaitTime = 1;
+    [SerializeField] private float jumpWaitTime = 1;
+
     private Vector3 playerVelocity;
     private Vector3 move;
     private Animator animator;
@@ -40,6 +44,7 @@ public class SoldierMovement : PlayerController
         animator = GetComponent<Animator>();
         speedometer.Initialise();
         boxCollider = gameObject.GetComponent<BoxCollider>();
+        currJumpWaitTime = jumpWaitTime;
 
         Audio.Play("GunCock", EAudioPlayOptions.AtTransformPosition | EAudioPlayOptions.DestroyOnEnd);
     }
@@ -65,6 +70,16 @@ public class SoldierMovement : PlayerController
         if (faceDir != Vector3.zero)
         {
             AlignTransformToMovement(transform, faceDir, RotationSpeed, Vector3.up);
+        }
+
+        if (bDidJump)
+        {
+            currJumpWaitTime -= Time.deltaTime;
+            if (currJumpWaitTime <= 0)
+            {
+                currJumpWaitTime = jumpWaitTime;
+                bDidJump = false;
+            }
         }
     }
 
@@ -167,20 +182,19 @@ public class SoldierMovement : PlayerController
 
     protected override void Jump(CallbackContext ctx)
     {
-        if (!Active || isSwimming)
+        if (!Active || isSwimming || bDidJump)
         {
             return;
         }
 
         // This check is original and untouched.
-        if (IsGrounded())
+        if (IsGrounded() && !bDidJump)
         {
             // Original: Jump with a modified kinematic equation.
             Rb.velocity += new Vector3(0f, Mathf.Sqrt(jumpHeight * -3f * Physics.gravity.y), 0f);
-            // If we were clinging onto something, we want to jump in the opposite direction
-            // as if the Monkey is jumping off the wall.
 
             animator.SetTrigger("Jump");
+            bDidJump = true;
         }
     }
 
