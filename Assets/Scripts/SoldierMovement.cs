@@ -31,6 +31,9 @@ public class SoldierMovement : PlayerController
     [SerializeField] private GameObject soldierCamera;
     private BoxCollider boxCollider;
 
+    private int maxAmmoClip = 10;
+    private int currAmmoClip = 10;
+
     [field: Header("Soldier Movement")]
     [field: SerializeField] public Transform BulletSpawnPoint { get; set; }
 
@@ -200,7 +203,7 @@ public class SoldierMovement : PlayerController
 
     protected override void PerformAbility(CallbackContext ctx)
     {
-        if (!Active)
+        if (!Active || AbilityUses <= 0)
         {
             return;
         }
@@ -210,6 +213,13 @@ public class SoldierMovement : PlayerController
         bullet.GetComponent<Rigidbody>().velocity = BulletSpawnPoint.forward * BulletSpeed;
 
         Audio.Play("Shot", EAudioPlayOptions.AtTransformPosition | EAudioPlayOptions.DestroyOnEnd);
+
+        currAmmoClip -= 1;
+        if (currAmmoClip <= 0)
+        {
+            currAmmoClip = maxAmmoClip;
+            AdjustAbilityValue(-1);
+        }
     }
 
     protected override void OnCollisionEnter(Collision collision)

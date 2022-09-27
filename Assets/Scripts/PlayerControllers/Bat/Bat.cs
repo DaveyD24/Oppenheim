@@ -93,10 +93,10 @@ public class Bat : PlayerController
 		};
 	}
 
-	public void AdjustEnergy(float amount)
-	{
-		AdjustFuelValue(amount);
-	}
+	//public void AdjustEnergy(float amount)
+	//{
+	//	AdjustFuelValue(amount);
+	//}
 
 	public void AdjustHealth(float amount)
 	{

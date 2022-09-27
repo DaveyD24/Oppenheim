@@ -118,13 +118,21 @@ public class MonkeyController : PlayerController
 
             // If we were clinging onto something, we want to jump in the opposite direction
             // as if the Monkey is jumping off the wall.
-            if (clinging)
+            if (AbilityUses > 0)
             {
-                Rb.velocity += contactPoint.normal;
-                clinging = false;
+                if (clinging)
+                {
+                    Rb.velocity += contactPoint.normal;
+                    clinging = false;
 
-                // Stop any weird rotations.
-                Rb.angularVelocity = Vector3.zero;
+                    // Stop any weird rotations.
+                    Rb.angularVelocity = Vector3.zero;
+                    AdjustAbilityValue(-1);
+                }
+            }
+            else
+            {
+                clinging = false;
             }
 
             bDidJump = true;
@@ -185,7 +193,7 @@ public class MonkeyController : PlayerController
         base.OnCollisionEnter(collision);
 
         // Only Cling to something if you're off the ground.
-        if (collision.transform.CompareTag("Clingable") && !IsGrounded())
+        if (AbilityUses > 0 && collision.transform.CompareTag("Clingable") && !IsGrounded())
         {
             Debug.Log("dsadfs");
             clinging = true;

@@ -282,12 +282,13 @@ public class BatMovement : MonoBehaviour
 		else if (!IsZero(Throw))
 		{
 			// Double-Jump mechanism.
-			if (!bHasGlidedThisJump)
+			if (!bHasGlidedThisJump && Bat.AbilityUses > 0)
 			{
 				// On Double-Jump...
 				StartGliding();
 
 				bHasDoubleJumped = true;
+				Bat.AdjustAbilityValue(-1);
 			}
 			else
 			{

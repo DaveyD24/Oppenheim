@@ -156,9 +156,10 @@ public class CarController : PlayerController
     protected override void PerformAbility(InputAction.CallbackContext ctx)
     {
         // note buggs out and fails if the car's wheels currently are not moving at all, otherwise it is fine
-        if (!BIsDash && BAnyWheelGrounded && Active)
+        if (AbilityUses > 0 && !BIsDash && BAnyWheelGrounded && Active)
         {
             BIsDash = true;
+            AdjustAbilityValue(-1);
 
             Audio.PlayUnique("Rev", EAudioPlayOptions.FollowEmitter | EAudioPlayOptions.DestroyOnEnd);
         }

@@ -9,7 +9,7 @@ using Unity.Services.Core;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
+using TMPro;
 
 /// <summary>
 /// A base class for handling the common functionality across all players.
@@ -18,7 +18,7 @@ using UnityEngine.UI;
 public abstract class PlayerController : MonoBehaviour
 {
     [SerializeField] private GameObject controlObj;
-    [SerializeField] private Slider fuelSlider;
+    [SerializeField] private TextMeshProUGUI abilityTxt;
 
     private bool bControlsHidden = false;
     private Vector3 startPosition;
@@ -38,6 +38,8 @@ public abstract class PlayerController : MonoBehaviour
     [HideInInspector] public bool Active { get; set; } = false;
 
     public Rigidbody Rb { get; private set; }
+
+    public int AbilityUses { get; private set; } = 3;
 
     public AudioController Audio { get; private set; }
 
@@ -195,18 +197,21 @@ public abstract class PlayerController : MonoBehaviour
         bControlsHidden = !bControlsHidden;
     }
 
-    protected void AdjustFuelValue(float amount)
+    public void AdjustAbilityValue(int amount)
     {
-        CurrentFuel += amount;
-        // Debug.Log(CurrentFuel + " " + amount);
-        fuelSlider.value = CurrentFuel;
+        AbilityUses += amount;
+        AbilityUses = Mathf.Max(AbilityUses, 0);
+        abilityTxt.text = AbilityUses.ToString();
 
-        // UIEvents.OnFuelChanged(PlayerIdSO.PlayerID, CurrentFuel / DefaultPlayerData.MaxFuel);
-        if (CurrentFuel <= 0)
-        {
-            Debug.LogError("Player Lost All fuel and Died");
-            OnDeath();
-        }
+        // Debug.Log(CurrentFuel + " " + amount);
+        // fuelSlider.value = CurrentFuel;
+
+        //// UIEvents.OnFuelChanged(PlayerIdSO.PlayerID, CurrentFuel / DefaultPlayerData.MaxFuel);
+        // if (CurrentFuel <= 0)
+        // {
+        //    Debug.LogError("Player Lost All fuel and Died");
+        //    OnDeath();
+        // }
     }
 
     protected virtual void Update()
@@ -260,6 +265,7 @@ public abstract class PlayerController : MonoBehaviour
         startRotation = transform.rotation;
 
         GameEvents.OnAddPlayerSwitch(PlayerIdSO.PlayerID);
+        AdjustAbilityValue(0);
     }
 
     public virtual void OnDeath()
@@ -379,7 +385,7 @@ public abstract class PlayerController : MonoBehaviour
     {
         if (playerId == PlayerIdSO.PlayerID)
         {
-            AdjustFuelValue(DefaultPlayerData.MaxFuel);
+            AdjustAbilityValue(5); // for each fuel collected add 5 ability uses;
         }
     }
 
