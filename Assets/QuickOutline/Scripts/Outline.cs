@@ -12,7 +12,6 @@ using System.Linq;
 using UnityEngine;
 
 [DisallowMultipleComponent]
-[ExecuteInEditMode]
 public class Outline : MonoBehaviour
 {
 	private static HashSet<Mesh> registeredMeshes = new HashSet<Mesh>();
@@ -91,7 +90,6 @@ public class Outline : MonoBehaviour
 
 	void Awake()
 	{
-
 		// Cache renderers
 		renderers = GetComponentsInChildren<Renderer>();
 
@@ -113,7 +111,6 @@ public class Outline : MonoBehaviour
 	{
 		foreach (var renderer in renderers)
 		{
-
 			// Append outline shaders
 			var materials = renderer.sharedMaterials.ToList();
 
@@ -126,7 +123,6 @@ public class Outline : MonoBehaviour
 
 	void OnValidate()
 	{
-
 		// Update material properties
 		needsUpdate = true;
 
@@ -171,15 +167,21 @@ public class Outline : MonoBehaviour
 
 	void OnDestroy()
 	{
-
-		// Destroy material instances
-		Destroy(outlineMaskMaterial);
-		Destroy(outlineFillMaterial);
+		if (Application.isPlaying)
+		{
+			// Destroy material instances
+			Destroy(outlineMaskMaterial);
+			Destroy(outlineFillMaterial);
+		}
+		else
+		{
+			DestroyImmediate(outlineMaskMaterial);
+			DestroyImmediate(outlineFillMaterial);
+		}
 	}
 
 	void Bake()
 	{
-
 		// Generate smooth normals for each mesh
 		var bakedMeshes = new HashSet<Mesh>();
 
@@ -202,11 +204,9 @@ public class Outline : MonoBehaviour
 
 	void LoadSmoothNormals()
 	{
-
 		// Retrieve or generate smooth normals
 		foreach (var meshFilter in GetComponentsInChildren<MeshFilter>())
 		{
-
 			// Skip if smooth normals have already been adopted
 			if (!registeredMeshes.Add(meshFilter.sharedMesh))
 			{
@@ -232,7 +232,6 @@ public class Outline : MonoBehaviour
 		// Clear UV3 on skinned mesh renderers
 		foreach (var skinnedMeshRenderer in GetComponentsInChildren<SkinnedMeshRenderer>())
 		{
-
 			// Skip if UV3 has already been reset
 			if (!registeredMeshes.Add(skinnedMeshRenderer.sharedMesh))
 			{
@@ -249,7 +248,6 @@ public class Outline : MonoBehaviour
 
 	List<Vector3> SmoothNormals(Mesh mesh)
 	{
-
 		// Group vertices by location
 		var groups = mesh.vertices.Select((vertex, index) => new KeyValuePair<Vector3, int>(vertex, index)).GroupBy(pair => pair.Key);
 
@@ -259,7 +257,6 @@ public class Outline : MonoBehaviour
 		// Average normals for grouped vertices
 		foreach (var group in groups)
 		{
-
 			// Skip single vertices
 			if (group.Count() == 1)
 			{
@@ -288,7 +285,6 @@ public class Outline : MonoBehaviour
 
 	void CombineSubmeshes(Mesh mesh, Material[] materials)
 	{
-
 		// Skip meshes with a single submesh
 		if (mesh.subMeshCount == 1)
 		{
@@ -308,7 +304,6 @@ public class Outline : MonoBehaviour
 
 	void UpdateMaterialProperties()
 	{
-
 		// Apply properties according to mode
 		outlineFillMaterial.SetColor("_OutlineColor", outlineColor);
 
