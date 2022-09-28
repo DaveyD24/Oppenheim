@@ -1,9 +1,7 @@
 ﻿/* --           Pre-Processor Directives           -- */
 
-#if UNITY_EDITOR
-// Show diagnostic data on the top left.
+// Show diagnostic data on the bottom left.
 #define WITH_GUI_INFO
-#endif
 
 // Enables Yaw control with the Horizontal Axis of InputActions.Move.
 #define MOVE_AIRBORNE
@@ -39,6 +37,7 @@ public class BatMovement : MonoBehaviour
 	[SerializeField] float TimeToV1 = 1f;
 	[SerializeField] float JumpHeight = 5f;
 	[SerializeField] float SecondsOfPitchFlight = 1f;
+	[SerializeField] Vector2 MinMaxPitchAngle;
 	float RemainingSeconds;
 	IEnumerator CurrentGradualFunc;
 
@@ -64,8 +63,11 @@ public class BatMovement : MonoBehaviour
 	bool bHasGlidedThisJump, bHasCancelledGlideThisJump;
 	bool bHasBeenGivenSlightBoost;
 	bool bHasDoubleJumped;
-	
+
 	Speedometer Speedometer;
+	float TimeNotMovingWhilstAirborne = 0f;
+
+	const float kAlignByGravityThreshold = 12f;
 
 	void Start()
 	{
@@ -80,6 +82,18 @@ public class BatMovement : MonoBehaviour
 		Speedometer.Initialise();
 	}
 
+#if UNITY_EDITOR
+	void Update()
+	{
+		// Simulates falling flat on the Bat's face.
+		if (Input.GetKeyDown(KeyCode.RightBracket))
+		{
+			transform.position = new Vector3(164.2399f, 9.04353f, -479.6122f);
+			transform.localEulerAngles = new Vector3(64.365f, 0f, 0f);
+		}
+	}
+#endif
+
 	void FixedUpdate()
 	{
 		if (!Bat.TrackingCamera)
@@ -89,12 +103,37 @@ public class BatMovement : MonoBehaviour
 
 		Speedometer.Record(this);
 
+		// If the Bat isn't really moving, but is still Airborne, something's wrong.
+		if (IsZero(Speedometer.Velocity, .5f) && IsAirborne())
+		{
+			TimeNotMovingWhilstAirborne += Time.deltaTime;
+
+			// After 1 second of not moving whilst IsAirborne():
+			if (TimeNotMovingWhilstAirborne >= 1f)
+			{
+				// Flip the Bat upright, and enable Jumping.
+				Bat.Physics.velocity = ComputeJumpVelocity(Vector3.up, 1f);
+				bHasGlidedThisJump = false;
+				bHasDoubleJumped = false;
+
+				ForceRealign();
+
+				TimeNotMovingWhilstAirborne = 0f;
+			}
+		}
+		else
+		{
+			TimeNotMovingWhilstAirborne = 0f;
+		}
+
 		HandleGroundMovement();
 		HandleMovement(ThrowMove);
 		HandleLook(ThrowLook);
 		DetermineVortex();
 
-		if (!IsZero(YawDelta) || !IsZero(PitchDelta))
+		// If the Bat is moving faster than the Gravity Threshold, rotate the Bat downwards during a free fall.
+		bool bIsAffectedGravityPastThreshold = Speedometer.MetresPerSecond > kAlignByGravityThreshold;
+		if (!IsZero(YawDelta) || !IsZero(PitchDelta) || bIsAffectedGravityPastThreshold)
 		{
 			// Translate World-Velocity to Local Forward.
 			Vector3 YawVelocity = RotateVector(Bat.Physics.velocity, transform.up, YawDelta);
@@ -108,28 +147,43 @@ public class BatMovement : MonoBehaviour
 			Bat.Physics.velocity = Velocity;
 
 			// Not Zero and must be facing in the same general direction.
-			if (Velocity != Vector3.zero && Vector3.Dot(transform.forward, Velocity) > .1f)
+			if (Velocity != Vector3.zero)
 			{
+				// If the Bat has fallen off an edge without Glide input.
+				if (bHasBeenGivenSlightBoost && !bHasGlidedThisJump && !bIsAffectedGravityPastThreshold)
+				{
+					// Ignore and do not face towards the effect of gravity.
+					Velocity.y = 0f;
+				}
+
 				// Use transform.up or Vector3.up?
 				Quaternion RotationNow = transform.rotation;
 				Quaternion TargetRot = Quaternion.LookRotation(Velocity, Vector3.up);
 				transform.rotation = Quaternion.RotateTowards(RotationNow, TargetRot, Bat.YawSpeed);
 			}
 		}
-		else
+		else if (GroundMovement != Vector3.zero && !IsAirborne())
 		{
-			if (GroundMovement != Vector3.zero && !IsAirborne())
-			{
-				// Smoothly rotate the Bat towards where it's moving.
-				Vector3 MovementVector = DirectionRelativeToTransform(Bat.TrackingCamera.transform, GroundMovement);
-				AlignTransformToMovement(transform, MovementVector, Bat.YawSpeed, Vector3.up);
-			}
+			// Smoothly rotate the Bat towards where it's moving.
+			Vector3 MovementVector = DirectionRelativeToTransform(Bat.TrackingCamera.transform, GroundMovement);
+			AlignTransformToMovement(transform, MovementVector, Bat.YawSpeed, Vector3.up);
 		}
 
 		SetAnimationState();
 		Realign();
 
 		Speedometer.Mark();
+	}
+
+	void OnCollisionEnter(Collision Collision)
+	{
+		if (bHasGlidedThisJump && IsAirborne())
+		{
+			if (Collision.relativeVelocity.magnitude > 10f)
+			{
+				ForceStopAllMovement();
+			}
+		}
 	}
 
 	public void MovementBinding(ref CallbackContext Context)
@@ -422,6 +476,35 @@ public class BatMovement : MonoBehaviour
 		}
 #endif
 
+		if (!IsFacingVelocity())
+		{
+			StopPitchInput();
+			return;
+		}
+
+		float PitchAngle = transform.rotation.eulerAngles.x;
+		float AngleNoWinding = PitchAngle > 180f ? PitchAngle - 360 : PitchAngle;
+
+		float Incline = Mathf.Sign(Throw);
+
+		// Upwards Pitch is negative, but positive in the inspector.
+		// Downwards Pitch is positive, but negative in the inspector.
+		// It just makes more sense to have the lower Pitch Angle limit
+		// to be relative to transform.forward. (- is down. + is up).
+		float Min = MinMaxPitchAngle[0] * -1f;
+		float Max = -MinMaxPitchAngle[1];
+
+		if (Incline < 0f && AngleNoWinding < Max)
+		{
+			StopPitchInput();
+			return;
+		}
+		else if (Incline > 0f && AngleNoWinding > Min)
+		{
+			StopPitchInput();
+			return;
+		}
+
 		float PitchThrow = PitchDeltaAngle;
 
 		if (RemainingSeconds <= 0f)
@@ -431,7 +514,7 @@ public class BatMovement : MonoBehaviour
 			PitchThrow *= .25f;
 		}
 
-		// Pitch.
+		// Pitch Upwards.
 		if (Throw < -.3f)
 		{
 			PitchDelta = PitchThrow;
@@ -439,11 +522,17 @@ public class BatMovement : MonoBehaviour
 			// Deduct time only when Pitching upwards.
 			RemainingSeconds -= Time.deltaTime;
 		}
+		// Pitch Downwards.
 		else if (Throw > .3f)
 		{
 			PitchDelta = -PitchThrow;
 		}
 		else
+		{
+			StopPitchInput();
+		}
+
+		void StopPitchInput()
 		{
 			Bat.Physics.angularVelocity = Vector3.zero;
 			PitchDelta = 0f;
@@ -465,6 +554,13 @@ public class BatMovement : MonoBehaviour
 			return;
 		}
 #endif
+
+		if (!IsFacingVelocity())
+		{
+			Bat.Physics.angularVelocity = Vector3.zero;
+			YawDelta = 0f;
+			return;
+		}
 
 		// Yaw.
 		if (Throw < -.3f)
@@ -508,17 +604,22 @@ public class BatMovement : MonoBehaviour
 		float Dot = Vector3.Dot(transform.up, Vector3.up);
 
 		// If the Bat is not 'upright' and the Bat is on the Ground.
-		if ((Dot <= kUpSensitivity) && Bat.IsGrounded())
+		if ((Dot <= kUpSensitivity) && !IsAirborne())
 		{
-			transform.rotation = Quaternion.FromToRotation(transform.up, Vector3.up) * transform.rotation;
-
-			// Stop moving.
-			/*Bat.Physics.velocity = */
-			Bat.Physics.angularVelocity = Vector3.zero;
-
-			// Stop everything else. Switch back to the Stand Idle animation.
-			Bat.Events.OnAnimationStateChanged?.Invoke(EAnimationState.StandIdle);
+			ForceRealign();
 		}
+	}
+
+	void ForceRealign()
+	{
+		transform.rotation = Quaternion.FromToRotation(transform.up, Vector3.up) * transform.rotation;
+
+		// Stop moving.
+		/*Bat.Physics.velocity = */
+		Bat.Physics.angularVelocity = Vector3.zero;
+
+		// Stop everything else. Switch back to the Stand Idle animation.
+		Bat.Events.OnAnimationStateChanged?.Invoke(EAnimationState.StandIdle);
 	}
 
 	/// <summary>Forces all movement components to Zero.</summary>
@@ -554,13 +655,26 @@ public class BatMovement : MonoBehaviour
 		return !Physics.Raycast(GroundRay, GroundRayDistance);
 	}
 
+	bool IsFacingVelocity()
+	{
+		Vector3 Direction = Speedometer.DirectionOfTravel;
+		Vector3 Forward = transform.forward;
+
+		return Vector3.Dot(Forward, Direction) > .1f;
+	}
+
 #if WITH_GUI_INFO
 	void OnGUI()
 	{
-		GUI.Label(new Rect(10, 10, 250, 250), $"Velocity: {Bat.Physics.velocity:F1}");
-		GUI.Label(new Rect(10, 25, 250, 250), $"Speed: {Bat.Physics.velocity.magnitude:F1}");
-		GUI.Label(new Rect(10, 40, 250, 250), $"Airborne? {(IsAirborne() ? "Yes" : "No")}");
-		GUI.Label(new Rect(10, 55, 250, 250), $"Remaining Pitch: {RemainingSeconds}");
+		if (Input.GetKey(KeyCode.Backslash))
+		{
+			int sh = Screen.height - 50;
+			GUI.Label(new Rect(10, sh - 10, 250, 250), $"Velocity: {Bat.Physics.velocity:F1}");
+			GUI.Label(new Rect(10, sh - 25, 250, 250), $"Speed: {Bat.Physics.velocity.magnitude:F1}");
+			GUI.Label(new Rect(10, sh - 40, 250, 250), $"Airborne? {(IsAirborne() ? "Yes" : "No")}");
+			GUI.Label(new Rect(10, sh - 55, 250, 250), $"Remaining Pitch: {RemainingSeconds}");
+			GUI.Label(new Rect(10, sh - 70, 250, 250), $"Slight Boost? {bHasBeenGivenSlightBoost}");
+		}
 	}
 #endif
 }
@@ -569,6 +683,7 @@ public struct Speedometer
 {
 	public Vector3 Velocity => (ThisFrame - LastFrame) / Time.deltaTime;
 	public float MetresPerSecond => Velocity.magnitude;
+	public Vector3 DirectionOfTravel => Velocity.normalized;
 
 	Vector3 LastFrame;
 	Vector3 ThisFrame;

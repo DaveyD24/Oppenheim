@@ -333,6 +333,7 @@ MonoBehaviour:
   TimeToV1: 1
   JumpHeight: 5
   SecondsOfPitchFlight: 1
+  MinMaxPitchAngle: {x: -30, y: 50}
   YawDeltaAngle: 2
   PitchDeltaAngle: 2
   GroundCheckOffset: {x: 0, y: 0.15, z: 0}
