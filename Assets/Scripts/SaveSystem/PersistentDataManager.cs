@@ -165,7 +165,7 @@ public class PersistentDataManager : MonoBehaviour
 
         if (SaveableData == null)
         {
-            // NewGame();
+            NewGame();
         }
     }
 

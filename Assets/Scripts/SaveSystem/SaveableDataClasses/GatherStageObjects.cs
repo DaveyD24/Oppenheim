@@ -1,21 +1,48 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 
 public class GatherStageObjects : MonoBehaviour
 {
     [SerializeField] private List<IDataInterface> stageSavables;
+    [SerializeField] private Vector3 offsetPos;
+    [SerializeField] private int boxWidth;
+    [SerializeField] private int boxHeight;
+    [SerializeField] private int boxDepth;
 
     [field: ContextMenuItem("Gather Saveable Objects", "FindSaveableObjectsArea")]
     [field: SerializeField] public int StageID { get; private set; }
 
     [field: SerializeField] public int SectionID { get; private set; }
 
-    [SerializeField] private Vector3 offsetPos;
-    [SerializeField] private int boxWidth;
-    [SerializeField] private int boxHeight;
-    [SerializeField] private int boxDepth;
+    public void SaveSection()
+    {
+        // PersistentDataManager.SaveableData = new SaveableData(); // not the correct way to do it, use the event system once setup to handle this specifics
+        // PersistentDataManager.SaveableData.ResetData();
+        SectionData sectionData = PersistentDataManager.SaveableData.ResetSectionData(StageID, SectionID);
+
+        foreach (var item in stageSavables)
+        {
+            item.SaveData(sectionData);
+        }
+    }
+
+    public void LoadSection()
+    {
+        // PersistentDataManager.SaveableData = new SaveableData(); // not the correct way to do it, use the event system once setup to handle this specifics
+        // PersistentDataManager.SaveableData.ResetData();
+        SectionData sectionData = PersistentDataManager.SaveableData.ReturnSectionsData(StageID, SectionID);
+
+        if (sectionData != null)
+        {
+            foreach (var item in stageSavables)
+            {
+                item.LoadData(sectionData);
+            }
+        }
+    }
 
     private void FindSaveableObjectsArea()
     {
@@ -38,11 +65,12 @@ public class GatherStageObjects : MonoBehaviour
 
         // stageSavables = FindObjectsOfType<MonoBehaviour>().OfType<IDataInterface>();//FindObjectsOfType<MonoBehaviour>().OfType<IDataInterface>();
         Debug.Log(stageSavables.ToList().Count);
+        EditorUtility.SetDirty(this);
     }
 
-    private void OnDrawGizmosSelected()
+    private void OnDrawGizmos()
     {
-        Gizmos.DrawCube(CalculateOffset(), BoxSize());
+        Gizmos.DrawWireCube(CalculateOffset(), BoxSize());
     }
 
     private Vector3 BoxSize()
@@ -55,21 +83,9 @@ public class GatherStageObjects : MonoBehaviour
         return transform.position + offsetPos;
     }
 
-    private void SaveSection()
-    {
-        PersistentDataManager.SaveableData = new SaveableData(); // not the correct way to do it, use the event system once setup to handle this specifics
-        PersistentDataManager.SaveableData.ResetData();
-        SectionData sectionData = PersistentDataManager.SaveableData.ResetSectionData(StageID, SectionID);
-
-        foreach (var item in stageSavables)
-        {
-            item.SaveData(sectionData);
-        }
-    }
-
     private void Start()
     {
         FindSaveableObjectsArea();
-        SaveSection();
+        // SaveSection();
     }
 }

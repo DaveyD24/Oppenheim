@@ -10,7 +10,7 @@ public class SectionData
 {
     [SerializeField] public List<int> AbilityItems { get; set; } = new List<int>(); // the id's of the ability items still left in the current section of the map.
 
-    [SerializeField] public SerializableDictionary<int, PushableBoxData> PushableBoxs { get; set; } = new SerializableDictionary<int, PushableBoxData>();
+    [SerializeField] public SerializableDictionary<int, GeneralPhysicsObjectData> PushableBoxs { get; set; } = new SerializableDictionary<int, GeneralPhysicsObjectData>();
 
 }
 

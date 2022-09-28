@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class PushableBoxData
+public class GeneralPhysicsObjectData
 {
     [SerializeField] public Vector3 Position { get; set; }
 

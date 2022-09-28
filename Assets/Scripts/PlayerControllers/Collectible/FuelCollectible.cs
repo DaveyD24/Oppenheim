@@ -28,20 +28,26 @@ public class FuelCollectible : UniqueID, IDataInterface
     {
         GameEvents.CollectFuel(playerId.PlayerID);
         Instantiate(collectParticles, transform.position, Quaternion.identity);
-        Debug.Log("Fuel Collection");
+
         // collection particle system and sound effect
-        Destroy(gameObject);
+        gameObject.SetActive(false);
     }
 
 #pragma warning disable SA1202 // Elements should be ordered by access
     public void LoadData(SectionData data)
 #pragma warning restore SA1202 // Elements should be ordered by access
     {
-        throw new System.NotImplementedException();
+        if (data.AbilityItems.Contains(SaveID))
+        {
+            gameObject.SetActive(true);
+        }
     }
 
     public void SaveData(SectionData data)
     {
-        data.AbilityItems.Add(SaveID);
+        if (gameObject.activeSelf)
+        {
+            data.AbilityItems.Add(SaveID);
+        }
     }
 }

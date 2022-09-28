@@ -46,12 +46,18 @@ public class PushableBox : UniqueID, IDataInterface
     public void LoadData(SectionData data)
 #pragma warning restore SA1202 // Elements should be ordered by access
     {
-        throw new System.NotImplementedException();
+        if (data.PushableBoxs.Dictionary.TryGetValue(SaveID, out GeneralPhysicsObjectData boxData))
+        {
+            rb.angularVelocity = boxData.AngularVelocity;
+            transform.position = boxData.Position;
+            transform.rotation = boxData.Rotation;
+            rb.velocity = boxData.Velocity;
+        }
     }
 
     public void SaveData(SectionData data)
     {
-        PushableBoxData boxData = new PushableBoxData();
+        GeneralPhysicsObjectData boxData = new GeneralPhysicsObjectData();
         boxData.AngularVelocity = rb.angularVelocity;
         boxData.Position = transform.position;
         boxData.Rotation = transform.rotation;

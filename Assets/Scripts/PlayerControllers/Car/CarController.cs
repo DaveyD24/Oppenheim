@@ -171,6 +171,16 @@ public class CarController : PlayerController
 
         bIsGrounded = IsGrounded();
         SetWindParticles();
+
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            GameObject.Find("SaveSection").GetComponent<GatherStageObjects>().SaveSection();
+        }
+
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            GameObject.Find("SaveSection").GetComponent<GatherStageObjects>().LoadSection();
+        }
     }
 
     public override void OnDeath()

@@ -7,7 +7,8 @@ using UnityEngine;
 
 public class UniqueID : MonoBehaviour
 {
-    [field: SerializeField] public bool BMarkUnchangeable { get; set; } = false; // ensures no id once set can ever be rest
+    [field: Header("Save System Data(Only first two items)")]
+    [field: SerializeField] public bool BMarkUnchangeable { get; set; } = false; // ensures no id once set can ever be rest, and mess up the save system as a result
 
     [field: SerializeField] [field: ReadOnly] public int SaveID { get; set; }
 
@@ -61,7 +62,7 @@ public class UniqueID : MonoBehaviour
         {
             UpdateId();
         }
-        else
+        else if (!EditorApplication.isPlayingOrWillChangePlaymode)
         {
             // this is the prefab asset gameobject so ensure the values are at their default state
             BMarkUnchangeable = false;
