@@ -6,7 +6,7 @@ using UnityEngine;
 /// <summary>
 /// Class to handle what occurs when any player collides with any fuel object.
 /// </summary>
-public class FuelCollectible : MonoBehaviour
+public class FuelCollectible : UniqueID, IDataInterface
 {
     [SerializeField] private PlayerIdObject playerId; // the id of the player whose fuel gets updated
     [SerializeField] private GameObject collectParticles;
@@ -31,5 +31,17 @@ public class FuelCollectible : MonoBehaviour
         Debug.Log("Fuel Collection");
         // collection particle system and sound effect
         Destroy(gameObject);
+    }
+
+#pragma warning disable SA1202 // Elements should be ordered by access
+    public void LoadData(SectionData data)
+#pragma warning restore SA1202 // Elements should be ordered by access
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void SaveData(SectionData data)
+    {
+        data.AbilityItems.Add(SaveID);
     }
 }

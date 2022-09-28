@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PushableBox : MonoBehaviour
+public class PushableBox : UniqueID, IDataInterface
 {
     private Rigidbody rb;
     [SerializeField] private float power;
@@ -31,7 +31,7 @@ public class PushableBox : MonoBehaviour
         }
     }
 
-    private void Start()
+    private void Awake()
     {
         rb = GetComponent<Rigidbody>();
     }
@@ -40,5 +40,23 @@ public class PushableBox : MonoBehaviour
     {
         yield return new WaitForSeconds(waitTime);
         bCanAddForce = true;
+    }
+
+#pragma warning disable SA1202 // Elements should be ordered by access
+    public void LoadData(SectionData data)
+#pragma warning restore SA1202 // Elements should be ordered by access
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void SaveData(SectionData data)
+    {
+        PushableBoxData boxData = new PushableBoxData();
+        boxData.AngularVelocity = rb.angularVelocity;
+        boxData.Position = transform.position;
+        boxData.Rotation = transform.rotation;
+        boxData.Velocity = rb.velocity;
+
+        data.PushableBoxs.Dictionary.Add(SaveID, boxData);
     }
 }

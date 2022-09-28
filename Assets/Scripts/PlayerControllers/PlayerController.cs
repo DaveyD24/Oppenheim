@@ -15,7 +15,7 @@ using TMPro;
 /// A base class for handling the common functionality across all players.
 /// </summary>
 [RequireComponent(typeof(Rigidbody), typeof(AudioController))]
-public abstract class PlayerController : MonoBehaviour
+public abstract class PlayerController : MonoBehaviour, IDataInterface
 {
     [SerializeField] private GameObject controlObj;
     [SerializeField] private TextMeshProUGUI abilityTxt;
@@ -421,5 +421,34 @@ public abstract class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(5);
         GameEvents.Die();
         DeathWaitTimer = null;
+    }
+
+#pragma warning disable SA1202 // Elements should be ordered by access
+    public void LoadData(SectionData data)
+#pragma warning restore SA1202 // Elements should be ordered by access
+    {
+        ////if (saveableData.PlayerDatas.Dictionary.ContainsKey(PlayerIdSO.PlayerID))
+        ////{
+        ////    PlayerData pData = saveableData.PlayerDatas.Dictionary[PlayerIdSO.PlayerID];
+        ////    AbilityUses = pData.NumberAbilityLeft;
+        ////    AdjustAbilityValue(0);
+
+        ////    transform.position = pData.Position;
+        ////}
+    }
+
+    public void SaveData(SectionData data)
+    {
+        ////PlayerData pData = new PlayerData();
+        ////pData.NumberAbilityLeft = AbilityUses;
+        ////pData.Position = transform.position;
+        ////if (saveableData.PlayerDatas.Dictionary.ContainsKey(PlayerIdSO.PlayerID))
+        ////{
+        ////    saveableData.PlayerDatas.Dictionary[PlayerIdSO.PlayerID] = pData;
+        ////}
+        ////else
+        ////{
+        ////    saveableData.PlayerDatas.Dictionary.Add(PlayerIdSO.PlayerID, pData);
+        ////}
     }
 }
