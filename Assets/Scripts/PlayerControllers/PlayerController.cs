@@ -15,7 +15,7 @@ using TMPro;
 /// A base class for handling the common functionality across all players.
 /// </summary>
 [RequireComponent(typeof(Rigidbody), typeof(AudioController))]
-public abstract class PlayerController : MonoBehaviour, IDataInterface
+public abstract class PlayerController : MonoBehaviour
 {
     [SerializeField] private GameObject controlObj;
     [SerializeField] private TextMeshProUGUI abilityTxt;
@@ -218,7 +218,6 @@ public abstract class PlayerController : MonoBehaviour, IDataInterface
     {
         if (transform.position.y < 2.5f)
         {
-            Debug.Log("PLayer got too low and died");
             OnDeath();
         }
 
@@ -254,6 +253,7 @@ public abstract class PlayerController : MonoBehaviour, IDataInterface
 
     protected virtual void Start()
     {
+        SaveData();
         activeIndicator = GetComponentInChildren(typeof(SpriteRenderer)) as SpriteRenderer;
         Rb = GetComponent<Rigidbody>();
         switchManager = FindObjectOfType<SwitchManager>();
@@ -292,6 +292,8 @@ public abstract class PlayerController : MonoBehaviour, IDataInterface
         GameEvents.OnDie += Respawn;
         GameEvents.OnActivatePlayer += ActivateInput;
         GameEvents.OnDeactivatePlayer += DeactivateInput;
+
+        GameEvents.OnSavePlayerData += SaveData;
     }
 
     protected virtual void OnDisable()
@@ -303,6 +305,8 @@ public abstract class PlayerController : MonoBehaviour, IDataInterface
 
         GameEvents.OnActivatePlayer -= ActivateInput;
         GameEvents.OnDeactivatePlayer -= DeactivateInput;
+
+        GameEvents.OnSavePlayerData -= SaveData;
     }
 
     protected virtual void OnDrawGizmosSelected()
@@ -385,6 +389,8 @@ public abstract class PlayerController : MonoBehaviour, IDataInterface
         {
             PlayerInput.Enable();
         }
+
+        LoadData();
     }
 
     private void LoseInput(PlayerInput player)
@@ -424,31 +430,35 @@ public abstract class PlayerController : MonoBehaviour, IDataInterface
     }
 
 #pragma warning disable SA1202 // Elements should be ordered by access
-    public void LoadData(SectionData data)
+    public void LoadData()
 #pragma warning restore SA1202 // Elements should be ordered by access
     {
-        ////if (saveableData.PlayerDatas.Dictionary.ContainsKey(PlayerIdSO.PlayerID))
-        ////{
-        ////    PlayerData pData = saveableData.PlayerDatas.Dictionary[PlayerIdSO.PlayerID];
-        ////    AbilityUses = pData.NumberAbilityLeft;
-        ////    AdjustAbilityValue(0);
-
-        ////    transform.position = pData.Position;
-        ////}
+        if (PersistentDataManager.SaveableData.PlayerDatas.Dictionary.ContainsKey(PlayerIdSO.PlayerID))
+        {
+            PlayerData pData = PersistentDataManager.SaveableData.PlayerDatas.Dictionary[PlayerIdSO.PlayerID];
+            AbilityUses = pData.NumberAbilityLeft;
+            AdjustAbilityValue(0);
+        }
     }
 
-    public void SaveData(SectionData data)
+    public void SaveData()
     {
-        ////PlayerData pData = new PlayerData();
-        ////pData.NumberAbilityLeft = AbilityUses;
-        ////pData.Position = transform.position;
-        ////if (saveableData.PlayerDatas.Dictionary.ContainsKey(PlayerIdSO.PlayerID))
-        ////{
-        ////    saveableData.PlayerDatas.Dictionary[PlayerIdSO.PlayerID] = pData;
-        ////}
-        ////else
-        ////{
-        ////    saveableData.PlayerDatas.Dictionary.Add(PlayerIdSO.PlayerID, pData);
-        ////}
+        PlayerData pData = new PlayerData();
+        if (AbilityUses < 3)
+        {
+            // as only save whenever reach a checkpoint, ensure the player gets enough ability uses
+            AbilityUses = 3;
+        }
+
+        pData.NumberAbilityLeft = AbilityUses;
+        pData.Position = transform.position;
+        if (PersistentDataManager.SaveableData.PlayerDatas.Dictionary.ContainsKey(PlayerIdSO.PlayerID))
+        {
+            PersistentDataManager.SaveableData.PlayerDatas.Dictionary[PlayerIdSO.PlayerID] = pData;
+        }
+        else
+        {
+            PersistentDataManager.SaveableData.PlayerDatas.Dictionary.Add(PlayerIdSO.PlayerID, pData);
+        }
     }
 }

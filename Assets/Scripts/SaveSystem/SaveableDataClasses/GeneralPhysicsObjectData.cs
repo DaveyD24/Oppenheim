@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// the actual data for a physics object which needs to be saved.
+/// </summary>
 [System.Serializable]
 public class GeneralPhysicsObjectData
 {

@@ -13,9 +13,9 @@ namespace EventSystem
 
         public static Action OnDie { get; set; }
 
-        public static Action<int> OnCollectFuel { get; set; }
+        public static Action OnSavePlayerData { get; set; }
 
-        // public static Action<UnityEngine.Collider, bool> OnColliderIgnore { get; set; }
+        public static Action<int> OnCollectFuel { get; set; }
 
         public static Action<int> OnAddPlayerSwitch { get; set; }
 
@@ -35,11 +35,23 @@ namespace EventSystem
             OnCollectFuel?.Invoke(playerId);
         }
 
+        public static void SavePlayerData()
+        {
+            OnSavePlayerData?.Invoke();
+        }
+
         public static void Die()
         {
             OnDie?.Invoke();
+
+            // reset all sections of the level to their current saved state
+            foreach (GatherStageObjects item in UnityEngine.MonoBehaviour.FindObjectsOfType<GatherStageObjects>())
+            {
+                item.LoadSection();
+            }
         }
 
+        // the below methods are to do with player input and adding/removing a player from the active list
         public static void AddPlayerSwitch(int playerId)
         {
             OnAddPlayerSwitch?.Invoke(playerId);
@@ -59,10 +71,5 @@ namespace EventSystem
         {
             OnDeactivatePlayer?.Invoke(currentPlayerId);
         }
-
-        // public static void ColliderIgnore(UnityEngine.Collider ignoreCollider, bool bIgnoreChild = false)
-        // {
-        //    OnColliderIgnore?.Invoke(ignoreCollider, bIgnoreChild);
-        // }
     }
 }

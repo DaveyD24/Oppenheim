@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// an object which when shot or dashed into either shatters into pieces or simply disapears and plays a particle effeect.
+/// </summary>
 [RequireComponent(typeof(AudioController))]
 public class BreakableObj : UniqueID, IDataInterface
 {

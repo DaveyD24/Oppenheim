@@ -3,7 +3,7 @@ using UnityEngine.Events;
 
 /// <summary>The base class for any <see cref="AButton"/> or <see cref="Switch"/>.</summary>
 [RequireComponent(typeof(BoxCollider))]
-public class Interactable : MonoBehaviour
+public class Interactable : UniqueID
 {
 	/// <summary>Event which fires when something Enters the Interactable Collider.</summary>
 	public UnityEvent<Interactable, GameObject> OnActivated;

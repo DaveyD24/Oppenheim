@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Forklift : MonoBehaviour
+public class Forklift : MonoBehaviour, IDataInterface
 {
     [SerializeField] private float moveSpeed;
 
@@ -91,5 +91,17 @@ public class Forklift : MonoBehaviour
         }
 
         moveWait = null;
+    }
+
+    public void LoadData(SectionData data)
+    {
+        moveTween = null;
+        StopAllCoroutines();
+        moveWait = null;
+    }
+
+    public void SaveData(SectionData data)
+    {
+        // do nothing
     }
 }

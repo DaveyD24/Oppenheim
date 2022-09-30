@@ -4,6 +4,9 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
+/// <summary>
+/// get all savable objects for the defined bounds of this stage, so that the can be saved and loaded dynamically.
+/// </summary>
 public class GatherStageObjects : MonoBehaviour
 {
     [SerializeField] private List<IDataInterface> stageSavables;
@@ -27,6 +30,8 @@ public class GatherStageObjects : MonoBehaviour
         {
             item.SaveData(sectionData);
         }
+
+        Debug.Log("Saved Sections Data: " + SectionID);
     }
 
     public void LoadSection()
@@ -42,6 +47,8 @@ public class GatherStageObjects : MonoBehaviour
                 item.LoadData(sectionData);
             }
         }
+
+        Debug.Log("Loaded in Sections Data: " + SectionID);
     }
 
     private void FindSaveableObjectsArea()
@@ -88,5 +95,10 @@ public class GatherStageObjects : MonoBehaviour
         FindSaveableObjectsArea();
 
         // SaveSection();
+    }
+
+    private void Start()
+    {
+        SaveSection();
     }
 }

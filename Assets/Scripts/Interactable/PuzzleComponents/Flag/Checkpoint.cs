@@ -1,16 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
+using EventSystem;
 using Unity.Services.Analytics;
 using Unity.Services.Core;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
-public class Checkpoint : MonoBehaviour
+/// <summary>
+/// Holds where the players respawn after death.
+/// Only ever one may exist per each save section.
+/// </summary>
+public class Checkpoint : MonoBehaviour, IDataInterface
 {
-    public static Vector3 RespawnPosition { get; private set; }
-
-    public static bool BUseCheckpointPos { get; private set; }
-
     private List<int> seenId = new List<int>();
     private float flagUpAmount;
     private Transform flagTransform;
@@ -21,7 +23,14 @@ public class Checkpoint : MonoBehaviour
     [SerializeField] private float maxY;
     [SerializeField] private ParticleSystem activateParticles;
 
+    [SerializeField] private UnityEvent SaveSectionsData;
+    [SerializeField] public UnityEvent ResetSectionsData;
+
     private Tween flagMoveTween;
+
+    public static Vector3 RespawnPosition { get; private set; }
+
+    public static bool BUseCheckpointPos { get; private set; }
 
     private void Start()
     {
@@ -67,6 +76,10 @@ public class Checkpoint : MonoBehaviour
                 BUseCheckpointPos = true;
             }
 
+            SaveSectionsData?.Invoke();
+            ResetSectionsData?.Invoke();
+            GameEvents.SavePlayerData();
+
             // SceneManager.LoadScene("WinScene");
 #if !UNITY_EDITOR
 		Dictionary<string, object> eventData = new Dictionary<string, object>();
@@ -90,5 +103,27 @@ public class Checkpoint : MonoBehaviour
                 flagTransform.localPosition = flagMoveTween.UpdatePositionCurve(movementSpeedCurve);
             }
         }
+    }
+
+#pragma warning disable SA1202 // Elements should be ordered by access
+    public void LoadData(SectionData data)
+#pragma warning restore SA1202 // Elements should be ordered by access
+    {
+        if (data.BIsCheckpointComplete)
+        {
+            flagTransform.localPosition = new Vector3(flagTransform.localPosition.x, maxY, flagTransform.localPosition.z);
+        }
+        else
+        {
+            flagTransform.localPosition = new Vector3(flagTransform.localPosition.x, minY, flagTransform.localPosition.z);
+            seenId.Clear();
+            flagMoveTween = null;
+            flagUpAmount = (maxY - minY) / 4;
+        }
+    }
+
+    public void SaveData(SectionData data)
+    {
+        data.BIsCheckpointComplete = seenId.Count >= 4;
     }
 }
