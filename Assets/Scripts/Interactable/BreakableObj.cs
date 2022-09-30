@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(AudioController))]
-public class BreakableObj : MonoBehaviour
+public class BreakableObj : UniqueID, IDataInterface
 {
     [Tooltip("Should this item break into pieces when broken, or should it just disapear")]
     [SerializeField] private bool bDoShatter = true;
@@ -16,7 +16,7 @@ public class BreakableObj : MonoBehaviour
 
     [ReadOnly] public AudioController Audio;
 
-    void Start()
+    private void Start()
     {
         Audio = GetComponent<AudioController>();
     }
@@ -68,7 +68,44 @@ public class BreakableObj : MonoBehaviour
             {
                 particelRenderer.material = particleColour[4];
             }
-            Destroy(gameObject);
+
+            gameObject.SetActive(false);
+        }
+    }
+
+    public void LoadData(SectionData data)
+    {
+        if (!bDoShatter)
+        {
+            if (data.GeneralPhysicsObject.Dictionary.ContainsKey(SaveID) && data.GeneralPhysicsObject.Dictionary.TryGetValue(SaveID, out GeneralPhysicsObjectData boxData))
+            {
+                Rigidbody rb = gameObject.GetComponent<Rigidbody>();
+                rb.angularVelocity = boxData.AngularVelocity;
+                transform.position = boxData.Position;
+                transform.rotation = boxData.Rotation;
+                rb.velocity = boxData.Velocity;
+                gameObject.SetActive(true);
+            }
+            else
+            {
+                gameObject.SetActive(false);
+            }
+        }
+    }
+
+    public void SaveData(SectionData data)
+    {
+        if (!bDoShatter && gameObject.activeSelf)
+        {
+            Rigidbody rb = gameObject.GetComponent<Rigidbody>();
+
+            GeneralPhysicsObjectData boxData = new GeneralPhysicsObjectData();
+            boxData.AngularVelocity = rb.angularVelocity;
+            boxData.Position = transform.position;
+            boxData.Rotation = transform.rotation;
+            boxData.Velocity = rb.velocity;
+
+            data.GeneralPhysicsObject.Dictionary.Add(SaveID, boxData);
         }
     }
 }

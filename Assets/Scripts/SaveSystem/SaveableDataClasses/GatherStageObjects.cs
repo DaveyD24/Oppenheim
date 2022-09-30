@@ -83,9 +83,10 @@ public class GatherStageObjects : MonoBehaviour
         return transform.position + offsetPos;
     }
 
-    private void Start()
+    private void Awake()
     {
         FindSaveableObjectsArea();
+
         // SaveSection();
     }
 }

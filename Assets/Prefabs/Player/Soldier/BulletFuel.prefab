@@ -144,8 +144,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08ff7faf6adb3144b9fe9c45f2686e57, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <BMarkUnchangeable>k__BackingField: 1
-  <SaveID>k__BackingField: 26
+  <BMarkUnchangeable>k__BackingField: 0
+  <SaveID>k__BackingField: 0
   playerId: {fileID: 11400000, guid: 1e6de6128901ea94a88896b92e3bf310, type: 2}
   collectParticles: {fileID: 341301465110762667, guid: 4db4a25e51ca01746ab63cd257ceb2bc, type: 3}
 --- !u!1 &6938822353928555966

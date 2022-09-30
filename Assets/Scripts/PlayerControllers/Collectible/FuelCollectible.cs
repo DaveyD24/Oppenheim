@@ -41,6 +41,10 @@ public class FuelCollectible : UniqueID, IDataInterface
         {
             gameObject.SetActive(true);
         }
+        else
+        {
+            gameObject.SetActive(false);
+        }
     }
 
     public void SaveData(SectionData data)

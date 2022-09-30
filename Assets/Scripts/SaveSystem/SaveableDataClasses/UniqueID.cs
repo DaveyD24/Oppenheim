@@ -8,7 +8,7 @@ using UnityEngine;
 public class UniqueID : MonoBehaviour
 {
     [field: Header("Save System Data(Only first two items)")]
-    [field: SerializeField] public bool BMarkUnchangeable { get; set; } = false; // ensures no id once set can ever be rest, and mess up the save system as a result
+    [field: SerializeField] [field: ReadOnly] public bool BIdUnchangeable { get; set; } = false; // ensures no id once set can ever be rest, and mess up the save system as a result
 
     [field: SerializeField] [field: ReadOnly] public int SaveID { get; set; }
 
@@ -26,11 +26,12 @@ public class UniqueID : MonoBehaviour
             bool bNewUnique = true;
             foreach (UniqueID item in itemIDs)
             {
-                if (item.gameObject != this.gameObject && item.SaveID == SaveID)
+                if (item.transform.root.gameObject != this.transform.root.gameObject && item.SaveID == SaveID)
                 {
-                    if ((item.BMarkUnchangeable && BMarkUnchangeable) || BMarkUnchangeable)
+                    if ((item.BIdUnchangeable && BIdUnchangeable) || BIdUnchangeable)
                     {
-                        Debug.LogError("Two marked unique id's are not unique. If duplicated, consider turning off BMarkUnchangeable so that these items can get a unique id");
+                        Debug.LogError("Two marked unique id's are not unique. If duplicated, consider turning off BMarkUnchangeable so that these items can get a unique id " +
+                            item.SaveID + ": Other Id  " + SaveID + ": This iD");
                         return;
                     }
 
@@ -43,14 +44,14 @@ public class UniqueID : MonoBehaviour
             if (bNewUnique)
             {
                 bIsUnique = true;
-                BMarkUnchangeable = true;
+                BIdUnchangeable = true;
                 EditorUtility.SetDirty(this);
             }
         }
     }
 
 #if UNITY_EDITOR
-    private void OnValidate()
+    public virtual void OnValidate()
     {
         // check if this is the prefab assets version or if the object is in the scene
         PrefabStage prefabStage = PrefabStageUtility.GetCurrentPrefabStage();
@@ -58,14 +59,15 @@ public class UniqueID : MonoBehaviour
         bool prefabConnected = PrefabUtility.GetPrefabInstanceStatus(this.gameObject) == PrefabInstanceStatus.Connected;
 
         // only update when this object is detected as being in the scene, and not in its prefab mode(the asset itself being stored as the prefab file)
-        if (!isValidPrefabStage && prefabConnected)
+        // also do it if it is detected this object is not in any way connected to any prefab asset at all
+        if ((!isValidPrefabStage && prefabConnected) || !PrefabUtility.IsPartOfAnyPrefab(this.transform.root.gameObject))
         {
             UpdateId();
         }
         else if (!EditorApplication.isPlayingOrWillChangePlaymode)
         {
             // this is the prefab asset gameobject so ensure the values are at their default state
-            BMarkUnchangeable = false;
+            BIdUnchangeable = false;
             SaveID = 0;
         }
     }

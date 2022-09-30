@@ -174,12 +174,12 @@ public class CarController : PlayerController
 
         if (Input.GetKeyDown(KeyCode.P))
         {
-            GameObject.Find("SaveSection").GetComponent<GatherStageObjects>().SaveSection();
+            GameObject.Find("SaveSection (1)").GetComponent<GatherStageObjects>().SaveSection();
         }
 
         if (Input.GetKeyDown(KeyCode.O))
         {
-            GameObject.Find("SaveSection").GetComponent<GatherStageObjects>().LoadSection();
+            GameObject.Find("SaveSection (1)").GetComponent<GatherStageObjects>().LoadSection();
         }
     }
 

@@ -46,23 +46,30 @@ public class PushableBox : UniqueID, IDataInterface
     public void LoadData(SectionData data)
 #pragma warning restore SA1202 // Elements should be ordered by access
     {
-        if (data.PushableBoxs.Dictionary.TryGetValue(SaveID, out GeneralPhysicsObjectData boxData))
+        if (gameObject.GetComponent<BoxCollider>() != null)
         {
-            rb.angularVelocity = boxData.AngularVelocity;
-            transform.position = boxData.Position;
-            transform.rotation = boxData.Rotation;
-            rb.velocity = boxData.Velocity;
+            if (data.GeneralPhysicsObject.Dictionary.TryGetValue(SaveID, out GeneralPhysicsObjectData boxData))
+            {
+                rb.angularVelocity = boxData.AngularVelocity;
+                transform.position = boxData.Position;
+                transform.rotation = boxData.Rotation;
+                rb.velocity = boxData.Velocity;
+            }
         }
     }
 
     public void SaveData(SectionData data)
     {
-        GeneralPhysicsObjectData boxData = new GeneralPhysicsObjectData();
-        boxData.AngularVelocity = rb.angularVelocity;
-        boxData.Position = transform.position;
-        boxData.Rotation = transform.rotation;
-        boxData.Velocity = rb.velocity;
+        // only save this data if it is not currently attached to a balloon
+        if (this.gameObject.GetComponent<Collider>() != null)
+        {
+            GeneralPhysicsObjectData boxData = new GeneralPhysicsObjectData();
+            boxData.AngularVelocity = rb.angularVelocity;
+            boxData.Position = transform.position;
+            boxData.Rotation = transform.rotation;
+            boxData.Velocity = rb.velocity;
 
-        data.PushableBoxs.Dictionary.Add(SaveID, boxData);
+            data.GeneralPhysicsObject.Dictionary.Add(SaveID, boxData);
+        }
     }
 }

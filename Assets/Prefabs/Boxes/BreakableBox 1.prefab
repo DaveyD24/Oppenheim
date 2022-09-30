@@ -154,6 +154,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c063374186f95aa4fa0105c57d27aff0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <BMarkUnchangeable>k__BackingField: 0
+  <SaveID>k__BackingField: 0
   bDoShatter: 0
   disapearParticles: {fileID: 8301482204331656129, guid: e705f6d2f0bbc0c41823f34653bc816a, type: 3}
   particleColour:

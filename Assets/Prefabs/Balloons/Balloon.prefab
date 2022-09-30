@@ -276,6 +276,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1a11f33248fd3e43a858bd53f887def, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <BIdUnchangeable>k__BackingField: 0
+  <SaveID>k__BackingField: 0
   boxToAttach: {fileID: 5753145578128966401}
   lineRenderer: {fileID: 0}
   AttachmentPoint: {fileID: 9216583132835852308}
@@ -386,6 +388,19 @@ LineRenderer:
     generateLightingData: 0
   m_UseWorldSpace: 1
   m_Loop: 0
+--- !u!65 &9177795378900754047
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5753145578128966401}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.8035434, y: 1.8035424, z: 1.7938944}
+  m_Center: {x: 0.000003397466, y: 0.000015467407, z: 0.00003758073}
 --- !u!1 &8313466736440306672
 GameObject:
   m_ObjectHideFlags: 0
