@@ -253,7 +253,7 @@ public abstract class PlayerController : MonoBehaviour
 
     protected virtual void Start()
     {
-        SaveData();
+        SaveData(null);
         activeIndicator = GetComponentInChildren(typeof(SpriteRenderer)) as SpriteRenderer;
         Rb = GetComponent<Rigidbody>();
         switchManager = FindObjectOfType<SwitchManager>();
@@ -441,16 +441,27 @@ public abstract class PlayerController : MonoBehaviour
         }
     }
 
-    public void SaveData()
+    public void SaveData(int[] fuelDataReset)
     {
         PlayerData pData = new PlayerData();
-        if (AbilityUses < 3)
-        {
-            // as only save whenever reach a checkpoint, ensure the player gets enough ability uses
-            AbilityUses = 3;
-        }
 
-        pData.NumberAbilityLeft = AbilityUses;
+        if (fuelDataReset != null)
+        {
+            // determine amount of fuel to ignore when saving, so that on a reset to this checkpoint no extra fuel gets added
+            int numInvalidAbilities = fuelDataReset[PlayerIdSO.PlayerID];
+            int saveAbilityAmount = AbilityUses - (numInvalidAbilities * 5);
+            if (saveAbilityAmount < 3)
+            {
+                // as only save whenever reach a checkpoint, ensure the player gets enough ability uses
+                saveAbilityAmount = 3;
+            }
+
+            pData.NumberAbilityLeft = saveAbilityAmount;
+        }
+        else
+        {
+            pData.NumberAbilityLeft = AbilityUses;
+        }
         pData.Position = transform.position;
         if (PersistentDataManager.SaveableData.PlayerDatas.Dictionary.ContainsKey(PlayerIdSO.PlayerID))
         {

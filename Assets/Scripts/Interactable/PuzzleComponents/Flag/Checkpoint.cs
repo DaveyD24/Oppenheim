@@ -24,7 +24,7 @@ public class Checkpoint : MonoBehaviour, IDataInterface
     [SerializeField] private ParticleSystem activateParticles;
 
     [SerializeField] private UnityEvent SaveSectionsData;
-    [SerializeField] public UnityEvent ResetSectionsData;
+    [SerializeField] public GatherStageObjects[] ResetSectionsFuelData;
 
     private Tween flagMoveTween;
 
@@ -77,8 +77,22 @@ public class Checkpoint : MonoBehaviour, IDataInterface
             }
 
             SaveSectionsData?.Invoke();
-            ResetSectionsData?.Invoke();
-            GameEvents.SavePlayerData();
+
+            // find all fuel which has been collected on sections that do not get saved so that these fuel values do not get saved along with it
+            // this ensures that when a player dies and the section resets they do not have abilities gathered which should have been reset
+            int[] fuelDataReset = new int[4];
+            foreach (GatherStageObjects item in ResetSectionsFuelData)
+            {
+                int[] gatheredItems = item.NumberInvalidSaveCollectibles();
+                for (int i = 0; i < gatheredItems.Length; i++)
+                {
+                    fuelDataReset[i] += gatheredItems[i];
+                }
+            }
+
+            GameEvents.SavePlayerData(fuelDataReset);
+
+            // somehow need to get the number of each collectible type gathered in the non-save sections of the level.
 
             // SceneManager.LoadScene("WinScene");
 #if !UNITY_EDITOR

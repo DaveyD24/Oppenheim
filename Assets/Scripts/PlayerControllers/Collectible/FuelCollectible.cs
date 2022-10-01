@@ -8,8 +8,9 @@ using UnityEngine;
 /// </summary>
 public class FuelCollectible : UniqueID, IDataInterface
 {
-    [SerializeField] private PlayerIdObject playerId; // the id of the player whose fuel gets updated
     [SerializeField] private GameObject collectParticles;
+
+    [field: SerializeField] public PlayerIdObject PlayerId { get; private set; } // the id of the player whose fuel gets updated
 
     private void Start()
     {
@@ -26,7 +27,7 @@ public class FuelCollectible : UniqueID, IDataInterface
 
     private void IsCollected()
     {
-        GameEvents.CollectFuel(playerId.PlayerID);
+        GameEvents.CollectFuel(PlayerId.PlayerID);
         Instantiate(collectParticles, transform.position, Quaternion.identity);
 
         // collection particle system and sound effect

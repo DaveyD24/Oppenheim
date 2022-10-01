@@ -203,7 +203,6 @@ public class MonkeyController : PlayerController
         // Only Cling to something if you're off the ground.
         if (AbilityUses > 0 && collision.transform.CompareTag("Clingable") && !IsGrounded())
         {
-            Debug.Log("dsadfs");
             clinging = true;
             clingPosition = collision.collider.ClosestPoint(transform.position);
             contactPoint = collision.GetContact(0);

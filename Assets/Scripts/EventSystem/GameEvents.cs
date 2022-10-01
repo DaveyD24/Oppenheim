@@ -13,7 +13,9 @@ namespace EventSystem
 
         public static Action OnDie { get; set; }
 
-        public static Action OnSavePlayerData { get; set; }
+        public static Action<int[]> OnSavePlayerData { get; set; }
+
+        public static Func<int[]> OnGatherInvalidSaveFuel { get; set; }
 
         public static Action<int> OnCollectFuel { get; set; }
 
@@ -35,20 +37,30 @@ namespace EventSystem
             OnCollectFuel?.Invoke(playerId);
         }
 
-        public static void SavePlayerData()
+        public static void SavePlayerData(int[] fuelDataReset)
         {
-            OnSavePlayerData?.Invoke();
+            OnSavePlayerData?.Invoke(fuelDataReset);
         }
 
         public static void Die()
         {
-            OnDie?.Invoke();
-
             // reset all sections of the level to their current saved state
             foreach (GatherStageObjects item in UnityEngine.MonoBehaviour.FindObjectsOfType<GatherStageObjects>())
             {
                 item.LoadSection();
             }
+
+            OnDie?.Invoke();
+        }
+
+        public static int[] GatherInvalidSaveFuel()
+        {
+            if (OnGatherInvalidSaveFuel != null)
+            {
+                return OnGatherInvalidSaveFuel();
+            }
+
+            return null;
         }
 
         // the below methods are to do with player input and adding/removing a player from the active list
