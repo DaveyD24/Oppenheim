@@ -61,7 +61,7 @@ public class GridPathfinding : MonoBehaviour
         lineRenderer.SetPosition(0, goalObject.transform.position);
         lineRenderer.SetPosition(lineRenderer.positionCount - 1, transform.position);
 
-        CreateMeshPath.MakeCube(meshFilter, path); // temporarily disable and fix up for sprint 4
+        // CreateMeshPath.MakeCube(meshFilter, path); // temporarily disable and fix up for sprint 4
     }
 
     private void OnDrawGizmos()

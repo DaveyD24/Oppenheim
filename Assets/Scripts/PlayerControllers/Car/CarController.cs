@@ -21,7 +21,7 @@ public class CarController : PlayerController
     [SerializeField] public List<AxleInfo> axleInfos; // the information about each individual axle
     private bool bIsGrounded = true;
 
-    private Node dashTopNode;
+    private Node<CarController> dashTopNode;
 
     [Header("Steering")]
     [Space(1)]
@@ -448,7 +448,7 @@ public class CarController : PlayerController
         DashPerform dashPerform = new DashPerform(this); // perform the dash ability
         DashTransition dashEnd = new DashTransition(this, 1, true); // play the animation to transition back to normal
 
-        dashTopNode = new Sequence(new List<Node> { dashInit, dashPerform, dashEnd });
+        dashTopNode = new Sequence<CarController>(new List<Node<CarController>> { dashInit, dashPerform, dashEnd });
     }
 
     private void ApplyIndicator()

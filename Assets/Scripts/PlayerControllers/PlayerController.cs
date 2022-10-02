@@ -318,6 +318,7 @@ public abstract class PlayerController : MonoBehaviour
 
         Gizmos.color = new Color(0, 1, 1, 1);
         Gizmos.DrawSphere(GetGroundCheckPosition(), GroundCheckRadius);
+        Gizmos.DrawCube(Rb.worldCenterOfMass, Vector3.one * 0.5f);
     }
 
     protected virtual void OnCollisionEnter(Collision collision)

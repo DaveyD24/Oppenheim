@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// Play the animation when transitioning to and from the dash.
 /// </summary>
-public class DashTransition : Node
+public class DashTransition : Node<CarController>
 {
     private float maxTime;
     private float initTime = 0;

@@ -2,9 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Node
+public abstract class Node<T>
+    where T : class
 {
-    private CarController blackboard;
+    private T blackboard;
 
     /// <summary>
     /// Success
@@ -18,7 +19,7 @@ public abstract class Node
         Running
     }
 
-    public CarController Blackboard
+    public T Blackboard
     {
         get => blackboard; set => blackboard = value;
     }

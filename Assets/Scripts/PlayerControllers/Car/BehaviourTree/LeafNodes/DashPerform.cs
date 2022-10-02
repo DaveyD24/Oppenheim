@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// Apply the forces to the car when dashing.
 /// </summary>
-public class DashPerform : Node
+public class DashPerform : Node<CarController>
 {
     private float dashCurrentTime = 0;
     private float dashMaxTime;
