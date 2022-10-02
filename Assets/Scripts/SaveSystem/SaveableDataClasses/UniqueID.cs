@@ -48,7 +48,7 @@ public class UniqueID : MonoBehaviour
                 bIsUnique = true;
                 BIdUnchangeable = true;
                 EditorUtility.SetDirty(this);
-                Debug.Log("Scripted Updated ID");
+                // Debug.Log("Scripted Updated ID");
             }
         }
     }

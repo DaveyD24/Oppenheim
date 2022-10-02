@@ -22,7 +22,7 @@ TagManager:
   - IgnorePlayer
   - Player
   - CameraCollide
-  - 
+  - FanIgnore
   - 
   - 
   - 
