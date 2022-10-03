@@ -135,7 +135,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1159723716041990623}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SoldTubeShort.002
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -165,7 +165,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9196187726626105869}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SoldTubeShort.001
   m_TagString: Untagged
   m_Icon: {fileID: 0}

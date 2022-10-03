@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4666020028980127010}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SolidTube4way.004
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -39,7 +39,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6765594051284944407}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SolidTube4way.002
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -69,7 +69,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3068077132346197877}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SolidTube4way.001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -231,7 +231,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 765444308609105329}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SolidTube4way.003
   m_TagString: Untagged
   m_Icon: {fileID: 0}

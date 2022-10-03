@@ -135,7 +135,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4830078660467909765}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SolidTubeUp.002
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -165,7 +165,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7058872166419948244}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SolidTubeUp.001
   m_TagString: Untagged
   m_Icon: {fileID: 0}

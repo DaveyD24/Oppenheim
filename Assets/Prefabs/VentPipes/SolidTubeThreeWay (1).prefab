@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7031814589665251605}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SolidTubeThreeWay.001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -39,7 +39,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3432866089155495087}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SolidTubeThreeWay.003
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -196,7 +196,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7528576128826324154}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SolidTubeThreeWay.002
   m_TagString: Untagged
   m_Icon: {fileID: 0}

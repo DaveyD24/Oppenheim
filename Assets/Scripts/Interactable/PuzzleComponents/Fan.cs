@@ -186,9 +186,6 @@ public class Fan : MonoBehaviour
                 currParticleTimeInterval -= Time.deltaTime;
 
                 // for the car check if either the closest or the second closest item was hit, as once the blocking sphere spawns in it will now be seen as the closest
-                if (gameObject.name == "FanChild (1)")
-                    Debug.Log(hit[0].collider.gameObject.name);
-
                 if ((hit[0].collider.gameObject == item.gameObject || (hit.Length > 1 && hit[0].collider.gameObject.name == "FanBlocker" && hit[1].collider.gameObject == item.gameObject)) && item.gameObject.name == "CarBody")
                 {
                     safePathParticlesObj.transform.position = item.transform.position;
@@ -197,7 +194,6 @@ public class Fan : MonoBehaviour
                     if (!safePathParticlesObj.activeSelf)
                     {
                         safePathParticlesObj.SetActive(true);
-                        Debug.Log("Setting item active");
                         safePathParticlesObj.transform.GetChild(0).gameObject.GetComponent<ParticleSystem>().Play();
                     }
 
@@ -208,7 +204,7 @@ public class Fan : MonoBehaviour
                     }
                 }
 
-                Debug.DrawRay(rayStart, transform.forward * DetermineForceSize(), Color.red);
+                // Debug.DrawRay(rayStart, transform.forward * DetermineForceSize(), Color.red);
             }
         }
     }
