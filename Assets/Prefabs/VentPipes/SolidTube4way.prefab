@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &3339035807272711507
+--- !u!1 &248207163742454520
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,29 +8,89 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 7031814589665251605}
+  - component: {fileID: 4666020028980127010}
   m_Layer: 0
-  m_Name: SolidTubeThreeWay.001
+  m_Name: SolidTube4way.004
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &7031814589665251605
+--- !u!4 &4666020028980127010
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3339035807272711507}
-  m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -0.8374996, y: 0, z: -0.18559313}
+  m_GameObject: {fileID: 248207163742454520}
+  m_LocalRotation: {x: -0.7071068, y: 0, z: -0.7071068, w: 0}
+  m_LocalPosition: {x: 1.0000014, y: 0.00000047683716, z: -0.000001135515}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 521171844659393083}
+  m_Father: {fileID: 8370667195693403987}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: -180}
+--- !u!1 &2566792066243596756
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6765594051284944407}
+  m_Layer: 0
+  m_Name: SolidTube4way.002
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6765594051284944407
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2566792066243596756}
+  m_LocalRotation: {x: 0.5, y: -0.5, z: -0.5, w: 0.5}
+  m_LocalPosition: {x: -0.9999988, y: 0.00000047683716, z: -0.000001135515}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 8370667195693403987}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: -90, z: -90}
+--- !u!1 &3202594130976145296
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3068077132346197877}
+  m_Layer: 0
+  m_Name: SolidTube4way.001
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3068077132346197877
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3202594130976145296}
+  m_LocalRotation: {x: 1, y: 0, z: 0, w: 0}
+  m_LocalPosition: {x: 0.0000014305115, y: 0.00000047683716, z: -0.8375012}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 8370667195693403987}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
---- !u!1 &4900375290635005368
+  m_LocalEulerAnglesHint: {x: 180, y: 0, z: 0}
+--- !u!1 &8012409830907947837
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -38,80 +98,51 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 3432866089155495087}
-  m_Layer: 0
-  m_Name: SolidTubeThreeWay.003
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &3432866089155495087
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4900375290635005368}
-  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0.83750045, y: 0, z: -0.18559313}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 521171844659393083}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
---- !u!1 &7223554622220035834
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 521171844659393083}
-  - component: {fileID: 1602210063263448091}
-  - component: {fileID: 1668519113980114942}
-  - component: {fileID: 3962322044698374984}
-  - component: {fileID: -3856388655805029433}
+  - component: {fileID: 8370667195693403987}
+  - component: {fileID: 2152965880998255565}
+  - component: {fileID: 8524862552252535902}
+  - component: {fileID: 74706006853053160}
+  - component: {fileID: -4562588431428367451}
   m_Layer: 8
-  m_Name: SolidTubeThreeWay (1)
+  m_Name: SolidTube4way
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &521171844659393083
+--- !u!4 &8370667195693403987
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7223554622220035834}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -182.35, y: 19.536404, z: -499.05}
+  m_GameObject: {fileID: 8012409830907947837}
+  m_LocalRotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
+  m_LocalPosition: {x: 1.3481073, y: 0, z: -43.3}
   m_LocalScale: {x: 25, y: 25, z: 25}
   m_Children:
-  - {fileID: 7031814589665251605}
-  - {fileID: 7528576128826324154}
-  - {fileID: 3432866089155495087}
+  - {fileID: 3068077132346197877}
+  - {fileID: 6765594051284944407}
+  - {fileID: 765444308609105329}
+  - {fileID: 4666020028980127010}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &1602210063263448091
+--- !u!33 &2152965880998255565
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7223554622220035834}
-  m_Mesh: {fileID: -8793766632323659269, guid: e53b93f23f3b9694395f6f4ad0dca47b, type: 3}
---- !u!23 &1668519113980114942
+  m_GameObject: {fileID: 8012409830907947837}
+  m_Mesh: {fileID: 6282709925529864951, guid: e53b93f23f3b9694395f6f4ad0dca47b, type: 3}
+--- !u!23 &8524862552252535902
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7223554622220035834}
+  m_GameObject: {fileID: 8012409830907947837}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -147,13 +178,13 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &3962322044698374984
+--- !u!114 &74706006853053160
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7223554622220035834}
+  m_GameObject: {fileID: 8012409830907947837}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 42ebac6e29ac3ec4dbf426d96430636b, type: 3}
@@ -169,25 +200,29 @@ MonoBehaviour:
   - {fileID: 1730049017819924830, guid: 8b928f0934193d24198b2e097e9fee5b, type: 3}
   - {fileID: 1791428112363167395, guid: a4d178b722fad4643843db8c9bb12568, type: 3}
   - {fileID: 5407567624650816034, guid: 2120c0a34f9eca8439c1f60bbdf7cca7, type: 3}
-  - {fileID: 7223554622220035834}
+  - {fileID: 7223554622220035834, guid: f0d848b7a4217c14987bd3a5f8db6f61, type: 3}
   - {fileID: 3614646724996727972, guid: cbfe8c7106da75b45825d3cf481f874e, type: 3}
-  - {fileID: 8012409830907947837, guid: f627c8506438b034d9d4870281e5e483, type: 3}
-  holeTubes: []
---- !u!64 &-3856388655805029433
+  - {fileID: 8012409830907947837}
+  holeTubes:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+--- !u!64 &-4562588431428367451
 MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7223554622220035834}
+  m_GameObject: {fileID: 8012409830907947837}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 4
   m_Convex: 0
   m_CookingOptions: 30
-  m_Mesh: {fileID: -8793766632323659269, guid: e53b93f23f3b9694395f6f4ad0dca47b, type: 3}
---- !u!1 &7799919251276281794
+  m_Mesh: {fileID: 6282709925529864951, guid: e53b93f23f3b9694395f6f4ad0dca47b, type: 3}
+--- !u!1 &8218930399069904130
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -195,25 +230,25 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 7528576128826324154}
+  - component: {fileID: 765444308609105329}
   m_Layer: 0
-  m_Name: SolidTubeThreeWay.002
+  m_Name: SolidTube4way.003
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &7528576128826324154
+--- !u!4 &765444308609105329
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7799919251276281794}
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.00000023841858, y: 0, z: 0.8144069}
+  m_GameObject: {fileID: 8218930399069904130}
+  m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
+  m_LocalPosition: {x: 0.0000014305115, y: 0.00000047683716, z: 0.8374987}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 521171844659393083}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Father: {fileID: 8370667195693403987}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}

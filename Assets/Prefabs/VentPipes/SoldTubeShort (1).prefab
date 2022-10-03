@@ -102,12 +102,15 @@ MonoBehaviour:
   add: 0
   currChildHole: 1
   addChildHole: 0
+  bUseSpecifiedRotation: 0
+  addChildRotation: {x: 0, y: 0, z: 0}
   tubes:
   - {fileID: 1730049017819924830, guid: 8b928f0934193d24198b2e097e9fee5b, type: 3}
   - {fileID: 1791428112363167395}
   - {fileID: 5407567624650816034, guid: 2120c0a34f9eca8439c1f60bbdf7cca7, type: 3}
   - {fileID: 7223554622220035834, guid: f0d848b7a4217c14987bd3a5f8db6f61, type: 3}
   - {fileID: 3614646724996727972, guid: cbfe8c7106da75b45825d3cf481f874e, type: 3}
+  - {fileID: 8012409830907947837, guid: f627c8506438b034d9d4870281e5e483, type: 3}
   holeTubes: []
 --- !u!64 &8656856202935449939
 MeshCollider:

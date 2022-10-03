@@ -24,6 +24,7 @@ public class TubeConnection : MonoBehaviour
         Corner,
         ThreeWay,
         UpDown,
+        FourWay,
     }
 
     private void OnDrawGizmosSelected()
@@ -70,6 +71,7 @@ public class TubeConnection : MonoBehaviour
         addedTube.transform.parent = null;
         child.parent = addedTube.transform;
         child.SetSiblingIndex(addChildHole);
+        addedTube.transform.parent = transform.parent;
 
         holeTubes[currChildHole] = addedTube;
     }

@@ -10,14 +10,18 @@ public class Fan : MonoBehaviour
     [SerializeField] private Vector3 fanForceSize;
     [SerializeField] private LayerMask ignoreLayers;
     [SerializeField] private GameObject collideFanParticles;
-    [SerializeField] private GameObject safePathParticlesObj;
+    [SerializeField] private GameObject safePathParticlesObj; // the particles.
     private Vector3 boxCenter;
-    private ParticleSystem safePathParticles;
-    private ParticleSystem fanParticles;
+    [SerializeField] private ParticleSystem fanParticles;
     [SerializeField] private GlobalForwardAxis forwardAxis = GlobalForwardAxis.YAxis;
 
     private float currParticleTimeInterval = .1f;
     private float particleTimeInterval = .75f;
+
+    [SerializeField] private bool bIsOn = true;
+
+    private Rigidbody detectedRigidbody;
+    private Vector3 detectedRigidbodyForce;
 
     private enum GlobalForwardAxis
     {
@@ -26,7 +30,11 @@ public class Fan : MonoBehaviour
         ZAxis,
     }
 
-    [SerializeField] private bool bIsOn = true;
+    public static bool BSeenCar { get; set; }
+
+    public static int NumFans { get; set; } = 0; // gets the number of fans in the scene
+
+    public static int LateUpdateNumFans { get; set; } = 0; // gets the number of fans which have had there late update methods called.
 
     public void SetFanState(bool enabled)
     {
@@ -47,8 +55,9 @@ public class Fan : MonoBehaviour
     {
         blades = transform.GetChild(0);
         boxCenter = DetermineBoxCenter();
-        fanParticles = collideFanParticles.gameObject.GetComponent<ParticleSystem>();
-        safePathParticles = safePathParticlesObj.gameObject.GetComponent<ParticleSystem>();
+
+        // fanParticles = collideFanParticles.gameObject.GetComponent<ParticleSystem>();
+
         safePathParticlesObj.transform.forward = transform.forward;
         if (!bIsOn)
         {
@@ -56,6 +65,10 @@ public class Fan : MonoBehaviour
         }
 
         currParticleTimeInterval = particleTimeInterval;
+
+        safePathParticlesObj.SetActive(false);
+
+        NumFans++;
     }
 
     // Update is called once per frame
@@ -63,7 +76,13 @@ public class Fan : MonoBehaviour
     {
         if (bIsOn)
         {
+            if (LateUpdateNumFans > 0)
+            {
+                LateUpdateNumFans = 0;
+            }
+
             RotateBlades();
+            DetermineItemForce();
         }
     }
 
@@ -71,7 +90,37 @@ public class Fan : MonoBehaviour
     {
         if (bIsOn)
         {
-            AddItemForce();
+            if (detectedRigidbody != null)
+            {
+                detectedRigidbody.AddForce(detectedRigidbodyForce);
+                detectedRigidbody = null;
+            }
+        }
+        else if (detectedRigidbody != null)
+        {
+            detectedRigidbody = null;
+        }
+    }
+
+    // late update is called after all update and fixed update methods on 100% of the scripts have been called
+    private void LateUpdate()
+    {
+        // deactivate the particles if they have not been seen at all
+        if (!BSeenCar && safePathParticlesObj.activeSelf)
+        {
+            // Debug.Log("Not seen the car");
+            safePathParticlesObj.SetActive(false);
+
+            // safePathParticles.Stop();
+            // safePathParticles.Clear();
+        }
+
+        LateUpdateNumFans++;
+
+        // ensure this can only be run once, and only after all fans have had their late update methods called
+        if (LateUpdateNumFans >= NumFans)
+        {
+            BSeenCar = false; // reset the car being seen so that it can be checked again on the next update
         }
     }
 
@@ -80,11 +129,10 @@ public class Fan : MonoBehaviour
         blades.Rotate(0, 0, fanSpeed * Time.deltaTime, Space.Self);
     }
 
-    private void AddItemForce()
+    private void DetermineItemForce()
     {
-        Collider[] colliders = Physics.OverlapBox(boxCenter, fanForceSize / 2, Quaternion.identity, ~ignoreLayers);
+        Collider[] colliders = Physics.OverlapBox(boxCenter, fanForceSize / 2, Quaternion.identity, ~ignoreLayers, QueryTriggerInteraction.Collide);
 
-        bool bSeenCar = false;
         foreach (Collider item in colliders)
         {
             // based on the direction of the fan draw a ray towards the item detected as being within the fan, so that the ray is parellel to the items direction to the fan
@@ -108,47 +156,60 @@ public class Fan : MonoBehaviour
             }
 
             // check if an item is blocking the fans force, if not this item gets the force
-            RaycastHit hit;
-            if (Physics.Raycast(rayStart, transform.forward, out hit, DetermineForceSize(), ~ignoreLayers) && hit.collider.gameObject == item.gameObject)
+            RaycastHit[] hit = Physics.RaycastAll(rayStart, transform.forward, DetermineForceSize(), ~ignoreLayers);
+            System.Array.Sort(hit, (x, y) => x.distance.CompareTo(y.distance)); // sort the objects by distance by distance
+
+            if (hit.Length > 0)
             {
-                if (item.gameObject.TryGetComponent(out Rigidbody rb))
+                // check the parameters of the first item hit only
+                if (hit[0].collider.gameObject == item.gameObject)
                 {
-                    if (hit.collider.gameObject.GetComponent<MonkeyController>() != null)
+                    if (detectedRigidbody == null && item.gameObject.TryGetComponent(out Rigidbody rb))
                     {
-                        rb.AddForce(transform.forward * fanForce * 1.5f);
-                    }
-                    else
-                    {
-                        rb.AddForce(transform.forward * fanForce);
+                        detectedRigidbody = rb;
+                        if (hit[0].collider.gameObject.GetComponent<MonkeyController>() != null)
+                        {
+                            detectedRigidbodyForce = transform.forward * fanForce * 1.5f;
+
+                            // rb.AddForce(transform.forward * fanForce * 1.5f);
+                        }
+                        else
+                        {
+                            detectedRigidbodyForce = transform.forward * fanForce;
+
+                            // rb.AddForce(transform.forward * fanForce);
+                        }
                     }
                 }
 
                 // spawn in the fan collide particles for the car
                 currParticleTimeInterval -= Time.deltaTime;
-                if (item.gameObject.name == "CarBody")
+
+                // for the car check if either the closest or the second closest item was hit, as once the blocking sphere spawns in it will now be seen as the closest
+                if (gameObject.name == "FanChild (1)")
+                    Debug.Log(hit[0].collider.gameObject.name);
+
+                if ((hit[0].collider.gameObject == item.gameObject || (hit.Length > 1 && hit[0].collider.gameObject.name == "FanBlocker" && hit[1].collider.gameObject == item.gameObject)) && item.gameObject.name == "CarBody")
                 {
                     safePathParticlesObj.transform.position = item.transform.position;
-                    bSeenCar = true;
-                    if (!safePathParticles.isPlaying)
+                    BSeenCar = true;
+
+                    if (!safePathParticlesObj.activeSelf)
                     {
-                        safePathParticles.Play();
+                        safePathParticlesObj.SetActive(true);
+                        Debug.Log("Setting item active");
+                        safePathParticlesObj.transform.GetChild(0).gameObject.GetComponent<ParticleSystem>().Play();
                     }
 
                     if (currParticleTimeInterval <= 0)
                     {
-                        Instantiate(collideFanParticles, hit.point, Quaternion.identity, item.transform);
+                        Instantiate(collideFanParticles, hit[0].point, Quaternion.identity, item.transform);
                         currParticleTimeInterval = particleTimeInterval;
                     }
                 }
 
                 Debug.DrawRay(rayStart, transform.forward * DetermineForceSize(), Color.red);
             }
-        }
-
-        if (!bSeenCar && safePathParticles.isPlaying)
-        {
-            safePathParticles.Stop();
-            safePathParticles.Clear();
         }
     }
 

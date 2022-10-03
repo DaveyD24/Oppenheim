@@ -23,7 +23,7 @@ public class NavigationNode
         hCost = -1;
     }
 
-    public float fCostSet() //estimation of total cost of current path from start to end nodes
+    public float fCostSet() // estimation of total cost of current path from start to end nodes
     {
         return gCost + hCost;
     }
