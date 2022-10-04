@@ -12,14 +12,19 @@ public class DisabledRotation : MonoBehaviour
     [SerializeField] private float rotSpeed;
     [SerializeField] private AnimationCurve rotCurve;
 
+    [SerializeField] private GameObject[] wireRacks;
+    [SerializeField] private GameObject solidFloor;
+
     public void MoveRotation()
     {
         rotTween = new Tween(transform.rotation, Quaternion.Euler(restRotation), Time.time, rotSpeed);
+        AdjustVisability(false);
     }
 
     public void CancelMove()
     {
         rotTween = null;
+        AdjustVisability(true);
     }
 
     private void Update()
@@ -33,5 +38,15 @@ public class DisabledRotation : MonoBehaviour
                 rotTween = null;
             }
         }
+    }
+
+    private void AdjustVisability(bool bWireVisible)
+    {
+        foreach (GameObject item in wireRacks)
+        {
+            item.SetActive(bWireVisible);
+        }
+
+        solidFloor.SetActive(!bWireVisible);
     }
 }

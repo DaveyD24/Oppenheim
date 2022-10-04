@@ -219,6 +219,9 @@ MonoBehaviour:
   meshRenderers:
   - {fileID: 3126731544117990746}
   - {fileID: 8243702941786768016}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!54 &4778583254599812540
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -227,7 +230,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8243702943377809533}
   serializedVersion: 2
-  m_Mass: 1000
+  m_Mass: 300
   m_Drag: 0.1
   m_AngularDrag: 1.5
   m_UseGravity: 1
@@ -260,6 +263,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9e3fc4aa0375884da2ac01796dd3196, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <BMarkUnchangeable>k__BackingField: 0
+  <BIdUnchangeable>k__BackingField: 0
   <SaveID>k__BackingField: 0
   power: 10

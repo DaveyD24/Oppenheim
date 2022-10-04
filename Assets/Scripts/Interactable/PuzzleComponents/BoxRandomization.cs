@@ -16,7 +16,9 @@ public class BoxRandomization : MonoBehaviour
     [SerializeField] private MeshFilter[] meshFilters;
     [SerializeField] private MeshRenderer[] meshRenderers;
     private Rigidbody rb;
-    // [SerializeField] private GameObject solidColliderObj;
+    [SerializeField] private bool bFreezeXPos = false;
+    [SerializeField] private bool bFreezeYPos = false;
+    [SerializeField] private bool bFreezeZPos = false;
 
     private void Start()
     {
@@ -76,12 +78,12 @@ public class BoxRandomization : MonoBehaviour
                 if (xVelocity > zVelocity)
                 {
                     velocity.z = 0;
-                    rb.constraints = RigidbodyConstraints.None;
+                    UnsetAllValidPositionConstraints();
                     rb.constraints = RigidbodyConstraints.FreezePositionZ;
                 }
                 else
                 {
-                    rb.constraints = RigidbodyConstraints.None;
+                    UnsetAllValidPositionConstraints();
                     rb.constraints = RigidbodyConstraints.FreezePositionX;
                     velocity.x = 0;
                 }
@@ -91,10 +93,45 @@ public class BoxRandomization : MonoBehaviour
             }
             else
             {
-                rb.constraints = RigidbodyConstraints.None;
+                UnsetAllValidPositionConstraints();
             }
 
             rb.freezeRotation = true;
+        }
+    }
+
+    private void UnsetAllValidPositionConstraints()
+    {
+        if (bFreezeXPos)
+        {
+            rb.constraints = RigidbodyConstraints.FreezePositionX;
+        }
+        else
+        {
+            rb.constraints &= ~RigidbodyConstraints.FreezeRotationX;
+        }
+
+        if (bFreezeYPos)
+        {
+            rb.constraints = RigidbodyConstraints.FreezePositionY;
+        }
+        else
+        {
+            rb.constraints &= ~RigidbodyConstraints.FreezeRotationY;
+        }
+
+        if (bFreezeZPos)
+        {
+            rb.constraints = RigidbodyConstraints.FreezePositionZ;
+        }
+        else
+        {
+            rb.constraints &= ~RigidbodyConstraints.FreezeRotationZ;
+        }
+
+        if (bFreezeZPos && bFreezeXPos)
+        {
+            rb.constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezePositionX;
         }
     }
 
