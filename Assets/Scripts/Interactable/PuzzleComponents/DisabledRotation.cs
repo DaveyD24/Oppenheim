@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// the rotation of the object when disabled.
+/// the rotation the object will move to when a button tells it to be disabled.
 /// </summary>
 public class DisabledRotation : MonoBehaviour
 {
@@ -12,6 +12,8 @@ public class DisabledRotation : MonoBehaviour
     [SerializeField] private float rotSpeed;
     [SerializeField] private AnimationCurve rotCurve;
 
+    [Header("Change Mesh from-to on activation")]
+    [SerializeField] private bool bAllowMeshChange = false;
     [SerializeField] private GameObject[] wireRacks;
     [SerializeField] private GameObject solidFloor;
 
@@ -42,11 +44,14 @@ public class DisabledRotation : MonoBehaviour
 
     private void AdjustVisability(bool bWireVisible)
     {
-        foreach (GameObject item in wireRacks)
+        if (bAllowMeshChange)
         {
-            item.SetActive(bWireVisible);
-        }
+            foreach (GameObject item in wireRacks)
+            {
+                item.SetActive(bWireVisible);
+            }
 
-        solidFloor.SetActive(!bWireVisible);
+            solidFloor.SetActive(!bWireVisible);
+        }
     }
 }
