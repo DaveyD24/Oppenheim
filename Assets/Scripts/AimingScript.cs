@@ -24,6 +24,7 @@ public class AimingScript : MonoBehaviour
 
     private void FindTarget()
     {
+        /*
         float closestDist = Mathf.Infinity;
         GameObject closestObj = null;
         GameObject[] allBreakables = GameObject.FindObjectsOfType<Breakable>();
@@ -37,7 +38,13 @@ public class AimingScript : MonoBehaviour
                 closestObj = currentTarget;
             }
         }
-        Debug.DrawLine(this.transform.position, closestObj.transform.position);
+        Debug.DrawLine(this.transform.position, closestObj.transform.position);*/
+
+
+
+
+
+
 
         //RaycastHit hit;
 
