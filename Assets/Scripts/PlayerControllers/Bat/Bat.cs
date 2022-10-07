@@ -104,12 +104,12 @@ public class Bat : PlayerController
 	public override Vector3 GetGroundCheckPosition()
 	{
 		// Fix Global Down as a Local direction.
-		Vector3 worldToLocalDown = transform.InverseTransformDirection(-transform.up);
+		Vector3 WorldToLocalDown = transform.InverseTransformDirection(-transform.up);
 
 		// Set the origin of the Ground Check to the centre of the Bat.
-		worldToLocalDown += Rb.centerOfMass;
+		WorldToLocalDown += Rb.centerOfMass;
 
-		return transform.position + worldToLocalDown;
+		return transform.position + WorldToLocalDown + groundCheckPosition;
 	}
 
 	protected override bool ShouldTakeFallDamage(Collision collision, out float relativeVelocity)

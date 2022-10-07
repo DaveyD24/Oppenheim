@@ -17,11 +17,19 @@ public class SpringArm : MonoBehaviour
 
 	[HideInInspector] public Camera CameraComponent;
 
+	/// <summary>Is this SpringArm tracking an Average Position?</summary>
+	[Header("ViewportSplit Controls [Read Only]")]
+	[ReadOnly] public bool bIsAverageTracking;
+	/// <summary>Is this Spring Arm temporary and should initialise itself?</summary>
+	[ReadOnly] public bool bIsSecondarySpringArm;
+
 	[Header("Spring Arm Settings.")]
 	public float Distance;
+	/// <summary>Rotation relative to Target.</summary>
 	[SerializeField] Vector3 GimbalRotation;
+	/// <summary>Rotation of the View Camera.</summary>
 	[SerializeField] Vector3 CameraRotation;
-	[SerializeField] bool bInheritRotation;
+	public bool bInheritRotation;
 	[Space(5)]
 	[SerializeField] bool bEnableScrollToDistance;
 	[SerializeField] float ScrollSensitivity;
@@ -58,18 +66,22 @@ public class SpringArm : MonoBehaviour
 
 	void Start()
 	{
-		DefaultGimbalRotation = GimbalRotation;
-		DefaultCameraRotation = CameraRotation;
+		// Secondary Spring Arms are initialised in ViewportSplit::SetSecondaryTarget().
+		if (!bIsSecondarySpringArm)
+		{
+			DefaultGimbalRotation = GimbalRotation;
+			DefaultCameraRotation = CameraRotation;
 
-		GimbalRotationInherited = DefaultGimbalRotation;
-		CameraRotationInherited = DefaultCameraRotation;
+			GimbalRotationInherited = DefaultGimbalRotation;
+			CameraRotationInherited = DefaultCameraRotation;
 
-		OriginalTargetOffset = TargetOffset;
+			OriginalTargetOffset = TargetOffset;
 
-		CameraComponent = GetComponent<Camera>();
-		DefaultProjection = CameraComponent.projectionMatrix;
+			CameraComponent = GetComponent<Camera>();
+			DefaultProjection = CameraComponent.projectionMatrix;
 
-		ViewportSplit.SetMainSpringArm(this);
+			ViewportSplit.SetMainSpringArm(this);
+		}
 	}
 
 	void Update()
@@ -103,7 +115,7 @@ public class SpringArm : MonoBehaviour
 		Vector3 FinalPosition;
 		Quaternion FinalRotation = Quaternion.Euler(CameraRotation);
 
-		if (!bInheritRotation)
+		if (!bInheritRotation || bIsAverageTracking)
 		{
 			float VerticalOrbit = GimbalRotation.x;
 			float HorizontalOrbit = -GimbalRotation.y;
@@ -128,10 +140,12 @@ public class SpringArm : MonoBehaviour
 		}
 		else
 		{
-			// Rotates the Camera around Target, given the Gimbal Rotation's Pitch (Y).
-			// As a side-effect, this also inherits the Yaw.
-			Quaternion InheritRotation = Quaternion.AngleAxis(GimbalRotationInherited.y, Target.right);
-			ArmDirection = (InheritRotation * Target.forward).normalized;
+			// Rotates the Spring Arm around to face the Target's forward vector.
+			// Ignores the Target's Y-Axis, replacing it with the Yaw rotation,
+			// relative to the Target, after inheritance.
+			ArmDirection = Target.forward;
+			ArmDirection.y = Mathf.Sin(-GimbalRotationInherited.y * Mathf.Deg2Rad);
+			ArmDirection.Normalize();
 
 			FinalRotation = GetInheritedRotation();
 		}
@@ -158,9 +172,9 @@ public class SpringArm : MonoBehaviour
 		if (bViewToTargetBlocked)
 		{
 			Vector3 Point = Hit.point - FOV.direction;
-			SetPositionAndRotation(Point, bInheritRotation
-				? GetInheritedRotation()
-				: Quaternion.Euler(CameraRotation));
+			SetPositionAndRotation(Point, !bInheritRotation || bIsAverageTracking
+				? Quaternion.Euler(CameraRotation)
+				: GetInheritedRotation());
 		}
 
 		return bViewToTargetBlocked;
@@ -188,14 +202,14 @@ public class SpringArm : MonoBehaviour
 
 	Quaternion GetInheritedRotation()
 	{
-		return Quaternion.Euler(new Vector3(GetInheritedAxis(Target.localEulerAngles.x) + CameraRotationInherited.x, CameraRotationInherited.y + GetInheritedAxis(Target.localEulerAngles.y)));
+		return Quaternion.Euler(new Vector3(CameraRotationInherited.x, CameraRotationInherited.y + GetInheritedAxis(Target.localEulerAngles.y)));
 	}
 
 	float GetInheritedAxis(float AxisAngle)
 	{
 		float TargetAxis = AxisAngle;
 		if (TargetAxis < 0f)
-			TargetAxis = 360f - TargetAxis;
+			TargetAxis = 360f + TargetAxis; // TargetAxis is negative.
 		return TargetAxis;
 	}
 
@@ -215,12 +229,12 @@ public class SpringArm : MonoBehaviour
 
 		if (Input.GetMouseButton(1))
 		{
-			float DeltaX = (MousePosition.x - PreviousMouseDragPosition.x) * OrbitSensitivity;
-			float DeltaY = (MousePosition.y - PreviousMouseDragPosition.y) * OrbitSensitivity;
+			float DeltaX = (MousePosition.x - PreviousMouseDragPosition.x) * OrbitSensitivity * Time.deltaTime;
+			float DeltaY = (MousePosition.y - PreviousMouseDragPosition.y) * OrbitSensitivity * Time.deltaTime;
 
 			DetermineInverse(ref DeltaX, ref DeltaY);
 
-			if (!bInheritRotation)
+			if (!bInheritRotation || bIsAverageTracking)
 			{
 				GimbalRotation.x += DeltaX;
 				CameraRotation.y += DeltaX;
@@ -233,6 +247,7 @@ public class SpringArm : MonoBehaviour
 			}
 			else
 			{
+				CameraRotationInherited.x -= DeltaY;
 				CameraRotationInherited.y += DeltaX;
 
 				if (GimbalRotationInherited.y - DeltaY < 70 && GimbalRotationInherited.y - DeltaY >= -70)
@@ -267,8 +282,8 @@ public class SpringArm : MonoBehaviour
 
 		if (Input.GetMouseButton(2))
 		{
-			float DeltaX = (MousePosition.x - PreviousMousePanPosition.x) * OrbitSensitivity;
-			float DeltaY = (MousePosition.y - PreviousMousePanPosition.y) * OrbitSensitivity;
+			float DeltaX = (MousePosition.x - PreviousMousePanPosition.x) * OrbitSensitivity * Time.deltaTime;
+			float DeltaY = (MousePosition.y - PreviousMousePanPosition.y) * OrbitSensitivity * Time.deltaTime;
 
 			// Ensure 'Right' and 'Up' is relative to the Camera.
 			TargetOffset -= DeltaX * Time.deltaTime * Camera.right + DeltaY * Time.deltaTime * Camera.up;
@@ -282,6 +297,7 @@ public class SpringArm : MonoBehaviour
 		PreviousMousePanPosition = MousePosition;
 	}
 
+#if false
 	void ComputeProjection()
 	{
 		if (bUseCustomProjection && Distance > 3)
@@ -321,6 +337,7 @@ public class SpringArm : MonoBehaviour
 			CameraComponent.projectionMatrix = DefaultProjection;
 		}
 	}
+#endif
 
 	#region Settings
 

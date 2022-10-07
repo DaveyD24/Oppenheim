@@ -10,7 +10,7 @@ Shader "Custom/Outline Fill" {
   Properties {
     [Enum(UnityEngine.Rendering.CompareFunction)] _ZTest("ZTest", Float) = 0
 
-    _OutlineColor("Outline Color", Color) = (1, 1, 1, 1)
+    _OutlineColour("Outline Color", Color) = (1, 1, 1, 1)
     _OutlineWidth("Outline Width", Range(0, 10)) = 2
   }
 
@@ -53,7 +53,7 @@ Shader "Custom/Outline Fill" {
         UNITY_VERTEX_OUTPUT_STEREO
       };
 
-      uniform fixed4 _OutlineColor;
+      uniform fixed4 _OutlineColour;
       uniform float _OutlineWidth;
 
       v2f vert(appdata input) {
@@ -67,7 +67,7 @@ Shader "Custom/Outline Fill" {
         float3 viewNormal = normalize(mul((float3x3)UNITY_MATRIX_IT_MV, normal));
 
         output.position = UnityViewToClipPos(viewPosition + viewNormal * -viewPosition.z * _OutlineWidth / 1000.0);
-        output.color = _OutlineColor;
+        output.color = _OutlineColour;
 
         return output;
       }

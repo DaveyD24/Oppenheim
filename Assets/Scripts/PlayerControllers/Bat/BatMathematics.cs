@@ -90,32 +90,32 @@ public static class BatMathematics
 	}
 
 	/// <summary>Converts a world direction to be relative to the Reference's forward.</summary>
-	public static Vector3 DirectionRelativeToTransform(Transform reference, Vector3 direction, bool bIgnoreYAxis = true)
+	public static Vector3 DirectionRelativeToTransform(Transform Reference, Vector3 Direction, bool bIgnoreYAxis = true)
 	{
-		Vector3 referenceForward = reference.forward;
-		Vector3 referenceRight = reference.right;
+		Vector3 ReferenceForward = Reference.forward;
+		Vector3 ReferenceRight = Reference.right;
 
 		if (bIgnoreYAxis)
 		{
-			referenceForward.y = referenceRight.y = 0f;
+			ReferenceForward.y = ReferenceRight.y = 0f;
 		}
 
-		referenceForward.Normalize();
-		referenceRight.Normalize();
+		ReferenceForward.Normalize();
+		ReferenceRight.Normalize();
 
-		float leftRight = direction.x;
-		float forwardBackward = direction.z;
+		float LeftRight = Direction.x;
+		float ForwardBackward = Direction.z;
 
-		Vector3 relativeMovementVector = (referenceForward * forwardBackward) + (referenceRight * leftRight);
+		Vector3 RelativeMovementVector = (ReferenceForward * ForwardBackward) + (ReferenceRight * LeftRight);
 
-		return relativeMovementVector;
+		return RelativeMovementVector;
 	}
 
-	public static void AlignTransformToMovement(Transform transform, Vector3 movementVector, float rotationSpeed, Vector3 upAxis)
+	public static void AlignTransformToMovement(Transform Transform, Vector3 MovementVector, float RotationSpeed, Vector3 UpAxis)
 	{
-		Quaternion rotationNow = transform.rotation;
-		Quaternion targetRotation = Quaternion.LookRotation(movementVector, upAxis);
-		transform.rotation = Quaternion.RotateTowards(rotationNow, targetRotation, rotationSpeed);
+		Quaternion RotationNow = Transform.rotation;
+		Quaternion TargetRotation = Quaternion.LookRotation(MovementVector, UpAxis);
+		Transform.rotation = Quaternion.RotateTowards(RotationNow, TargetRotation, RotationSpeed);
 	}
 
 	public const float kZeroThreshold = .01f;

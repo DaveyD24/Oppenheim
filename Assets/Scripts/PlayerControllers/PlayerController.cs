@@ -61,8 +61,7 @@ public abstract class PlayerController : MonoBehaviour
 
     [field: SerializeField, Min(25f)] protected float FallDamageThreshold { get; private set; }
 
-    // Not a Property, is Private: Use GetGroundCheckPosition() instead.
-    [field: SerializeField] Vector3 groundCheckPosition;
+    [field: SerializeField] protected Vector3 groundCheckPosition;
 
     [field: SerializeField] protected float GroundCheckRadius { get; private set; }
 
@@ -309,7 +308,7 @@ public abstract class PlayerController : MonoBehaviour
             Rb = GetComponent<Rigidbody>();
         }
 
-        Gizmos.color = new Color(0, 1, 1, 1);
+        Gizmos.color = Color.cyan;
         Gizmos.DrawSphere(GetGroundCheckPosition(), GroundCheckRadius);
     }
 

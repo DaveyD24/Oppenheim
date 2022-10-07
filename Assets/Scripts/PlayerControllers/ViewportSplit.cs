@@ -84,6 +84,7 @@ public class ViewportSplit : MonoBehaviour
 #endif
 
 			MainSpringArm.Target = Active[P1].transform;
+			MainSpringArm.bIsAverageTracking = false;
 			SetSecondaryTarget(Active[P2]); // <-- Split-Screen is done here.
 		}
 		// Merge the two cameras back as one Viewport.
@@ -91,13 +92,17 @@ public class ViewportSplit : MonoBehaviour
 		{
 			// TODO: Interp from Split to Single Screen.
 			MainSpringArm.CameraComponent.rect = new Rect(0, 0, 1, 1);
+
 			RemoveSecondaryCamera();
 
-			Get().SwitchManager.GetAllPlayers(out PlayerController[] All);
+			SwitchManager Multiplayer = Get().SwitchManager;
+			int NumberOfPlayers = Multiplayer.GetNumberOfPlayers();
+			MainSpringArm.bIsAverageTracking = Multiplayer.GetNumberOfPlayers() > 1;
+
+			Multiplayer.GetAllPlayers(out PlayerController[] All);
 			foreach (PlayerController PC in All)
 				PC.TrackingCamera = MainSpringArm;
 
-			int NumberOfPlayers = Get().SwitchManager.GetNumberOfPlayers();
 			if (NumberOfPlayers > 1)
 			{
 				Vector3 AveragePosition = GetAveragePosition();
@@ -131,6 +136,10 @@ public class ViewportSplit : MonoBehaviour
 			Camera CameraComponent = NewSpringArm.GetOrAddComponent<Camera>();
 			SecondSpringArm = NewSpringArm.GetOrAddComponent<SpringArm>();
 
+			// Mark this Spring Arm as Secondary and do not Initialise with Start().
+			SecondSpringArm.bIsSecondarySpringArm = true;
+
+			// Instead, Initialise using the MainSpringArm's Start() initialisation fields.
 			SpringArmSettings Settings = MainSpringArm.GetSettings();
 			SecondSpringArm.SetSettings(Settings, Target.transform, CameraComponent);
 
@@ -192,6 +201,7 @@ public class ViewportSplit : MonoBehaviour
 		float T = Get().TooFarThreshold;
 		float T2 = T * T;
 
+		// Use SqrDist to save the expensive Sqrt() call against a known value.
 		for (int i = 0; i < ActivePlayers.Count; ++i)
 			if (Mean.SquareDistance(ActivePlayers[i].transform.position) > T2)
 				return true;
@@ -211,6 +221,7 @@ public class ViewportSplit : MonoBehaviour
 		float T = Get().TooFarThreshold;
 		float T2 = T * T;
 
+		// Use SqrDist to save the expensive Sqrt() call against a known value.
 		for (int i = 0; i < ActivePlayers.Count; ++i)
 			if (Mean.SquareDistance(ActivePlayers[i].transform.position) > T2)
 				PlayersTooFar.Add(ActivePlayers[i]);
@@ -218,12 +229,15 @@ public class ViewportSplit : MonoBehaviour
 		return PlayersTooFar.Count != 0;
 	}
 
+	/// <summary>Set the <see cref="SpringArm"/> that will never be destroyed.</summary>
+	/// <param name="InMain"></param>
 	public static void SetMainSpringArm(SpringArm InMain)
 	{
 		if (!MainSpringArm)
 			MainSpringArm = InMain;
 	}
 
+	/// <summary>Destroy the Secondary Camera.</summary>
 	static void RemoveSecondaryCamera()
 	{
 		if (SecondSpringArm)
