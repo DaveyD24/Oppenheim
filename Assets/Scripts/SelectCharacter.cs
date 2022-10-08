@@ -10,7 +10,12 @@ public class SelectCharacter : MonoBehaviour
     public void NextCharacter() 
     {
         characters[selectedCharacter].SetActive(false);
-        selectedCharacter = (selectedCharacter + 1) % characters.Length;
+        if (selectedCharacter + 1 > characters.Length){
+            selectedCharacter = 0;
+        }
+        else{
+            selectedCharacter = (selectedCharacter + 1); //% characters.Length;
+        } 
         characters[selectedCharacter].SetActive(true);
     }
 
