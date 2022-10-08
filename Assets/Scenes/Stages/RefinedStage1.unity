@@ -210,6 +210,9 @@ MonoBehaviour:
   - {fileID: 144359}
   meshRenderers:
   - {fileID: 144358}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!54 &144356
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -3727,6 +3730,9 @@ MonoBehaviour:
   meshRenderers:
   - {fileID: 79386930}
   - {fileID: 690677124}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!23 &79386930
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -7243,6 +7249,9 @@ MonoBehaviour:
   meshRenderers:
   - {fileID: 136556441}
   - {fileID: 829640453}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!23 &136556441
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -11907,6 +11916,9 @@ MonoBehaviour:
   meshRenderers:
   - {fileID: 247486494}
   - {fileID: 1241068759}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!23 &247486494
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -12430,6 +12442,9 @@ MonoBehaviour:
   meshRenderers:
   - {fileID: 262248328}
   - {fileID: 1014354039}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!23 &262248328
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -12979,6 +12994,9 @@ MonoBehaviour:
   meshRenderers:
   - {fileID: 275404008}
   - {fileID: 1175571101}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!23 &275404008
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -14242,6 +14260,9 @@ MonoBehaviour:
   - {fileID: 293587429}
   meshRenderers:
   - {fileID: 293587428}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!54 &293587426
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -17036,6 +17057,9 @@ MonoBehaviour:
   meshRenderers:
   - {fileID: 381433206}
   - {fileID: 1538895085}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!23 &381433206
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -17113,14 +17137,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Blueprint
       objectReference: {fileID: 0}
-    - target: {fileID: 1534755949760726659, guid: 3b2fd21f4623c5f449640b0298e0617c, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1534755949760726659, guid: 3b2fd21f4623c5f449640b0298e0617c, type: 3}
-      propertyPath: m_TagString
-      value: Blueprint
-      objectReference: {fileID: 0}
     - target: {fileID: 2193711826713223049, guid: 3b2fd21f4623c5f449640b0298e0617c, type: 3}
       propertyPath: m_RootOrder
       value: 5
@@ -17165,10 +17181,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2988544641173171108, guid: 3b2fd21f4623c5f449640b0298e0617c, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 1.49
-      objectReference: {fileID: 0}
     - target: {fileID: 3654281983787433712, guid: 3b2fd21f4623c5f449640b0298e0617c, type: 3}
       propertyPath: m_IsActive
       value: 1
@@ -17178,24 +17190,6 @@ PrefabInstance:
 --- !u!1 &386129721 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1534755949760726659, guid: 3b2fd21f4623c5f449640b0298e0617c, type: 3}
-  m_PrefabInstance: {fileID: 386129720}
-  m_PrefabAsset: {fileID: 0}
---- !u!65 &386129722
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 386129721}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!4 &386129723 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 2193711826713223049, guid: 3b2fd21f4623c5f449640b0298e0617c, type: 3}
   m_PrefabInstance: {fileID: 386129720}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &386424226
@@ -17690,6 +17684,9 @@ MonoBehaviour:
   meshRenderers:
   - {fileID: 399572006}
   - {fileID: 878876154}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!23 &399572006
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -18939,6 +18936,9 @@ MonoBehaviour:
   meshRenderers:
   - {fileID: 425835984}
   - {fileID: 126323223}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!23 &425835984
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -20189,6 +20189,9 @@ MonoBehaviour:
   - {fileID: 451053649}
   meshRenderers:
   - {fileID: 451053648}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!54 &451053646
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -24412,6 +24415,9 @@ MonoBehaviour:
   meshRenderers:
   - {fileID: 537510804}
   - {fileID: 565628446}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!23 &537510804
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -26939,6 +26945,9 @@ MonoBehaviour:
   - {fileID: 598693561}
   meshRenderers:
   - {fileID: 598693560}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!54 &598693558
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -27733,6 +27742,9 @@ MonoBehaviour:
   meshRenderers:
   - {fileID: 612148320}
   - {fileID: 203371775}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!23 &612148320
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -29841,6 +29853,9 @@ MonoBehaviour:
   meshRenderers:
   - {fileID: 656780544}
   - {fileID: 2101938374}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!23 &656780544
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -30482,6 +30497,9 @@ MonoBehaviour:
   meshRenderers:
   - {fileID: 675359799}
   - {fileID: 1687340674}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!23 &675359799
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -31672,6 +31690,9 @@ MonoBehaviour:
   meshRenderers:
   - {fileID: 687817723}
   - {fileID: 1651601409}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!23 &687817723
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -32807,6 +32828,9 @@ MonoBehaviour:
   - {fileID: 710031763}
   meshRenderers:
   - {fileID: 710031762}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!54 &710031760
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -35882,6 +35906,9 @@ MonoBehaviour:
   meshRenderers:
   - {fileID: 781730538}
   - {fileID: 1366524867}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!23 &781730538
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -36549,6 +36576,9 @@ MonoBehaviour:
   meshRenderers:
   - {fileID: 796538844}
   - {fileID: 1674573833}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!23 &796538844
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -36730,6 +36760,9 @@ MonoBehaviour:
   meshRenderers:
   - {fileID: 797431764}
   - {fileID: 1274537215}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!23 &797431764
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -39451,6 +39484,9 @@ MonoBehaviour:
   meshRenderers:
   - {fileID: 860281134}
   - {fileID: 519210515}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!23 &860281134
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -40638,6 +40674,9 @@ MonoBehaviour:
   meshRenderers:
   - {fileID: 885619496}
   - {fileID: 739329439}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!23 &885619496
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -44027,6 +44066,9 @@ MonoBehaviour:
   - {fileID: 975647929}
   meshRenderers:
   - {fileID: 975647928}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!54 &975647926
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -46002,6 +46044,9 @@ MonoBehaviour:
   meshRenderers:
   - {fileID: 999773433}
   - {fileID: 1101932153}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!23 &999773433
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -47635,6 +47680,9 @@ MonoBehaviour:
   - {fileID: 1055214061}
   meshRenderers:
   - {fileID: 1055214060}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!54 &1055214058
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -52986,6 +53034,9 @@ MonoBehaviour:
   - {fileID: 1196129711}
   meshRenderers:
   - {fileID: 1196129710}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!54 &1196129708
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -53687,6 +53738,9 @@ MonoBehaviour:
   - {fileID: 1222015925}
   meshRenderers:
   - {fileID: 1222015924}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!54 &1222015922
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -54801,6 +54855,9 @@ MonoBehaviour:
   - {fileID: 1248545875}
   meshRenderers:
   - {fileID: 1248545874}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!54 &1248545872
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -55192,6 +55249,9 @@ MonoBehaviour:
   meshRenderers:
   - {fileID: 1251142548}
   - {fileID: 1342255942}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!23 &1251142548
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -60493,6 +60553,9 @@ MonoBehaviour:
   - {fileID: 1362954142}
   meshRenderers:
   - {fileID: 1362954141}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!54 &1362954139
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -62888,6 +62951,9 @@ MonoBehaviour:
   meshRenderers:
   - {fileID: 1410770458}
   - {fileID: 718403251}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!23 &1410770458
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -65336,6 +65402,9 @@ MonoBehaviour:
   - {fileID: 1478025279}
   meshRenderers:
   - {fileID: 1478025278}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!54 &1478025276
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -66106,6 +66175,84 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1498065308}
   m_Mesh: {fileID: 4300000, guid: c7d246b320fbfff4093aa541d6a54a80, type: 3}
+--- !u!21 &1501589966
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Balloon
+  m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
+  m_ShaderKeywords: _ALPHAPREMULTIPLY_ON
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: 3000
+  stringTagMap:
+    RenderType: Transparent
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _BumpMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailAlbedoMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailMask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailNormalMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _EmissionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MetallicGlossMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _OcclusionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ParallaxMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _BumpScale: 1
+    - _Cutoff: 0.5
+    - _DetailNormalMapScale: 1
+    - _DstBlend: 10
+    - _GlossMapScale: 1
+    - _Glossiness: 1
+    - _GlossyReflections: 1
+    - _Metallic: 0
+    - _Mode: 3
+    - _OcclusionStrength: 1
+    - _Parallax: 0.02
+    - _SmoothnessTextureChannel: 0
+    - _SpecularHighlights: 1
+    - _SrcBlend: 1
+    - _UVSec: 0
+    - _ZWrite: 0
+    m_Colors:
+    - _Color: {r: 0, g: 0.044233803, b: 0.027068365, a: 1}
+    - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+  m_BuildTextureStacks: []
 --- !u!1 &1505646464
 GameObject:
   m_ObjectHideFlags: 0
@@ -68550,6 +68697,9 @@ MonoBehaviour:
   meshRenderers:
   - {fileID: 1568628071}
   - {fileID: 1797599889}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!23 &1568628071
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -69641,6 +69791,9 @@ MonoBehaviour:
   - {fileID: 1587287152}
   meshRenderers:
   - {fileID: 1587287151}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!54 &1587287149
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -70344,6 +70497,9 @@ MonoBehaviour:
   - {fileID: 1602036477}
   meshRenderers:
   - {fileID: 1602036476}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!54 &1602036474
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -72655,6 +72811,9 @@ MonoBehaviour:
   meshRenderers:
   - {fileID: 1651933890}
   - {fileID: 811873542}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!23 &1651933890
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -73262,6 +73421,9 @@ MonoBehaviour:
   meshRenderers:
   - {fileID: 1664415618}
   - {fileID: 1064996228}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!23 &1664415618
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -77349,6 +77511,9 @@ MonoBehaviour:
   meshRenderers:
   - {fileID: 1722934597}
   - {fileID: 936343864}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!23 &1722934597
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -77617,6 +77782,9 @@ MonoBehaviour:
   - {fileID: 1724226557}
   meshRenderers:
   - {fileID: 1724226556}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!54 &1724226554
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -78692,6 +78860,84 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1759914315}
   m_Mesh: {fileID: 4300000, guid: f1a871656407f1843a8eea3435a3ef93, type: 3}
+--- !u!21 &1763385576
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Balloon
+  m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
+  m_ShaderKeywords: _ALPHAPREMULTIPLY_ON
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: 3000
+  stringTagMap:
+    RenderType: Transparent
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _BumpMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailAlbedoMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailMask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailNormalMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _EmissionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MetallicGlossMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _OcclusionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ParallaxMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _BumpScale: 1
+    - _Cutoff: 0.5
+    - _DetailNormalMapScale: 1
+    - _DstBlend: 10
+    - _GlossMapScale: 1
+    - _Glossiness: 1
+    - _GlossyReflections: 1
+    - _Metallic: 0
+    - _Mode: 3
+    - _OcclusionStrength: 1
+    - _Parallax: 0.02
+    - _SmoothnessTextureChannel: 0
+    - _SpecularHighlights: 1
+    - _SrcBlend: 1
+    - _UVSec: 0
+    - _ZWrite: 0
+    m_Colors:
+    - _Color: {r: 0.3896423, g: 0, b: 0.37039644, a: 1}
+    - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+  m_BuildTextureStacks: []
 --- !u!1 &1763699572
 GameObject:
   m_ObjectHideFlags: 0
@@ -80074,6 +80320,9 @@ MonoBehaviour:
   - {fileID: 1804390568}
   meshRenderers:
   - {fileID: 1804390567}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!54 &1804390565
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -81017,6 +81266,9 @@ MonoBehaviour:
   - {fileID: 1815755374}
   meshRenderers:
   - {fileID: 1815755373}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!54 &1815755371
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -90868,99 +91120,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2066185609}
   m_Mesh: {fileID: 4300000, guid: c7d246b320fbfff4093aa541d6a54a80, type: 3}
---- !u!1 &2068051756
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2068051757}
-  - component: {fileID: 2068051758}
-  m_Layer: 0
-  m_Name: Point Light
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2068051757
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2068051756}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.83, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 386129723}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!108 &2068051758
-Light:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2068051756}
-  m_Enabled: 1
-  serializedVersion: 10
-  m_Type: 2
-  m_Shape: 0
-  m_Color: {r: 0, g: 0.91636705, b: 1, a: 1}
-  m_Intensity: 1
-  m_Range: 30.86
-  m_SpotAngle: 30
-  m_InnerSpotAngle: 21.80208
-  m_CookieSize: 10
-  m_Shadows:
-    m_Type: 0
-    m_Resolution: -1
-    m_CustomResolution: -1
-    m_Strength: 1
-    m_Bias: 0.05
-    m_NormalBias: 0.4
-    m_NearPlane: 0.2
-    m_CullingMatrixOverride:
-      e00: 1
-      e01: 0
-      e02: 0
-      e03: 0
-      e10: 0
-      e11: 1
-      e12: 0
-      e13: 0
-      e20: 0
-      e21: 0
-      e22: 1
-      e23: 0
-      e30: 0
-      e31: 0
-      e32: 0
-      e33: 1
-    m_UseCullingMatrixOverride: 0
-  m_Cookie: {fileID: 0}
-  m_DrawHalo: 0
-  m_Flare: {fileID: 0}
-  m_RenderMode: 0
-  m_CullingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_RenderingLayerMask: 1
-  m_Lightmapping: 4
-  m_LightShadowCasterMode: 0
-  m_AreaSize: {x: 1, y: 1}
-  m_BounceIntensity: 1
-  m_ColorTemperature: 6570
-  m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
-  m_UseBoundingSphereOverride: 0
-  m_UseViewFrustumForShadowCasterCull: 1
-  m_ShadowRadius: 0
-  m_ShadowAngle: 0
 --- !u!1 &2070661131
 GameObject:
   m_ObjectHideFlags: 0

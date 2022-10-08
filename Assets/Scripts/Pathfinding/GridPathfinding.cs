@@ -20,6 +20,7 @@ public class GridPathfinding : MonoBehaviour
     [SerializeField] private LayerMask groundLayer;
     [ContextMenuItem("Generate the Grid", "GenerateGrid")]
     [SerializeField] private bool bShowGrid = false;
+    [SerializeField] private bool bPathValidCollide = true;
 
     [ContextMenuItem("Generate a path from this object to the goal", "GenerateWirePath")]
     public GameObject goalObject;
@@ -37,7 +38,8 @@ public class GridPathfinding : MonoBehaviour
             {
                 for (int k = 0; k < depth; k++)
                 {
-                    if (Physics.CheckSphere(PointToWorld(i, j, k), tileSize * 0.5f, groundLayer))
+                    bool bHit = Physics.CheckSphere(PointToWorld(i, j, k), tileSize * 0.5f, groundLayer);
+                    if ((bHit && bPathValidCollide) || (!bHit && !bPathValidCollide))
                     {
                         grid[i, j, k] = new NavigationNode(i, j, k);
                     }

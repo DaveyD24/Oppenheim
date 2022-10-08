@@ -47,13 +47,14 @@ MonoBehaviour:
   meshFilter: {fileID: 0}
   width: 10
   height: 50
-  depth: 260
+  depth: 10
   tileSize: 4
-  offset: {x: 158, y: 36.161, z: -453.72}
+  offset: {x: 0, y: 0, z: 0}
   groundLayer:
     serializedVersion: 2
     m_Bits: 2147483647
   bShowGrid: 0
+  bPathValidCollide: 1
   goalObject: {fileID: 0}
 --- !u!120 &9135703808337706924
 LineRenderer:
