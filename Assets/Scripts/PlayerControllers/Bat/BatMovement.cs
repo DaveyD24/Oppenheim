@@ -314,6 +314,9 @@ public class BatMovement : MonoBehaviour
 
 	public void HandleJump(float Throw)
 	{
+		if (!Bat.Active)
+			return;
+
 		if (!IsAirborne())
 		{
 			// Grounded.
