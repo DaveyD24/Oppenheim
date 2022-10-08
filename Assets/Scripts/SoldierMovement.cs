@@ -13,7 +13,12 @@ public class SoldierMovement : PlayerController
     [SerializeField] private GameObject ragdol;
     [SerializeField] private GameObject baseMesh;
     [SerializeField] private GameObject soldierCamera;
+    [SerializeField] private GameObject gun;
     private BoxCollider boxCollider;
+    
+    float closestDist = Mathf.Infinity;
+    Collider closestObj = null;
+    Collider[] objNearby;
 
     [field: Header("Soldier Movement")]
     [field: SerializeField] public Transform BulletSpawnPoint { get; set; }
@@ -45,7 +50,6 @@ public class SoldierMovement : PlayerController
     protected override void Update()
     {
         base.Update();
-
         // Rotate towards Movement.
         Vector3 cameraRelativeDirection = DirectionRelativeToTransform(soldierCamera.transform, move);
         Vector3 faceDir = cameraRelativeDirection;
@@ -283,5 +287,28 @@ public class SoldierMovement : PlayerController
         {
             animator.SetTrigger("Walk");
         }
+    }
+
+    private void FindTarget()
+    {
+        objNearby = Physics.OverlapSphere(this.soldierTransform.position, 50f);
+        foreach (Collider obj in objNearby) 
+        {
+            if (obj.tag == "Breakable") {
+                float breakableDist = (obj.transform.position - this.transform.position).sqrMagnitude;
+                if (breakableDist < closestDist)
+                {
+                    closestDist = breakableDist;
+                    closestObj = obj;
+                }
+            }
+        }
+        Debug.DrawLine(this.transform.position, closestObj.transform.position);
+    }
+
+    private void AutoAim()
+    {
+        gun.transform.LookAt(closestObj.transform);
+
     }
 }
