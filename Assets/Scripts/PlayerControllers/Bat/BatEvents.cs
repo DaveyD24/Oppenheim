@@ -79,6 +79,9 @@ public class BatEvents : MonoBehaviour
 
 			WindGushFalloff = GraduallyStopWindGush();
 			StartCoroutine(WindGushFalloff);
+
+			//if (Bat.Audio.Playing.ContainsKey("Wind Gush"))
+			//	Bat.Audio.Playing.Remove("Wind Gush");
 		}
 	}
 

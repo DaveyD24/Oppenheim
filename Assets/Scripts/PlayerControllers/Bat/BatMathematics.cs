@@ -211,6 +211,12 @@ public static class BatMathematics
 			F = Min;
 	}
 
+	public static void ClampMax(ref float F, float Max)
+	{
+		if (F > Max)
+			F = Max;
+	}
+
 	/// <summary>Checks whether <paramref name="V"/> contains <see cref="float.NaN"/>.</summary>
 	/// <remarks>Used in Antipede.</remarks>
 	/// <returns><see langword="true"/> if at least one vector component is <see cref="float.NaN"/>.</returns>
