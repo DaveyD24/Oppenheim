@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 876671622923516079}
   - component: {fileID: 4991862436757991073}
   - component: {fileID: -6574425274678568234}
+  - component: {fileID: -2692842493156082260}
   m_Layer: 0
   m_Name: Button
   m_TagString: Untagged
@@ -125,6 +126,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: -2692842493156082260}
+        m_TargetAssemblyTypeName: AudioController, Assembly-CSharp
+        m_MethodName: PlayFromInteractable
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Button Down
+          m_BoolArgument: 0
+        m_CallState: 2
   OnDeactivated:
     m_PersistentCalls:
       m_Calls:
@@ -140,8 +153,62 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: -2692842493156082260}
+        m_TargetAssemblyTypeName: AudioController, Assembly-CSharp
+        m_MethodName: PlayFromInteractable
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Button Up
+          m_BoolArgument: 0
+        m_CallState: 2
   RequiredMassToActivate: 0
   bIsPersistent: 0
+--- !u!114 &-2692842493156082260
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6435307911758216489}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdf51a863cc80a541bd21546cf8cfb67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HashMap:
+    Entries:
+    - Key: Button Down
+      Value:
+        Clip: {fileID: 8300000, guid: 387ee18ebead30e4ea501727d03fdefa, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 0
+        bLoop: 0
+        Priority: 128
+        Volume: 1
+        Pitch: 1
+        StereoPan: 0
+        SpatialBlend: 0.75
+        ReverbZoneMix: 1
+    - Key: Button Up
+      Value:
+        Clip: {fileID: 8300000, guid: a56608592a3e3f2499ae31cb4ebf8d2d, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 0
+        bLoop: 0
+        Priority: 128
+        Volume: 1
+        Pitch: 1
+        StereoPan: 0
+        SpatialBlend: 0.75
+        ReverbZoneMix: 1
 --- !u!1 &6707911210625736198
 GameObject:
   m_ObjectHideFlags: 0

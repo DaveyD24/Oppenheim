@@ -499,6 +499,34 @@ MonoBehaviour:
         StereoPan: 0
         SpatialBlend: 0.75
         ReverbZoneMix: 1
+    - Key: Wind Gush
+      Value:
+        Clip: {fileID: 8300000, guid: f5d09d48c6021f54591eb6983d272e2e, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 0
+        bLoop: 1
+        Priority: 128
+        Volume: 1
+        Pitch: 1
+        StereoPan: 0
+        SpatialBlend: 0.75
+        ReverbZoneMix: 1
+    - Key: Munch
+      Value:
+        Clip: {fileID: 8300000, guid: 57561f7f1afd8084c8851cca6d1a7c3c, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 0
+        bLoop: 0
+        Priority: 128
+        Volume: 1
+        Pitch: 1
+        StereoPan: 0
+        SpatialBlend: 0.75
+        ReverbZoneMix: 1
 --- !u!114 &4799401949374260401
 MonoBehaviour:
   m_ObjectHideFlags: 0

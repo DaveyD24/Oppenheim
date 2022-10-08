@@ -203,6 +203,8 @@ public abstract class PlayerController : MonoBehaviour
         // Debug.Log(CurrentFuel + " " + amount);
         fuelSlider.value = CurrentFuel;
 
+        PlayFuelCollectionSound();
+
         // UIEvents.OnFuelChanged(PlayerIdSO.PlayerID, CurrentFuel / DefaultPlayerData.MaxFuel);
         if (CurrentFuel <= 0)
         {
@@ -314,7 +316,7 @@ public abstract class PlayerController : MonoBehaviour
 
     protected virtual void OnCollisionEnter(Collision collision)
     {
-        bool bTakeFallDamage = ShouldTakeFallDamage(collision, out float relativeVelocity);
+        bool bTakeFallDamage = ShouldTakeFallDamage(collision, out _);
 
         // if (relativeVelocity > MovementSpeed + 1f)
         // {
@@ -327,10 +329,10 @@ public abstract class PlayerController : MonoBehaviour
 
         if (!collision.gameObject.CompareTag("Player") && beforeCollideSpeed > DefaultPlayerData.dustParticlesCollisionSpeed)
         {
-            Instantiate(DefaultPlayerData.DustParticles, collision.GetContact(0).point, Quaternion.identity);
+            OnDustParticles(collision.GetContact(0).point);
         }
 
-        if(collision.gameObject.CompareTag("Blueprint"))
+        if (collision.gameObject.CompareTag("Blueprint"))
         {
             SceneManager.LoadScene("WinScene");
         }
@@ -402,6 +404,13 @@ public abstract class PlayerController : MonoBehaviour
         GameEvents.Die();
         DeathWaitTimer = null;
     }
+
+    protected virtual void OnDustParticles(Vector3 Position)
+    {
+        Instantiate(DefaultPlayerData.DustParticles, Position, Quaternion.identity);
+    }
+
+    protected virtual void PlayFuelCollectionSound() { }
 }
 
 public enum EPlayer

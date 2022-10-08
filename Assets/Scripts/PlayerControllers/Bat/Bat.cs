@@ -112,25 +112,30 @@ public class Bat : PlayerController
 		return transform.position + WorldToLocalDown + groundCheckPosition;
 	}
 
-	protected override bool ShouldTakeFallDamage(Collision collision, out float relativeVelocity)
+	protected override bool ShouldTakeFallDamage(Collision Collision, out float RelativeVelocity)
 	{
-		relativeVelocity = collision.relativeVelocity.magnitude;
+		RelativeVelocity = Collision.relativeVelocity.magnitude;
 
-		if (relativeVelocity < FallDamageThreshold)
+		if (RelativeVelocity < FallDamageThreshold)
 		{
 			return false;
 		}
 
 		// Take damage if landing/crashing at an Angle > than 30 degrees of the surface.
-		float angle = FAngle(transform.up, collision.contacts[0].normal);
-		bool bTakeFallDamage = angle > 30f;
+		float Angle = FAngle(transform.up, Collision.contacts[0].normal);
+		bool bTakeFallDamage = Angle > 30f;
 
 		if (bTakeFallDamage)
 		{
-			Debug.Log($"Collision with {collision.gameObject.name} at {angle:F0} degrees at {relativeVelocity:F0}m/s");
+			Debug.Log($"Collision with {Collision.gameObject.name} at {Angle:F0} degrees at {RelativeVelocity:F0}m/s");
 		}
 
 		return bTakeFallDamage;
+	}
+
+	protected override void PlayFuelCollectionSound()
+	{
+		Events.OnMangoCollected();
 	}
 
 	public override void OnDeath()

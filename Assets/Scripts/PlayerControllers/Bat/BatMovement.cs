@@ -402,6 +402,8 @@ public class BatMovement : MonoBehaviour
 			// sometimes made these 1E-11. These values NEED to be zero whilst Grounded.
 			ForceZero(ref PitchDelta);
 			ForceZero(ref YawDelta);
+
+			Bat.Events.StopGlidingWindGush();
 		}
 	}
 
@@ -415,6 +417,7 @@ public class BatMovement : MonoBehaviour
 		RemainingSeconds = SecondsOfPitchFlight;
 
 		Bat.Audio.Play("Whoosh", EAudioPlayOptions.FollowEmitter | EAudioPlayOptions.DestroyOnEnd);
+		Bat.Events.PlayGlidingWindGush();
 	}
 
 	private IEnumerator GradualAcceleration()
