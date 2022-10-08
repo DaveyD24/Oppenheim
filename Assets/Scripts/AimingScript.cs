@@ -7,16 +7,17 @@ public class AimingScript : MonoBehaviour
     public Transform aimPosition;
     //public GameObject currentGun;
     GameObject currentTarget;
+    float closestDist = Mathf.Infinity;
+    Collider closestObj = null;
+    Collider[] objNearby;
 
     bool isAiming;
 
-    // Start is called before the first frame update
     void Start()
     {
         //currentGun.transform.position = aimPosition.position;
     }
 
-    // Update is called once per frame
     void Update()
     {
         FindTarget();
@@ -64,6 +65,26 @@ public class AimingScript : MonoBehaviour
         //        isAiming = false;
         //    }
         //}
+
+
+        /*
+    private void FindTarget()
+        {
+        objNearby = Physics.OverlapSphere(this.soldierTransform.position, 50f);
+        foreach (Collider obj in objNearby) 
+        {
+            if (obj.tag == "Breakable") {
+                float breakableDist = (obj.transform.position - this.transform.position).sqrMagnitude;
+                if (breakableDist < closestDist)
+                {
+                    closestDist = breakableDist;
+                    closestObj = obj;
+                }
+            }
+        }
+        Debug.DrawLine(this.transform.position, closestObj.transform.position);
+    }
+        */
     }
 
     private void AutoAim() 
