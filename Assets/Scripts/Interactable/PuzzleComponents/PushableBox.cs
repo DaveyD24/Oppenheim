@@ -6,6 +6,7 @@ public class PushableBox : UniqueID, IDataInterface
 {
     private Rigidbody rb;
     [SerializeField] private float power;
+    [SerializeField] private bool bNotSave = false;
 
     private float waitTime = 0.1f;
     private bool bCanAddForce = true;
@@ -46,7 +47,7 @@ public class PushableBox : UniqueID, IDataInterface
     public void LoadData(SectionData data)
 #pragma warning restore SA1202 // Elements should be ordered by access
     {
-        if (gameObject.GetComponent<BoxCollider>() != null)
+        if (!bNotSave && gameObject.GetComponent<BoxCollider>() != null)
         {
             if (data.GeneralPhysicsObject.Dictionary.TryGetValue(SaveID, out GeneralPhysicsObjectData boxData))
             {
@@ -61,7 +62,7 @@ public class PushableBox : UniqueID, IDataInterface
     public void SaveData(SectionData data)
     {
         // only save this data if it is not currently attached to a balloon
-        if (this.gameObject.GetComponent<Collider>() != null)
+        if (!bNotSave && this.gameObject.GetComponent<Collider>() != null)
         {
             GeneralPhysicsObjectData boxData = new GeneralPhysicsObjectData();
             boxData.AngularVelocity = rb.angularVelocity;

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Fan : MonoBehaviour
+public class Fan : MonoBehaviour//, IDataInterface
 {
     private Transform blades;
     [SerializeField] private float fanSpeed = 400;
@@ -167,9 +167,17 @@ public class Fan : MonoBehaviour
                     if (detectedRigidbody == null && item.gameObject.TryGetComponent(out Rigidbody rb))
                     {
                         detectedRigidbody = rb;
-                        if (hit[0].collider.gameObject.GetComponent<MonkeyController>() != null)
+                        if (hit[0].collider.gameObject.TryGetComponent(out MonkeyController monkey))
                         {
-                            detectedRigidbodyForce = transform.forward * fanForce * 1.5f;
+                            if (!monkey.IsClingJump())
+                            {
+                                // ensures the monkey can safely jump while clinging to an object which is in the fans path
+                                detectedRigidbodyForce = transform.forward * fanForce * 1.5f;
+                            }
+                            else
+                            {
+                                detectedRigidbodyForce = Vector3.zero;
+                            }
 
                             // rb.AddForce(transform.forward * fanForce * 1.5f);
                         }
@@ -237,4 +245,22 @@ public class Fan : MonoBehaviour
 
         return forceSize;
     }
+
+//#pragma warning disable SA1202 // Elements should be ordered by access
+//    public void LoadData(SectionData data)
+//#pragma warning restore SA1202 // Elements should be ordered by access
+//    {
+//        if (!BNotSaveData)
+//        {
+//            SetFanState(data.FanData.Dictionary[SaveID]);
+//        }
+//    }
+
+//    public void SaveData(SectionData data)
+//    {
+//        if (!BNotSaveData)
+//        {
+//            data.FanData.Dictionary.Add(SaveID, bIsOn);
+//        }
+//    }
 }

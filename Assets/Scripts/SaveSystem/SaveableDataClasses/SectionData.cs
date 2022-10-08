@@ -24,6 +24,8 @@ public class SectionData
 
     [SerializeField] public SerializableDictionary<int, bool> SwitchData { get; set; } = new SerializableDictionary<int, bool>();
 
+    [SerializeField] public SerializableDictionary<int, bool> FanData { get; set; } = new SerializableDictionary<int, bool>();
+
 }
 
 /// <summary>

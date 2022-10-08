@@ -166,6 +166,15 @@ public class MonkeyController : PlayerController
         ragdol.transform.position = transform.position;
     }
 
+    /// <summary>
+    /// checks if jumping while also having been clung to an object.
+    /// </summary>
+    /// <returns>if it is cling jumping or not.</returns>
+    public bool IsClingJump()
+    {
+        return animator.GetCurrentAnimatorStateInfo(0).IsName("ClimbJump") || clinging;
+    }
+
     protected override void Respawn()
     {
         baseMesh.SetActive(true);
@@ -179,10 +188,12 @@ public class MonkeyController : PlayerController
         base.Respawn();
     }
 
+#if UNITY_EDITOR
     private void OnGUI()
     {
         GUI.Label(new Rect(100, 65, 250, 250), $"Clinging? {(clinging ? "Yes" : "No")}");
     }
+#endif
 
     protected override void FixedUpdate()
     {

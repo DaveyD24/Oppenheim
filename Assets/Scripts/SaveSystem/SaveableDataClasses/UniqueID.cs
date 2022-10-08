@@ -10,8 +10,10 @@ using UnityEngine;
 /// </summary>
 public class UniqueID : MonoBehaviour
 {
-    [field: Header("Save System Data(Only first two items)")]
+    [field: Header("Save System Data(Only first three items)")]
     [field: SerializeField] public bool BIdUnchangeable { get; set; } = false; // ensures no id once set can ever be rest, and mess up the save system as a result
+
+    [field: SerializeField] public bool BNotSaveData { get; set; } = false; // should this items data not be saved
 
     [field: SerializeField] [field: ReadOnly] public int SaveID { get; set; } // a unique id to use when saving and loading the object.
 
