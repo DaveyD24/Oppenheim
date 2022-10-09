@@ -14,9 +14,11 @@ public abstract class Node<T>
     /// </summary>
     public enum ENodeState
     {
+#pragma warning disable SA1602 // Enumeration items should be documented
         Success,
         Failure,
-        Running
+        Running,
+#pragma warning restore SA1602 // Enumeration items should be documented
     }
 
     public T Blackboard
