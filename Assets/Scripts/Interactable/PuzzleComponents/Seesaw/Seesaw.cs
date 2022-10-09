@@ -20,6 +20,7 @@ public class Seesaw : MonoBehaviour
 	float InRatio;
 	float OutRatio;
 	float SmoothDampVelocity;
+	[SerializeField] private float timeReachTarget = 0.05f;
 
 	void FixedUpdate()
 	{
@@ -42,7 +43,7 @@ public class Seesaw : MonoBehaviour
 		// More NaN Checks.
 		if (!DiagnosticCheckNaN(Pitch))
 		{
-			float SmoothedPitch = Mathf.SmoothDamp(WrapAngle(transform.localEulerAngles.x), Pitch, ref SmoothDampVelocity, .1f, MaxRotationDeltaAngle);
+			float SmoothedPitch = Mathf.SmoothDamp(WrapAngle(transform.localEulerAngles.x), Pitch, ref SmoothDampVelocity, timeReachTarget, MaxRotationDeltaAngle);
 			transform.localEulerAngles = new Vector3(SmoothedPitch, transform.localEulerAngles.y, transform.localEulerAngles.z);
 #if UNITY_EDITOR
 			CurrentPitch = Pitch;

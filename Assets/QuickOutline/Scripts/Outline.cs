@@ -18,36 +18,48 @@ public class Outline : MonoBehaviour
 
 	public EOutlineMode OutlineMode
 	{
-		get { return Mode; }
-		set
-		{
-			Mode = value;
-			bNeedsUpdate = true;
-		}
+        get
+        {
+            return Mode;
+        }
+
+        set
+        {
+            Mode = value;
+            bNeedsUpdate = true;
+        }
 	}
 
 	public Color OutlineColour
 	{
-		get { return Colour; }
-		set
-		{
-			Colour = value;
-			bNeedsUpdate = true;
-		}
+        get
+        {
+            return Colour;
+        }
+
+        set
+        {
+            Colour = value;
+            bNeedsUpdate = true;
+        }
 	}
 
 	public float OutlineWidth
 	{
-		get { return Width; }
-		set
-		{
-			Width = value;
-			bNeedsUpdate = true;
-		}
+        get
+        {
+            return Width;
+        }
+
+        set
+        {
+            Width = value;
+            bNeedsUpdate = true;
+        }
 	}
 
 	[Serializable]
-	class ListVector3
+	private class ListVector3
 	{
 		public List<Vector3> Data;
 	}

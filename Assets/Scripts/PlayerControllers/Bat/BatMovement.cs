@@ -175,7 +175,7 @@ public class BatMovement : MonoBehaviour
 		Speedometer.Mark();
 	}
 
-	void OnCollisionEnter(Collision Collision)
+	private void OnCollisionEnter(Collision Collision)
 	{
 		if (bHasGlidedThisJump && IsAirborne())
 		{
@@ -213,7 +213,7 @@ public class BatMovement : MonoBehaviour
 	public void LookBinding(ref CallbackContext Context)
 	{
 		/**
-		--      This does nothing if we're not using LOOK_AIRBORNE.     --
+		 --      This does nothing if we're not using LOOK_AIRBORNE.     --
 		--               Can always be changed, if needed.              --
 		**/
 #if LOOK_AIRBORNE

@@ -279,20 +279,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   controlObj: {fileID: 0}
   abilityTxt: {fileID: 3736332190251587606}
-  fuelSlider: {fileID: 6881637983473362689}
   HumanPlayerIndex: 0
   <PlayerIdSO>k__BackingField: {fileID: 11400000, guid: 250a1cc6c2eafb54fb4fa9dcd6298d62, type: 2}
   <DefaultPlayerData>k__BackingField: {fileID: 11400000, guid: edaf631a83ce6ea42aa9463c9228f767, type: 2}
   <Bouyancy>k__BackingField: 0
   <MovementSpeed>k__BackingField: 5
-  <RotationSpeed>k__BackingField: 7.5
+  <RotationSpeed>k__BackingField: 3
   <Health>k__BackingField: 1
   <FallDamageThreshold>k__BackingField: 27
   groundCheckPosition: {x: 0, y: 0.5, z: 0}
   <GroundCheckRadius>k__BackingField: 0.5
+  <TrackingCamera>k__BackingField: {fileID: 0}
   <StageStartPosition>k__BackingField: {x: 159.804, y: 5.833921, z: -493.00803}
   <StageStartRotation>k__BackingField: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
-  <TrackingCamera>k__BackingField: {fileID: 0}
   bIsStandalone: 0
   ragdol: {fileID: 1259981665220065791}
   baseMesh: {fileID: 1051679150067098337}

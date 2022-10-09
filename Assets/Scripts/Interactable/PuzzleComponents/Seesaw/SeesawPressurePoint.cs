@@ -5,19 +5,23 @@ public class SeesawPressurePoint : MonoBehaviour
 {
 	[Min(0f)] public float CurrentWeight;
 
-	void OnTriggerEnter(Collider Other)
+	private void OnTriggerEnter(Collider other)
 	{
-		if (Other.TryGetComponent(out Rigidbody Physics))
-		{
-			CurrentWeight += Physics.mass;
-		}
-	}
+		GameObject obj = other.gameObject.name == "CarBody" ? other.transform.parent.gameObject : other.gameObject;
 
-	void OnTriggerExit(Collider Other)
+		if (obj.TryGetComponent(out Rigidbody physics))
+        {
+            CurrentWeight += physics.mass;
+        }
+    }
+
+	private void OnTriggerExit(Collider other)
 	{
-		if (Other.TryGetComponent(out Rigidbody Physics))
+		GameObject obj = other.gameObject.name == "CarBody" ? other.transform.parent.gameObject : other.gameObject;
+
+		if (obj.TryGetComponent(out Rigidbody physics))
 		{
-			CurrentWeight -= Physics.mass;
+			CurrentWeight -= physics.mass;
 		}
 
 		// Ensure the weight never drops below zero.

@@ -99,8 +99,10 @@ public class GatherStageObjects : MonoBehaviour
         }
 
         // stageSavables = FindObjectsOfType<MonoBehaviour>().OfType<IDataInterface>();//FindObjectsOfType<MonoBehaviour>().OfType<IDataInterface>();
-        Debug.Log(stageSavables.ToList().Count);
+        // Debug.Log(stageSavables.ToList().Count);
+#if UNITY_EDITOR
         EditorUtility.SetDirty(this);
+#endif
     }
 
     private void OnDrawGizmos()
