@@ -22,6 +22,8 @@ public class FuelCollectible : UniqueID, IDataInterface
         if (other.gameObject.CompareTag("Player"))
         {
             IsCollected();
+
+           if (other.TryGetComponent(out PlayerController player)) {  }
         }
     }
 

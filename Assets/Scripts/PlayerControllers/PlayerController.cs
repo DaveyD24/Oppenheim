@@ -68,7 +68,7 @@ public abstract class PlayerController : MonoBehaviour
 
     [field: SerializeField] protected float GroundCheckRadius { get; private set; }
 
-    [field: SerializeField, ReadOnly] public SpringArm TrackingCamera { get; set; }
+    [field: SerializeField] public SpringArm TrackingCamera { get; set; }
 
     protected float CurrentFuel { get => fuel; set => fuel = Mathf.Clamp(value, 0, DefaultPlayerData.MaxFuel); }
 
@@ -205,8 +205,6 @@ public abstract class PlayerController : MonoBehaviour
         AbilityUses += amount;
         AbilityUses = Mathf.Max(AbilityUses, 0);
         abilityTxt.text = AbilityUses.ToString();
-
-        PlayFuelCollectionSound();
     }
 
     protected virtual void Update()
@@ -404,6 +402,7 @@ public abstract class PlayerController : MonoBehaviour
         if (playerId == PlayerIdSO.PlayerID)
         {
             AdjustAbilityValue(5); // for each fuel collected add 5 ability uses;
+            PlayFuelCollectionSound();
         }
     }
 

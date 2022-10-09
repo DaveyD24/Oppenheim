@@ -1439,7 +1439,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   controlObj: {fileID: 0}
   abilityTxt: {fileID: 6801897874528200568}
-  fuelSlider: {fileID: 6068752831645552715}
   HumanPlayerIndex: 0
   <PlayerIdSO>k__BackingField: {fileID: 11400000, guid: 1e6de6128901ea94a88896b92e3bf310, type: 2}
   <DefaultPlayerData>k__BackingField: {fileID: 11400000, guid: edaf631a83ce6ea42aa9463c9228f767, type: 2}
@@ -1450,14 +1449,13 @@ MonoBehaviour:
   <FallDamageThreshold>k__BackingField: 25
   groundCheckPosition: {x: 0, y: 0, z: 0}
   <GroundCheckRadius>k__BackingField: 0.3
+  <TrackingCamera>k__BackingField: {fileID: 0}
   <StageStartPosition>k__BackingField: {x: 159.9148, y: 5.5, z: -506.90985}
   <StageStartRotation>k__BackingField: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
   jumpWaitTime: 1
-  <TrackingCamera>k__BackingField: {fileID: 0}
   jumpHeight: 1
   ragdol: {fileID: 1937797457676110068}
   baseMesh: {fileID: 3182380755078332304}
-  soldierCamera: {fileID: 0}
   <BulletSpawnPoint>k__BackingField: {fileID: 683507821935103832}
   <BulletPrefab>k__BackingField: {fileID: 1859860186272881942, guid: c152a41615db67940a047f2c85d5e16a, type: 3}
   <BulletSpeed>k__BackingField: 10
@@ -1537,8 +1535,6 @@ MonoBehaviour:
   yPosition: 0
 --- !u!65 &707257446435360162
 BoxCollider:
---- !u!114 &3163964536523772284
-MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1548,8 +1544,15 @@ MonoBehaviour:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 2.5843582, z: 1}
-  m_Center: {x: 0, y: 1.3040247, z: 0}
+  m_Size: {x: 1.098938, y: 2.7164102, z: 1.0704956}
+  m_Center: {x: 0.007873535, y: 1.3727353, z: 0.007843018}
+--- !u!114 &3163964536523772284
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3182380755078332306}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}

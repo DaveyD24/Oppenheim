@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657993, g: 0.4964143, b: 0.5748183, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657934, g: 0.4964134, b: 0.57481736, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -3084,6 +3084,14 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 927938367}
     - target: {fileID: 5654260496683680184, guid: 34b351ecfbc2ccf4f95314a24a9de033, type: 3}
+      propertyPath: soldierTransform
+      value: 
+      objectReference: {fileID: 128388135}
+    - target: {fileID: 5654260496683680184, guid: 34b351ecfbc2ccf4f95314a24a9de033, type: 3}
+      propertyPath: <TrackingCamera>k__BackingField
+      value: 
+      objectReference: {fileID: 927938369}
+    - target: {fileID: 5654260496683680184, guid: 34b351ecfbc2ccf4f95314a24a9de033, type: 3}
       propertyPath: <StageStartPosition>k__BackingField.x
       value: 2.79
       objectReference: {fileID: 0}
@@ -3507,6 +3515,11 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 24
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &128388135 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3182380755078358002, guid: 34b351ecfbc2ccf4f95314a24a9de033, type: 3}
+  m_PrefabInstance: {fileID: 100789332}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &132751532 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4583938017156319738, guid: a82a2362ab0b4da458d7ca4ed81dad6d, type: 3}
@@ -17470,6 +17483,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 927938367}
     - target: {fileID: 1586942486836073262, guid: deef8f80c194f684395af95bdaf24d3b, type: 3}
+      propertyPath: <TrackingCamera>k__BackingField
+      value: 
+      objectReference: {fileID: 927938369}
+    - target: {fileID: 1586942486836073262, guid: deef8f80c194f684395af95bdaf24d3b, type: 3}
       propertyPath: <StageStartPosition>k__BackingField.x
       value: -0.85
       objectReference: {fileID: 0}
@@ -19528,15 +19545,17 @@ MonoBehaviour:
   Target: {fileID: 818209820}
   TargetOffset: {x: 0, y: 0, z: 0}
   CameraComponent: {fileID: 0}
+  bIsAverageTracking: 0
+  bIsSecondarySpringArm: 0
   Distance: 26
-  GimbalRotation: {x: 0, y: 30, z: 0}
-  CameraRotation: {x: 26, y: 0, z: 0}
+  GimbalRotation: {x: 0, y: 24.4, z: 0}
+  CameraRotation: {x: 17.8, y: 0, z: 0}
   bInheritRotation: 0
   bEnableScrollToDistance: 1
   ScrollSensitivity: 1
   DefaultGimbalRotation: {x: 0, y: 27.75, z: 0}
   DefaultCameraRotation: {x: 29.17, y: 0, z: 0}
-  OrbitSensitivity: 1
+  OrbitSensitivity: 15
   bInvertX: 0
   bInvertY: 0
   bInvertZ: 0
@@ -19544,8 +19563,8 @@ MonoBehaviour:
   OnlyCollideWith:
     serializedVersion: 2
     m_Bits: 256
-  PositionalLagStrength: 0.2
-  RotationalLagStrength: 0.2
+  PositionalLagStrength: 0.1
+  RotationalLagStrength: 0.1
   bUseCustomProjection: 0
   Plane: {fileID: 0}
   NearClipDistance: 0
@@ -19580,8 +19599,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 927938367}
-  m_LocalRotation: {x: 0.22495104, y: 0, z: 0, w: 0.97437006}
-  m_LocalPosition: {x: -0.85000026, y: 145.811, z: -19.982046}
+  m_LocalRotation: {x: 0.15471038, y: 0, z: 0, w: 0.98795986}
+  m_LocalPosition: {x: -0.85000026, y: 144.64659, z: -19.952948}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
