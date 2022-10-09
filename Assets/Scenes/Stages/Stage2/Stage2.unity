@@ -19828,6 +19828,7 @@ GameObject:
   - component: {fileID: 960368679}
   - component: {fileID: 960368678}
   - component: {fileID: 960368684}
+  - component: {fileID: 960368685}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -19985,6 +19986,48 @@ MonoBehaviour:
   - {x: -2, y: 144.4324, z: -4.4}
   camLookAt: 0
   data: {fileID: 11400000, guid: 3e3756183fe78f64cb4f3653edd363e0, type: 2}
+--- !u!114 &960368685
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 960368677}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdf51a863cc80a541bd21546cf8cfb67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HashMap:
+    Entries:
+    - Key: Factory Ambient
+      Value:
+        Clip: {fileID: 8300000, guid: 92b7e6d3f6501e04cae40611d0851ab0, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 1
+        bLoop: 1
+        Priority: 128
+        Volume: 1
+        Pitch: 1
+        StereoPan: 0
+        SpatialBlend: 0.75
+        ReverbZoneMix: 1
+    - Key: Factory Ambient with Music
+      Value:
+        Clip: {fileID: 8300000, guid: 2e1561d69871f754e86c372aea63d0fd, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 1
+        bLoop: 1
+        Priority: 128
+        Volume: 1
+        Pitch: 1
+        StereoPan: 0
+        SpatialBlend: 0.75
+        ReverbZoneMix: 1
 --- !u!1 &964989364
 GameObject:
   m_ObjectHideFlags: 0
