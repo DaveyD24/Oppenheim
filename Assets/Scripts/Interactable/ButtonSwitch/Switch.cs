@@ -3,7 +3,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class Switch : Interactable
+public class Switch : Interactable, IDataInterface
 {
 	public UnityEvent SwitchedOn;
 	public UnityEvent SwitchedOff;
@@ -16,7 +16,7 @@ public class Switch : Interactable
 
 	Action<Switch> ReliantListeners;
 
-	void Start()
+	public void Start()
 	{
 		// Attach the main Listener to the Switches that this Switch relies on.
 		foreach (Switch Reliant in ReliantSwitches)
@@ -25,13 +25,13 @@ public class Switch : Interactable
 		}
 	}
 
-	public virtual void OnTriggerEnter(Collider Entered)
+	public virtual void OnTriggerEnter(Collider entered)
 	{
 		// Turn this Switch ON/OFF.
 		ToggleSwitch();
 
 		// Fires the ON/OFF Broadcasts.
-		CheckBroadcast(Entered);
+		CheckBroadcast(entered);
 	}
 
 	// Trigger this Switch regardless of any reliant Switches.
@@ -60,7 +60,7 @@ public class Switch : Interactable
 	/// </b><br></br>
 	/// The last Switch to turn ON before this Broadcast.
 	/// </param>
-	void CheckBroadcast(Collider Broadcaster)
+	private void CheckBroadcast(Collider Broadcaster)
 	{
 		if (bIsOn && AreAllReliantSwitchesOn())
 		{
@@ -75,17 +75,39 @@ public class Switch : Interactable
 	}
 
 	// Also fire ON/OFF Broadcasts if a reliant Switch is triggered.
-	void OnAnyReliantListener(Switch Broadcast)
+	private void OnAnyReliantListener(Switch broadcast)
 	{
-		CheckBroadcast(Broadcast.Collider);
+		CheckBroadcast(broadcast.Collider);
 	}
 
 	/// <returns><see langword="true"></see> if all <see cref="ReliantSwitches"/> are <see cref="bIsOn"/>.</returns>
-	bool AreAllReliantSwitchesOn()
+	private bool AreAllReliantSwitchesOn()
 	{
 		if (ReliantSwitches.Length == 0)
+		{
 			return true;
+		}
 
 		return ReliantSwitches.All(Switch => Switch.bIsOn);
+	}
+
+#pragma warning disable SA1202 // Elements should be ordered by access
+	public void LoadData(SectionData data)
+#pragma warning restore SA1202 // Elements should be ordered by access
+	{
+		bIsOn = data.SwitchData.Dictionary[SaveID];
+		if (bIsOn)
+		{
+			SwitchedOn?.Invoke();
+		}
+		else
+		{
+			SwitchedOff?.Invoke();
+		}
+	}
+
+	public void SaveData(SectionData data)
+	{
+		data.SwitchData.Dictionary.Add(SaveID, bIsOn);
 	}
 }

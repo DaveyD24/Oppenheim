@@ -282,12 +282,13 @@ public class BatMovement : MonoBehaviour
 		else if (!IsZero(Throw))
 		{
 			// Double-Jump mechanism.
-			if (!bHasGlidedThisJump)
+			if (!bHasGlidedThisJump && Bat.AbilityUses > 0)
 			{
 				// On Double-Jump...
 				StartGliding();
 
 				bHasDoubleJumped = true;
+				Bat.AdjustAbilityValue(-1);
 			}
 			else
 			{
@@ -528,6 +529,9 @@ public class BatMovement : MonoBehaviour
 		ForceZero(ref ThrowMove.y);
 		ForceZero(ref ThrowLook.x);
 		ForceZero(ref ThrowLook.y);
+		ThrowMove = Vector2.zero;
+		ThrowLook = Vector2.zero;
+		GroundMovement = Vector3.zero;
 
 		StopGradualAcceleration();
 	}

@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// Apply the forces to the car when dashing.
 /// </summary>
-public class DashPerform : Node
+public class DashPerform : Node<CarController>
 {
     private float dashCurrentTime = 0;
     private float dashMaxTime;
@@ -42,8 +42,9 @@ public class DashPerform : Node
         dashCurrentTime += Time.fixedDeltaTime;
         CancleSidewaysVelocity();
 
-        if (dashCurrentTime >= dashMaxTime)
+        if (dashCurrentTime >= dashMaxTime || Blackboard.BCancelDash)
         {
+            Blackboard.BCancelDash = false;
             return ENodeState.Success;
         }
 

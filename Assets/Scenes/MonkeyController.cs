@@ -5,6 +5,17 @@ using static UnityEngine.InputSystem.InputAction;
 
 public class MonkeyController : PlayerController
 {
+#if UNITY_EDITOR
+    [field: Header("Start Reset")]
+    [field: ContextMenuItem("Set Start Transform", "SetStartTransform")]
+#pragma warning disable SA1202 // Elements should be ordered by access
+    [field: SerializeField] public Vector3 StageStartPosition { get; set; }
+
+    [field: ContextMenuItem("Move to Start", "MoveToStartTransform")]
+    [field: SerializeField] public Quaternion StageStartRotation { get; set; }
+#pragma warning restore SA1202 // Elements should be ordered by access
+
+#endif
 
     private float jumpHeight = 2.0f;
     private Vector3 move;
@@ -107,17 +118,24 @@ public class MonkeyController : PlayerController
 
             // If we were clinging onto something, we want to jump in the opposite direction
             // as if the Monkey is jumping off the wall.
-            if (clinging)
+            if (AbilityUses > 0)
             {
-                Rb.velocity += contactPoint.normal;
-                clinging = false;
+                if (clinging)
+                {
+                    Rb.velocity += contactPoint.normal;
+                    clinging = false;
 
-                // Stop any weird rotations.
-                Rb.angularVelocity = Vector3.zero;
+                    // Stop any weird rotations.
+                    Rb.angularVelocity = Vector3.zero;
+                    AdjustAbilityValue(-1);
+                }
+            }
+            else
+            {
+                clinging = false;
             }
 
             bDidJump = true;
-            Debug.Log("yeet");
             animator.SetTrigger("Jump");
 
             Audio.Play(RandomSound(), EAudioPlayOptions.FollowEmitter | EAudioPlayOptions.DestroyOnEnd);
@@ -137,11 +155,24 @@ public class MonkeyController : PlayerController
     public override void OnDeath()
     {
         base.OnDeath();
+        move = Vector3.zero;
+        clinging = false;
+        bDidJump = false;
+
         baseMesh.SetActive(false);
         boxCollider.enabled = false;
         ragdol.SetActive(true);
         Rb.isKinematic = true;
         ragdol.transform.position = transform.position;
+    }
+
+    /// <summary>
+    /// checks if jumping while also having been clung to an object.
+    /// </summary>
+    /// <returns>if it is cling jumping or not.</returns>
+    public bool IsClingJump()
+    {
+        return animator.GetCurrentAnimatorStateInfo(0).IsName("ClimbJump") || clinging;
     }
 
     protected override void Respawn()
@@ -150,13 +181,19 @@ public class MonkeyController : PlayerController
         boxCollider.enabled = true;
         ragdol.SetActive(false);
         Rb.isKinematic = false;
+
+        move = Vector3.zero;
+        clinging = false;
+        bDidJump = false;
         base.Respawn();
     }
 
+#if UNITY_EDITOR
     private void OnGUI()
     {
         GUI.Label(new Rect(100, 65, 250, 250), $"Clinging? {(clinging ? "Yes" : "No")}");
     }
+#endif
 
     protected override void FixedUpdate()
     {
@@ -175,9 +212,8 @@ public class MonkeyController : PlayerController
         base.OnCollisionEnter(collision);
 
         // Only Cling to something if you're off the ground.
-        if (collision.transform.CompareTag("Clingable") && !IsGrounded())
+        if (AbilityUses > 0 && collision.transform.CompareTag("Clingable") && !IsGrounded())
         {
-            Debug.Log("dsadfs");
             clinging = true;
             clingPosition = collision.collider.ClosestPoint(transform.position);
             contactPoint = collision.GetContact(0);
@@ -198,13 +234,13 @@ public class MonkeyController : PlayerController
     {
         if (!bDidJump)
         {
-            if (IsZero(speedometer.Velocity))
-            {
-                animator.SetTrigger("Idle");
-            }
-            else if (clinging)
+            if (clinging)
             {
                 animator.SetTrigger("Climb");
+            }
+            else if (IsZero(speedometer.Velocity))
+            {
+                animator.SetTrigger("Idle");
             }
             else
             {
@@ -213,10 +249,24 @@ public class MonkeyController : PlayerController
         }
     }
 
-    string RandomSound()
+    private string RandomSound()
     {
         bool bRandomBool = Random.Range(0f, 1f) < .5f;
 
-        return bRandomBool ? "Scream":"OOH AHH";
+        return bRandomBool ? "Scream" : "OOH AHH";
     }
+
+#if UNITY_EDITOR
+    private void SetStartTransform()
+    {
+        StageStartPosition = transform.position;
+        StageStartRotation = transform.rotation;
+    }
+
+    private void MoveToStartTransform()
+    {
+        transform.rotation = StageStartRotation;
+        transform.position = StageStartPosition;
+    }
+#endif
 }

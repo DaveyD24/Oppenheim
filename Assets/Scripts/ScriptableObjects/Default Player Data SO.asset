@@ -39,3 +39,5 @@ MonoBehaviour:
   <FuelLoseMultiplier>k__BackingField: 0.01
   <DustParticles>k__BackingField: {fileID: 6197338229895351634, guid: e071970770248be4bba934296afbcfc6, type: 3}
   <dustParticlesCollisionSpeed>k__BackingField: 5
+  <CheckpointYOffset>k__BackingField: 1
+  <RadiusFromCheckpiont>k__BackingField: 2

@@ -9,10 +9,11 @@ public class AButton : Interactable
 	bool bIsOn = false;
 	IOData IO;
 
-	void OnTriggerEnter(Collider Entered)
+	private void OnTriggerEnter(Collider Entered)
 	{
-		float Mass = IO.Enter(Entered.gameObject).Mass;
-		
+		// as the car's gameobject which has a rigidbody also does not have any colliders, need to specifically handle this case
+		float Mass = Entered.gameObject.name == "CarBody" ? IO.Enter(Entered.transform.parent.gameObject).Mass : IO.Enter(Entered.gameObject).Mass;
+
 		if (!bIsOn && Mass >= RequiredMassToActivate)
 		{
 			BroadcastActive(Entered);

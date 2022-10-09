@@ -44,13 +44,13 @@ public class BatEvents : MonoBehaviour
 		Animator.SetInteger("Behaviour", (int)NewState);
 	}
 
-	void OnMangoCollected()
-	{
-		Debug.Log("Mango Collected!");
+	//void OnMangoCollected()
+	//{
+	//	Debug.Log("Mango Collected!");
 
-		Bat.AdjustEnergy(10f);
-		Bat.AdjustHealth(10f);
-	}
+	//	// Bat.AdjustEnergy(10f);
+	//	// Bat.AdjustHealth(10f);
+	//}
 }
 
 public enum EAnimationState : int

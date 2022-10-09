@@ -99,8 +99,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08ff7faf6adb3144b9fe9c45f2686e57, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerId: {fileID: 11400000, guid: 250a1cc6c2eafb54fb4fa9dcd6298d62, type: 2}
+  <BIdUnchangeable>k__BackingField: 0
+  <SaveID>k__BackingField: 0
   collectParticles: {fileID: 341301465110762667, guid: c05525b6ac92bb443939e3b9bf840eb8, type: 3}
+  <PlayerId>k__BackingField: {fileID: 11400000, guid: 250a1cc6c2eafb54fb4fa9dcd6298d62, type: 2}
 --- !u!135 &6232105601253978864
 SphereCollider:
   m_ObjectHideFlags: 0

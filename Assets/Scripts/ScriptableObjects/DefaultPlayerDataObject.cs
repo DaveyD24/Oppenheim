@@ -15,7 +15,12 @@ public class DefaultPlayerDataObject : ScriptableObject
     [field: SerializeField] public float FuelLoseMultiplier { get; private set; }
 
     [field: SerializeField] public GameObject DustParticles { get; private set; }
+
     [field: SerializeField] public float dustParticlesCollisionSpeed { get; private set; }
+
+    [field: SerializeField] public float CheckpointYOffset { get; private set; }
+
+    [field: SerializeField] public float RadiusFromCheckpiont { get; private set; }
 
     public float MaxFuel { get; private set; } = 100;
 }
