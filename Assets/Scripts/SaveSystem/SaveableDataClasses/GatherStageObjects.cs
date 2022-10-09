@@ -32,7 +32,7 @@ public class GatherStageObjects : MonoBehaviour
             item.SaveData(sectionData);
         }
 
-        Debug.Log("Saved Sections Data: " + SectionID);
+        // Debug.Log("Saved Sections Data: " + SectionID);
     }
 
     public void LoadSection()
@@ -93,7 +93,8 @@ public class GatherStageObjects : MonoBehaviour
             if (item.gameObject.TryGetComponent(out FuelCollectible fuel))
             {
                 sectionFuelCollectible.Add(fuel);
-                Debug.Log("fuel Being added");
+
+                // Debug.Log("fuel Being added");
             }
         }
 

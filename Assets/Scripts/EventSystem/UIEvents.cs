@@ -9,6 +9,8 @@ namespace EventSystem
     {
         public static Action<int, float> OnFuelChanged { get; set; }
 
+        public static Action OnBeginAnnoucement { get; set; }
+
         public static Action<int, bool> OnCanvasStateChanged { get; set; }
 
         public static Action OnShowIntructions { get; set; }
@@ -29,6 +31,11 @@ namespace EventSystem
         {
             // if this Action has one or more methods assigned to it then run this method
             OnCanvasStateChanged?.Invoke(playerID, value);
+        }
+
+        public static void BeginAnnoucement()
+        {
+            OnBeginAnnoucement?.Invoke();
         }
     }
 }

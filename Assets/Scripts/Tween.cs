@@ -13,6 +13,15 @@ public class Tween
         this.Duration = duration;
     }
 
+    public Tween(Color startColour, Color endColour, float startTime, float duration)
+    {
+        // this.Target = Target;
+        this.StartColour = startColour;
+        this.EndColour = endColour;
+        this.StartTime = startTime;
+        this.Duration = duration;
+    }
+
     public Tween(Quaternion startRot, Quaternion endRot, float startTime, float duration)
     {
         // this.Target = Target;
@@ -44,6 +53,10 @@ public class Tween
 
     public Quaternion EndRot { get; private set; }
 
+    public Color StartColour { get; private set; }
+
+    public Color EndColour { get; private set; }
+
     public float StartTime { get; private set; }
 
     public float Duration { get; private set; }
@@ -58,6 +71,7 @@ public class Tween
         float timeFraction = (Time.time - StartTime) / Duration;
         return Mathf.Lerp(StartPosCircular, EndPosCircular, timeFraction);
     }
+
     public Vector3 UpdatePosition()
     {
         float timeFraction = (Time.time - StartTime) / Duration;
@@ -68,6 +82,12 @@ public class Tween
     {
         float timeFraction = (Time.time - StartTime) / Duration;
         return Vector3.Lerp(StartPos, EndPos, curve.Evaluate(timeFraction));
+    }
+
+    public Color UpdateColourCurve(AnimationCurve curve)
+    {
+        float timeFraction = (Time.time - StartTime) / Duration;
+        return Color.Lerp(StartColour, EndColour, curve.Evaluate(timeFraction));
     }
 
     public Vector3 UpdatePositionCircular(float radius, Vector2 centre)
