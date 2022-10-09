@@ -208,6 +208,7 @@ GameObject:
   - component: {fileID: 7416210237573453966}
   - component: {fileID: 1340159501527262271}
   - component: {fileID: 997098492960105755}
+  - component: {fileID: 4799401949374260401}
   m_Layer: 7
   m_Name: Bat
   m_TagString: Player
@@ -278,6 +279,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   controlObj: {fileID: 0}
   abilityTxt: {fileID: 3736332190251587606}
+  fuelSlider: {fileID: 6881637983473362689}
+  HumanPlayerIndex: 0
   <PlayerIdSO>k__BackingField: {fileID: 11400000, guid: 250a1cc6c2eafb54fb4fa9dcd6298d62, type: 2}
   <DefaultPlayerData>k__BackingField: {fileID: 11400000, guid: edaf631a83ce6ea42aa9463c9228f767, type: 2}
   <Bouyancy>k__BackingField: 0
@@ -285,10 +288,11 @@ MonoBehaviour:
   <RotationSpeed>k__BackingField: 7.5
   <Health>k__BackingField: 1
   <FallDamageThreshold>k__BackingField: 27
-  groundCheckPosition: {x: 0, y: 1.5, z: 0}
+  groundCheckPosition: {x: 0, y: 0.5, z: 0}
   <GroundCheckRadius>k__BackingField: 0.5
   <StageStartPosition>k__BackingField: {x: 159.804, y: 5.833921, z: -493.00803}
   <StageStartRotation>k__BackingField: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
+  <TrackingCamera>k__BackingField: {fileID: 0}
   bIsStandalone: 0
   ragdol: {fileID: 1259981665220065791}
   baseMesh: {fileID: 1051679150067098337}
@@ -332,6 +336,7 @@ MonoBehaviour:
   TimeToV1: 1
   JumpHeight: 5
   SecondsOfPitchFlight: 1
+  MinMaxPitchAngle: {x: -30, y: 50}
   YawDeltaAngle: 2
   PitchDeltaAngle: 2
   GroundCheckOffset: {x: 0, y: 0.15, z: 0}
@@ -339,7 +344,6 @@ MonoBehaviour:
   WingtipVortex:
   - {fileID: 3088230679319579010}
   - {fileID: 5709110691537363226}
-  BatCamera: {fileID: 0}
 --- !u!114 &4603439497635631443
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -360,7 +364,7 @@ TrailRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 291893582209903765}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -498,6 +502,52 @@ MonoBehaviour:
         StereoPan: 0
         SpatialBlend: 0.75
         ReverbZoneMix: 1
+    - Key: Wind Gush
+      Value:
+        Clip: {fileID: 8300000, guid: f5d09d48c6021f54591eb6983d272e2e, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 0
+        bLoop: 1
+        Priority: 128
+        Volume: 1
+        Pitch: 1
+        StereoPan: 0
+        SpatialBlend: 0.75
+        ReverbZoneMix: 1
+    - Key: Munch
+      Value:
+        Clip: {fileID: 8300000, guid: 57561f7f1afd8084c8851cca6d1a7c3c, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 0
+        bLoop: 0
+        Priority: 128
+        Volume: 1
+        Pitch: 1
+        StereoPan: 0
+        SpatialBlend: 0.75
+        ReverbZoneMix: 1
+--- !u!114 &4799401949374260401
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 291893582209903765}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Mode: 4
+  Colour: {r: 1, g: 1, b: 1, a: 1}
+  Width: 2
+  bShouldPrecomputeOutline: 0
+  BakeKeys: []
+  BakeValues: []
 --- !u!1 &711425588696738181
 GameObject:
   m_ObjectHideFlags: 0

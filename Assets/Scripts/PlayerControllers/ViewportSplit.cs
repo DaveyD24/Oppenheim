@@ -1,10 +1,9 @@
 
 #if UNITY_EDITOR
-//#define MICHAEL
+#define MICHAEL
 #endif
 
 using System.Linq;
-using System.Text;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Extensions;
@@ -12,9 +11,9 @@ using static global::BatMathematics;
 
 public class ViewportSplit : MonoBehaviour
 {
-	static Dictionary<PlayerController, SpringArm> AdditionalCameras;
 	static Queue<SpringArm> AddedCameraQueue; // Probably not needed if we're having maximum two Players.
 	static SpringArm MainSpringArm;
+	static SpringArm SecondSpringArm;
 	static ViewportSplit Viewport;
 
 	[SerializeField] SwitchManager SwitchManager;
@@ -30,7 +29,6 @@ public class ViewportSplit : MonoBehaviour
 			Viewport = this;
 
 			Average = new GameObject("Average Position Marker").transform;
-			AdditionalCameras = new Dictionary<PlayerController, SpringArm>();
 			AddedCameraQueue = new Queue<SpringArm>();
 		}
 		else
@@ -41,112 +39,129 @@ public class ViewportSplit : MonoBehaviour
 
 	void Update()
 	{
-#if UNITY_EDITOR
-		if (ArePlayersTooFarApart(out HashSet<PlayerController> TooFar))
-		{
-			if (TooFar.Count != 0)
-			{
-				StringBuilder Debug_TooFar = new StringBuilder();
-				Debug_TooFar.Append("These players are too far: ");
-				foreach (PlayerController PC in TooFar)
-					Debug_TooFar.Append(PC.name + " ");
-				Debug.Log(Debug_TooFar.ToString());
-				//Debug.Break();
-			}
-		}
-#endif
-
 		if (Average)
 		{
 			SetCameraPositions();
 		}
 	}
 
+	/// <returns>The <see langword="static"/> reference to the only <see cref="ViewportSplit"/>.</returns>
 	public static ViewportSplit Get()
 	{
 		return Viewport;
 	}
 
+	/// <summary>Sets the camera/s position.</summary>
+	/// <remarks>Determines whether the Viewport should split and/or merge, given active players.</remarks>
 	public static void SetCameraPositions()
 	{
-		if (ArePlayersTooFarApart(out HashSet<PlayerController> TooFar))
+		// If we need to split the Viewport.
+		if (ArePlayersTooFarApart())
 		{
-			List<PlayerController> IgnoredPlayers = new List<PlayerController>();
-			List<PlayerController> ExcludingIgnored = new List<PlayerController>();
+			List<PlayerController> Active = Get().SwitchManager.GetActivePlayers();
 
-			Get().SwitchManager.GetAllPlayers(out PlayerController[] All);
+			int P1, P2, P3, P4;
+			P1 = P2 = P3 = P4 = -1;
 
-			// LINQ expressions.
-			IgnoredPlayers.AddRange(All.Where(PC => TooFar.Contains(PC)));    // SELECT PlayerController WHERE PlayerController EXISTS IN TooFar
-			ExcludingIgnored.AddRange(All.Where(PC => !TooFar.Contains(PC))); // SELECT PlayerController WHERE PlayerController NOT EXISTS IN TooFar
+			for (int i = 0; i < Active.Count; ++i)
+			{
+				if (Active[i].HumanPlayerIndex == EPlayer.P1)
+					P1 = i;
+				else if (Active[i].HumanPlayerIndex == EPlayer.P2)
+					P2 = i;
+				// 3-4 Players are not supported...
+				else if (Active[i].HumanPlayerIndex == EPlayer.P3)
+					P3 = i;
+				else if (Active[i].HumanPlayerIndex == EPlayer.P4)
+					P4 = i;
+			}
 
-			foreach (PlayerController Player in IgnoredPlayers)
-				MakeNewSpringArm(Player);
+#if UNITY_EDITOR
+			// Check if Michael is stupid.
+			Debug.Assert(P2 != -1, "ViewportSplit::SetCameraPosition() -> ArePlayersTooFar(...) returned true with only 1 active player!");
 
-			if (ExcludingIgnored.Count != 0)
-				Average.position = GetAveragePosition(ExcludingIgnored.ToArray());
+			Debug.Assert(P3 == -1 && P4 == -1, "3-4 Players are not supported by Viewport Split!");
+#endif
+
+			MainSpringArm.Target = Active[P1].transform;
+			MainSpringArm.bIsAverageTracking = false;
+			SetSecondaryTarget(Active[P2]); // <-- Split-Screen is done here.
 		}
+		// Merge the two cameras back as one Viewport.
 		else
 		{
 			// TODO: Interp from Split to Single Screen.
 			MainSpringArm.CameraComponent.rect = new Rect(0, 0, 1, 1);
-			if (AddedCameraQueue.Count != 0)
-			{
-				/* -- This part probably isn't needed if we're having maximum two Players. -- */
 
-				SpringArm ToRemove = AddedCameraQueue.Dequeue();
-				AdditionalCameras.Clear();
-				Destroy(ToRemove.gameObject);
+			RemoveSecondaryCamera();
+
+			SwitchManager Multiplayer = Get().SwitchManager;
+			int NumberOfPlayers = Multiplayer.GetNumberOfPlayers();
+			MainSpringArm.bIsAverageTracking = Multiplayer.GetNumberOfPlayers() > 1;
+
+			Multiplayer.GetAllPlayers(out PlayerController[] All);
+			foreach (PlayerController PC in All)
+				PC.TrackingCamera = MainSpringArm;
+
+			if (NumberOfPlayers > 1)
+			{
+				Vector3 AveragePosition = GetAveragePosition();
+
+				// Check for NaN for the start of the Game when there is no
+				// Active Player because division by zero.
+				if (!DiagnosticCheckNaN(AveragePosition))
+				{
+					Average.position = AveragePosition;
+					MainSpringArm.Target = Average;
+				}
 			}
-
-			Vector3 AveragePosition = GetAveragePosition();
-
-			// Check for NaN for the start of the Game when there is no
-			// Active Player because division by zero.
-			if (!DiagnosticCheckNaN(AveragePosition))
+			else if (NumberOfPlayers == 1)
 			{
-				Average.position = AveragePosition;
-				MainSpringArm.Target = Average;
+				PlayerController OnlyActive = All.First(PC => PC.Active);
+				MainSpringArm.Target = OnlyActive.transform;
 			}
 		}
 	}
 
-	public static void MakeNewSpringArm(PlayerController Target)
+	/// <summary>Splits the Viewport into two.</summary>
+	/// <param name="Target">The player of the new second screen.</param>
+	public static void SetSecondaryTarget(PlayerController Target)
 	{
-		/**
-		 --        I don't have another controller to test this.        --
-		 --                         - Michael                           --
-		 --                                                             --
-		 --        I think it *should* work for 2 Players ONLY.         --
-		 **/
+		if (!SecondSpringArm)
+		{
+			// Make a new empty GameObject.
+			GameObject NewSpringArm = new GameObject();
 
-		// We already have a Spring Arm tracking Target, so don't add another.
-		if (AdditionalCameras.ContainsKey(Target))
-			return;
+			// Add a Spring Arm component with the same settings as the Main Camera.
+			Camera CameraComponent = NewSpringArm.GetOrAddComponent<Camera>();
+			SecondSpringArm = NewSpringArm.GetOrAddComponent<SpringArm>();
 
-		// Make a new empty GameObject.
-		GameObject NewSpringArm = new GameObject($"Spring Arm Targeting: {Target.name}");
+			// Mark this Spring Arm as Secondary and do not Initialise with Start().
+			SecondSpringArm.bIsSecondarySpringArm = true;
 
-		// Add a Spring Arm component with the same settings as the Main Camera.
-		Camera CameraComponent = NewSpringArm.GetOrAddComponent<Camera>();
-		SpringArm Component = NewSpringArm.GetOrAddComponent<SpringArm>();
-		SpringArmSettings Settings = MainSpringArm.GetSettings();
-		Component.SetSettings(Settings, Target.transform, CameraComponent);
+			// Instead, Initialise using the MainSpringArm's Start() initialisation fields.
+			SpringArmSettings Settings = MainSpringArm.GetSettings();
+			SecondSpringArm.SetSettings(Settings, Target.transform, CameraComponent);
 
-		// Split the screen vertically. P1 (Main) on Left. P2 (New) on Right.
-		Rect SplitScreenP1 = new Rect(0f, 0f, .5f, 1f);
-		Rect SplitScreenP2 = new Rect(.5f, 0f, .5f, 1f);
+			// Split the screen vertically. P1 (Main) on Left. P2 (New) on Right.
+			Rect SplitScreenP1 = new Rect(0f, 0f, .5f, 1f);
+			Rect SplitScreenP2 = new Rect(.5f, 0f, .5f, 1f);
 
-		// TODO: Interp the transition from Single to Split Screen.
+			// TODO: Interp the transition from Single to Split Screen.
 
-		MainSpringArm.CameraComponent.rect = SplitScreenP1;
-		CameraComponent.rect = SplitScreenP2;
+			MainSpringArm.CameraComponent.rect = SplitScreenP1;
+			SecondSpringArm.CameraComponent.rect = SplitScreenP2;
 
-		AdditionalCameras.Add(Target, Component);
-		AddedCameraQueue.Enqueue(Component);
+			AddedCameraQueue.Enqueue(SecondSpringArm);
+		}
+
+		SecondSpringArm.name = $"Spring Arm Targeting: {Target.name}";
+		SecondSpringArm.Target = Target.transform;
+
+		Target.TrackingCamera = SecondSpringArm;
 	}
 
-	/// <summary>Average position of ALL players.</summary>
+	/// <summary>Average position of ACTIVE players.</summary>
 	public static Vector3 GetAveragePosition()
 	{
 		List<PlayerController> Active = Get().SwitchManager.GetActivePlayers();
@@ -164,37 +179,72 @@ public class ViewportSplit : MonoBehaviour
 		return Positions / (float)Players.Length;
 	}
 
-	public static bool ArePlayersTooFarApart(out HashSet<PlayerController> PlayersTooFar)
+	/// <remarks>
+	/// Too far is defined as:<br></br>
+	/// <code>
+	/// distance(v, Player.Position) &gt; <see cref="TooFarThreshold"/>
+	/// <br></br>
+	/// Where v = Average Position of all Active Players.
+	/// </code>
+	/// I.e., A Player is too far if distance between v and the Player's position is
+	/// greater than <see cref="TooFarThreshold"/>.
+	/// </remarks>
+	/// <returns>
+	/// <see langword="true"/> if at least one Active Player is <see cref="TooFarThreshold"/>
+	/// from their Average Position.
+	/// </returns>
+	public static bool ArePlayersTooFarApart()
 	{
-		PlayersTooFar = new HashSet<PlayerController>();
-#if !MICHAEL
 		List<PlayerController> ActivePlayers = Get().SwitchManager.GetActivePlayers();
 
 		Vector3 Mean = GetAveragePosition(ActivePlayers.ToArray());
 		float T = Get().TooFarThreshold;
 		float T2 = T * T;
 
+		// Use SqrDist to save the expensive Sqrt() call against a known value.
 		for (int i = 0; i < ActivePlayers.Count; ++i)
 			if (Mean.SquareDistance(ActivePlayers[i].transform.position) > T2)
-				PlayersTooFar.Add(ActivePlayers[i]);
-#else // MICHAEL
-		Get().SwitchManager.GetAllPlayers(out PlayerController[] AllPlayers);
+				return true;
 
-		Vector3 Mean = GetAveragePosition(AllPlayers);
+		return false;
+	}
+
+	/// <inheritdoc cref="ArePlayersTooFarApart"/>
+	/// <param name="PlayersTooFar">Out HashSet of the Players that are considered 'Too Far'.</param>
+	public static bool ArePlayersTooFarApart(out HashSet<PlayerController> PlayersTooFar)
+	{
+		PlayersTooFar = new HashSet<PlayerController>();
+
+		List<PlayerController> ActivePlayers = Get().SwitchManager.GetActivePlayers();
+
+		Vector3 Mean = GetAveragePosition(ActivePlayers.ToArray());
 		float T = Get().TooFarThreshold;
 		float T2 = T * T;
 
-		for (int i = 0; i < AllPlayers.Length; ++i)
-			if (Mean.SquareDistance(AllPlayers[i].transform.position) > T2)
-				PlayersTooFar.Add(AllPlayers[i]);
-#endif // !MICHAEL
+		// Use SqrDist to save the expensive Sqrt() call against a known value.
+		for (int i = 0; i < ActivePlayers.Count; ++i)
+			if (Mean.SquareDistance(ActivePlayers[i].transform.position) > T2)
+				PlayersTooFar.Add(ActivePlayers[i]);
+
 		return PlayersTooFar.Count != 0;
 	}
 
+	/// <summary>Set the <see cref="SpringArm"/> that will never be destroyed.</summary>
+	/// <param name="InMain"></param>
 	public static void SetMainSpringArm(SpringArm InMain)
 	{
 		if (!MainSpringArm)
 			MainSpringArm = InMain;
+	}
+
+	/// <summary>Destroy the Secondary Camera.</summary>
+	static void RemoveSecondaryCamera()
+	{
+		if (SecondSpringArm)
+		{
+			Destroy(SecondSpringArm.gameObject);
+			SecondSpringArm = null;
+		}
 	}
 
 #if UNITY_EDITOR

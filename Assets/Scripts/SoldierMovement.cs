@@ -28,7 +28,6 @@ public class SoldierMovement : PlayerController
     [SerializeField] private float jumpHeight = 3f;
     [SerializeField] private GameObject ragdol;
     [SerializeField] private GameObject baseMesh;
-    [SerializeField] private GameObject soldierCamera;
     private BoxCollider boxCollider;
 
     private int maxAmmoClip = 10;
@@ -67,7 +66,7 @@ public class SoldierMovement : PlayerController
         base.Update();
 
         // Rotate towards Movement.
-        Vector3 cameraRelativeDirection = DirectionRelativeToTransform(soldierCamera.transform, move);
+        Vector3 cameraRelativeDirection = DirectionRelativeToTransform(TrackingCamera.transform, move);
         Vector3 faceDir = cameraRelativeDirection;
         faceDir.y = 0;
         if (faceDir != Vector3.zero)
@@ -232,7 +231,7 @@ public class SoldierMovement : PlayerController
         base.FixedUpdate();
         speedometer.Record(this);
 
-        Vector3 cameraRelativeDirection = DirectionRelativeToTransform(soldierCamera.transform, move);
+        Vector3 cameraRelativeDirection = DirectionRelativeToTransform(TrackingCamera.transform, move);
         if (isSwimming)
         {
             // Swimming

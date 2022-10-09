@@ -45,6 +45,8 @@ public abstract class PlayerController : MonoBehaviour
 
     public float Weight { get; private set; }
 
+    [ReadOnly] public EPlayer HumanPlayerIndex = EPlayer.None;
+
     [field: Header("Inherited from Player Controller")]
 
     // A unique object each scene object gets assigned, being largly used to store the players id
@@ -62,10 +64,11 @@ public abstract class PlayerController : MonoBehaviour
 
     [field: SerializeField, Min(25f)] protected float FallDamageThreshold { get; private set; }
 
-    // Not a Property, is Private: Use GetGroundCheckPosition() instead.
-    [field: SerializeField] Vector3 groundCheckPosition;
+    [field: SerializeField] protected Vector3 groundCheckPosition;
 
     [field: SerializeField] protected float GroundCheckRadius { get; private set; }
+
+    [field: SerializeField, ReadOnly] public SpringArm TrackingCamera { get; set; }
 
     protected float CurrentFuel { get => fuel; set => fuel = Mathf.Clamp(value, 0, DefaultPlayerData.MaxFuel); }
 
@@ -203,15 +206,7 @@ public abstract class PlayerController : MonoBehaviour
         AbilityUses = Mathf.Max(AbilityUses, 0);
         abilityTxt.text = AbilityUses.ToString();
 
-        // Debug.Log(CurrentFuel + " " + amount);
-        // fuelSlider.value = CurrentFuel;
-
-        //// UIEvents.OnFuelChanged(PlayerIdSO.PlayerID, CurrentFuel / DefaultPlayerData.MaxFuel);
-        // if (CurrentFuel <= 0)
-        // {
-        //    Debug.LogError("Player Lost All fuel and Died");
-        //    OnDeath();
-        // }
+        PlayFuelCollectionSound();
     }
 
     protected virtual void Update()
@@ -316,14 +311,14 @@ public abstract class PlayerController : MonoBehaviour
             Rb = GetComponent<Rigidbody>();
         }
 
-        Gizmos.color = new Color(0, 1, 1, 1);
+        Gizmos.color = Color.cyan;
         Gizmos.DrawSphere(GetGroundCheckPosition(), GroundCheckRadius);
         Gizmos.DrawCube(Rb.worldCenterOfMass, Vector3.one * 0.5f);
     }
 
     protected virtual void OnCollisionEnter(Collision collision)
     {
-        bool bTakeFallDamage = ShouldTakeFallDamage(collision, out float relativeVelocity);
+        bool bTakeFallDamage = ShouldTakeFallDamage(collision, out _);
 
         // if (relativeVelocity > MovementSpeed + 1f)
         // {
@@ -336,7 +331,7 @@ public abstract class PlayerController : MonoBehaviour
 
         if (!collision.gameObject.CompareTag("Player") && beforeCollideSpeed > DefaultPlayerData.dustParticlesCollisionSpeed)
         {
-            Instantiate(DefaultPlayerData.DustParticles, collision.GetContact(0).point, Quaternion.identity);
+            OnDustParticles(collision.GetContact(0).point);
         }
 
         if (collision.gameObject.CompareTag("Blueprint"))
@@ -473,4 +468,19 @@ public abstract class PlayerController : MonoBehaviour
             PersistentDataManager.SaveableData.PlayerDatas.Dictionary.Add(PlayerIdSO.PlayerID, pData);
         }
     }
+    protected virtual void OnDustParticles(Vector3 Position)
+    {
+        Instantiate(DefaultPlayerData.DustParticles, Position, Quaternion.identity);
+    }
+
+    protected virtual void PlayFuelCollectionSound() { }
+}
+
+public enum EPlayer
+{
+        None = 0,
+        P1 = 1,
+        P2 = 2,
+        P3 = 3,
+        P4 = 4,
 }

@@ -117,33 +117,38 @@ public class Bat : PlayerController
 	public override Vector3 GetGroundCheckPosition()
 	{
 		// Fix Global Down as a Local direction.
-		Vector3 worldToLocalDown = transform.InverseTransformDirection(-transform.up);
+		Vector3 WorldToLocalDown = transform.InverseTransformDirection(-transform.up);
 
 		// Set the origin of the Ground Check to the centre of the Bat.
-		worldToLocalDown += Rb.centerOfMass;
+		WorldToLocalDown += Rb.centerOfMass;
 
-		return transform.position + worldToLocalDown;
+		return transform.position + WorldToLocalDown + groundCheckPosition;
 	}
 
-	protected override bool ShouldTakeFallDamage(Collision collision, out float relativeVelocity)
+	protected override bool ShouldTakeFallDamage(Collision Collision, out float RelativeVelocity)
 	{
-		relativeVelocity = collision.relativeVelocity.magnitude;
+		RelativeVelocity = Collision.relativeVelocity.magnitude;
 
-		if (relativeVelocity < FallDamageThreshold)
+		if (RelativeVelocity < FallDamageThreshold)
 		{
 			return false;
 		}
 
 		// Take damage if landing/crashing at an Angle > than 30 degrees of the surface.
-		float angle = FAngle(transform.up, collision.contacts[0].normal);
-		bool bTakeFallDamage = angle > 30f;
+		float Angle = FAngle(transform.up, Collision.contacts[0].normal);
+		bool bTakeFallDamage = Angle > 30f;
 
 		if (bTakeFallDamage)
 		{
-			Debug.Log($"Collision with {collision.gameObject.name} at {angle:F0} degrees at {relativeVelocity:F0}m/s");
+			Debug.Log($"Collision with {Collision.gameObject.name} at {Angle:F0} degrees at {RelativeVelocity:F0}m/s");
 		}
 
 		return bTakeFallDamage;
+	}
+
+	protected override void PlayFuelCollectionSound()
+	{
+		Events.OnMangoCollected();
 	}
 
 	public override void OnDeath()

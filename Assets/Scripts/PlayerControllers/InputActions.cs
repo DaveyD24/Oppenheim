@@ -405,6 +405,17 @@ public class @InputActions : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""a64e0034-fa36-49a1-a4d8-07bde77c6991"",
+                    ""path"": ""<HID::Logitech Logitech Attack 3>/button8"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Joystick"",
+                    ""action"": ""RotatePlayer"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""5648c274-3aee-4a0a-a4b0-20ceb2ecc4c3"",
                     ""path"": ""<Keyboard>/h"",
                     ""interactions"": """",
@@ -965,6 +976,17 @@ public class @InputActions : IInputActionCollection, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
+                    ""action"": ""Join"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""96b3b62c-3cb2-4662-8ae5-525b86471d3b"",
+                    ""path"": ""<HID::Logitech Logitech Attack 3>/button9"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Joystick"",
                     ""action"": ""Join"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false

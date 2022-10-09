@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using EventSystem;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -13,6 +12,8 @@ public class SwitchManager : MonoBehaviour
     private Dictionary<PlayerInput, int> playerInputConnection = new Dictionary<PlayerInput, int>();
     private List<int> controlledPlayers = new List<int>();
     private List<int> uncontrolledPlayers = new List<int>();
+
+    private int numberOfPlayers = 0;
 
     [SerializeField] private InputActions joinAction; // the input for joining as a new controller
 
@@ -140,6 +141,8 @@ public class SwitchManager : MonoBehaviour
             controlledPlayers.Add(playerID);
             uncontrolledPlayers.RemoveAt(playerToControl);
 
+            GetPlayerByID(playerID).HumanPlayerIndex = (EPlayer)(++numberOfPlayers);
+
             GameEvents.ActivatePlayer(playerID, player);
 
             // Debug.Log("New Player Added: " + playerAdded);
@@ -169,6 +172,11 @@ public class SwitchManager : MonoBehaviour
                 // deactivate the current controlled player
                 uncontrolledPlayers.Add(currentPlayerId);
                 controlledPlayers.Remove(currentPlayerId);
+
+                PlayerController inControl = GetPlayerByID(playerID);
+                PlayerController outControl = GetPlayerByID(currentPlayerId);
+                inControl.HumanPlayerIndex = outControl.HumanPlayerIndex;
+                outControl.HumanPlayerIndex = EPlayer.None;
             }
         }
     }
@@ -213,8 +221,12 @@ public class SwitchManager : MonoBehaviour
         Debug.Log("input device has disconnected");
         GameEvents.DeactivatePlayer(playerInputConnection[playerInput]);
         playerInputConnection.Remove(playerInput);
+
+        --numberOfPlayers;
     }
 
+    public int GetNumberOfPlayers() => numberOfPlayers;
+    
     /// <summary>Get every Player in the game.</summary>
     public void GetAllPlayers(out PlayerController[] outPlayers)
     {
@@ -229,12 +241,12 @@ public class SwitchManager : MonoBehaviour
 
     public List<PlayerController> GetActivePlayers()
     {
-        List<PlayerController> retVal = new List<PlayerController>();
+        List<PlayerController> RetVal = new List<PlayerController>();
 
-        GetAllPlayers(out PlayerController[] all);
-        retVal.AddRange(all.Where(pc => pc.IsActive()));
+        foreach (int ID in controlledPlayers)
+            RetVal.Add(GetPlayerByID(ID));
         
-        return retVal;
+        return RetVal;
     }
 
     public PlayerController GetPlayerByID(int playerID)

@@ -1363,6 +1363,7 @@ GameObject:
   - component: {fileID: 5002497366165462985}
   - component: {fileID: 7418030357996614338}
   - component: {fileID: 707257446435360162}
+  - component: {fileID: 3163964536523772284}
   m_Layer: 7
   m_Name: Soldier
   m_TagString: Player
@@ -1438,6 +1439,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   controlObj: {fileID: 0}
   abilityTxt: {fileID: 6801897874528200568}
+  fuelSlider: {fileID: 6068752831645552715}
+  HumanPlayerIndex: 0
   <PlayerIdSO>k__BackingField: {fileID: 11400000, guid: 1e6de6128901ea94a88896b92e3bf310, type: 2}
   <DefaultPlayerData>k__BackingField: {fileID: 11400000, guid: edaf631a83ce6ea42aa9463c9228f767, type: 2}
   <Bouyancy>k__BackingField: 0
@@ -1450,6 +1453,7 @@ MonoBehaviour:
   <StageStartPosition>k__BackingField: {x: 159.9148, y: 5.5, z: -506.90985}
   <StageStartRotation>k__BackingField: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
   jumpWaitTime: 1
+  <TrackingCamera>k__BackingField: {fileID: 0}
   jumpHeight: 1
   ragdol: {fileID: 1937797457676110068}
   baseMesh: {fileID: 3182380755078332304}
@@ -1533,6 +1537,8 @@ MonoBehaviour:
   yPosition: 0
 --- !u!65 &707257446435360162
 BoxCollider:
+--- !u!114 &3163964536523772284
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1544,6 +1550,17 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 2.5843582, z: 1}
   m_Center: {x: 0, y: 1.3040247, z: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Mode: 4
+  Colour: {r: 0.040124174, g: 0.4528302, b: 0, a: 1}
+  Width: 2
+  bShouldPrecomputeOutline: 0
+  BakeKeys: []
+  BakeValues: []
 --- !u!1 &3182380755078332308
 GameObject:
   m_ObjectHideFlags: 0

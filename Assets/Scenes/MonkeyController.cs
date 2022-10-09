@@ -33,7 +33,6 @@ public class MonkeyController : PlayerController
     [SerializeField] private float jumpWaitTime = 1;
     [SerializeField] private GameObject ragdol;
     [SerializeField] private GameObject baseMesh;
-    [SerializeField] private GameObject monkeyCamera;
     private BoxCollider boxCollider;
 
     private enum State
@@ -85,7 +84,7 @@ public class MonkeyController : PlayerController
         // Rotate towards Movement.
         if (move != Vector3.zero)
         {
-            Vector3 cameraRelativeDirection = DirectionRelativeToTransform(monkeyCamera.transform, move);
+            Vector3 cameraRelativeDirection = DirectionRelativeToTransform(TrackingCamera.transform, move);
             AlignTransformToMovement(transform, cameraRelativeDirection, RotationSpeed, Vector3.up);
         }
     }
@@ -201,7 +200,7 @@ public class MonkeyController : PlayerController
 
         speedometer.Record(this);
 
-        Vector3 cameraRelativeDirection = DirectionRelativeToTransform(monkeyCamera.transform, move);
+        Vector3 cameraRelativeDirection = DirectionRelativeToTransform(TrackingCamera.transform, move);
         Rb.MovePosition(Rb.position + (MovementSpeed * Time.fixedDeltaTime * cameraRelativeDirection));
         DetermineAnimationState();
         speedometer.Mark();
@@ -249,7 +248,19 @@ public class MonkeyController : PlayerController
         }
     }
 
-    private string RandomSound()
+    protected override void OnDustParticles(Vector3 Position)
+    {
+        base.OnDustParticles(Position);
+
+        Audio.Play("Doof", EAudioPlayOptions.AtTransformPosition | EAudioPlayOptions.DestroyOnEnd);
+    }
+
+    protected override void PlayFuelCollectionSound()
+    {
+        Audio.Play("Munch", EAudioPlayOptions.Global | EAudioPlayOptions.DestroyOnEnd);
+    }
+
+    string RandomSound()
     {
         bool bRandomBool = Random.Range(0f, 1f) < .5f;
 
