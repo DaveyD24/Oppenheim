@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+#if UNITY_EDITOR
 using UnityEditor;
 using UnityEditor.Experimental.SceneManagement;
+#endif
 using UnityEngine;
 
 /// <summary>
@@ -17,6 +19,7 @@ public class UniqueID : MonoBehaviour
 
     [field: SerializeField] [field: ReadOnly] public int SaveID { get; set; } // a unique id to use when saving and loading the object.
 
+#if UNITY_EDITOR
     /// <summary>
     /// Give each saveable item a unique id.
     /// Note that this is kinda inefficent at times, simply due to it needing to search all objects.
@@ -54,6 +57,7 @@ public class UniqueID : MonoBehaviour
             }
         }
     }
+#endif
 
 #if UNITY_EDITOR
     public virtual void OnValidate()

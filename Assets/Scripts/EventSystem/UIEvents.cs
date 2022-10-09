@@ -9,11 +9,15 @@ namespace EventSystem
     {
         public static Action<int, float> OnFuelChanged { get; set; }
 
+        public static Action<string> OnSceneChange { get; set; }
+
         public static Action OnBeginAnnoucement { get; set; }
 
         public static Action<int, bool> OnCanvasStateChanged { get; set; }
 
         public static Action OnShowIntructions { get; set; }
+
+        public static Action OnPauseGame { get; set; }
 
         public static void FuelChanged(int playerID, float currentFuel)
         {
@@ -33,9 +37,19 @@ namespace EventSystem
             OnCanvasStateChanged?.Invoke(playerID, value);
         }
 
+        public static void SceneChange(string scene)
+        {
+            OnSceneChange?.Invoke(scene);
+        }
+
         public static void BeginAnnoucement()
         {
             OnBeginAnnoucement?.Invoke();
+        }
+
+        public static void PauseGame()
+        {
+            OnPauseGame?.Invoke();
         }
     }
 }

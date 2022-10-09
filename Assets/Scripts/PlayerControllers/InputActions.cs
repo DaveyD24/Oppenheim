@@ -81,6 +81,14 @@ public class @InputActions : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Pause"",
+                    ""type"": ""Button"",
+                    ""id"": ""69769df0-5914-4aa9-824e-0cdf51104a89"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -168,6 +176,17 @@ public class @InputActions : IInputActionCollection, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Joystick"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d06be30a-821c-4b62-a84b-f0219ae5db14"",
+                    ""path"": ""<Gamepad>/dpad"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
                     ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -428,11 +447,33 @@ public class @InputActions : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""b91ad9a3-4b85-4db5-8b2a-9284eb3d9f2c"",
-                    ""path"": ""<Gamepad>/select"",
+                    ""path"": ""<Gamepad>/buttonEast"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
                     ""action"": ""HideControls"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4b09ad29-e02e-4574-9623-5ec28a3ef97f"",
+                    ""path"": ""<Keyboard>/p"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0ba7cfb5-d3b9-46c0-b5e7-a6d589e7871c"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Pause"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1067,6 +1108,7 @@ public class @InputActions : IInputActionCollection, IDisposable
         m_Player_SkipTut = m_Player.FindAction("SkipTut", throwIfNotFound: true);
         m_Player_RotatePlayer = m_Player.FindAction("RotatePlayer", throwIfNotFound: true);
         m_Player_HideControls = m_Player.FindAction("HideControls", throwIfNotFound: true);
+        m_Player_Pause = m_Player.FindAction("Pause", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1139,6 +1181,7 @@ public class @InputActions : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_SkipTut;
     private readonly InputAction m_Player_RotatePlayer;
     private readonly InputAction m_Player_HideControls;
+    private readonly InputAction m_Player_Pause;
     public struct PlayerActions
     {
         private @InputActions m_Wrapper;
@@ -1151,6 +1194,7 @@ public class @InputActions : IInputActionCollection, IDisposable
         public InputAction @SkipTut => m_Wrapper.m_Player_SkipTut;
         public InputAction @RotatePlayer => m_Wrapper.m_Player_RotatePlayer;
         public InputAction @HideControls => m_Wrapper.m_Player_HideControls;
+        public InputAction @Pause => m_Wrapper.m_Player_Pause;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1184,6 +1228,9 @@ public class @InputActions : IInputActionCollection, IDisposable
                 @HideControls.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnHideControls;
                 @HideControls.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnHideControls;
                 @HideControls.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnHideControls;
+                @Pause.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPause;
+                @Pause.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPause;
+                @Pause.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPause;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -1212,6 +1259,9 @@ public class @InputActions : IInputActionCollection, IDisposable
                 @HideControls.started += instance.OnHideControls;
                 @HideControls.performed += instance.OnHideControls;
                 @HideControls.canceled += instance.OnHideControls;
+                @Pause.started += instance.OnPause;
+                @Pause.performed += instance.OnPause;
+                @Pause.canceled += instance.OnPause;
             }
         }
     }
@@ -1409,6 +1459,7 @@ public class @InputActions : IInputActionCollection, IDisposable
         void OnSkipTut(InputAction.CallbackContext context);
         void OnRotatePlayer(InputAction.CallbackContext context);
         void OnHideControls(InputAction.CallbackContext context);
+        void OnPause(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

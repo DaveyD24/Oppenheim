@@ -108,7 +108,7 @@ public class MonkeyController : PlayerController
                 cameraRelativeDirection *= -1;
             }
 
-            AlignTransformToMovement(transform, cameraRelativeDirection, RotationSpeed, Vector3.up);
+            AlignTransformToMovement(transform, cameraRelativeDirection, RotationSpeed * Time.deltaTime, Vector3.up);
         }
     }
 

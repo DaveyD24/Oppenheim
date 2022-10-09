@@ -78,7 +78,7 @@ public class SoldierMovement : PlayerController
 
         if (faceDir != Vector3.zero)
         {
-            AlignTransformToMovement(transform, faceDir, RotationSpeed, Vector3.up);
+            AlignTransformToMovement(transform, faceDir, RotationSpeed * Time.deltaTime, Vector3.up);
         }
 
         if (bDidJump)
