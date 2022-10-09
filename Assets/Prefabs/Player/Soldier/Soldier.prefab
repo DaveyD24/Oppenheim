@@ -1444,7 +1444,7 @@ MonoBehaviour:
   <DefaultPlayerData>k__BackingField: {fileID: 11400000, guid: edaf631a83ce6ea42aa9463c9228f767, type: 2}
   <Bouyancy>k__BackingField: 0
   <MovementSpeed>k__BackingField: 6
-  <RotationSpeed>k__BackingField: 2
+  <RotationSpeed>k__BackingField: 1
   <Health>k__BackingField: 0
   <FallDamageThreshold>k__BackingField: 25
   groundCheckPosition: {x: 0, y: 0, z: 0}

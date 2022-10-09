@@ -58,6 +58,8 @@ public class CarController : PlayerController
 
     [field: SerializeField] public Material DashBodyMaterial { get; private set; }
 
+    [field: SerializeField] public float DashGroundCheckLength { get; private set; } = 2;
+
     [SerializeField] public bool BCancelDash { get; set; } = false;
 
     [Header("Wind Particles")]
@@ -218,6 +220,8 @@ public class CarController : PlayerController
         Gizmos.color = Color.green;
         Gizmos.DrawCube(DashOffset + transform.position, Vector3.one * .25f);
         Gizmos.color = Color.red;
+
+        Gizmos.DrawLine(transform.position, transform.position + (Vector3.down * DashGroundCheckLength));
     }
 
     protected override void Respawn()

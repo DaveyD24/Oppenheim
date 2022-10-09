@@ -9,6 +9,7 @@ public class DisabledRotation : MonoBehaviour
 {
     private Tween rotTween;
     [SerializeField] private Vector3 restRotation;
+    private Vector3 startRotation;
     [SerializeField] private float rotSpeed;
     [SerializeField] private AnimationCurve rotCurve;
 
@@ -17,9 +18,19 @@ public class DisabledRotation : MonoBehaviour
     [SerializeField] private GameObject[] wireRacks;
     [SerializeField] private GameObject solidFloor;
 
-    public void MoveRotation()
+    public void MoveRotation(bool backToInitial)
     {
-        rotTween = new Tween(transform.rotation, Quaternion.Euler(restRotation), Time.time, rotSpeed);
+        rotTween = null;
+
+        if (backToInitial)
+        {
+            rotTween = new Tween(transform.rotation, Quaternion.Euler(startRotation), Time.time, rotSpeed);
+        }
+        else
+        {
+            rotTween = new Tween(transform.rotation, Quaternion.Euler(restRotation), Time.time, rotSpeed);
+        }
+
         AdjustVisability(false);
     }
 
@@ -53,5 +64,10 @@ public class DisabledRotation : MonoBehaviour
 
             solidFloor.SetActive(!bWireVisible);
         }
+    }
+
+    private void Awake()
+    {
+        startRotation = transform.rotation.eulerAngles;
     }
 }

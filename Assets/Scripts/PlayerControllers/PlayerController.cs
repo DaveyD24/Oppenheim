@@ -203,7 +203,7 @@ public abstract class PlayerController : MonoBehaviour
     public void AdjustAbilityValue(int amount)
     {
         AbilityUses += amount;
-        AbilityUses = Mathf.Max(AbilityUses, 0);
+        AbilityUses = Mathf.Max(0, AbilityUses);
         abilityTxt.text = AbilityUses.ToString();
     }
 
@@ -270,8 +270,7 @@ public abstract class PlayerController : MonoBehaviour
 
         if (DeathWaitTimer == null)
         {
-            Debug.Log("Player Died");
-
+            // Debug.Log("Player Died");
             DeathWaitTimer = DeathWait();
             StartCoroutine(DeathWaitTimer);
         }

@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 4567349395999465315}
   - component: {fileID: 4567349395999465314}
   m_Layer: 0
-  m_Name: Battery
+  m_Name: BatteryPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -98,8 +98,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 5.221182, y: 1.0188997, z: 4.61357}
-  m_Center: {x: -1.3254089, y: -0.00000008940697, z: 0.00040233135}
+  m_Size: {x: 5.221182, y: 3.3422682, z: 4.61357}
+  m_Center: {x: -1.3254088, y: 1.1616839, z: 0.00040233135}
 --- !u!114 &4567349395999465314
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -113,6 +113,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <BIdUnchangeable>k__BackingField: 0
+  <BNotSaveData>k__BackingField: 0
   <SaveID>k__BackingField: 0
   collectParticles: {fileID: 341301465110762667, guid: 334c4f6566749f443996f25e4e447782, type: 3}
   <PlayerId>k__BackingField: {fileID: 11400000, guid: a6ba5f247f9af9242bb3d3700fe06543, type: 2}
