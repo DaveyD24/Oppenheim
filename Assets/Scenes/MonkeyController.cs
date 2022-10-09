@@ -35,6 +35,8 @@ public class MonkeyController : PlayerController
     [SerializeField] private GameObject baseMesh;
     private BoxCollider boxCollider;
 
+    private bool bStillClinging = false; // if the monkey is still clinging even after jumping, as it never actually left the wall
+
     private enum State
     {
         CLING,
@@ -63,6 +65,20 @@ public class MonkeyController : PlayerController
             {
                 currJumpWaitTime = jumpWaitTime;
                 bDidJump = false;
+
+                // if still clinging to an object, even though the jump has finished
+                if (bStillClinging)
+                {
+                    if (AbilityUses > 0)
+                    {
+                        clinging = true;
+                    }
+                    else
+                    {
+                        bStillClinging = false;
+                        clinging = false;
+                    }
+                }
             }
         }
 
@@ -85,6 +101,13 @@ public class MonkeyController : PlayerController
         if (move != Vector3.zero)
         {
             Vector3 cameraRelativeDirection = DirectionRelativeToTransform(TrackingCamera.transform, move);
+
+            // if walking backwards and the camera is inheriting, do not rotate around as its disorienting
+            if (move.x == 0 && move.z < 0 && TrackingCamera.bInheritRotation)
+            {
+                cameraRelativeDirection *= -1;
+            }
+
             AlignTransformToMovement(transform, cameraRelativeDirection, RotationSpeed, Vector3.up);
         }
     }
@@ -110,7 +133,7 @@ public class MonkeyController : PlayerController
         }
 
         // This check is original and untouched.
-        if ((IsGrounded() || clinging) && !bDidJump)
+        if ((IsGrounded() || clinging) && !bDidJump) // buggy if jumping and moving at the same time.
         {
             // Original: Jump with a modified kinematic equation.
             Rb.velocity += new Vector3(0f, Mathf.Sqrt(jumpHeight * -3f * Physics.gravity.y), 0f);
@@ -122,7 +145,7 @@ public class MonkeyController : PlayerController
                 if (clinging)
                 {
                     Rb.velocity += contactPoint.normal;
-                    clinging = false;
+                    clinging = false; // issue as if never actually exit the transform, it will never be entered again and thus never register as clinging
 
                     // Stop any weird rotations.
                     Rb.angularVelocity = Vector3.zero;
@@ -211,11 +234,16 @@ public class MonkeyController : PlayerController
         base.OnCollisionEnter(collision);
 
         // Only Cling to something if you're off the ground.
-        if (AbilityUses > 0 && collision.transform.CompareTag("Clingable") && !IsGrounded())
+        if (collision.transform.CompareTag("Clingable"))
         {
-            clinging = true;
+            if (AbilityUses > 0 && !IsGrounded())
+            {
+                clinging = true;
+            }
+
             clingPosition = collision.collider.ClosestPoint(transform.position);
             contactPoint = collision.GetContact(0);
+            bStillClinging = true;
         }
     }
 
@@ -226,6 +254,7 @@ public class MonkeyController : PlayerController
         if (collision.transform.CompareTag("Clingable"))
         {
             clinging = false;
+            bStillClinging = false;
         }
     }
 

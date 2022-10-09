@@ -69,6 +69,13 @@ public class SoldierMovement : PlayerController
         Vector3 cameraRelativeDirection = DirectionRelativeToTransform(TrackingCamera.transform, move);
         Vector3 faceDir = cameraRelativeDirection;
         faceDir.y = 0;
+
+        // if walking backwards and the camera is inheriting, do not rotate around as its disorienting
+        if (move.x == 0 && move.z < 0 && TrackingCamera.bInheritRotation)
+        {
+            faceDir *= -1;
+        }
+
         if (faceDir != Vector3.zero)
         {
             AlignTransformToMovement(transform, faceDir, RotationSpeed, Vector3.up);

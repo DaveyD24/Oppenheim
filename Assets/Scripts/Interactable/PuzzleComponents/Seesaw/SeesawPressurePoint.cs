@@ -28,6 +28,6 @@ public class SeesawPressurePoint : MonoBehaviour
 		BatMathematics.ClampMin(ref CurrentWeight, 0f);
 	}
 
-	/// <summary>Automatic <see langword="implicit"/> conversion to the Weight of this Pressure Point.</summary>
-	public static implicit operator float(SeesawPressurePoint SPP) => SPP.CurrentWeight;
+    /// <summary>Automatic <see langword="implicit"/> conversion to the Weight of this Pressure Point.</summary>
+	public static implicit operator float(SeesawPressurePoint sPP) => sPP.CurrentWeight;
 }

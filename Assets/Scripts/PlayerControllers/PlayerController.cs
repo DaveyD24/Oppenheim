@@ -449,6 +449,8 @@ public abstract class PlayerController : MonoBehaviour
             {
                 // as only save whenever reach a checkpoint, ensure the player gets enough ability uses
                 saveAbilityAmount = 3;
+                AbilityUses = 3;
+                AdjustAbilityValue(0);
             }
 
             pData.NumberAbilityLeft = saveAbilityAmount;
@@ -457,6 +459,7 @@ public abstract class PlayerController : MonoBehaviour
         {
             pData.NumberAbilityLeft = AbilityUses;
         }
+
         pData.Position = transform.position;
         if (PersistentDataManager.SaveableData.PlayerDatas.Dictionary.ContainsKey(PlayerIdSO.PlayerID))
         {
@@ -467,6 +470,7 @@ public abstract class PlayerController : MonoBehaviour
             PersistentDataManager.SaveableData.PlayerDatas.Dictionary.Add(PlayerIdSO.PlayerID, pData);
         }
     }
+
     protected virtual void OnDustParticles(Vector3 Position)
     {
         Instantiate(DefaultPlayerData.DustParticles, Position, Quaternion.identity);

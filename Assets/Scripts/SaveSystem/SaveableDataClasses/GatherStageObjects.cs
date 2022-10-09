@@ -49,7 +49,7 @@ public class GatherStageObjects : MonoBehaviour
             }
         }
 
-        Debug.Log("Loaded in Sections Data: " + SectionID);
+        // Debug.Log("Loaded in Sections Data: " + SectionID);
     }
 
     /// <summary>
