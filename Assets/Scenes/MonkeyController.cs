@@ -121,6 +121,16 @@ public class MonkeyController : PlayerController
 
         move = ctx.ReadValue<Vector2>();
 
+        if (Mathf.Abs(move.x) < DefaultPlayerData.InputDeadZone)
+        {
+            move.x = 0;
+        }
+
+        if (Mathf.Abs(move.y) < DefaultPlayerData.InputDeadZone)
+        {
+            move.y = 0;
+        }
+
         // Convert 2D to 3D movement.
         move = new Vector3(move.x, 0, move.y).normalized;
     }
