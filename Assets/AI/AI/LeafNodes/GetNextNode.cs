@@ -34,10 +34,11 @@ public class GetNextNode : Node<GenericBot>
                 {
                     Blackboard.NextPosVector = Blackboard.NextPosTransform.position;
                 }
-                    return ENodeState.Success;
+
+                return ENodeState.Success;
             }
         }
 
-        return ENodeState.Failure; //no node or path could be found
+        return ENodeState.Failure; // no node or path could be found
     }
 }

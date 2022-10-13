@@ -23,6 +23,12 @@ public class GenericBot : MonoBehaviour
 
     [field: SerializeField] public float GroundOffset { get; private set; }
 
+    [field: SerializeField] public float SightRadius { get; private set; }
+
+    [field: SerializeField] public float SightAngle { get; private set; }
+
+    [field: SerializeField] public LayerMask DetectibleLayers { get; private set; }
+
     // Start is called before the first frame update
     private void Start()
     {
