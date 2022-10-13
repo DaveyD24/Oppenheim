@@ -43,10 +43,11 @@ public class GenericBot : MonoBehaviour
     {
         if (topNode != null)
         {
-            topNode.Execute();
+            topNode.Execute(); // run from the top node of the tree down, following the defined structure
         }
     }
 
+    // setup the structure behaviour tree here
     private void GenerateBehaviourTree()
     {
         GetNextNode getNextNode = new GetNextNode(this);
