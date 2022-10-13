@@ -5,7 +5,7 @@ using UnityEngine;
 public class GetNextNode : Node<GenericBot>
 {
     // find next position on the map to move towards
-    public GetNextNode(GenericBot blackboard, bool isFleeing = false)
+    public GetNextNode(GenericBot blackboard)
     {
         this.Blackboard = blackboard;
     }
