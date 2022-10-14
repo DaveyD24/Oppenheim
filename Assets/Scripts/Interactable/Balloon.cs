@@ -21,7 +21,7 @@ public class Balloon : UniqueID, IDataInterface
 
 	[SerializeField, ReadOnly] Material StandardMaterial;
 
-	[SerializeField, Tooltip("The attached Box at the end of the String."), ReadOnly] GameObject Box;
+	[SerializeField, Tooltip("The attached Box at the end of the String.")] GameObject Box;
 
 	private Quaternion attachedBoxRotation;
 
@@ -33,7 +33,7 @@ public class Balloon : UniqueID, IDataInterface
 
 		if (!Box)
 		{
-			// SpawnBox();
+			SpawnBox();
 		}
 
 		lineRenderer = GetComponent<LineRenderer>();
@@ -42,6 +42,13 @@ public class Balloon : UniqueID, IDataInterface
 
 		attachedBoxRotation = boxToAttach.transform.rotation;
 		Destroy(boxToAttach.GetComponent<Collider>());
+
+		if (TryGetComponent(out MeshRenderer MR))
+		{
+			MR.sharedMaterial = new Material(StandardMaterial);
+
+			MR.sharedMaterial.SetColor("_Color", bRandomiseColour ? URandom.ColorHSV(.1f, .9f, 1f, 1f) : BalloonColour);
+		}
 	}
 
 	void Update()
@@ -103,25 +110,6 @@ public class Balloon : UniqueID, IDataInterface
 		lineRenderer.SetPosition(1, hit.point);
 		lineRenderer.SetPosition(0, boxToAttach.transform.position);
 	}
-
-#if UNITY_EDITOR
-	public override void OnValidate()
-	{
-		base.OnValidate();
-		// Spawn a Box in Editor.
-		if (!Box && AttachmentPoint && boxToAttach)
-		{
-			SpawnBox();
-		}
-
-		if (!Application.isPlaying && TryGetComponent(out MeshRenderer mR))
-		{
-			mR.sharedMaterial = new Material(StandardMaterial);
-
-			mR.sharedMaterial.SetColor("_Color", bRandomiseColour ? URandom.ColorHSV(.1f, .9f, 1f, 1f) : BalloonColour);
-		}
-	}
-#endif
 
 #pragma warning disable SA1202 // Elements should be ordered by access
 	public void LoadData(SectionData data)
