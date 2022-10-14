@@ -94,7 +94,7 @@ public class BatMovement : MonoBehaviour
 	}
 #endif
 
-	void FixedUpdate()
+	private void FixedUpdate()
 	{
 		if (!Bat.TrackingCamera)
 		{
@@ -136,37 +136,44 @@ public class BatMovement : MonoBehaviour
 		if (!IsZero(YawDelta) || !IsZero(PitchDelta) || bIsAffectedGravityPastThreshold)
 		{
 			// Translate World-Velocity to Local Forward.
-			Vector3 YawVelocity = RotateVector(Bat.Physics.velocity, transform.up, YawDelta);
-			Vector3 CombinedVelocity = RotateVector(YawVelocity, -transform.right, PitchDelta);
-			Bat.Physics.velocity = CombinedVelocity; // Combination of Pitch and Yaw.
+			Vector3 yawVelocity = RotateVector(Bat.Physics.velocity, transform.up, YawDelta);
+			Vector3 combinedVelocity = RotateVector(yawVelocity, -transform.right, PitchDelta);
+			Bat.Physics.velocity = combinedVelocity; // Combination of Pitch and Yaw.
 
 			// Set to Zero if its close enough to Zero.
-			Vector3 Velocity = Bat.Physics.velocity;
-			SetZeroIfZero(ref Velocity);
+			Vector3 velocity = Bat.Physics.velocity;
+			SetZeroIfZero(ref velocity);
 
-			Bat.Physics.velocity = Velocity;
+			Bat.Physics.velocity = velocity;
 
 			// Not Zero and must be facing in the same general direction.
-			if (Velocity != Vector3.zero)
+			if (velocity != Vector3.zero)
 			{
 				// If the Bat has fallen off an edge without Glide input.
 				if (bHasBeenGivenSlightBoost && !bHasGlidedThisJump && !bIsAffectedGravityPastThreshold)
 				{
 					// Ignore and do not face towards the effect of gravity.
-					Velocity.y = 0f;
+					velocity.y = 0f;
 				}
 
 				// Use transform.up or Vector3.up?
-				Quaternion RotationNow = transform.rotation;
-				Quaternion TargetRot = Quaternion.LookRotation(Velocity, Vector3.up);
-				transform.rotation = Quaternion.RotateTowards(RotationNow, TargetRot, Bat.YawSpeed);
+				Quaternion rotationNow = transform.rotation;
+				Quaternion targetRot = Quaternion.LookRotation(velocity, Vector3.up);
+				transform.rotation = Quaternion.RotateTowards(rotationNow, targetRot, Bat.YawSpeed);
 			}
 		}
 		else if (GroundMovement != Vector3.zero && !IsAirborne())
 		{
 			// Smoothly rotate the Bat towards where it's moving.
-			Vector3 MovementVector = DirectionRelativeToTransform(Bat.TrackingCamera.transform, GroundMovement);
-			AlignTransformToMovement(transform, MovementVector, Bat.YawSpeed, Vector3.up);
+			Vector3 movementVector = DirectionRelativeToTransform(Bat.TrackingCamera.transform, GroundMovement);
+
+			// if walking backwards and the camera is inheriting, do not rotate around as its disorienting
+			if (GroundMovement.x == 0 && GroundMovement.z < 0 && Bat.TrackingCamera.bInheritRotation)
+			{
+				movementVector *= -1;
+			}
+
+			AlignTransformToMovement(transform, movementVector, Bat.YawSpeed, Vector3.up);
 		}
 
 		SetAnimationState();
@@ -175,7 +182,7 @@ public class BatMovement : MonoBehaviour
 		Speedometer.Mark();
 	}
 
-	void OnCollisionEnter(Collision Collision)
+	private void OnCollisionEnter(Collision Collision)
 	{
 		if (bHasGlidedThisJump && IsAirborne())
 		{
@@ -191,6 +198,16 @@ public class BatMovement : MonoBehaviour
 		if (Bat.Active)
 		{
 			ThrowMove = Context.action.ReadValue<Vector2>();
+
+			if (Mathf.Abs(ThrowMove.x) < Bat.DefaultPlayerData.InputDeadZone)
+			{
+				ThrowMove.x = 0;
+			}
+
+			if (Mathf.Abs(ThrowMove.y) < Bat.DefaultPlayerData.InputDeadZone)
+			{
+				ThrowMove.y = 0;
+			}
 		}
 		else
 		{
@@ -213,7 +230,7 @@ public class BatMovement : MonoBehaviour
 	public void LookBinding(ref CallbackContext Context)
 	{
 		/**
-		--      This does nothing if we're not using LOOK_AIRBORNE.     --
+		 --      This does nothing if we're not using LOOK_AIRBORNE.     --
 		--               Can always be changed, if needed.              --
 		**/
 #if LOOK_AIRBORNE

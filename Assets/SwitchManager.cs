@@ -51,7 +51,7 @@ public class SwitchManager : MonoBehaviour
     {
         List<PlayerController> active = GetActivePlayers();
         outActivePlayerTransforms = new Transform[active.Count];
-        
+
         for (int i = 0; i < active.Count; ++i)
         {
                 outActivePlayerTransforms[i] = active[i].transform;
@@ -141,7 +141,8 @@ public class SwitchManager : MonoBehaviour
             controlledPlayers.Add(playerID);
             uncontrolledPlayers.RemoveAt(playerToControl);
 
-            GetPlayerByID(playerID).HumanPlayerIndex = (EPlayer)(++numberOfPlayers);
+            numberOfPlayers++;
+            GetPlayerByID(playerID).HumanPlayerIndex = (EPlayer)numberOfPlayers;
 
             GameEvents.ActivatePlayer(playerID, player);
 
@@ -226,7 +227,7 @@ public class SwitchManager : MonoBehaviour
     }
 
     public int GetNumberOfPlayers() => numberOfPlayers;
-    
+
     /// <summary>Get every Player in the game.</summary>
     public void GetAllPlayers(out PlayerController[] outPlayers)
     {

@@ -69,9 +69,16 @@ public class SoldierMovement : PlayerController
         Vector3 cameraRelativeDirection = DirectionRelativeToTransform(TrackingCamera.transform, move);
         Vector3 faceDir = cameraRelativeDirection;
         faceDir.y = 0;
+
+        // if walking backwards and the camera is inheriting, do not rotate around as its disorienting
+        if (move.x == 0 && move.z < 0 && TrackingCamera.bInheritRotation)
+        {
+            faceDir *= -1;
+        }
+
         if (faceDir != Vector3.zero)
         {
-            AlignTransformToMovement(transform, faceDir, RotationSpeed, Vector3.up);
+            AlignTransformToMovement(transform, faceDir, RotationSpeed * Time.deltaTime, Vector3.up);
         }
 
         if (bDidJump)
@@ -175,6 +182,16 @@ public class SoldierMovement : PlayerController
         }
 
         move = ctx.ReadValue<Vector2>();
+
+        if (Mathf.Abs(move.x) < DefaultPlayerData.InputDeadZone)
+        {
+            move.x = 0;
+        }
+
+        if (Mathf.Abs(move.y) < DefaultPlayerData.InputDeadZone)
+        {
+            move.y = 0;
+        }
 
         // Convert 2D to 3D movement.
         move.z = move.y;

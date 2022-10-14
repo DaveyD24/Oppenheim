@@ -18,14 +18,15 @@ using TMPro;
 public abstract class PlayerController : MonoBehaviour
 {
     [SerializeField] private GameObject controlObj;
+    [SerializeField] private GameObject abilityActiveObj;
     [SerializeField] private TextMeshProUGUI abilityTxt;
+    [SerializeField] private Canvas playerCanvas;
 
     private bool bControlsHidden = false;
     private Vector3 startPosition;
     private Quaternion startRotation;
     private float fuel;
     private bool isFarEnoughAway = false;
-    private SpriteRenderer activeIndicator;
     private float beforeCollideSpeed;
 
     private PlayerInput pInput;
@@ -52,7 +53,7 @@ public abstract class PlayerController : MonoBehaviour
     // A unique object each scene object gets assigned, being largly used to store the players id
     [field: SerializeField] public PlayerIdObject PlayerIdSO { get; private set; }
 
-    [field: SerializeField] protected DefaultPlayerDataObject DefaultPlayerData { get; private set; }
+    [field: SerializeField] public DefaultPlayerDataObject DefaultPlayerData { get; private set; }
 
     [field: SerializeField] protected float Bouyancy { get; private set; }
 
@@ -68,7 +69,21 @@ public abstract class PlayerController : MonoBehaviour
 
     [field: SerializeField] protected float GroundCheckRadius { get; private set; }
 
-    [field: SerializeField] public SpringArm TrackingCamera { get; set; }
+#pragma warning disable SA1201 // Elements should appear in the correct order
+    [SerializeField] private SpringArm trackingCamera;
+#pragma warning restore SA1201 // Elements should appear in the correct order
+
+    [SerializeField] public SpringArm TrackingCamera
+    {
+        get => trackingCamera;
+        set
+        {
+            trackingCamera = value;
+            playerCanvas.renderMode = RenderMode.ScreenSpaceCamera;
+            playerCanvas.worldCamera = trackingCamera.gameObject.GetComponent<Camera>();
+            playerCanvas.planeDistance = 1;
+        }
+    }
 
     protected float CurrentFuel { get => fuel; set => fuel = Mathf.Clamp(value, 0, DefaultPlayerData.MaxFuel); }
 
@@ -110,6 +125,8 @@ public abstract class PlayerController : MonoBehaviour
             controlObj.SetActive(true);
             bControlsHidden = false;
         }
+
+        abilityActiveObj.SetActive(true);
     }
 
     public void Deactivate()
@@ -119,6 +136,11 @@ public abstract class PlayerController : MonoBehaviour
         if (controlObj != null)
         {
             controlObj.SetActive(false);
+        }
+
+        if (abilityActiveObj != null)
+        {
+            abilityActiveObj.SetActive(false);
         }
     }
 
@@ -136,8 +158,6 @@ public abstract class PlayerController : MonoBehaviour
     {
         if (playerID == PlayerIdSO.PlayerID)
         {
-            activeIndicator.enabled = true;
-
             // setup the inputs to use
             pInput = playerInput;
             Inputs = playerInput.actions;
@@ -155,6 +175,7 @@ public abstract class PlayerController : MonoBehaviour
 
             PlayerInput.FindAction("RotatePlayer").performed += RotatePlayer;
 
+            PlayerInput.FindAction("Pause").performed += GamePause;
             // Inputs.Player.Jump.canceled += Jump;
             PlayerInput.Enable();
 
@@ -179,11 +200,10 @@ public abstract class PlayerController : MonoBehaviour
             PlayerInput.FindAction("Jump").performed -= Jump;
             PlayerInput.FindAction("RotatePlayer").performed -= RotatePlayer;
             PlayerInput.FindAction("HideControls").performed -= ControlsVisibility;
+            PlayerInput.FindAction("Pause").performed -= GamePause;
 
             PlayerInput.Disable();
             Deactivate();
-
-            activeIndicator.enabled = false;
         }
     }
 
@@ -200,10 +220,15 @@ public abstract class PlayerController : MonoBehaviour
         bControlsHidden = !bControlsHidden;
     }
 
+    private void GamePause(InputAction.CallbackContext ctx)
+    {
+        UIEvents.PauseGame();
+    }
+
     public void AdjustAbilityValue(int amount)
     {
         AbilityUses += amount;
-        AbilityUses = Mathf.Max(AbilityUses, 0);
+        AbilityUses = Mathf.Max(0, AbilityUses);
         abilityTxt.text = AbilityUses.ToString();
     }
 
@@ -246,8 +271,8 @@ public abstract class PlayerController : MonoBehaviour
 
     protected virtual void Start()
     {
+        playerCanvas.gameObject.transform.parent = null;
         SaveData(null);
-        activeIndicator = GetComponentInChildren(typeof(SpriteRenderer)) as SpriteRenderer;
         Rb = GetComponent<Rigidbody>();
         switchManager = FindObjectOfType<SwitchManager>();
         Audio = GetComponent<AudioController>();
@@ -270,8 +295,7 @@ public abstract class PlayerController : MonoBehaviour
 
         if (DeathWaitTimer == null)
         {
-            Debug.Log("Player Died");
-
+            // Debug.Log("Player Died");
             DeathWaitTimer = DeathWait();
             StartCoroutine(DeathWaitTimer);
         }
@@ -334,7 +358,14 @@ public abstract class PlayerController : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Blueprint"))
         {
-            SceneManager.LoadScene("WinScene");
+            if (SceneManager.GetActiveScene().name == "RefinedStage1")
+            {
+                UIEvents.SceneChange("Stage2");
+            }
+            else
+            {
+                UIEvents.SceneChange("WinScene");
+            }
         }
     }
 
@@ -406,6 +437,11 @@ public abstract class PlayerController : MonoBehaviour
         }
     }
 
+    private void SetCanvasCamera()
+    {
+
+    }
+
     private IEnumerator DeathWait()
     {
         // Debug.Log("Player Died");
@@ -449,6 +485,8 @@ public abstract class PlayerController : MonoBehaviour
             {
                 // as only save whenever reach a checkpoint, ensure the player gets enough ability uses
                 saveAbilityAmount = 3;
+                AbilityUses = 3;
+                AdjustAbilityValue(0);
             }
 
             pData.NumberAbilityLeft = saveAbilityAmount;
@@ -457,6 +495,7 @@ public abstract class PlayerController : MonoBehaviour
         {
             pData.NumberAbilityLeft = AbilityUses;
         }
+
         pData.Position = transform.position;
         if (PersistentDataManager.SaveableData.PlayerDatas.Dictionary.ContainsKey(PlayerIdSO.PlayerID))
         {
@@ -467,6 +506,7 @@ public abstract class PlayerController : MonoBehaviour
             PersistentDataManager.SaveableData.PlayerDatas.Dictionary.Add(PlayerIdSO.PlayerID, pData);
         }
     }
+
     protected virtual void OnDustParticles(Vector3 Position)
     {
         Instantiate(DefaultPlayerData.DustParticles, Position, Quaternion.identity);

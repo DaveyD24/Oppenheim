@@ -86,7 +86,7 @@ public class Checkpoint : MonoBehaviour, IDataInterface
                 int[] gatheredItems = item.NumberInvalidSaveCollectibles();
                 for (int i = 0; i < gatheredItems.Length; i++)
                 {
-                    fuelDataReset[i] += gatheredItems[i];
+                    fuelDataReset[i] = gatheredItems[i];
                 }
             }
 

@@ -24443,7 +24443,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fanSpeed: 400
   fanForce: 200
-  fanForceSize: {x: 2.5, y: 2.5, z: 69}
+  fanForceSize: {x: 3.13, y: 3, z: 69}
   ignoreLayers:
     serializedVersion: 2
     m_Bits: 512
@@ -53619,7 +53619,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fanSpeed: 400
   fanForce: 200
-  fanForceSize: {x: 2.5, y: 2.5, z: 69}
+  fanForceSize: {x: 3.13, y: 3, z: 69}
   ignoreLayers:
     serializedVersion: 2
     m_Bits: 512
@@ -53727,7 +53727,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fanSpeed: 400
   fanForce: 200
-  fanForceSize: {x: 2.5, y: 2.5, z: 69}
+  fanForceSize: {x: 3.13, y: 3, z: 69}
   ignoreLayers:
     serializedVersion: 2
     m_Bits: 512
@@ -53835,7 +53835,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fanSpeed: 400
   fanForce: 200
-  fanForceSize: {x: 2.5, y: 2.5, z: 69}
+  fanForceSize: {x: 3.13, y: 3, z: 69}
   ignoreLayers:
     serializedVersion: 2
     m_Bits: 512
@@ -83369,7 +83369,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fanSpeed: 400
   fanForce: 200
-  fanForceSize: {x: 2.5, y: 2.5, z: 69}
+  fanForceSize: {x: 3.13, y: 3, z: 69}
   ignoreLayers:
     serializedVersion: 2
     m_Bits: 512
@@ -98095,7 +98095,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fanSpeed: 400
   fanForce: 200
-  fanForceSize: {x: 2.5, y: 2.5, z: 69}
+  fanForceSize: {x: 3.13, y: 3, z: 69}
   ignoreLayers:
     serializedVersion: 2
     m_Bits: 512
@@ -98203,7 +98203,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fanSpeed: 400
   fanForce: 200
-  fanForceSize: {x: 2.5, y: 2.5, z: 69}
+  fanForceSize: {x: 3.13, y: 3, z: 69}
   ignoreLayers:
     serializedVersion: 2
     m_Bits: 512
@@ -98700,7 +98700,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fanSpeed: 400
   fanForce: 200
-  fanForceSize: {x: 2.5, y: 2.5, z: 69}
+  fanForceSize: {x: 3.13, y: 3, z: 69}
   ignoreLayers:
     serializedVersion: 2
     m_Bits: 512
@@ -98808,7 +98808,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fanSpeed: 400
   fanForce: 200
-  fanForceSize: {x: 2.5, y: 2.5, z: 69}
+  fanForceSize: {x: 3.13, y: 3, z: 69}
   ignoreLayers:
     serializedVersion: 2
     m_Bits: 512
@@ -98998,7 +98998,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fanSpeed: 400
   fanForce: 200
-  fanForceSize: {x: 2.5, y: 2.5, z: 69}
+  fanForceSize: {x: 3.13, y: 3, z: 69}
   ignoreLayers:
     serializedVersion: 2
     m_Bits: 512
@@ -118711,7 +118711,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fanSpeed: 400
   fanForce: 200
-  fanForceSize: {x: 2.5, y: 2.5, z: 69}
+  fanForceSize: {x: 3.13, y: 3, z: 69}
   ignoreLayers:
     serializedVersion: 2
     m_Bits: 512
@@ -133299,7 +133299,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fanSpeed: 400
   fanForce: 200
-  fanForceSize: {x: 2.5, y: 2.5, z: 69}
+  fanForceSize: {x: 3.13, y: 3, z: 69}
   ignoreLayers:
     serializedVersion: 2
     m_Bits: 512
@@ -138215,7 +138215,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fanSpeed: 400
   fanForce: 200
-  fanForceSize: {x: 2.5, y: 2.5, z: 69}
+  fanForceSize: {x: 3.13, y: 3, z: 69}
   ignoreLayers:
     serializedVersion: 2
     m_Bits: 512
@@ -138323,7 +138323,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fanSpeed: 400
   fanForce: 200
-  fanForceSize: {x: 2.5, y: 2.5, z: 69}
+  fanForceSize: {x: 3.13, y: 3, z: 69}
   ignoreLayers:
     serializedVersion: 2
     m_Bits: 512
@@ -138431,7 +138431,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fanSpeed: 400
   fanForce: 200
-  fanForceSize: {x: 2.5, y: 2.5, z: 69}
+  fanForceSize: {x: 3.13, y: 3, z: 69}
   ignoreLayers:
     serializedVersion: 2
     m_Bits: 512
@@ -148211,7 +148211,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fanSpeed: 400
   fanForce: 200
-  fanForceSize: {x: 2.5, y: 2.5, z: 69}
+  fanForceSize: {x: 3.13, y: 3, z: 69}
   ignoreLayers:
     serializedVersion: 2
     m_Bits: 512

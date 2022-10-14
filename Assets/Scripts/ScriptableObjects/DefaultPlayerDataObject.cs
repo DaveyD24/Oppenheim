@@ -12,7 +12,7 @@ public class DefaultPlayerDataObject : ScriptableObject
     [field: SerializeField] public AnimationCurve DecreaseFuelAmount { get; private set; }
 
     [field: Range(0, 1)]
-    [field: SerializeField] public float FuelLoseMultiplier { get; private set; }
+    [field: SerializeField] public float InputDeadZone { get; private set; }
 
     [field: SerializeField] public GameObject DustParticles { get; private set; }
 

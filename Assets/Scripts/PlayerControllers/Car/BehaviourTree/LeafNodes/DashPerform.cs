@@ -93,7 +93,7 @@ public class DashPerform : Node<CarController>
     private void AllignToGround()
     {
         RaycastHit ground;
-        if (Physics.Raycast(Blackboard.Rb.transform.position, -Vector3.up, out ground, 10.0f, ~Blackboard.PlayerLayer))
+        if (Physics.Raycast(Blackboard.Rb.transform.position, -Vector3.up, out ground, Blackboard.DashGroundCheckLength, ~Blackboard.PlayerLayer))
         {
             Vector3 lookDir = forwardMove;
             Vector3 up = ground.normal;

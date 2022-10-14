@@ -370,6 +370,9 @@ MonoBehaviour:
   bDoRandRotation: 1
   meshFilters: []
   meshRenderers: []
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!54 &41595197
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -435,6 +438,9 @@ MonoBehaviour:
   meshRenderers:
   - {fileID: 41595199}
   - {fileID: 2006762422}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!23 &41595199
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -582,6 +588,9 @@ MonoBehaviour:
   bDoRandRotation: 1
   meshFilters: []
   meshRenderers: []
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!54 &47672892
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -647,6 +656,9 @@ MonoBehaviour:
   meshRenderers:
   - {fileID: 47672894}
   - {fileID: 28229086}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!23 &47672894
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -805,7 +817,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: RefinedStage1
+          m_StringArgument: LevelSelect
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &57217529
@@ -927,6 +939,9 @@ MonoBehaviour:
   bDoRandRotation: 1
   meshFilters: []
   meshRenderers: []
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!54 &73933151
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -992,6 +1007,9 @@ MonoBehaviour:
   meshRenderers:
   - {fileID: 73933153}
   - {fileID: 316577805}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!23 &73933153
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1139,6 +1157,9 @@ MonoBehaviour:
   bDoRandRotation: 1
   meshFilters: []
   meshRenderers: []
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!54 &99688834
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1204,6 +1225,9 @@ MonoBehaviour:
   meshRenderers:
   - {fileID: 99688836}
   - {fileID: 674779119}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!23 &99688836
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1591,6 +1615,9 @@ MonoBehaviour:
   bDoRandRotation: 1
   meshFilters: []
   meshRenderers: []
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!54 &138290389
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1656,6 +1683,9 @@ MonoBehaviour:
   meshRenderers:
   - {fileID: 138290391}
   - {fileID: 1889756982}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!23 &138290391
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -2044,6 +2074,9 @@ MonoBehaviour:
   bDoRandRotation: 1
   meshFilters: []
   meshRenderers: []
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!54 &211534137
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2109,6 +2142,9 @@ MonoBehaviour:
   meshRenderers:
   - {fileID: 211534139}
   - {fileID: 1716057179}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!23 &211534139
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -2256,6 +2292,9 @@ MonoBehaviour:
   bDoRandRotation: 1
   meshFilters: []
   meshRenderers: []
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!54 &226196182
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2321,6 +2360,9 @@ MonoBehaviour:
   meshRenderers:
   - {fileID: 226196184}
   - {fileID: 1355962806}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!23 &226196184
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -2538,6 +2580,9 @@ MonoBehaviour:
   bDoRandRotation: 1
   meshFilters: []
   meshRenderers: []
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!54 &297864339
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2603,6 +2648,9 @@ MonoBehaviour:
   meshRenderers:
   - {fileID: 297864341}
   - {fileID: 1491110784}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!23 &297864341
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -2993,6 +3041,9 @@ MonoBehaviour:
   bDoRandRotation: 1
   meshFilters: []
   meshRenderers: []
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!54 &342612666
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -3058,6 +3109,9 @@ MonoBehaviour:
   meshRenderers:
   - {fileID: 342612668}
   - {fileID: 1808579397}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!23 &342612668
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -3892,6 +3946,9 @@ MonoBehaviour:
   bDoRandRotation: 1
   meshFilters: []
   meshRenderers: []
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!54 &680257503
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -3957,6 +4014,9 @@ MonoBehaviour:
   meshRenderers:
   - {fileID: 680257505}
   - {fileID: 440459300}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!23 &680257505
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -4104,6 +4164,9 @@ MonoBehaviour:
   bDoRandRotation: 1
   meshFilters: []
   meshRenderers: []
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!54 &685319674
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -4169,6 +4232,9 @@ MonoBehaviour:
   meshRenderers:
   - {fileID: 685319676}
   - {fileID: 159463503}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!23 &685319676
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -5278,6 +5344,9 @@ MonoBehaviour:
   bDoRandRotation: 1
   meshFilters: []
   meshRenderers: []
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!54 &966364280
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -5343,6 +5412,9 @@ MonoBehaviour:
   meshRenderers:
   - {fileID: 966364282}
   - {fileID: 311338261}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!23 &966364282
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -5654,6 +5726,9 @@ MonoBehaviour:
   bDoRandRotation: 1
   meshFilters: []
   meshRenderers: []
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!54 &1063638886
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -5719,6 +5794,9 @@ MonoBehaviour:
   meshRenderers:
   - {fileID: 1063638888}
   - {fileID: 850468007}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!23 &1063638888
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -5948,6 +6026,9 @@ MonoBehaviour:
   bDoRandRotation: 1
   meshFilters: []
   meshRenderers: []
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!54 &1113152236
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -6013,6 +6094,9 @@ MonoBehaviour:
   meshRenderers:
   - {fileID: 1113152238}
   - {fileID: 2025449995}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!23 &1113152238
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -6242,6 +6326,9 @@ MonoBehaviour:
   bDoRandRotation: 1
   meshFilters: []
   meshRenderers: []
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!54 &1134817589
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -6307,6 +6394,9 @@ MonoBehaviour:
   meshRenderers:
   - {fileID: 1134817591}
   - {fileID: 1130179126}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!23 &1134817591
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -6571,6 +6661,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab6af619d49f7404eab92afe06f801ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pauseMenu: {fileID: 0}
 --- !u!1001 &1310199292
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6891,22 +6982,13 @@ GameObject:
   m_Component:
   - component: {fileID: 1460730046}
   - component: {fileID: 1460730045}
-  - component: {fileID: 1460730044}
   m_Layer: 0
   m_Name: Main Camera
-  m_TagString: MainCamera
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!81 &1460730044
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1460730043}
-  m_Enabled: 1
 --- !u!20 &1460730045
 Camera:
   m_ObjectHideFlags: 0
@@ -7045,6 +7127,9 @@ MonoBehaviour:
   bDoRandRotation: 1
   meshFilters: []
   meshRenderers: []
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!54 &1464464266
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -7110,6 +7195,9 @@ MonoBehaviour:
   meshRenderers:
   - {fileID: 1464464268}
   - {fileID: 1453534284}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!23 &1464464268
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -7414,6 +7502,9 @@ MonoBehaviour:
   bDoRandRotation: 1
   meshFilters: []
   meshRenderers: []
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!54 &1497131402
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -7479,6 +7570,9 @@ MonoBehaviour:
   meshRenderers:
   - {fileID: 1497131404}
   - {fileID: 990132608}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!23 &1497131404
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -7626,6 +7720,9 @@ MonoBehaviour:
   bDoRandRotation: 1
   meshFilters: []
   meshRenderers: []
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!54 &1604676198
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -7691,6 +7788,9 @@ MonoBehaviour:
   meshRenderers:
   - {fileID: 1604676200}
   - {fileID: 904456003}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!23 &1604676200
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -7838,6 +7938,9 @@ MonoBehaviour:
   bDoRandRotation: 1
   meshFilters: []
   meshRenderers: []
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!54 &1625255823
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -7903,6 +8006,9 @@ MonoBehaviour:
   meshRenderers:
   - {fileID: 1625255825}
   - {fileID: 719448726}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!23 &1625255825
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -8050,6 +8156,9 @@ MonoBehaviour:
   bDoRandRotation: 1
   meshFilters: []
   meshRenderers: []
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!54 &1688530967
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -8115,6 +8224,9 @@ MonoBehaviour:
   meshRenderers:
   - {fileID: 1688530969}
   - {fileID: 558705029}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!23 &1688530969
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -8485,6 +8597,9 @@ MonoBehaviour:
   bDoRandRotation: 1
   meshFilters: []
   meshRenderers: []
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!54 &1723374505
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -8550,6 +8665,9 @@ MonoBehaviour:
   meshRenderers:
   - {fileID: 1723374507}
   - {fileID: 125722178}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!23 &1723374507
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -8697,6 +8815,9 @@ MonoBehaviour:
   bDoRandRotation: 1
   meshFilters: []
   meshRenderers: []
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!54 &1732039412
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -8762,6 +8883,9 @@ MonoBehaviour:
   meshRenderers:
   - {fileID: 1732039414}
   - {fileID: 674214357}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!23 &1732039414
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -8909,6 +9033,9 @@ MonoBehaviour:
   bDoRandRotation: 1
   meshFilters: []
   meshRenderers: []
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!54 &1764437964
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -8974,6 +9101,9 @@ MonoBehaviour:
   meshRenderers:
   - {fileID: 1764437966}
   - {fileID: 1035681193}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!23 &1764437966
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -9121,6 +9251,9 @@ MonoBehaviour:
   bDoRandRotation: 1
   meshFilters: []
   meshRenderers: []
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!54 &1764651666
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -9186,6 +9319,9 @@ MonoBehaviour:
   meshRenderers:
   - {fileID: 1764651668}
   - {fileID: 1997791657}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!23 &1764651668
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -9572,6 +9708,9 @@ MonoBehaviour:
   bDoRandRotation: 1
   meshFilters: []
   meshRenderers: []
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!54 &1797446251
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -9637,6 +9776,9 @@ MonoBehaviour:
   meshRenderers:
   - {fileID: 1797446253}
   - {fileID: 466100083}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!23 &1797446253
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -9881,6 +10023,9 @@ MonoBehaviour:
   bDoRandRotation: 1
   meshFilters: []
   meshRenderers: []
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!54 &1806618177
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -9946,6 +10091,9 @@ MonoBehaviour:
   meshRenderers:
   - {fileID: 1806618179}
   - {fileID: 1228070869}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!23 &1806618179
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -10175,6 +10323,9 @@ MonoBehaviour:
   bDoRandRotation: 1
   meshFilters: []
   meshRenderers: []
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!54 &1869759434
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -10240,6 +10391,9 @@ MonoBehaviour:
   meshRenderers:
   - {fileID: 1869759436}
   - {fileID: 201632433}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!23 &1869759436
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -10469,6 +10623,9 @@ MonoBehaviour:
   bDoRandRotation: 1
   meshFilters: []
   meshRenderers: []
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!54 &1917500066
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -10534,6 +10691,9 @@ MonoBehaviour:
   meshRenderers:
   - {fileID: 1917500068}
   - {fileID: 1793151377}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!23 &1917500068
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -10817,6 +10977,9 @@ MonoBehaviour:
   bDoRandRotation: 1
   meshFilters: []
   meshRenderers: []
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!54 &1962315495
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -10882,6 +11045,9 @@ MonoBehaviour:
   meshRenderers:
   - {fileID: 1962315497}
   - {fileID: 1779121532}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!23 &1962315497
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -11275,6 +11441,9 @@ MonoBehaviour:
   bDoRandRotation: 1
   meshFilters: []
   meshRenderers: []
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!54 &2051903298
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -11340,6 +11509,9 @@ MonoBehaviour:
   meshRenderers:
   - {fileID: 2051903300}
   - {fileID: 1095562840}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!23 &2051903300
 MeshRenderer:
   m_ObjectHideFlags: 0

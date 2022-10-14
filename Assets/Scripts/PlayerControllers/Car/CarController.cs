@@ -58,6 +58,8 @@ public class CarController : PlayerController
 
     [field: SerializeField] public Material DashBodyMaterial { get; private set; }
 
+    [field: SerializeField] public float DashGroundCheckLength { get; private set; } = 2;
+
     [SerializeField] public bool BCancelDash { get; set; } = false;
 
     [Header("Wind Particles")]
@@ -151,6 +153,15 @@ public class CarController : PlayerController
     protected override void Movement(InputAction.CallbackContext ctx)
     {
         inputAmount = ctx.ReadValue<Vector2>();
+        if (Mathf.Abs(inputAmount.x) < DefaultPlayerData.InputDeadZone)
+        {
+            inputAmount.x = 0;
+        }
+
+        if (Mathf.Abs(inputAmount.y) < DefaultPlayerData.InputDeadZone)
+        {
+            inputAmount.y = 0;
+        }
     }
 
     protected override void PerformAbility(InputAction.CallbackContext ctx)
@@ -218,6 +229,8 @@ public class CarController : PlayerController
         Gizmos.color = Color.green;
         Gizmos.DrawCube(DashOffset + transform.position, Vector3.one * .25f);
         Gizmos.color = Color.red;
+
+        Gizmos.DrawLine(transform.position, transform.position + (Vector3.down * DashGroundCheckLength));
     }
 
     protected override void Respawn()

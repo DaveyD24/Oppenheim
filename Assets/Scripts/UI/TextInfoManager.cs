@@ -57,12 +57,13 @@ public class TextInfoManager : MonoBehaviour
 
     private void NextLine()
     {
-        if (!isComplete)
+        if (!isComplete && currentTxt != null)
         {
             StopAllCoroutines();
             lineAt++;
             currentTxt.text = string.Empty;
             charAt = 0;
+
             // Debug.Log(currentList.Count + "waesrdfgthdfrdwaesfrdgd" + lineAt);
             if (lineAt < currentList.Count)
             {

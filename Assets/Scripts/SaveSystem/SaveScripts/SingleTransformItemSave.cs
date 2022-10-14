@@ -19,33 +19,39 @@ public class SingleTransformItemSave : UniqueID, IDataInterface
 
     public void LoadData(SectionData data)
     {
-        if (transformComp == TransformComponent.Position)
+        if (!BNotSaveData)
         {
-            transform.position = data.OneTransformChangeObjects.Dictionary[SaveID];
-        }
-        else if (transformComp == TransformComponent.Rotation)
-        {
-            transform.rotation = Quaternion.Euler(data.OneTransformChangeObjects.Dictionary[SaveID]);
-        }
-        else if (transformComp == TransformComponent.Scale)
-        {
-            transform.localScale = data.OneTransformChangeObjects.Dictionary[SaveID];
+            if (transformComp == TransformComponent.Position)
+            {
+                transform.position = data.OneTransformChangeObjects.Dictionary[SaveID];
+            }
+            else if (transformComp == TransformComponent.Rotation)
+            {
+                transform.rotation = Quaternion.Euler(data.OneTransformChangeObjects.Dictionary[SaveID]);
+            }
+            else if (transformComp == TransformComponent.Scale)
+            {
+                transform.localScale = data.OneTransformChangeObjects.Dictionary[SaveID];
+            }
         }
     }
 
     public void SaveData(SectionData data)
     {
-        if (transformComp == TransformComponent.Position)
+        if (!BNotSaveData)
         {
-            data.OneTransformChangeObjects.Dictionary.Add(SaveID, transform.position);
-        }
-        else if (transformComp == TransformComponent.Rotation)
-        {
-            data.OneTransformChangeObjects.Dictionary.Add(SaveID, transform.rotation.eulerAngles);
-        }
-        else if (transformComp == TransformComponent.Scale)
-        {
-            data.OneTransformChangeObjects.Dictionary.Add(SaveID, transform.localScale);
+            if (transformComp == TransformComponent.Position)
+            {
+                data.OneTransformChangeObjects.Dictionary.Add(SaveID, transform.position);
+            }
+            else if (transformComp == TransformComponent.Rotation)
+            {
+                data.OneTransformChangeObjects.Dictionary.Add(SaveID, transform.rotation.eulerAngles);
+            }
+            else if (transformComp == TransformComponent.Scale)
+            {
+                data.OneTransformChangeObjects.Dictionary.Add(SaveID, transform.localScale);
+            }
         }
     }
 }

@@ -142,6 +142,9 @@ MonoBehaviour:
   - {fileID: 1739996986757713006}
   meshRenderers:
   - {fileID: 1739996986756979602}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
 --- !u!114 &4865792399604372665
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -154,7 +157,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c063374186f95aa4fa0105c57d27aff0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <BMarkUnchangeable>k__BackingField: 0
+  <BIdUnchangeable>k__BackingField: 0
+  <BNotSaveData>k__BackingField: 0
   <SaveID>k__BackingField: 0
   bDoShatter: 0
   disapearParticles: {fileID: 8301482204331656129, guid: e705f6d2f0bbc0c41823f34653bc816a, type: 3}
