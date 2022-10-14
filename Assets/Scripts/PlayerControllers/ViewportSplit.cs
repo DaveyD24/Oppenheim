@@ -1,6 +1,6 @@
 
 #if UNITY_EDITOR
-#define MICHAEL
+//#define MICHAEL_TESTING
 #endif
 
 using System.Linq;
@@ -18,9 +18,16 @@ public class ViewportSplit : MonoBehaviour
 
 	[SerializeField] SwitchManager SwitchManager;
 	[SerializeField] float TooFarThreshold = 20f;
-	[SerializeField] Vector2 MinMaxCameraDistance;
+	[SerializeField] float SplitPollingRate = 2f;
+	float TimeOfLastSplit = -1f;
 
 	static Transform Average;
+
+#if MICHAEL_TESTING
+	bool bFlipFlop = false;
+	enum ETestType { Hold, Press };
+	[SerializeField] ETestType TestType;
+#endif
 
 	void Awake()
 	{
@@ -43,6 +50,35 @@ public class ViewportSplit : MonoBehaviour
 		{
 			SetCameraPositions();
 		}
+
+#if MICHAEL_TESTING
+		/** -- Test that a delay of <see cref="TooFarThreshold"/> exists between Viewport Splits.  -- */
+		/**                                --  Expected Behaviour  --                                 */
+		/**          The Viewport should split every <see cref="TooFarThreshold"/> seconds.           */
+
+		// Use (=) to trigger the test.
+		if ((TestType == ETestType.Hold && Input.GetKey(KeyCode.Equals)) || (TestType == ETestType.Press && Input.GetKeyDown(KeyCode.Equals)))
+		{
+			// Can only test with two Players.
+			if (SwitchManager.GetNumberOfPlayers() == 1)
+			{
+				Debug.LogError("Testing with one person?");
+				return;
+			}
+
+			SwitchManager.GetAllActivePlayerTransforms(out Transform[] OutActiveTs);
+
+			// 3+ Players are unsupported.
+			Debug.Assert(OutActiveTs.Length == 2, "Viewport Split only supports 2 Active Players");
+
+			if (Average)
+			{
+				// Move P2 just outside of TooFarThreshold by .5f, and then within by .5, depending on FlipFlop, each frame.
+				OutActiveTs[1].position = Average.position + OutActiveTs[0].forward * (TooFarThreshold + (bFlipFlop ? .5f : -.5f));
+				bFlipFlop = !bFlipFlop;
+			}
+		}
+#endif
 	}
 
 	/// <returns>The <see langword="static"/> reference to the only <see cref="ViewportSplit"/>.</returns>
@@ -58,6 +94,9 @@ public class ViewportSplit : MonoBehaviour
 		// If we need to split the Viewport.
 		if (ArePlayersTooFarApart())
 		{
+			if (SecondSpringArm || Time.time - Get().TimeOfLastSplit < Get().SplitPollingRate)
+				return;
+
 			List<PlayerController> Active = Get().SwitchManager.GetActivePlayers();
 
 			int P1, P2, P3, P4;
@@ -86,6 +125,8 @@ public class ViewportSplit : MonoBehaviour
 			MainSpringArm.Target = Active[P1].transform;
 			MainSpringArm.bIsAverageTracking = false;
 			SetSecondaryTarget(Active[P2]); // <-- Split-Screen is done here.
+
+			Get().TimeOfLastSplit = Time.time;
 		}
 		// Merge the two cameras back as one Viewport.
 		else
@@ -195,6 +236,9 @@ public class ViewportSplit : MonoBehaviour
 	/// </returns>
 	public static bool ArePlayersTooFarApart()
 	{
+		if (Get().SwitchManager.GetNumberOfPlayers() <= 1)
+			return false;
+
 		List<PlayerController> ActivePlayers = Get().SwitchManager.GetActivePlayers();
 
 		Vector3 Mean = GetAveragePosition(ActivePlayers.ToArray());

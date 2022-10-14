@@ -54,7 +54,7 @@ public class SwitchManager : MonoBehaviour
         
         for (int i = 0; i < active.Count; ++i)
         {
-                outActivePlayerTransforms[i++] = active[i].transform;
+                outActivePlayerTransforms[i] = active[i].transform;
         }
     }
 

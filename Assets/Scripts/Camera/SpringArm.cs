@@ -20,7 +20,7 @@ public class SpringArm : MonoBehaviour
 	/// <summary>Is this SpringArm tracking an Average Position?</summary>
 	[Header("ViewportSplit Controls [Read Only]")]
 	[ReadOnly] public bool bIsAverageTracking;
-	/// <summary>Is this Spring Arm temporary and should initialise itself?</summary>
+	/// <summary>Is this Spring Arm temporary and should not initialise itself?</summary>
 	[ReadOnly] public bool bIsSecondarySpringArm;
 
 	[Header("Spring Arm Settings.")]
