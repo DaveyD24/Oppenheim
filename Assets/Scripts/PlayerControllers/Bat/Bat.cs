@@ -19,12 +19,6 @@ public class Bat : PlayerController
 
 #endif
 
-#if UNITY_EDITOR
-	[Header("EDITOR ONLY")]
-	// True when on a testing scene. Sets this Bat to 'Active' so
-	// that it can be controlled in a scene without a SwitchManager.
-	[SerializeField] private bool bIsStandalone;
-#endif
 	[SerializeField] private GameObject ragdol;
 	[SerializeField] private GameObject baseMesh;
 	private BoxCollider boxCollider;
@@ -57,13 +51,6 @@ public class Bat : PlayerController
 		{
 			base.ActivateInput(playerID, playerInput);
 			BindMiscellaneousInputs();
-
-#if UNITY_EDITOR
-			if (bIsStandalone)
-			{
-				Activate();
-			}
-#endif
 		}
 	}
 

@@ -161,8 +161,6 @@ public class ViewportSplit : MonoBehaviour
 				PlayerController OnlyActive = All.First(PC => PC.Active);
 				MainSpringArm.Target = OnlyActive.transform;
 			}
-
-			Debug.Log(NumberOfPlayers);
 		}
 	}
 
