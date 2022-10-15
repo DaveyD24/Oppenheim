@@ -22,8 +22,8 @@ TagManager:
   - IgnorePlayer
   - Player
   - CameraCollide
-  - 
-  - 
+  - FanIgnore
+  - FanOnly
   - 
   - 
   - 

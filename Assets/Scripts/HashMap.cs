@@ -1,10 +1,11 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>Cheat the Unity Inspector to show <see cref="Dictionary{TKey, TValue}"/>.</summary>
 [Serializable]
-public class HashMap<TKey, TValue>
+public class HashMap<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TValue>>
 {
 	[Serializable]
 	public class Entry
@@ -46,6 +47,16 @@ public class HashMap<TKey, TValue>
 	public void Pull(TKey K) => Internal_Dictionary.Remove(K);
 	public void Clear() => Internal_Dictionary.Clear();
 	public bool TryGet(TKey K, out TValue V) => Internal_Dictionary.TryGetValue(K, out V);
+
+	public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
+	{
+		return ((IEnumerable<KeyValuePair<TKey, TValue>>)Internal_Dictionary).GetEnumerator();
+	}
+
+	IEnumerator IEnumerable.GetEnumerator()
+	{
+		return ((IEnumerable)Internal_Dictionary).GetEnumerator();
+	}
 
 	public TValue this[TKey K]
 	{

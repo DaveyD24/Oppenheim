@@ -62,9 +62,9 @@ public static class BatMathematics
 	public static Vector3 RotateVector(Vector3 Vector, Vector3 Axis, float Angle)
 	{
 		if (IsZero(Angle))
-        {
-            return Vector;
-        }
+		{
+			return Vector;
+		}
 
 		SinCos(out float S, out float C, Angle * Mathf.Deg2Rad);
 
@@ -90,32 +90,32 @@ public static class BatMathematics
 	}
 
 	/// <summary>Converts a world direction to be relative to the Reference's forward.</summary>
-	public static Vector3 DirectionRelativeToTransform(Transform reference, Vector3 direction, bool bIgnoreYAxis = true)
+	public static Vector3 DirectionRelativeToTransform(Transform Reference, Vector3 Direction, bool bIgnoreYAxis = true)
 	{
-		Vector3 referenceForward = reference.forward;
-		Vector3 referenceRight = reference.right;
+		Vector3 ReferenceForward = Reference.forward;
+		Vector3 ReferenceRight = Reference.right;
 
 		if (bIgnoreYAxis)
 		{
-			referenceForward.y = referenceRight.y = 0f;
+			ReferenceForward.y = ReferenceRight.y = 0f;
 		}
 
-		referenceForward.Normalize();
-		referenceRight.Normalize();
+		ReferenceForward.Normalize();
+		ReferenceRight.Normalize();
 
-		float leftRight = direction.x;
-		float forwardBackward = direction.z;
+		float LeftRight = Direction.x;
+		float ForwardBackward = Direction.z;
 
-		Vector3 relativeMovementVector = (referenceForward * forwardBackward) + (referenceRight * leftRight);
+		Vector3 RelativeMovementVector = (ReferenceForward * ForwardBackward) + (ReferenceRight * LeftRight);
 
-		return relativeMovementVector;
+		return RelativeMovementVector;
 	}
 
-	public static void AlignTransformToMovement(Transform transform, Vector3 movementVector, float rotationSpeed, Vector3 upAxis)
+	public static void AlignTransformToMovement(Transform Transform, Vector3 MovementVector, float RotationSpeed, Vector3 UpAxis)
 	{
-		Quaternion rotationNow = transform.rotation;
-		Quaternion targetRotation = Quaternion.LookRotation(movementVector, upAxis);
-		transform.rotation = Quaternion.RotateTowards(rotationNow, targetRotation, rotationSpeed);
+		Quaternion RotationNow = Transform.rotation;
+		Quaternion TargetRotation = Quaternion.LookRotation(MovementVector, UpAxis);
+		Transform.rotation = Quaternion.RotateTowards(RotationNow, TargetRotation, RotationSpeed);
 	}
 
 	public const float kZeroThreshold = .01f;
@@ -171,38 +171,38 @@ public static class BatMathematics
 			int I = *(int*)&pF; // Lossless conversion of float F bits to int I bits.
 			I &= 0x0;           // Bitwise & 0 always equals 0.
 			F = *(float*)&I;    // Treat the bits of I as a float and give it back to F.
-		}
 
 #if UNITY_EDITOR
-		/*
-		 * For future reference, this function was made because PitchDelta and YawDelta
-		 * was not Zero where it needed to be. These two floats are used in BatMovement.FixedUpdate()
-		 * and is needed for aligning the Bat's velocity to where it is facing.
-		 * 
-		 * There are checks (PitchDelta != 0f || YawDelta != 0f): only if this check passes,
-		 * can we align velocities - it also means the Bat is Airborne.
-		 * 
-		 * Problem is: When these checks pass whilst the Bat is clearly Grounded (IsGrounded() == true)
-		 * and not Airborne (IsAirborne() == false) the Bat would not orient itself to where it's going
-		 * *on the Ground*. This looked weird, and this function literally forces the two floats to be
-		 * exactly Zero... well in theory anyway; if you're reading this, it means it, too, failed.
-		 */
+			/*
+			 * For future reference, this function was made because PitchDelta and YawDelta
+			 * was not Zero where it needed to be. These two floats are used in BatMovement.FixedUpdate()
+			 * and is needed for aligning the Bat's velocity to where it is facing.
+			 * 
+			 * There are checks (PitchDelta != 0f || YawDelta != 0f): only if this check passes,
+			 * can we align velocities - it also means the Bat is Airborne.
+			 * 
+			 * Problem is: When these checks pass whilst the Bat is clearly Grounded (IsGrounded() == true)
+			 * and not Airborne (IsAirborne() == false) the Bat would not orient itself to where it's going
+			 * *on the Ground*. This looked weird, and this function literally forces the two floats to be
+			 * exactly Zero... well in theory anyway; if you're reading this, it means it, too, failed.
+			 */
 
-		if (float.IsNaN(F))
-		{
-			Debug.LogError("Tell Michael he's dumb! F = NaN");
-		}
+			if ((*(int*)(&pF) & 0x7FFFFFFF) > 0x7F800000)
+			{
+				Debug.LogError("Tell Michael he's dumb! F = NaN");
+			}
 
-		if (float.IsInfinity(F))
-		{
-			Debug.LogError("Tell Michael he's dumb! F = Infinity");
-		}
+			if (*(int*)(&pF) == 0x7F800000)
+			{
+				Debug.LogError("Tell Michael he's dumb! F = Infinity");
+			}
 
-		if (float.IsNegativeInfinity(F))
-		{
-			Debug.LogError("Tell Michael he's dumb! F = -Infinity");
-		}
+			if (*(int*)(&pF) == unchecked((int)0xFF800000))
+			{
+				Debug.LogError("Tell Michael he's dumb! F = -Infinity");
+			}
 #endif
+		}
 	}
 
 	public static void ClampMin(ref float F, float Min)
@@ -210,7 +210,13 @@ public static class BatMathematics
 		if (F < Min)
 			F = Min;
 	}
-	
+
+	public static void ClampMax(ref float F, float Max)
+	{
+		if (F > Max)
+			F = Max;
+	}
+
 	/// <summary>Checks whether <paramref name="V"/> contains <see cref="float.NaN"/>.</summary>
 	/// <remarks>Used in Antipede.</remarks>
 	/// <returns><see langword="true"/> if at least one vector component is <see cref="float.NaN"/>.</returns>
@@ -218,7 +224,7 @@ public static class BatMathematics
 	{
 		return DiagnosticCheckNaN(V.x) || DiagnosticCheckNaN(V.y) || DiagnosticCheckNaN(V.z);
 	}
-	
+
 	/// <summary>Checks whether <paramref name="F"/> is <see cref="float.NaN"/>.</summary>
 	/// <remarks>Used in Antipede.</remarks>
 	/// <returns><see langword="true"/> if <paramref name="F"/> is <see cref="float.NaN"/>.</returns

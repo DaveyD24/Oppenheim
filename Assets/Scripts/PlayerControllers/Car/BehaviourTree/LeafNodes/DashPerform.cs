@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// Apply the forces to the car when dashing.
 /// </summary>
-public class DashPerform : Node
+public class DashPerform : Node<CarController>
 {
     private float dashCurrentTime = 0;
     private float dashMaxTime;
@@ -42,8 +42,9 @@ public class DashPerform : Node
         dashCurrentTime += Time.fixedDeltaTime;
         CancleSidewaysVelocity();
 
-        if (dashCurrentTime >= dashMaxTime)
+        if (dashCurrentTime >= dashMaxTime || Blackboard.BCancelDash)
         {
+            Blackboard.BCancelDash = false;
             return ENodeState.Success;
         }
 
@@ -92,7 +93,7 @@ public class DashPerform : Node
     private void AllignToGround()
     {
         RaycastHit ground;
-        if (Physics.Raycast(Blackboard.Rb.transform.position, -Vector3.up, out ground, 10.0f, ~Blackboard.PlayerLayer))
+        if (Physics.Raycast(Blackboard.Rb.transform.position, -Vector3.up, out ground, Blackboard.DashGroundCheckLength, ~Blackboard.PlayerLayer))
         {
             Vector3 lookDir = forwardMove;
             Vector3 up = ground.normal;

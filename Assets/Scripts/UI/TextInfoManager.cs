@@ -31,7 +31,7 @@ public class TextInfoManager : MonoBehaviour
     private TextMeshProUGUI currentTxt;
     private List<string> currentList = new List<string>();
 
-    private void Start()
+    public void InitilizeAnnoucement()
     {
         lineAt = 0;
         charAt = 0;
@@ -57,12 +57,13 @@ public class TextInfoManager : MonoBehaviour
 
     private void NextLine()
     {
-        if (!isComplete)
+        if (!isComplete && currentTxt != null)
         {
             StopAllCoroutines();
             lineAt++;
             currentTxt.text = string.Empty;
             charAt = 0;
+
             // Debug.Log(currentList.Count + "waesrdfgthdfrdwaesfrdgd" + lineAt);
             if (lineAt < currentList.Count)
             {
@@ -113,6 +114,8 @@ public class TextInfoManager : MonoBehaviour
 
     private void OnEnable()
     {
+        UIEvents.OnBeginAnnoucement += InitilizeAnnoucement;
+
         Inputs = new InputActions();
 
         Inputs.Player.NextLine.performed += KeyNextLine;
@@ -123,9 +126,14 @@ public class TextInfoManager : MonoBehaviour
 
     private void OnDisable()
     {
-        Inputs.Player.NextLine.performed -= KeyNextLine;
-        Inputs.Player.SkipTut.performed -= SkipIntro;
+        UIEvents.OnBeginAnnoucement -= InitilizeAnnoucement;
 
-        Inputs.Player.Disable();
+        if (Inputs != null)
+        {
+            Inputs.Player.NextLine.performed -= KeyNextLine;
+            Inputs.Player.SkipTut.performed -= SkipIntro;
+
+            Inputs.Player.Disable();
+        }
     }
 }

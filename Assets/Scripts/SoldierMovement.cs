@@ -5,6 +5,22 @@ using static UnityEngine.InputSystem.InputAction;
 
 public class SoldierMovement : PlayerController
 {
+#if UNITY_EDITOR
+    [field: Header("Start Reset")]
+    [field: ContextMenuItem("Set Start Transform", "SetStartTransform")]
+#pragma warning disable SA1202 // Elements should be ordered by access
+    [field: SerializeField] public Vector3 StageStartPosition { get; set; }
+
+    [field: ContextMenuItem("Move to Start", "MoveToStartTransform")]
+    [field: SerializeField] public Quaternion StageStartRotation { get; set; }
+#pragma warning restore SA1202 // Elements should be ordered by access
+
+#endif
+
+    private bool bDidJump = false;
+    private float currJumpWaitTime = 1;
+    [SerializeField] private float jumpWaitTime = 1;
+
     private Vector3 playerVelocity;
     private Vector3 move;
     private Animator animator;
@@ -12,13 +28,10 @@ public class SoldierMovement : PlayerController
     [SerializeField] private float jumpHeight = 3f;
     [SerializeField] private GameObject ragdol;
     [SerializeField] private GameObject baseMesh;
-    [SerializeField] private GameObject soldierCamera;
-    [SerializeField] private GameObject gun;
     private BoxCollider boxCollider;
-    
-    float closestDist = Mathf.Infinity;
-    Collider closestObj = null;
-    Collider[] objNearby;
+
+    private int maxAmmoClip = 10;
+    private int currAmmoClip = 10;
 
     [field: Header("Soldier Movement")]
     [field: SerializeField] public Transform BulletSpawnPoint { get; set; }
@@ -33,6 +46,7 @@ public class SoldierMovement : PlayerController
         animator = GetComponent<Animator>();
         speedometer.Initialise();
         boxCollider = gameObject.GetComponent<BoxCollider>();
+        currJumpWaitTime = jumpWaitTime;
 
         Audio.Play("GunCock", EAudioPlayOptions.AtTransformPosition | EAudioPlayOptions.DestroyOnEnd);
     }
@@ -50,13 +64,31 @@ public class SoldierMovement : PlayerController
     protected override void Update()
     {
         base.Update();
+
         // Rotate towards Movement.
-        Vector3 cameraRelativeDirection = DirectionRelativeToTransform(soldierCamera.transform, move);
+        Vector3 cameraRelativeDirection = DirectionRelativeToTransform(TrackingCamera.transform, move);
         Vector3 faceDir = cameraRelativeDirection;
         faceDir.y = 0;
+
+        // if walking backwards and the camera is inheriting, do not rotate around as its disorienting
+        if (move.x == 0 && move.z < 0 && TrackingCamera.bInheritRotation)
+        {
+            faceDir *= -1;
+        }
+
         if (faceDir != Vector3.zero)
         {
-            AlignTransformToMovement(transform, faceDir, RotationSpeed, Vector3.up);
+            AlignTransformToMovement(transform, faceDir, RotationSpeed * Time.deltaTime, Vector3.up);
+        }
+
+        if (bDidJump)
+        {
+            currJumpWaitTime -= Time.deltaTime;
+            if (currJumpWaitTime <= 0)
+            {
+                currJumpWaitTime = jumpWaitTime;
+                bDidJump = false;
+            }
         }
     }
 
@@ -151,6 +183,16 @@ public class SoldierMovement : PlayerController
 
         move = ctx.ReadValue<Vector2>();
 
+        if (Mathf.Abs(move.x) < DefaultPlayerData.InputDeadZone)
+        {
+            move.x = 0;
+        }
+
+        if (Mathf.Abs(move.y) < DefaultPlayerData.InputDeadZone)
+        {
+            move.y = 0;
+        }
+
         // Convert 2D to 3D movement.
         move.z = move.y;
         move.y = 0;
@@ -159,26 +201,25 @@ public class SoldierMovement : PlayerController
 
     protected override void Jump(CallbackContext ctx)
     {
-        if (!Active || isSwimming)
+        if (!Active || isSwimming || bDidJump)
         {
             return;
         }
 
         // This check is original and untouched.
-        if (IsGrounded())
+        if (IsGrounded() && !bDidJump)
         {
             // Original: Jump with a modified kinematic equation.
             Rb.velocity += new Vector3(0f, Mathf.Sqrt(jumpHeight * -3f * Physics.gravity.y), 0f);
-            // If we were clinging onto something, we want to jump in the opposite direction
-            // as if the Monkey is jumping off the wall.
 
             animator.SetTrigger("Jump");
+            bDidJump = true;
         }
     }
 
     protected override void PerformAbility(CallbackContext ctx)
     {
-        if (!Active)
+        if (!Active || AbilityUses <= 0)
         {
             return;
         }
@@ -188,6 +229,13 @@ public class SoldierMovement : PlayerController
         bullet.GetComponent<Rigidbody>().velocity = BulletSpawnPoint.forward * BulletSpeed;
 
         Audio.Play("Shot", EAudioPlayOptions.AtTransformPosition | EAudioPlayOptions.DestroyOnEnd);
+
+        currAmmoClip -= 1;
+        if (currAmmoClip <= 0)
+        {
+            currAmmoClip = maxAmmoClip;
+            AdjustAbilityValue(-1);
+        }
     }
 
     protected override void OnCollisionEnter(Collision collision)
@@ -200,7 +248,7 @@ public class SoldierMovement : PlayerController
         base.FixedUpdate();
         speedometer.Record(this);
 
-        Vector3 cameraRelativeDirection = DirectionRelativeToTransform(soldierCamera.transform, move);
+        Vector3 cameraRelativeDirection = DirectionRelativeToTransform(TrackingCamera.transform, move);
         if (isSwimming)
         {
             // Swimming
@@ -254,6 +302,10 @@ public class SoldierMovement : PlayerController
     public override void OnDeath()
     {
         base.OnDeath();
+        move = Vector3.zero;
+        isSwimming = false;
+        bDidJump = false;
+
         baseMesh.SetActive(false);
         boxCollider.enabled = false;
         ragdol.SetActive(true);
@@ -274,6 +326,10 @@ public class SoldierMovement : PlayerController
         ragdol.SetActive(false);
         Rb.isKinematic = false;
         bHasPlayedScream = false;
+
+        move = Vector3.zero;
+        isSwimming = false;
+        bDidJump = false;
         base.Respawn();
     }
 
@@ -289,26 +345,17 @@ public class SoldierMovement : PlayerController
         }
     }
 
-    private void FindTarget()
+#if UNITY_EDITOR
+    private void SetStartTransform()
     {
-        objNearby = Physics.OverlapSphere(this.soldierTransform.position, 50f);
-        foreach (Collider obj in objNearby) 
-        {
-            if (obj.tag == "Breakable") {
-                float breakableDist = (obj.transform.position - this.transform.position).sqrMagnitude;
-                if (breakableDist < closestDist)
-                {
-                    closestDist = breakableDist;
-                    closestObj = obj;
-                }
-            }
-        }
-        Debug.DrawLine(this.transform.position, closestObj.transform.position);
+        StageStartPosition = transform.position;
+        StageStartRotation = transform.rotation;
     }
 
-    private void AutoAim()
+    private void MoveToStartTransform()
     {
-        gun.transform.LookAt(closestObj.transform);
-
+        transform.rotation = StageStartRotation;
+        transform.position = StageStartPosition;
     }
+#endif
 }

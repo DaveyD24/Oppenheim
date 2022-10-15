@@ -1,11 +1,24 @@
+using EventSystem;
 using UnityEngine;
-using static UnityEngine.InputSystem.InputAction;
-using static global::BatMathematics;
 using UnityEngine.InputSystem;
+using static global::BatMathematics;
+using static UnityEngine.InputSystem.InputAction;
 
 [RequireComponent(typeof(BatMovement), typeof(BatEvents))]
 public class Bat : PlayerController
 {
+#if UNITY_EDITOR
+	[field: Header("Start Reset")]
+	[field: ContextMenuItem("Set Start Transform", "SetStartTransform")]
+#pragma warning disable SA1202 // Elements should be ordered by access
+	[field: SerializeField] public Vector3 StageStartPosition { get; set; }
+
+	[field: ContextMenuItem("Move to Start", "MoveToStartTransform")]
+	[field: SerializeField] public Quaternion StageStartRotation { get; set; }
+#pragma warning restore SA1202 // Elements should be ordered by access
+
+#endif
+
 #if UNITY_EDITOR
 	[Header("EDITOR ONLY")]
 	// True when on a testing scene. Sets this Bat to 'Active' so
@@ -80,10 +93,10 @@ public class Bat : PlayerController
 		};
 	}
 
-	public void AdjustEnergy(float amount)
-	{
-		AdjustFuelValue(amount);
-	}
+	//public void AdjustEnergy(float amount)
+	//{
+	//	AdjustFuelValue(amount);
+	//}
 
 	public void AdjustHealth(float amount)
 	{
@@ -104,44 +117,50 @@ public class Bat : PlayerController
 	public override Vector3 GetGroundCheckPosition()
 	{
 		// Fix Global Down as a Local direction.
-		Vector3 worldToLocalDown = transform.InverseTransformDirection(-transform.up);
+		Vector3 WorldToLocalDown = transform.InverseTransformDirection(-transform.up);
 
 		// Set the origin of the Ground Check to the centre of the Bat.
-		worldToLocalDown += Rb.centerOfMass;
+		WorldToLocalDown += Rb.centerOfMass;
 
-		return transform.position + worldToLocalDown;
+		return transform.position + WorldToLocalDown + groundCheckPosition;
 	}
 
-	protected override bool ShouldTakeFallDamage(Collision collision, out float relativeVelocity)
+	protected override bool ShouldTakeFallDamage(Collision Collision, out float RelativeVelocity)
 	{
-		relativeVelocity = collision.relativeVelocity.magnitude;
+		RelativeVelocity = Collision.relativeVelocity.magnitude;
 
-		if (relativeVelocity < FallDamageThreshold)
+		if (RelativeVelocity < FallDamageThreshold)
 		{
 			return false;
 		}
 
 		// Take damage if landing/crashing at an Angle > than 30 degrees of the surface.
-		float angle = FAngle(transform.up, collision.contacts[0].normal);
-		bool bTakeFallDamage = angle > 30f;
+		float Angle = FAngle(transform.up, Collision.contacts[0].normal);
+		bool bTakeFallDamage = Angle > 30f;
 
 		if (bTakeFallDamage)
 		{
-			Debug.Log($"Collision with {collision.gameObject.name} at {angle:F0} degrees at {relativeVelocity:F0}m/s");
+			Debug.Log($"Collision with {Collision.gameObject.name} at {Angle:F0} degrees at {RelativeVelocity:F0}m/s");
 		}
 
 		return bTakeFallDamage;
 	}
 
+	protected override void PlayFuelCollectionSound()
+	{
+		Events.OnMangoCollected();
+	}
+
 	public override void OnDeath()
 	{
 		base.OnDeath();
+		MovementComponent.ForceStopAllMovement();
+
 		baseMesh.SetActive(false);
 		boxCollider.enabled = false;
 		ragdol.SetActive(true);
 		Rb.isKinematic = true;
 		ragdol.transform.position = transform.position;
-		MovementComponent.ForceStopAllMovement();
 	}
 
 	protected override void Respawn()
@@ -150,6 +169,21 @@ public class Bat : PlayerController
 		boxCollider.enabled = true;
 		ragdol.SetActive(false);
 		Rb.isKinematic = false;
+		MovementComponent.ForceStopAllMovement();
 		base.Respawn();
 	}
+
+#if UNITY_EDITOR
+	private void SetStartTransform()
+	{
+		StageStartPosition = transform.position;
+		StageStartRotation = transform.rotation;
+	}
+
+	private void MoveToStartTransform()
+	{
+		transform.rotation = StageStartRotation;
+		transform.position = StageStartPosition;
+	}
+#endif
 }

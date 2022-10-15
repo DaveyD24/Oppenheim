@@ -8,8 +8,8 @@ using Unity.Services.Analytics;
 using Unity.Services.Core;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 /// <summary>
 /// A base class for handling the common functionality across all players.
@@ -18,13 +18,15 @@ using UnityEngine.SceneManagement;
 public abstract class PlayerController : MonoBehaviour
 {
     [SerializeField] private GameObject controlObj;
-    [SerializeField] private Slider fuelSlider;
+    [SerializeField] private GameObject abilityActiveObj;
+    [SerializeField] private TextMeshProUGUI abilityTxt;
+    [SerializeField] private Canvas playerCanvas;
+
     private bool bControlsHidden = false;
     private Vector3 startPosition;
     private Quaternion startRotation;
     private float fuel;
     private bool isFarEnoughAway = false;
-    private SpriteRenderer activeIndicator;
     private float beforeCollideSpeed;
 
     private PlayerInput pInput;
@@ -38,16 +40,20 @@ public abstract class PlayerController : MonoBehaviour
 
     public Rigidbody Rb { get; private set; }
 
+    public int AbilityUses { get; private set; } = 3;
+
     public AudioController Audio { get; private set; }
 
     public float Weight { get; private set; }
+
+    [ReadOnly] public EPlayer HumanPlayerIndex = EPlayer.None;
 
     [field: Header("Inherited from Player Controller")]
 
     // A unique object each scene object gets assigned, being largly used to store the players id
     [field: SerializeField] public PlayerIdObject PlayerIdSO { get; private set; }
 
-    [field: SerializeField] protected DefaultPlayerDataObject DefaultPlayerData { get; private set; }
+    [field: SerializeField] public DefaultPlayerDataObject DefaultPlayerData { get; private set; }
 
     [field: SerializeField] protected float Bouyancy { get; private set; }
 
@@ -59,10 +65,25 @@ public abstract class PlayerController : MonoBehaviour
 
     [field: SerializeField, Min(25f)] protected float FallDamageThreshold { get; private set; }
 
-    // Not a Property, is Private: Use GetGroundCheckPosition() instead.
-    [field: SerializeField] Vector3 groundCheckPosition;
+    [field: SerializeField] protected Vector3 groundCheckPosition;
 
     [field: SerializeField] protected float GroundCheckRadius { get; private set; }
+
+#pragma warning disable SA1201 // Elements should appear in the correct order
+    [SerializeField] private SpringArm trackingCamera;
+#pragma warning restore SA1201 // Elements should appear in the correct order
+
+    [SerializeField] public SpringArm TrackingCamera
+    {
+        get => trackingCamera;
+        set
+        {
+            trackingCamera = value;
+            playerCanvas.renderMode = RenderMode.ScreenSpaceCamera;
+            playerCanvas.worldCamera = trackingCamera.gameObject.GetComponent<Camera>();
+            playerCanvas.planeDistance = 1;
+        }
+    }
 
     protected float CurrentFuel { get => fuel; set => fuel = Mathf.Clamp(value, 0, DefaultPlayerData.MaxFuel); }
 
@@ -104,6 +125,8 @@ public abstract class PlayerController : MonoBehaviour
             controlObj.SetActive(true);
             bControlsHidden = false;
         }
+
+        abilityActiveObj.SetActive(true);
     }
 
     public void Deactivate()
@@ -113,6 +136,11 @@ public abstract class PlayerController : MonoBehaviour
         if (controlObj != null)
         {
             controlObj.SetActive(false);
+        }
+
+        if (abilityActiveObj != null)
+        {
+            abilityActiveObj.SetActive(false);
         }
     }
 
@@ -130,8 +158,6 @@ public abstract class PlayerController : MonoBehaviour
     {
         if (playerID == PlayerIdSO.PlayerID)
         {
-            activeIndicator.enabled = true;
-
             // setup the inputs to use
             pInput = playerInput;
             Inputs = playerInput.actions;
@@ -149,6 +175,7 @@ public abstract class PlayerController : MonoBehaviour
 
             PlayerInput.FindAction("RotatePlayer").performed += RotatePlayer;
 
+            PlayerInput.FindAction("Pause").performed += GamePause;
             // Inputs.Player.Jump.canceled += Jump;
             PlayerInput.Enable();
 
@@ -173,11 +200,10 @@ public abstract class PlayerController : MonoBehaviour
             PlayerInput.FindAction("Jump").performed -= Jump;
             PlayerInput.FindAction("RotatePlayer").performed -= RotatePlayer;
             PlayerInput.FindAction("HideControls").performed -= ControlsVisibility;
+            PlayerInput.FindAction("Pause").performed -= GamePause;
 
             PlayerInput.Disable();
             Deactivate();
-
-            activeIndicator.enabled = false;
         }
     }
 
@@ -194,25 +220,22 @@ public abstract class PlayerController : MonoBehaviour
         bControlsHidden = !bControlsHidden;
     }
 
-    protected void AdjustFuelValue(float amount)
+    private void GamePause(InputAction.CallbackContext ctx)
     {
-        CurrentFuel += amount;
-        // Debug.Log(CurrentFuel + " " + amount);
-        fuelSlider.value = CurrentFuel;
+        UIEvents.PauseGame();
+    }
 
-        // UIEvents.OnFuelChanged(PlayerIdSO.PlayerID, CurrentFuel / DefaultPlayerData.MaxFuel);
-        if (CurrentFuel <= 0)
-        {
-            Debug.LogError("Player Lost All fuel and Died");
-            OnDeath();
-        }
+    public void AdjustAbilityValue(int amount)
+    {
+        AbilityUses += amount;
+        AbilityUses = Mathf.Max(0, AbilityUses);
+        abilityTxt.text = AbilityUses.ToString();
     }
 
     protected virtual void Update()
     {
         if (transform.position.y < 2.5f)
         {
-            Debug.Log("PLayer got too low and died");
             OnDeath();
         }
 
@@ -248,7 +271,8 @@ public abstract class PlayerController : MonoBehaviour
 
     protected virtual void Start()
     {
-        activeIndicator = GetComponentInChildren(typeof(SpriteRenderer)) as SpriteRenderer;
+        playerCanvas.gameObject.transform.parent = null;
+        SaveData(null);
         Rb = GetComponent<Rigidbody>();
         switchManager = FindObjectOfType<SwitchManager>();
         Audio = GetComponent<AudioController>();
@@ -259,6 +283,7 @@ public abstract class PlayerController : MonoBehaviour
         startRotation = transform.rotation;
 
         GameEvents.OnAddPlayerSwitch(PlayerIdSO.PlayerID);
+        AdjustAbilityValue(0);
     }
 
     public virtual void OnDeath()
@@ -270,8 +295,7 @@ public abstract class PlayerController : MonoBehaviour
 
         if (DeathWaitTimer == null)
         {
-            Debug.Log("Player Died");
-
+            // Debug.Log("Player Died");
             DeathWaitTimer = DeathWait();
             StartCoroutine(DeathWaitTimer);
         }
@@ -285,6 +309,8 @@ public abstract class PlayerController : MonoBehaviour
         GameEvents.OnDie += Respawn;
         GameEvents.OnActivatePlayer += ActivateInput;
         GameEvents.OnDeactivatePlayer += DeactivateInput;
+
+        GameEvents.OnSavePlayerData += SaveData;
     }
 
     protected virtual void OnDisable()
@@ -296,6 +322,8 @@ public abstract class PlayerController : MonoBehaviour
 
         GameEvents.OnActivatePlayer -= ActivateInput;
         GameEvents.OnDeactivatePlayer -= DeactivateInput;
+
+        GameEvents.OnSavePlayerData -= SaveData;
     }
 
     protected virtual void OnDrawGizmosSelected()
@@ -305,13 +333,14 @@ public abstract class PlayerController : MonoBehaviour
             Rb = GetComponent<Rigidbody>();
         }
 
-        Gizmos.color = new Color(0, 1, 1, 1);
+        Gizmos.color = Color.cyan;
         Gizmos.DrawSphere(GetGroundCheckPosition(), GroundCheckRadius);
+        Gizmos.DrawCube(Rb.worldCenterOfMass, Vector3.one * 0.5f);
     }
 
     protected virtual void OnCollisionEnter(Collision collision)
     {
-        bool bTakeFallDamage = ShouldTakeFallDamage(collision, out float relativeVelocity);
+        bool bTakeFallDamage = ShouldTakeFallDamage(collision, out _);
 
         // if (relativeVelocity > MovementSpeed + 1f)
         // {
@@ -324,12 +353,19 @@ public abstract class PlayerController : MonoBehaviour
 
         if (!collision.gameObject.CompareTag("Player") && beforeCollideSpeed > DefaultPlayerData.dustParticlesCollisionSpeed)
         {
-            Instantiate(DefaultPlayerData.DustParticles, collision.GetContact(0).point, Quaternion.identity);
+            OnDustParticles(collision.GetContact(0).point);
         }
 
-        if(collision.gameObject.CompareTag("Blueprint"))
+        if (collision.gameObject.CompareTag("Blueprint"))
         {
-            SceneManager.LoadScene("WinScene");
+            if (SceneManager.GetActiveScene().name == "RefinedStage1")
+            {
+                UIEvents.SceneChange("Stage2");
+            }
+            else
+            {
+                UIEvents.SceneChange("WinScene");
+            }
         }
     }
 
@@ -356,12 +392,30 @@ public abstract class PlayerController : MonoBehaviour
     {
         // respawning code...
         Rb.velocity = Vector3.zero;
-        Rb.transform.position = startPosition;
-        transform.rotation = startRotation;
+        Rb.angularVelocity = Vector3.zero;
+
+        if (!Checkpoint.BUseCheckpointPos)
+        {
+            Rb.transform.position = startPosition;
+            transform.rotation = startRotation;
+        }
+        else
+        {
+            // calculate the radius around the checkpoint at which the players are to spawn
+            Vector3 centrePos = Checkpoint.RespawnPosition;
+            float currentAngle = (90 * PlayerIdSO.PlayerID * Mathf.PI) / 180.0f;
+            Vector3 playerPos = centrePos + new Vector3(Mathf.Cos(currentAngle) * DefaultPlayerData.RadiusFromCheckpiont, DefaultPlayerData.CheckpointYOffset, Mathf.Sin(currentAngle) * DefaultPlayerData.RadiusFromCheckpiont);
+
+            Rb.transform.position = playerPos;
+            transform.rotation = Quaternion.identity;
+        }
+
         if (PlayerInput != null)
         {
             PlayerInput.Enable();
         }
+
+        LoadData();
     }
 
     private void LoseInput(PlayerInput player)
@@ -378,8 +432,14 @@ public abstract class PlayerController : MonoBehaviour
     {
         if (playerId == PlayerIdSO.PlayerID)
         {
-            AdjustFuelValue(DefaultPlayerData.MaxFuel);
+            AdjustAbilityValue(5); // for each fuel collected add 5 ability uses;
+            PlayFuelCollectionSound();
         }
+    }
+
+    private void SetCanvasCamera()
+    {
+
     }
 
     private IEnumerator DeathWait()
@@ -399,4 +459,67 @@ public abstract class PlayerController : MonoBehaviour
         GameEvents.Die();
         DeathWaitTimer = null;
     }
+
+#pragma warning disable SA1202 // Elements should be ordered by access
+    public void LoadData()
+#pragma warning restore SA1202 // Elements should be ordered by access
+    {
+        if (PersistentDataManager.SaveableData.PlayerDatas.Dictionary.ContainsKey(PlayerIdSO.PlayerID))
+        {
+            PlayerData pData = PersistentDataManager.SaveableData.PlayerDatas.Dictionary[PlayerIdSO.PlayerID];
+            AbilityUses = pData.NumberAbilityLeft;
+            AdjustAbilityValue(0);
+        }
+    }
+
+    public void SaveData(int[] fuelDataReset)
+    {
+        PlayerData pData = new PlayerData();
+
+        if (fuelDataReset != null)
+        {
+            // determine amount of fuel to ignore when saving, so that on a reset to this checkpoint no extra fuel gets added
+            int numInvalidAbilities = fuelDataReset[PlayerIdSO.PlayerID];
+            int saveAbilityAmount = AbilityUses - (numInvalidAbilities * 5);
+            if (saveAbilityAmount < 3)
+            {
+                // as only save whenever reach a checkpoint, ensure the player gets enough ability uses
+                saveAbilityAmount = 3;
+                AbilityUses = 3;
+                AdjustAbilityValue(0);
+            }
+
+            pData.NumberAbilityLeft = saveAbilityAmount;
+        }
+        else
+        {
+            pData.NumberAbilityLeft = AbilityUses;
+        }
+
+        pData.Position = transform.position;
+        if (PersistentDataManager.SaveableData.PlayerDatas.Dictionary.ContainsKey(PlayerIdSO.PlayerID))
+        {
+            PersistentDataManager.SaveableData.PlayerDatas.Dictionary[PlayerIdSO.PlayerID] = pData;
+        }
+        else
+        {
+            PersistentDataManager.SaveableData.PlayerDatas.Dictionary.Add(PlayerIdSO.PlayerID, pData);
+        }
+    }
+
+    protected virtual void OnDustParticles(Vector3 Position)
+    {
+        Instantiate(DefaultPlayerData.DustParticles, Position, Quaternion.identity);
+    }
+
+    protected virtual void PlayFuelCollectionSound() { }
+}
+
+public enum EPlayer
+{
+        None = 0,
+        P1 = 1,
+        P2 = 2,
+        P3 = 3,
+        P4 = 4,
 }
