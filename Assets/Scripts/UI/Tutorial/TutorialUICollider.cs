@@ -18,12 +18,16 @@ public class TutorialUICollider : MonoBehaviour
 
 	const float kAVeryLongTime = 86400f; // 1 Day.
 
+	Camera MainCamera;
+
 	void Start()
 	{
 		if (TryGetComponent(out BoxCollider BoxCollider))
 		{
 			BoxCollider.isTrigger = true;
 		}
+
+		MainCamera = Camera.main;
 	}
 
 	void Update()
@@ -31,7 +35,7 @@ public class TutorialUICollider : MonoBehaviour
 		if (bShowInCorner || !Current)
 			return;
 
-		Current.Rect.position = Camera.main.WorldToScreenPoint(transform.position + InPlacePosition);
+		Current.Rect.position = MainCamera.WorldToScreenPoint(transform.position + InPlacePosition);
 	}
 
 	void OnTriggerEnter(Collider other)

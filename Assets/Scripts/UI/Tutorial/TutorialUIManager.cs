@@ -25,6 +25,7 @@ public class TutorialUIManager : MonoBehaviour
 
 	public static TutorialUIManager Get() => Instance;
 
+	[Exec(Description = "Makes Oppenheim pop out of the top right corner to say stuff")]
 	/// <summary>
 	/// Makes Oppenheim pop out of the top right corner to say
 	/// <paramref name="Title"/> with <paramref name="Contents"/>
