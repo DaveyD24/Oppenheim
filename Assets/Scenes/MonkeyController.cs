@@ -24,9 +24,11 @@ public class MonkeyController : PlayerController
     private Speedometer speedometer;
 
     private bool clinging = false;
+    private bool hanging = false;
     private ContactPoint contactPoint;
 
     private Vector3 clingPosition;
+    private Vector3 hangPosition;
 
     private bool bDidJump = false;
     private float currJumpWaitTime = 1;
@@ -77,6 +79,10 @@ public class MonkeyController : PlayerController
                 // Vector3 gradual = Vector3.Lerp(transform.position, desiredPosition, 0.00125f);
                 // transform.position = gradual;
                 Rb.velocity = Vector3.zero;
+            }
+            if (hanging)
+            {
+
             }
 
             Rb.useGravity = !clinging;
@@ -129,10 +135,16 @@ public class MonkeyController : PlayerController
                     Rb.angularVelocity = Vector3.zero;
                     AdjustAbilityValue(-1);
                 }
+                if (hanging)
+                {
+                    Debug.Log("I am hanging");
+                    this.transform.position = new Vector3(this.transform.position.x, hangPosition.y, this.transform.position.z);
+                }
             }
             else
             {
                 clinging = false;
+                hanging = false;
             }
 
             bDidJump = true;
@@ -215,8 +227,16 @@ public class MonkeyController : PlayerController
         if (AbilityUses > 0 && collision.transform.CompareTag("Clingable") && !IsGrounded())
         {
             clinging = true;
+            hanging = false;
             clingPosition = collision.collider.ClosestPoint(transform.position);
             contactPoint = collision.GetContact(0);
+        }
+
+        if (AbilityUses > 0 && collision.transform.CompareTag("Hangable") && !IsGrounded())
+        {
+            hanging = true;
+            clinging = false;
+            hangPosition = this.transform.position;
         }
     }
 
