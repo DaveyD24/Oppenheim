@@ -30,6 +30,14 @@ public static class StaticCheats
 		TP_All(164.77f, 55.25f, -308.92f);
 	}
 
+	[Exec("Teleports all active players to the Switch Puzzle at the end of Staf 1.")]
+	public static void TP_SwitchPuzzle()
+	{
+		Set();
+
+		TP_Active(164.77f, 69.22f, -240.42f);
+	}
+
 	[Exec("Teleports all players to the specified X, Y, and Z Coordinates in World Space.")]
 	public static void TP_All(float X, float Y, float Z)
 	{

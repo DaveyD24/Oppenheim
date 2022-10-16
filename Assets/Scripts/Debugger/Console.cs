@@ -36,28 +36,26 @@ public class Console : MonoBehaviour
 	{
 		if (IN.GetKeyDown(KeyCode.BackQuote))
 			bShowConsole = !bShowConsole;
+	}
 
-		if (IN.GetKeyDown(KeyCode.RightShift))
+	void BuildExec()
+	{
+		if (!string.IsNullOrEmpty(Input))
 		{
-			if (!string.IsNullOrEmpty(Input))
-			{
-				string[] Split = Input.Split(' ');
-				object[] Args = new object[Split.Length - 1];
-				string Func = Split[0];
+			string[] Split = Input.Split(' ');
+			object[] Args = new object[Split.Length - 1];
+			string Func = Split[0];
 
-				for (int o = 0, s = 1; s < Split.Length; ++s, ++o)
-					Args[o] = Split[s];
+			for (int o = 0, s = 1; s < Split.Length; ++s, ++o)
+				Args[o] = Split[s];
 
-				Exec(Func, Args);
+			Exec(Func, Args);
 
-				PreviousInput = Input;
-			}
+			PreviousInput = Input;
 
-			Input = "";
 		}
 
-		if (IN.GetKeyDown(KeyCode.UpArrow))
-			Input = PreviousInput;
+		Input = "";
 	}
 
 	public void Exec(string MethodName, params object[] Params)
@@ -108,7 +106,26 @@ public class Console : MonoBehaviour
 	void OnGUI()
 	{
 		if (!bShowConsole)
+		{
 			return;
+		}
+
+		if (Event.current.Equals(Event.KeyboardEvent("Return")))
+		{
+			BuildExec();
+			return;
+		}
+
+		if (Event.current.Equals(Event.KeyboardEvent("Backquote")))
+		{
+			bShowConsole = false;
+			return;
+		}
+
+		if (Event.current.Equals(Event.KeyboardEvent("Up")))
+		{
+			Input = PreviousInput;
+		}
 
 		float Y = 0f;
 
@@ -123,6 +140,7 @@ public class Console : MonoBehaviour
 			Scroll = GUI.BeginScrollView(new Rect(0, Y + 5, Screen.width, FuncsHeight), Scroll, ExecList);
 
 			int i = 0;
+#pragma warning disable UNT0018 // System.Reflection features in performance critical messages. MethodInfo is already cached in Funcs by Start().
 			foreach (KeyValuePair<string, MethodExec<MethodInfo, ExecAttribute>> Func in Funcs)
 			{
 				StringBuilder ParamsBuilder = new StringBuilder();
@@ -132,12 +150,13 @@ public class Console : MonoBehaviour
 					ParamsBuilder.Append(ParamSplit[ParamSplit.Length - 1]).Append(" ").Append(Param.Name).Append(", ");
 				}
 
-				string Text = $"{Func.Value.Method.Name} ({ParamsBuilder.ToString().TrimEnd(',',' ')}) - {Func.Value.Exec.Description}";
+				string Text = $"{Func.Value.Method.Name} ({ParamsBuilder.ToString().TrimEnd(',', ' ')}) - {Func.Value.Exec.Description}";
 
 				Rect TextRect = new Rect(5, 20 * i++, ExecList.width - 100, 20);
 
 				GUI.Label(TextRect, Text);
 			}
+#pragma warning restore UNT0018 // System.Reflection features in performance critical messages. MethodInfo is already cached in Funcs by Start().
 
 			GUI.EndScrollView();
 
@@ -147,6 +166,8 @@ public class Console : MonoBehaviour
 		GUI.Box(new Rect(0, Y, Screen.width, 30), "");
 		GUI.backgroundColor = Color.white;
 
+		GUI.SetNextControlName("Exec Text Field");
 		Input = GUI.TextField(new Rect(10f, Y + 5f, Screen.width - 20f, 20f), Input);
+		GUI.FocusControl("Exec Text Field");
 	}
 }

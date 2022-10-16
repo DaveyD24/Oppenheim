@@ -76,4 +76,13 @@ public class IntroShowcase : MonoBehaviour
             Gizmos.DrawSphere(item, 20);
         }
     }
+
+    [Exec("Skips all time consuming introductions.")]
+    public void Skia()
+    {
+        enabled = false;
+        camMoveTween = null;
+        introUIBanner.gameObject.SetActive(false);
+        // UIEvents.BeginAnnoucement(); // Skip this as well.
+    }
 }
