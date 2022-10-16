@@ -3,24 +3,28 @@ using static global::BatMathematics;
 
 public class Seesaw : MonoBehaviour
 {
-	[SerializeField] SeesawPressurePoint In, Out;
+	[Header("Ends")]
+	[SerializeField] SeesawPressurePoint In;
+	[SerializeField] SeesawPressurePoint Out;
 
+	[Header("Weight")]
 	[SerializeField, Min(1f), Tooltip("The Mass in which this Seesaw is fully tilted.")] float MaxWeight;
 	[SerializeField, ReadOnly] float InWeight, OutWeight;
 
+	[Header("Pitch Angle")]
 	[SerializeField, Tooltip("The starting Pitch of this Seesaw.")] float DefaultPitch;
+	[SerializeField, Tooltip("The Pitch of this Seesaw when fully tilted.")] float MaxPitch;
 #if UNITY_EDITOR
 	// This is to debug the Pitch angle.
 	[SerializeField, ReadOnly] float CurrentPitch;
 #endif
-	[SerializeField, Tooltip("The Pitch of this Seesaw when fully tilted.")] float MaxPitch;
 
 	[SerializeField, Tooltip("How many degrees should this Seesaw be able to rotate?")] float MaxRotationDeltaAngle;
 
 	float InRatio;
 	float OutRatio;
 	float SmoothDampVelocity;
-	[SerializeField] private float timeReachTarget = 0.05f;
+	//[SerializeField] private float timeReachTarget = 0.05f; // Doesn't work.
 
 	void FixedUpdate()
 	{
@@ -43,12 +47,12 @@ public class Seesaw : MonoBehaviour
 		// More NaN Checks.
 		if (!DiagnosticCheckNaN(Pitch))
 		{
-			float SmoothedPitch = Mathf.SmoothDamp(WrapAngle(transform.localEulerAngles.x), Pitch, ref SmoothDampVelocity, timeReachTarget, MaxRotationDeltaAngle);
+			float SmoothedPitch = Mathf.SmoothDampAngle(transform.localEulerAngles.x, Pitch, ref SmoothDampVelocity, .1f, MaxRotationDeltaAngle);
 			transform.localEulerAngles = new Vector3(SmoothedPitch, transform.localEulerAngles.y, transform.localEulerAngles.z);
-#if UNITY_EDITOR
-			CurrentPitch = Pitch;
-#endif
 		}
+#if UNITY_EDITOR
+		CurrentPitch = Pitch;
+#endif
 	}
 
 	// From Fallen Order.
@@ -59,6 +63,12 @@ public class Seesaw : MonoBehaviour
 
 	void OnValidate()
 	{
+		if (MaxPitch < -90f || MaxPitch > 90f)
+		{
+			Debug.LogError("<color=#FF4444>Please keep it between -90 and +90 degrees to stop it from shaking.</color>");
+			MaxPitch = 90f * Mathf.Sign(MaxPitch);
+		}
+
 		DefaultPitch = WrapAngle(DefaultPitch);
 		MaxPitch = WrapAngle(MaxPitch);
 	}
@@ -73,8 +83,6 @@ public class Seesaw : MonoBehaviour
 	//void OnGUI()
 	//{
 	//	int sh = Screen.height - 50;
-	//	GUI.Label(new Rect(10, sh - 10, 250, 250), $"Out Ratio: {OutRatio:F2}");
-	//	GUI.Label(new Rect(10, sh - 25, 250, 250), $"In Ratio: {InRatio:F2}");
-	//	GUI.Label(new Rect(10, sh - 40, 250, 250), $"Smooth Damp Velocity: {SmoothDampVelocity:F2}");
+	//	GUI.Label(new Rect(10, sh - 10, 250, 250), $"Pitch: {transform.localEulerAngles.x:F2}");
 	//}
 }

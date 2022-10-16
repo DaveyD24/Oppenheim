@@ -64,8 +64,6 @@ public class Console : MonoBehaviour
 	{
 		if (Funcs.ContainsKey(MethodName))
 		{
-			bool bExecutedFunc = true;
-
 			try
 			{
 				MethodExec<MethodInfo, ExecAttribute> Func = Funcs[MethodName];
@@ -84,15 +82,8 @@ public class Console : MonoBehaviour
 				{
 					Func.Method.Invoke(Convert.ChangeType(FindObjectOfType(Func.Method.DeclaringType), Func.Method.DeclaringType), Parameters);
 				}
-
-				bShowConsole = false;
 			}
 			catch (Exception)
-			{
-				bExecutedFunc = false;
-			}
-
-			if (!bExecutedFunc)
 			{
 				StringBuilder ErrorBuilder = new StringBuilder();
 
@@ -129,7 +120,7 @@ public class Console : MonoBehaviour
 			Rect ExecList = new Rect(0, 0, Screen.width - 30, 20 * Funcs.Count);
 
 			GUI.backgroundColor = Color.white;
-			Scroll = GUI.BeginScrollView(new Rect(0, Y + 5, Screen.width, 90), Scroll, ExecList);
+			Scroll = GUI.BeginScrollView(new Rect(0, Y + 5, Screen.width, FuncsHeight), Scroll, ExecList);
 
 			int i = 0;
 			foreach (KeyValuePair<string, MethodExec<MethodInfo, ExecAttribute>> Func in Funcs)

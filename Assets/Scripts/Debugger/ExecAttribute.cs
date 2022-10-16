@@ -4,18 +4,11 @@ using UnityEngine;
 [AttributeUsage(AttributeTargets.Method)]
 public class ExecAttribute : Attribute
 {
-	public Type Behaviour;
 	public string Description;
 
-	public ExecAttribute() { }
+	public ExecAttribute() { Description = string.Empty; }
 
-	public ExecAttribute(Type Behaviour)
-	{
-		this.Behaviour = Behaviour;
-		Description = string.Empty;
-	}
-
-	public ExecAttribute(Type Behaviour, string Desc) : this(Behaviour)
+	public ExecAttribute(string Desc)
 	{
 		Description = Desc;
 	}

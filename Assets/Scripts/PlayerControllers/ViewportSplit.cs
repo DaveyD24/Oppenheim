@@ -282,6 +282,8 @@ public class ViewportSplit : MonoBehaviour
 			MainSpringArm = InMain;
 	}
 
+	public static SwitchManager GetSwitchManager() => Get().SwitchManager;
+
 	/// <summary>Destroy the Secondary Camera.</summary>
 	static void RemoveSecondaryCamera()
 	{

@@ -711,10 +711,17 @@ public class BatMovement : MonoBehaviour
 		SecondsOfPitchFlight = Time;
 	}
 
-	[Exec(Description ="Give the Bat more takeoff power.")]
+	[Exec(Description = "Give the Bat more takeoff power.")]
 	public void GiveMorePower(float Power)
 	{
 		MaxTakeoffAcceleration = Power;
+	}
+
+	[Exec(Description = "Gives the Bat more Flight Time and Power.")]
+	public void BatCheats(float Time, float Power)
+	{
+		GiveMoreFlightTime(Time);
+		GiveMorePower(Power);
 	}
 }
 
