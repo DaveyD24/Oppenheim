@@ -49,8 +49,8 @@ public class TutorialUIManager : MonoBehaviour
 	{
 		Show("Some Title", 
 			  "Some Text for the Tutorial scene to teach players how to play the game!\n\n" +
-			  "I hope this can be a very long piece of text and the text box will automatically" +
-			  "resize itself accordingly. Otherwise, I might need to adjust the Canvas Scaler" +
+			  "I hope this can be a very long piece of text and the text box will automatically " +
+			  "resize itself accordingly. Otherwise, I might need to adjust the Canvas Scaler " +
 			  "so that everything looks better. I also hate UI and am running out of things to say.",
 			  4f);
 	}

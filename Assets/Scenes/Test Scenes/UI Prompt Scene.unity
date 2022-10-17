@@ -3887,7 +3887,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9eeb29e5a82fb724f8a4df5591aa6f53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bDrawRotationalLines: 0
+  bDrawRotationalLines: 1
   Camera: {fileID: 1673939897}
   Target: {fileID: 952481283}
   TargetOffset: {x: 0, y: 0, z: 0}
@@ -3898,11 +3898,15 @@ MonoBehaviour:
   GimbalRotation: {x: 0, y: 24.4, z: 0}
   CameraRotation: {x: 17.8, y: 0, z: 0}
   bInheritRotation: 0
-  bEnableScrollToDistance: 1
-  ScrollSensitivity: 1
   DefaultGimbalRotation: {x: 0, y: 27.75, z: 0}
   DefaultCameraRotation: {x: 29.17, y: 0, z: 0}
+  bEnableScrollToDistance: 1
+  ScrollSensitivity: 1
+  MaxDistance: 30
   OrbitSensitivity: 15
+  MinMaxOrbitAngle: {x: 1, y: 70}
+  bPermanentlyChangePanTargetOffset: 0
+  MaxPanDistance: 5
   bInvertX: 0
   bInvertY: 0
   bInvertZ: 0
@@ -3910,8 +3914,8 @@ MonoBehaviour:
   OnlyCollideWith:
     serializedVersion: 2
     m_Bits: 256
-  PositionalLagStrength: 0.5
-  RotationalLagStrength: 0.5
+  PositionalLagStrength: 0.2
+  RotationalLagStrength: 0.2
   bUseCustomProjection: 0
   Plane: {fileID: 0}
   NearClipDistance: 0
