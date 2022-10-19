@@ -21,7 +21,7 @@ public class GenericLeaf<T> : Node<T>
 
     public override ENodeState Evaluate()
     {
-        return ENodeState.Running; // can be whatever retrun is nessesary
+        return ENodeState.Running; // can be whatever return is nessesary
     }
 
     public override void End()

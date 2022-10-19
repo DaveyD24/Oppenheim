@@ -7,6 +7,7 @@ using UnityEngine;
 public class TubeConnection : MonoBehaviour
 {
     [SerializeField] private float gizmoSize = 10;
+    [SerializeField] private float scaleMultiplier = 25;
     [ContextMenuItem("Add in a new tube", "AddTube")]
     [SerializeField] private TubeToAdd add;
     [SerializeField] private int currChildHole;
@@ -51,7 +52,7 @@ public class TubeConnection : MonoBehaviour
         }
 
         GameObject addedTube = Instantiate(tubes[(int)add]);
-        addedTube.transform.localScale = Vector3.one * 25;
+        addedTube.transform.localScale = Vector3.one * scaleMultiplier;
         Transform child = addedTube.transform.GetChild(addChildHole);
         child.parent = null;
         addedTube.transform.parent = child;

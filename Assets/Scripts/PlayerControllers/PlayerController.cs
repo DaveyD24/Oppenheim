@@ -271,7 +271,7 @@ public abstract class PlayerController : MonoBehaviour
 
     protected virtual void Start()
     {
-        playerCanvas.gameObject.transform.parent = null;
+        playerCanvas.gameObject.transform.SetParent(null, false);
         SaveData(null);
         Rb = GetComponent<Rigidbody>();
         switchManager = FindObjectOfType<SwitchManager>();

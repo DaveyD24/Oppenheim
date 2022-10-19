@@ -9,6 +9,11 @@ public class TutorialUICollider : MonoBehaviour
 
 	[Header("Popup Position Settings")]
 	[SerializeField] bool bShowInCorner;
+
+	[Tooltip("If true, the title must match the ID of the control sprite from the control sprite map on the in place template")]
+	[SerializeField] bool bShowControls;
+	[SerializeField] string controlsTitle; // the title to display for the controls text
+
 	[SerializeField] TutorialUI CornerTemplate;
 	[SerializeField] TutorialUI InPlaceTemplate;
 	[SerializeField] Vector3 InPlacePosition;
@@ -42,7 +47,7 @@ public class TutorialUICollider : MonoBehaviour
 
 			if (bShowInCorner)
 			{
-				Current = TutorialUIManager.Get().Show(Title, Contents, kAVeryLongTime);
+				Current = TutorialUIManager.Get().Show(Title, Contents, kAVeryLongTime, bShowControls, controlsTitle);
 			}
 			else
 			{
@@ -68,7 +73,7 @@ public class TutorialUICollider : MonoBehaviour
 	void ShowInPlace()
 	{
 		TutorialUI InPlace = Instantiate(InPlaceTemplate, TutorialUIManager.Get().TutorialCanvasParent.transform);
-		InPlace.Set(Title, Contents, kAVeryLongTime);
+		InPlace.Set(Title, Contents, kAVeryLongTime, bShowControls, controlsTitle);
 
 		InPlace.Rect.anchorMin = InPlace.Rect.anchorMax = InPlace.Rect.localScale = new Vector2(.5f, .5f);
 		InPlace.Rect.anchoredPosition = Vector2.zero;

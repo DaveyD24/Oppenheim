@@ -26,6 +26,9 @@ namespace EventSystem
 
         public static Action<int, PlayerInput> OnActivatePlayer { get; set; }
 
+        // in the below func the last argument(bool) is the return type while the others two are the input parameters
+        public static Func<float, Vector3, bool> OnPlayerCompareDistance { get; set; } // used to enable the players distance to another object to be calculated and compared
+
         public static Action<int> OnDeactivatePlayer { get; set; }
 
         public static void DashCarCollide()
@@ -62,6 +65,16 @@ namespace EventSystem
             }
 
             return null;
+        }
+
+        public static bool PlayerCompareDistance(float distance, Vector3 otherPosition)
+        {
+            if (OnPlayerCompareDistance != null)
+            {
+                return OnPlayerCompareDistance(distance, otherPosition);
+            }
+
+            return false;
         }
 
         // the below methods are to do with player input and adding/removing a player from the active list

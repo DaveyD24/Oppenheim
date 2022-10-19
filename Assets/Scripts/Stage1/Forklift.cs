@@ -36,7 +36,8 @@ public class Forklift : MonoBehaviour, IDataInterface
 
     private void Start()
     {
-        liftPos = transform.GetChild(0);
+        liftPos = transform.childCount > 0 ? transform.GetChild(0) : transform;
+
         if (bDoScaleInstead)
         {
             startPos = liftPos.transform.localScale;
@@ -83,11 +84,11 @@ public class Forklift : MonoBehaviour, IDataInterface
 
         if (!bIsUpMove)
         {
-                moveTween = new Tween(new Vector3(startPos.x, maxHeight, startPos.z), new Vector3(startPos.x, minHeight, startPos.z), Time.time, moveSpeed);
+                moveTween = new Tween(liftPos.position, new Vector3(startPos.x, minHeight, startPos.z), Time.time, moveSpeed);
         }
         else
         {
-                moveTween = new Tween(new Vector3(startPos.x, minHeight, startPos.z), new Vector3(startPos.x, maxHeight, startPos.z), Time.time, moveSpeed);
+            moveTween = new Tween(liftPos.position, new Vector3(startPos.x, maxHeight, startPos.z), Time.time, moveSpeed);
         }
 
         moveWait = null;
