@@ -428,7 +428,7 @@ public class BatMovement : MonoBehaviour
 		}
 	}
 
-	private void StartGliding()
+	public void StartGliding()
 	{
 		StopGradualAcceleration();
 
@@ -704,6 +704,25 @@ public class BatMovement : MonoBehaviour
 		}
 	}
 #endif
+
+	[Exec(Description = "Gives the Bat more time to fly around.")]
+	public void GiveMoreFlightTime(float Time)
+	{
+		SecondsOfPitchFlight = Time;
+	}
+
+	[Exec(Description = "Give the Bat more takeoff power.")]
+	public void GiveMorePower(float Power)
+	{
+		MaxTakeoffAcceleration = Power;
+	}
+
+	[Exec(Description = "Gives the Bat more Flight Time and Power.")]
+	public void BatCheats(float Time, float Power)
+	{
+		GiveMoreFlightTime(Time);
+		GiveMorePower(Power);
+	}
 }
 
 public struct Speedometer

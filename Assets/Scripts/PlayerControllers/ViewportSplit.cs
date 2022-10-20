@@ -8,10 +8,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Extensions;
 using static global::BatMathematics;
+using EventSystem;
+using UnityEngine.InputSystem;
 
 public class ViewportSplit : MonoBehaviour
 {
-	static Queue<SpringArm> AddedCameraQueue; // Probably not needed if we're having maximum two Players.
 	static SpringArm MainSpringArm;
 	static SpringArm SecondSpringArm;
 	static ViewportSplit Viewport;
@@ -36,12 +37,14 @@ public class ViewportSplit : MonoBehaviour
 			Viewport = this;
 
 			Average = new GameObject("Average Position Marker").transform;
-			AddedCameraQueue = new Queue<SpringArm>();
 		}
 		else
 		{
 			Debug.LogError($"Ensure there is only one {nameof(ViewportSplit)} in the game!");
 		}
+
+		// When any player Switches characters, the camera MUST update.
+		GameEvents.OnRotatePlayer += (int e, PlayerInput s) => { TimeOfLastSplit = -1f; };
 	}
 
 	void Update()
@@ -94,7 +97,7 @@ public class ViewportSplit : MonoBehaviour
 		// If we need to split the Viewport.
 		if (ArePlayersTooFarApart())
 		{
-			if (SecondSpringArm || Time.time - Get().TimeOfLastSplit < Get().SplitPollingRate)
+			if (Time.time - Get().TimeOfLastSplit < Get().SplitPollingRate)
 				return;
 
 			List<PlayerController> Active = Get().SwitchManager.GetActivePlayers();
@@ -192,8 +195,6 @@ public class ViewportSplit : MonoBehaviour
 
 			MainSpringArm.CameraComponent.rect = SplitScreenP1;
 			SecondSpringArm.CameraComponent.rect = SplitScreenP2;
-
-			AddedCameraQueue.Enqueue(SecondSpringArm);
 		}
 
 		SecondSpringArm.name = $"Spring Arm Targeting: {Target.name}";
@@ -280,6 +281,8 @@ public class ViewportSplit : MonoBehaviour
 		if (!MainSpringArm)
 			MainSpringArm = InMain;
 	}
+
+	public static SwitchManager GetSwitchManager() => Get().SwitchManager;
 
 	/// <summary>Destroy the Secondary Camera.</summary>
 	static void RemoveSecondaryCamera()

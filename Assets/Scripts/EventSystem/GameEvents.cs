@@ -36,6 +36,7 @@ namespace EventSystem
             OnDashCarCollide?.Invoke(); // not yet implemented
         }
 
+        [Exec(Description = "WOAH OHO OH")]
         public static void CollectFuel(int playerId)
         {
             OnCollectFuel?.Invoke(playerId);

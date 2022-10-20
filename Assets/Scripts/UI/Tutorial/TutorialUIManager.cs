@@ -26,6 +26,7 @@ public class TutorialUIManager : MonoBehaviour
 
 	public static TutorialUIManager Get() => Instance;
 
+	[Exec(Description = "Makes Oppenheim pop out of the top right corner to say stuff")]
 	/// <summary>
 	/// Makes Oppenheim pop out of the top right corner to say
 	/// <paramref name="Title"/> with <paramref name="Contents"/>
@@ -51,8 +52,8 @@ public class TutorialUIManager : MonoBehaviour
 		Show(
 			  "Some Title",
 			  "Some Text for the Tutorial scene to teach players how to play the game!\n\n" +
-			  "I hope this can be a very long piece of text and the text box will automatically" +
-			  "resize itself accordingly. Otherwise, I might need to adjust the Canvas Scaler" +
+			  "I hope this can be a very long piece of text and the text box will automatically " +
+			  "resize itself accordingly. Otherwise, I might need to adjust the Canvas Scaler " +
 			  "so that everything looks better. I also hate UI and am running out of things to say.",
 #pragma warning restore SA1118 // Parameter should not span multiple lines
 			  4f);

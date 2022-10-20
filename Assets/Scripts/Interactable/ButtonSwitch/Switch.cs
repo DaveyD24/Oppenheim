@@ -60,7 +60,7 @@ public class Switch : Interactable, IDataInterface
 	/// </b><br></br>
 	/// The last Switch to turn ON before this Broadcast.
 	/// </param>
-	private void CheckBroadcast(Collider Broadcaster)
+	void CheckBroadcast(Collider Broadcaster)
 	{
 		if (bIsOn && AreAllReliantSwitchesOn())
 		{
@@ -75,13 +75,13 @@ public class Switch : Interactable, IDataInterface
 	}
 
 	// Also fire ON/OFF Broadcasts if a reliant Switch is triggered.
-	private void OnAnyReliantListener(Switch broadcast)
+	void OnAnyReliantListener(Switch broadcast)
 	{
 		CheckBroadcast(broadcast.Collider);
 	}
 
 	/// <returns><see langword="true"></see> if all <see cref="ReliantSwitches"/> are <see cref="bIsOn"/>.</returns>
-	private bool AreAllReliantSwitchesOn()
+	bool AreAllReliantSwitchesOn()
 	{
 		if (ReliantSwitches.Length == 0)
 		{
@@ -90,6 +90,13 @@ public class Switch : Interactable, IDataInterface
 
 		return ReliantSwitches.All(Switch => Switch.bIsOn);
 	}
+
+#if UNITY_EDITOR
+	void OnMouseDown()
+	{
+		ToggleSwitch();
+	}
+#endif
 
 #pragma warning disable SA1202 // Elements should be ordered by access
 	public void LoadData(SectionData data)

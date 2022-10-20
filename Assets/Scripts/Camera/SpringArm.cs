@@ -30,12 +30,22 @@ public class SpringArm : MonoBehaviour
 	/// <summary>Rotation of the View Camera.</summary>
 	[SerializeField] Vector3 CameraRotation;
 	public bool bInheritRotation;
-	[Space(5)]
-	[SerializeField] bool bEnableScrollToDistance;
-	[SerializeField] float ScrollSensitivity;
 	[HideInInspector, SerializeField] Vector3 DefaultGimbalRotation;
 	[HideInInspector, SerializeField] Vector3 DefaultCameraRotation;
+
+	[Header("Scroll Settings")]
+	[SerializeField] bool bEnableScrollToDistance;
+	[SerializeField] float ScrollSensitivity;
+	[SerializeField] float MaxDistance = 30;
+
+	[Header("Orbit Settings")]
 	[SerializeField] float OrbitSensitivity = 1f;
+	[SerializeField] Vector2 MinMaxOrbitAngle = new Vector2(1f, 70f);
+
+	[Header("Pan Settings")]
+	[SerializeField] bool bPermanentlyChangePanTargetOffset;
+	[SerializeField] float MaxPanDistance = 5f;
+
 	Vector2 PreviousMouseDragPosition;
 	Vector3 GimbalRotationInherited;
 	Vector3 CameraRotationInherited;
@@ -63,6 +73,8 @@ public class SpringArm : MonoBehaviour
 	[SerializeField] float NearClipDistance;
 	[SerializeField] float DistanceLimit;
 	Matrix4x4 DefaultProjection;
+
+	bool bNoClip = false;
 
 	void Start()
 	{
@@ -93,20 +105,55 @@ public class SpringArm : MonoBehaviour
 			bInheritRotation = !bInheritRotation;
 
 		ScrollDistance();
+
+		if (bNoClip)
+		{
+			if (Input.GetKey(KeyCode.W))
+			{
+				Camera.position += Camera.forward * 15 * Time.deltaTime;
+			}
+			else if (Input.GetKey(KeyCode.S))
+			{
+				Camera.position -= Camera.forward * 15 * Time.deltaTime;
+			}
+
+			if (Input.GetKey(KeyCode.D))
+			{
+				Camera.position += Camera.right * 15 * Time.deltaTime;
+			}
+			else if (Input.GetKey(KeyCode.A))
+			{
+				Camera.position -= Camera.right * 15 * Time.deltaTime;
+			}
+
+			if (Input.GetKey(KeyCode.Q))
+			{
+				Camera.position += Vector3.up * 15 * Time.deltaTime;
+			}
+			else if (Input.GetKey(KeyCode.E))
+			{
+				Camera.position -= Vector3.up * 15 * Time.deltaTime;
+			}
+		}
 	}
 
 	void FixedUpdate()
 	{
+		if (bNoClip)
+			return;
+
 		Camera.position = Vector3.Lerp(Camera.position, TargetPosition, PositionalLagStrength);
 		Camera.rotation = Quaternion.Slerp(Camera.rotation, TargetRotation, RotationalLagStrength);
 
 		PlaceCamera();
 	}
 
+#if false
 	void OnPreCull()
 	{
 		//ComputeProjection();
 	}
+#endif
 
 	void PlaceCamera()
 	{
@@ -219,7 +266,7 @@ public class SpringArm : MonoBehaviour
 		{
 			Distance += Input.mouseScrollDelta.y * (bInvertZ ? -1f : 1f) * -ScrollSensitivity;
 
-			Distance = Mathf.Clamp(Distance, 1, 30);
+			Distance = Mathf.Clamp(Distance, 1, MaxDistance);
 		}
 	}
 
@@ -239,7 +286,7 @@ public class SpringArm : MonoBehaviour
 				GimbalRotation.x += DeltaX;
 				CameraRotation.y += DeltaX;
 
-				if (GimbalRotation.y - DeltaY < 70 && GimbalRotation.y - DeltaY >= -70)
+				if (GimbalRotation.y - DeltaY < MinMaxOrbitAngle.y && GimbalRotation.y - DeltaY >= MinMaxOrbitAngle.x)
 				{
 					GimbalRotation.y -= DeltaY;
 					CameraRotation.x -= DeltaY;
@@ -250,7 +297,7 @@ public class SpringArm : MonoBehaviour
 				CameraRotationInherited.x -= DeltaY;
 				CameraRotationInherited.y += DeltaX;
 
-				if (GimbalRotationInherited.y - DeltaY < 70 && GimbalRotationInherited.y - DeltaY >= -70)
+				if (GimbalRotationInherited.y - DeltaY < MinMaxOrbitAngle.y && GimbalRotationInherited.y - DeltaY >= MinMaxOrbitAngle.x)
 				{
 					GimbalRotationInherited.y -= DeltaY;
 				}
@@ -282,19 +329,29 @@ public class SpringArm : MonoBehaviour
 
 		if (Input.GetMouseButton(2))
 		{
-			float DeltaX = (MousePosition.x - PreviousMousePanPosition.x) * OrbitSensitivity * Time.deltaTime;
-			float DeltaY = (MousePosition.y - PreviousMousePanPosition.y) * OrbitSensitivity * Time.deltaTime;
+			float DeltaX = (MousePosition.x - PreviousMousePanPosition.x) * OrbitSensitivity * OrbitSensitivity * Time.deltaTime;
+			float DeltaY = (MousePosition.y - PreviousMousePanPosition.y) * OrbitSensitivity * OrbitSensitivity * Time.deltaTime;
 
 			// Ensure 'Right' and 'Up' is relative to the Camera.
 			TargetOffset -= DeltaX * Time.deltaTime * Camera.right + DeltaY * Time.deltaTime * Camera.up;
-			TargetOffset = Vector3.ClampMagnitude(TargetOffset, 5f);
+			TargetOffset = Vector3.ClampMagnitude(TargetOffset, MaxPanDistance);
 		}
 		else
 		{
-			TargetOffset = Vector3.Lerp(TargetOffset, OriginalTargetOffset, .2f);
+			if (!bPermanentlyChangePanTargetOffset)
+				TargetOffset = Vector3.Lerp(TargetOffset, OriginalTargetOffset, .2f);
 		}
 
 		PreviousMousePanPosition = MousePosition;
+	}
+
+	[Exec("Toggles No Clip on the first Spring Arm.")]
+	public void NoClia()
+	{
+		bNoClip = !bNoClip;
+
+		if (!bNoClip)
+			TargetOffset = OriginalTargetOffset;
 	}
 
 #if false
