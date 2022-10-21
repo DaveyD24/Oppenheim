@@ -82,10 +82,13 @@ public class MonkeyController : PlayerController
             }
             if (hanging)
             {
-
+                //Debug.Log("I am hanging");
+                //this.transform.position = new Vector3(this.transform.position.x, hangPosition.y, this.transform.position.z);
+                //this.transform.position = hangPosition;
+                Rb.constraints = RigidbodyConstraints.FreezePositionY;
             }
 
-            Rb.useGravity = !clinging;
+            Rb.useGravity = (!clinging && !hanging);
         }
 
         // Rotate towards Movement.
@@ -117,7 +120,7 @@ public class MonkeyController : PlayerController
         }
 
         // This check is original and untouched.
-        if ((IsGrounded() || clinging) && !bDidJump)
+        if ((IsGrounded() || clinging || hanging) && !bDidJump)
         {
             // Original: Jump with a modified kinematic equation.
             Rb.velocity += new Vector3(0f, Mathf.Sqrt(jumpHeight * -3f * Physics.gravity.y), 0f);
@@ -137,9 +140,11 @@ public class MonkeyController : PlayerController
                 }
                 if (hanging)
                 {
-                    Debug.Log("I am hanging");
-                    this.transform.position = new Vector3(this.transform.position.x, hangPosition.y, this.transform.position.z);
+                    Debug.Log("Unhang");
+                    hanging = false;
+                    Rb.constraints = RigidbodyConstraints.None;
                 }
+
             }
             else
             {
@@ -247,6 +252,10 @@ public class MonkeyController : PlayerController
         if (collision.transform.CompareTag("Clingable"))
         {
             clinging = false;
+        }
+        if (collision.transform.CompareTag("Hangable"))
+        {
+            hanging = false;
         }
     }
 

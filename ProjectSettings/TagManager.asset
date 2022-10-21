@@ -12,6 +12,7 @@ TagManager:
   - Wall
   - Water
   - Blueprint
+  - Hangable
   layers:
   - Default
   - TransparentFX
