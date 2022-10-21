@@ -9237,6 +9237,11 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 325441359}
   m_Mesh: {fileID: 8461416126441360069, guid: feb5bdb9736641142bcd1b457cbe19e1, type: 3}
+--- !u!4 &325547747 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1100799181752514095, guid: 283b6e8a8ea81244190b33581ca13b59, type: 3}
+  m_PrefabInstance: {fileID: 649278397}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &333945768
 GameObject:
   m_ObjectHideFlags: 0
@@ -22352,7 +22357,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 500
-  field of view: 26.991467
+  field of view: 53
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -22382,31 +22387,42 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9eeb29e5a82fb724f8a4df5591aa6f53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bDrawRotationalLines: 0
+  bDrawSpringArmLine: 1
+  bDrawRotationalLines: 1
+  bDrawAdvancedCollisionLines: 1
   Camera: {fileID: 927938372}
-  Target: {fileID: 128388135}
+  Target: {fileID: 325547747}
   TargetOffset: {x: 0, y: 0, z: 0}
   CameraComponent: {fileID: 0}
   bIsAverageTracking: 0
   bIsSecondarySpringArm: 0
-  Distance: 26
-  GimbalRotation: {x: 0, y: 24.4, z: 0}
-  CameraRotation: {x: 17.8, y: 0, z: 0}
+  Distance: 14
+  GimbalRotation: {x: 0, y: 21.5, z: 0}
+  CameraRotation: {x: 11, y: 0, z: 0}
   bInheritRotation: 1
-  bEnableScrollToDistance: 1
-  ScrollSensitivity: 1
+  bInheritPitch: 0
   DefaultGimbalRotation: {x: 0, y: 27.75, z: 0}
   DefaultCameraRotation: {x: 29.17, y: 0, z: 0}
+  bEnableScrollToDistance: 1
+  ScrollSensitivity: 1
+  MaxDistance: 16
   OrbitSensitivity: 15
+  MinMaxOrbitAngle: {x: 1, y: 70}
+  bPermanentlyChangePanTargetOffset: 0
+  MaxPanDistance: 5
   bInvertX: 0
   bInvertY: 0
   bInvertZ: 0
   bRunCollisionChecks: 1
+  bUseAdvancedCollisionBehaviour: 1
+  bForceAdvancedBehaviour: 1
+  AdvancedCollisionActivationDistance: 12
+  MaxAdvancedCollisionAngle: 90
   OnlyCollideWith:
     serializedVersion: 2
     m_Bits: 256
-  PositionalLagStrength: 0.5
-  RotationalLagStrength: 0.5
+  PositionalLagStrength: 0.2
+  RotationalLagStrength: 0.2
   bUseCustomProjection: 0
   Plane: {fileID: 0}
   NearClipDistance: 0
@@ -22442,7 +22458,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 927938367}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.7900004, y: 139.18, z: -19.877174}
+  m_LocalPosition: {x: 0.91, y: 139.18, z: -20.72}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -22856,6 +22872,7 @@ GameObject:
   - component: {fileID: 960368684}
   - component: {fileID: 960368685}
   - component: {fileID: 960368686}
+  - component: {fileID: 960368687}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -22892,7 +22909,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SwitchManager: {fileID: 960368682}
   TooFarThreshold: 7
-  MinMaxCameraDistance: {x: 0, y: 0}
+  SplitPollingRate: 2
 --- !u!114 &960368680
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23068,6 +23085,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pauseMenu: {fileID: 1065474921}
+--- !u!114 &960368687
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 960368677}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d34c6815c5c803240a8820f0e2423b0b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &964989364
 GameObject:
   m_ObjectHideFlags: 0
