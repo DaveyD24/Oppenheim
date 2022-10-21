@@ -48,7 +48,13 @@ public class MovementNode : MonoBehaviour
             float distance = Vector3.Distance(this.transform.position, n.transform.position);
             if (distance <= nodeDistance)
             {
-                connectedNodes.Add(n);
+
+                Vector3 Midpoint = (this.transform.position + n.transform.position) / 2;
+
+                if (Physics.CheckSphere(Midpoint, nodeDistance / 10))
+                {
+                    connectedNodes.Add(n);
+                }
             }
         }
     }
