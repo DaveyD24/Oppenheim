@@ -13,6 +13,7 @@ TagManager:
   - Water
   - Blueprint
   - Hangable
+  - NodePlatform
   layers:
   - Default
   - TransparentFX

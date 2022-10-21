@@ -20,28 +20,37 @@ public enum Access
 
 public class MovementNode : MonoBehaviour
 {
-    private List<MovementNode> connectedNodes = new List<MovementNode>();
+    [SerializeField] private List<MovementNode> connectedNodes = new List<MovementNode>();
     private GameObject owner;
-    [SerializeField] private float nodeDistance = 5.0f;
+    private float nodeDistance = 2.0f;
     private MovementNode nextNode;
 
+    NodeManager nodeManager;
+
     // Start is called before the first frame update
-    private void Start()
+    private void Awake()
+    {
+        nodeManager = GameObject.FindObjectOfType<NodeManager>();
+        nodeDistance = nodeManager.GetNodeDistance() * 1.5f;
+    }
+
+
+    // Update is called once per frame
+    private void Update()
+    {
+    }
+
+    public void ConnectNodes()
     {
         MovementNode[] allNodes = GameObject.FindObjectsOfType<MovementNode>();
         foreach (MovementNode n in allNodes)
         {
             float distance = Vector3.Distance(this.transform.position, n.transform.position);
-            if (distance < nodeDistance)
+            if (distance <= nodeDistance)
             {
                 connectedNodes.Add(n);
             }
         }
-    }
-
-    // Update is called once per frame
-    private void Update()
-    {
     }
 
     public void CalculateNextNode()
