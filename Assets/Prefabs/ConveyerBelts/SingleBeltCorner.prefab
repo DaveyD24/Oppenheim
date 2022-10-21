@@ -110,6 +110,8 @@ MonoBehaviour:
   - {fileID: 8009906541806146793, guid: 7c9af5c0da70bd24cbbfd63b43a00ed5, type: 3}
   - {fileID: 8009906541806146793, guid: 7c9af5c0da70bd24cbbfd63b43a00ed5, type: 3}
   - {fileID: 6523052187942400600}
+  - {fileID: 9122731655588917195, guid: df14b5873a608bd4a967d0c3a01b3b4c, type: 3}
+  - {fileID: 5354132434556659415, guid: 54cd9dd47dad8d942bb4935967ee4d6e, type: 3}
   holeTubes:
   - {fileID: 0}
   - {fileID: 0}

@@ -26,13 +26,13 @@ public class InstructionBookSequence : Node<ActionSequence>
 
     private IEnumerator WaitTutDone()
     {
+        //yield return new WaitForSeconds(3);
+        //UIEvents.TutorialUIPopup(string.Empty, "Use this book, it will contain details on everything I have taught", 10);
+
+        //yield return new WaitForSeconds(8);
+        //UIEvents.TutorialUIPopup("Open/Close Book", string.Empty, 10, true, "Open/Close Book");
+
         yield return new WaitForSeconds(3);
-        UIEvents.TutorialUIPopup(string.Empty, "Use this book, it will contain details on everything I have taught", 10);
-
-        yield return new WaitForSeconds(8);
-        UIEvents.TutorialUIPopup("Open/Close Book", string.Empty, 10, true);
-
-        yield return new WaitForSeconds(5);
         UIEvents.TutorialUIPopup(string.Empty, "Complete the challenges, make it to the head office and save my life", 10);
     }
 

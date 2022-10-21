@@ -38,14 +38,16 @@ public class TutorialUICollider : MonoBehaviour
 	void Update()
 	{
 		if (bShowInCorner || !Current)
+		{
 			return;
+		}
 
 		Current.Rect.position = MainCamera.WorldToScreenPoint(transform.position + InPlacePosition);
 	}
 
-	void OnTriggerEnter(Collider other)
+	private void OnTriggerEnter(Collider other)
 	{
-		if (other.CompareTag("Player"))
+		if (Current == null && other.CompareTag("Player"))
 		{
 			++PlayerCount;
 
@@ -60,7 +62,7 @@ public class TutorialUICollider : MonoBehaviour
 		}
 	}
 
-	void OnTriggerExit(Collider other)
+	private void OnTriggerExit(Collider other)
 	{
 		if (other.CompareTag("Player"))
 		{
@@ -74,7 +76,7 @@ public class TutorialUICollider : MonoBehaviour
 		}
 	}
 
-	void ShowInPlace()
+	private void ShowInPlace()
 	{
 		TutorialUI InPlace = Instantiate(InPlaceTemplate, TutorialUIManager.Get().TutorialCanvasParent.transform);
 		InPlace.Set(Title, Contents, kAVeryLongTime, bShowControls, controlsTitle);
@@ -87,7 +89,7 @@ public class TutorialUICollider : MonoBehaviour
 	}
 
 #if UNITY_EDITOR
-	void OnDrawGizmos()
+	private void OnDrawGizmos()
 	{
 		Gizmos.color = Color.cyan;
 		Gizmos.DrawSphere(transform.position + InPlacePosition, .15f);

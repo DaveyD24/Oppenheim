@@ -9,7 +9,7 @@ public class TubeConnection : MonoBehaviour
     [SerializeField] private float gizmoSize = 10;
     [SerializeField] private float scaleMultiplier = 25;
     [ContextMenuItem("Add in a new tube", "AddTube")]
-    [SerializeField] private TubeToAdd add;
+    [SerializeField] public TubeToAdd add;
     [SerializeField] private int currChildHole;
     [SerializeField] private int addChildHole;
     [SerializeField] private bool bUseSpecifiedRotation = false;
@@ -18,7 +18,7 @@ public class TubeConnection : MonoBehaviour
     [SerializeField] private GameObject[] tubes;
     [SerializeField] private GameObject[] holeTubes; // the tubes which are currently over each hole
 
-    private enum TubeToAdd
+    public enum TubeToAdd
     {
         Long,
         Short,

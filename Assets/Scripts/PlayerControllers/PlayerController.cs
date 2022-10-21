@@ -63,7 +63,7 @@ public abstract class PlayerController : MonoBehaviour
 
     [field: SerializeField] protected float Health { get; private set; }
 
-    [field: SerializeField, Min(25f)] protected float FallDamageThreshold { get; private set; }
+    [field: SerializeField, Min(10)] protected float FallDamageThreshold { get; private set; }
 
     [field: SerializeField] protected Vector3 groundCheckPosition;
 

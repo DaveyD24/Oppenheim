@@ -19,6 +19,8 @@ public class BoxRandomization : MonoBehaviour
     [SerializeField] private bool bFreezeXPos = false;
     [SerializeField] private bool bFreezeYPos = false;
     [SerializeField] private bool bFreezeZPos = false;
+    [Tooltip("When moving, is the object restructed to only move in the direction of most force")]
+    [SerializeField] private bool bDoRestrictMovement = true;
 
     private void Start()
     {
@@ -137,7 +139,10 @@ public class BoxRandomization : MonoBehaviour
 
     private void Update()
     {
-        OneDirectionMove();
+        if (bDoRestrictMovement)
+        {
+            OneDirectionMove();
+        }
 
         // Debug.Log(solidColliderObj);
         // solidColliderObj.transform.position = transform.position;

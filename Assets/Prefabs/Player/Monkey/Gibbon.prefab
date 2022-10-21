@@ -2291,7 +2291,7 @@ MonoBehaviour:
   <MovementSpeed>k__BackingField: 5
   <RotationSpeed>k__BackingField: 250
   <Health>k__BackingField: 0
-  <FallDamageThreshold>k__BackingField: 25
+  <FallDamageThreshold>k__BackingField: 10
   groundCheckPosition: {x: 0, y: -0.5, z: 0}
   <GroundCheckRadius>k__BackingField: 0.3
   trackingCamera: {fileID: 0}

@@ -5,6 +5,8 @@ using UnityEngine;
 public class Forklift : MonoBehaviour, IDataInterface
 {
     [SerializeField] private float moveSpeed;
+    [Min(0)] [Tooltip("The amount of time to wait before it begins to move")]
+    [SerializeField] private float waitMoveTime = 5;
 
     [SerializeField] private float minHeight = 36.5f;
     [SerializeField] private float maxHeight = 52.5f;
@@ -80,7 +82,7 @@ public class Forklift : MonoBehaviour, IDataInterface
     private IEnumerator MoveWait(bool bIsUpMove)
     {
         Debug.Log("Moving the item upwards");
-        yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(waitMoveTime);
 
         if (!bIsUpMove)
         {
