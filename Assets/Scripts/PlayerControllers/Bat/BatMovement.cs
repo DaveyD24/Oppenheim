@@ -165,15 +165,15 @@ public class BatMovement : MonoBehaviour
 		else if (GroundMovement != Vector3.zero && !IsAirborne())
 		{
 			// Smoothly rotate the Bat towards where it's moving.
-			Vector3 movementVector = DirectionRelativeToTransform(Bat.TrackingCamera.transform, GroundMovement);
+			Vector3 MovementVector = DirectionRelativeToTransform(Bat.TrackingCamera.transform, GroundMovement);
 
 			// if walking backwards and the camera is inheriting, do not rotate around as its disorienting
-			if (GroundMovement.x == 0 && GroundMovement.z < 0 && Bat.TrackingCamera.bInheritRotation)
+			if (!(GroundMovement.x == 0 && GroundMovement.z < 0 && Bat.TrackingCamera.bInheritRotation))
 			{
-				movementVector *= -1;
+				AlignTransformToMovement(transform, MovementVector, Bat.YawSpeed, Vector3.up);
 			}
 
-			AlignTransformToMovement(transform, movementVector, Bat.YawSpeed, Vector3.up);
+			MDebug.DrawArrow(transform.position, MovementVector, Color.magenta);
 		}
 
 		SetAnimationState();
@@ -415,8 +415,8 @@ public class BatMovement : MonoBehaviour
 		if (!IsAirborne() || !bHasGlidedThisJump)
 		{
 			// Ground Movement relative to the camera.
-			Vector3 cameraRelativeDirection = DirectionRelativeToTransform(Bat.TrackingCamera.transform, GroundMovement);
-			Bat.Physics.MovePosition(Bat.Physics.position + (cameraRelativeDirection * Time.fixedDeltaTime));
+			Vector3 CameraRelativeDirection = DirectionRelativeToSpringArm(Bat.TrackingCamera, GroundMovement);
+			Bat.Physics.MovePosition(Bat.Physics.position + (CameraRelativeDirection * Time.fixedDeltaTime));
 
 			// PitchDelta = YawDelta = 0f;
 			// Apparently this wasn't enough - floating point precision failed and 
@@ -722,6 +722,8 @@ public class BatMovement : MonoBehaviour
 	{
 		GiveMoreFlightTime(Time);
 		GiveMorePower(Power);
+
+		EventSystem.GameEvents.CollectFuel(1);
 	}
 }
 

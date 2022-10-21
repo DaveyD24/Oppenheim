@@ -12,6 +12,43 @@ public static class BatMathematics
 	/// MATH FUNCTIONS
 	/// 
 
+	/// <summary>Converts a normalised vector direction to a Quaternion rotation</summary>
+	/// <remarks>Roll (Z) cannot be calculated from a direction vector.</remarks>
+	/// <param name="From">Origin</param>
+	/// <param name="To">Target</param>
+	/// <returns>Quaternion rotation from to.</returns>
+	public static Quaternion DirectionToQuat(Vector3 From, Vector3 To)
+	{
+		Vector3 Direction = (To - From).normalized;
+
+		return V2Q(Direction);
+	}
+
+	/// <summary>Converts a normalised vector to a Quaternion rotation.</summary>
+	/// <remarks>Roll (Z) cannot be calculated from a direction vector.</remarks>
+	/// <param name="V">Normalised direction vector.</param>
+	/// <returns>Quaternion rotation without roll.</returns>
+	public static Quaternion V2Q(Vector3 V)
+	{
+		return Quaternion.Euler(V2PYR(V));
+	}
+
+	/// <summary>Converts V to Pitch Yaw Roll.</summary>
+	/// <remarks>Roll (Z) cannot be calculated from a direction vector.</remarks>
+	/// <param name="V">Normalised direction vector.</param>
+	/// <returns>X = Pitch, Y = Yaw, Z = Roll = 0.</returns>
+	public static Vector3 V2PYR(Vector3 V)
+	{
+		Vector3 EulerRadians = new Vector3
+		{
+			x = FArcSine(V.y),
+			y = Mathf.Atan2(V.x, V.z),
+			z = 0
+		};
+
+		return EulerRadians * Mathf.Rad2Deg;
+	}
+
 	public static Vector3 ComputeJumpVelocity(Vector3 Up, float DesiredHeight)
 	{
 		return Up * ComputeJumpScalar(DesiredHeight);
@@ -95,6 +132,11 @@ public static class BatMathematics
 		Vector3 ReferenceForward = Reference.forward;
 		Vector3 ReferenceRight = Reference.right;
 
+		return DirectionRelativeToForwardRight(ReferenceForward, ReferenceRight, Direction, bIgnoreYAxis);
+	}
+
+	public static Vector3 DirectionRelativeToForwardRight(Vector3 ReferenceForward, Vector3 ReferenceRight, Vector3 Direction, bool bIgnoreYAxis = true)
+	{
 		if (bIgnoreYAxis)
 		{
 			ReferenceForward.y = ReferenceRight.y = 0f;
@@ -106,9 +148,18 @@ public static class BatMathematics
 		float LeftRight = Direction.x;
 		float ForwardBackward = Direction.z;
 
-		Vector3 RelativeMovementVector = (ReferenceForward * ForwardBackward) + (ReferenceRight * LeftRight);
+		Vector3 RelativeVector = (ReferenceForward * ForwardBackward) + (ReferenceRight * LeftRight);
 
-		return RelativeMovementVector;
+		return RelativeVector;
+	}
+
+	const float kCloseEnoughToParallel = .25f;
+
+	public static Vector3 DirectionRelativeToSpringArm(SpringArm Arm, Vector3 Direction, bool bIgnoreYAxis = true)
+	{
+		Arm.GetForwardRight(out Vector3 F, out Vector3 R);
+
+		return DirectionRelativeToForwardRight(F, R, Direction, bIgnoreYAxis);
 	}
 
 	public static void AlignTransformToMovement(Transform Transform, Vector3 MovementVector, float RotationSpeed, Vector3 UpAxis)
