@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Blueprint : MonoBehaviour
 {
@@ -14,4 +15,14 @@ public class Blueprint : MonoBehaviour
 		transform.position += BobTheBuilder * PeakHeight;
 		transform.eulerAngles += RotationSpeed * Time.deltaTime * Vector3.up;
 	}
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+			Debug.Log("GAME OVER MOITE");
+			Destroy(this.gameObject.GetComponent<SpriteRenderer>());
+			SceneManager.LoadScene("WinScene");
+        }
+    }
 }
