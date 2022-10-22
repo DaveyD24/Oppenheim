@@ -293,11 +293,13 @@ public class SpringArm : MonoBehaviour
 
 		bIsAdvancedBehaviourEffective = true;
 
+#if UNITY_EDITOR
 		if (bDrawAdvancedCollisionLines)
 		{
 			DrawArrow(transform.position, AdvancedForwardVector, Color.blue);
 			DrawArrow(transform.position, AdvancedRightVector, Color.red);
 		}
+#endif
 
 		// Dynamically adjust the angle to be inversely proportional to the distance with the Wall and the Max Spring Arm Distance.
 		float DeltaAngle = 90f * ((Distance - Hit.distance) / Distance);
@@ -315,8 +317,10 @@ public class SpringArm : MonoBehaviour
 		Vector3 PointRight = TP + Right * Distance;
 		Vector3 PointLeft = TP + Left * Distance;
 
+#if UNITY_EDITOR
 		if (bDrawAdvancedCollisionLines)
 			DrawArrow(TP, TargetDirectionToCamera * Hit.distance, Color.yellow);
+#endif
 
 		bool bRHit = Physics.Raycast(RR, out RaycastHit RHit, Distance, OnlyCollideWith);
 		bool bLHit = Physics.Raycast(RL, out RaycastHit LHit, Distance, OnlyCollideWith);
@@ -324,17 +328,19 @@ public class SpringArm : MonoBehaviour
 		if (bRHit)
 		{
 			PointRight = RHit.point;
-
+#if UNITY_EDITOR
 			if (bDrawAdvancedCollisionLines)
 				DrawArrow(TP, Right * RHit.distance, Color.red);
+#endif
 		}
 
 		if (bLHit)
 		{
 			PointLeft = LHit.point;
-
+#if UNITY_EDITOR
 			if (bDrawAdvancedCollisionLines)
 				DrawArrow(TP, Left * LHit.distance, Color.green);
+#endif
 		}
 
 		// Look at TargetPos() while still maintaining the inherited Pitch rotation.
