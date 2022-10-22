@@ -53,6 +53,10 @@ public class EnemyBot : MonoBehaviour
             }
 
             MoveToNextNode();
+
+            Vector3 targetPosition = new Vector3(nextNode.transform.position.x, this.transform.position.y, nextNode.transform.position.z);
+
+            this.transform.LookAt(targetPosition);
             
         }
     }
