@@ -17,6 +17,8 @@ using TMPro;
 [RequireComponent(typeof(Rigidbody), typeof(AudioController))]
 public abstract class PlayerController : MonoBehaviour
 {
+    [Tooltip("When on the tutorial level do not give three ability used so need to check when it is")]
+    [SerializeField] private bool bIsTutorialLevel = false;
     [SerializeField] private GameObject controlObj;
     [SerializeField] private GameObject abilityActiveObj;
     [SerializeField] private TextMeshProUGUI abilityTxt;
@@ -47,7 +49,7 @@ public abstract class PlayerController : MonoBehaviour
 
     public Rigidbody Rb { get; private set; }
 
-    public int AbilityUses { get; private set; } = 3;
+    [field: SerializeField] public int AbilityUses { get; private set; } = 3;
 
     public AudioController Audio { get; private set; }
 
@@ -372,6 +374,12 @@ public abstract class PlayerController : MonoBehaviour
         startRotation = transform.rotation;
 
         GameEvents.OnAddPlayerSwitch(PlayerIdSO.PlayerID);
+
+        if (bIsTutorialLevel)
+        {
+            AbilityUses = 0;
+        }
+
         AdjustAbilityValue(0);
     }
 
@@ -570,7 +578,7 @@ public abstract class PlayerController : MonoBehaviour
             // determine amount of fuel to ignore when saving, so that on a reset to this checkpoint no extra fuel gets added
             int numInvalidAbilities = fuelDataReset[PlayerIdSO.PlayerID];
             int saveAbilityAmount = AbilityUses - (numInvalidAbilities * 5);
-            if (saveAbilityAmount < 3)
+            if (saveAbilityAmount < 3 && !bIsTutorialLevel)
             {
                 // as only save whenever reach a checkpoint, ensure the player gets enough ability uses
                 saveAbilityAmount = 3;

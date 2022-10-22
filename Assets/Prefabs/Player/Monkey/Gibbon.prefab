@@ -2280,6 +2280,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fcaa7093491068a42b1584d4e7d2d01b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bIsTutorialLevel: 0
   controlObj: {fileID: 1380014017272559542}
   abilityActiveObj: {fileID: 4292051421636100735}
   abilityTxt: {fileID: 8866032319640643977}
@@ -2291,7 +2292,7 @@ MonoBehaviour:
   <MovementSpeed>k__BackingField: 5
   <RotationSpeed>k__BackingField: 250
   <Health>k__BackingField: 0
-  <FallDamageThreshold>k__BackingField: 10
+  <FallDamageThreshold>k__BackingField: 20
   groundCheckPosition: {x: 0, y: -0.5, z: 0}
   <GroundCheckRadius>k__BackingField: 0.3
   trackingCamera: {fileID: 0}

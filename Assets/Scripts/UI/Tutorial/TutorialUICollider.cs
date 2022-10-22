@@ -84,7 +84,7 @@ public class TutorialUICollider : MonoBehaviour
 
 	private void ShowInPlace()
 	{
-		TutorialUI InPlace = Instantiate(InPlaceTemplate, TutorialUIManager.Get().TutorialCanvasParent.transform);//tutorialCanvasParentWorld.transform);
+		TutorialUI InPlace = Instantiate(InPlaceTemplate, TutorialUIManager.Get().TutorialCanvasParent.transform); // tutorialCanvasParentWorld.transform);
 		InPlace.Set(Title, Contents, kAVeryLongTime, bShowControls, controlsTitle);
 
 		InPlace.Rect.anchorMin = InPlace.Rect.anchorMax = InPlace.Rect.localScale = new Vector2(.5f, .5f);
