@@ -10,6 +10,14 @@ namespace EventSystem
     /// </summary>
     public static class GameEvents
     {
+
+        // actions for when player controller uses the camera
+        public static Action<Transform, float> OnCameraZoom { get; set; }
+
+        public static Action<Transform, Vector3, bool> OnCameraMove { get; set; }
+
+        public static Action<Transform> OnCameraFollowRotation { get; set; }
+
         public static Action OnDashCarCollide { get; set; }
 
         public static Action OnDie { get; set; }
@@ -36,7 +44,7 @@ namespace EventSystem
             OnDashCarCollide?.Invoke(); // not yet implemented
         }
 
-        [Exec(Description = "WOAH OHO OH")]
+        [Exec(Description = "WOAH OHO OH")] // ????? what?
         public static void CollectFuel(int playerId)
         {
             OnCollectFuel?.Invoke(playerId);
@@ -97,6 +105,21 @@ namespace EventSystem
         public static void DeactivatePlayer(int currentPlayerId)
         {
             OnDeactivatePlayer?.Invoke(currentPlayerId);
+        }
+
+        public static void CameraMove(Transform transform, Vector3 inputAmount, bool bCamFinished = false)
+        {
+            OnCameraMove?.Invoke(transform, inputAmount, bCamFinished);
+        }
+
+        public static void CameraZoom(Transform transform, float scrollAmount)
+        {
+            OnCameraZoom?.Invoke(transform, scrollAmount);
+        }
+
+        public static void CameraFollowRotation(Transform transform)
+        {
+            OnCameraFollowRotation?.Invoke(transform);
         }
     }
 }

@@ -17,6 +17,8 @@ public class TutorialUICollider : MonoBehaviour
 	[SerializeField] TutorialUI CornerTemplate;
 	[SerializeField] TutorialUI InPlaceTemplate;
 	[SerializeField] Vector3 InPlacePosition;
+	[SerializeField] private Canvas tutorialCanvasParentWorld;
+
 
 	TutorialUI Current;
 	int PlayerCount = 0;
@@ -35,7 +37,7 @@ public class TutorialUICollider : MonoBehaviour
 		MainCamera = Camera.main;
 	}
 
-	void Update()
+	private void Update()
 	{
 		if (bShowInCorner || !Current)
 		{
@@ -47,17 +49,21 @@ public class TutorialUICollider : MonoBehaviour
 
 	private void OnTriggerEnter(Collider other)
 	{
-		if (Current == null && other.CompareTag("Player"))
+		if (other.CompareTag("Player"))
 		{
 			++PlayerCount;
 
-			if (bShowInCorner)
+			// only spawn in if no players have interacted with it
+			if (PlayerCount <= 1)
 			{
-				Current = TutorialUIManager.Get().Show(Title, Contents, kAVeryLongTime, bShowControls, controlsTitle);
-			}
-			else
-			{
-				ShowInPlace();
+				if (bShowInCorner)
+				{
+					Current = TutorialUIManager.Get().Show(Title, Contents, kAVeryLongTime, bShowControls, controlsTitle);
+				}
+				else
+				{
+					ShowInPlace();
+				}
 			}
 		}
 	}
@@ -78,12 +84,14 @@ public class TutorialUICollider : MonoBehaviour
 
 	private void ShowInPlace()
 	{
-		TutorialUI InPlace = Instantiate(InPlaceTemplate, TutorialUIManager.Get().TutorialCanvasParent.transform);
+		TutorialUI InPlace = Instantiate(InPlaceTemplate, TutorialUIManager.Get().TutorialCanvasParent.transform);//tutorialCanvasParentWorld.transform);
 		InPlace.Set(Title, Contents, kAVeryLongTime, bShowControls, controlsTitle);
 
 		InPlace.Rect.anchorMin = InPlace.Rect.anchorMax = InPlace.Rect.localScale = new Vector2(.5f, .5f);
 		InPlace.Rect.anchoredPosition = Vector2.zero;
 		InPlace.Blur.SetActive(false);
+
+		InPlace.transform.position = transform.position + InPlacePosition;
 
 		Current = InPlace;
 	}

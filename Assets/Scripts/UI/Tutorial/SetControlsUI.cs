@@ -23,6 +23,17 @@ public class SetControlsUI : MonoBehaviour
         headerTxt.gameObject.SetActive(true);
         headerTxt.text = controlName;
 
+        // convert all non-keyboard input devices to use the gamepad controls for the xbox controller as UI as no need to have them all setup when cannot test with them all
+        if (input1Name != "Keyboard")
+        {
+            input1Name = "gamepad";
+        }
+
+        if (numPlayers > 1 && input2Name != "Keyboard")
+        {
+            input2Name = "gamepad";
+        }
+
         if (speechBubble != null)
         {
             speechBubble.SetActive(true);

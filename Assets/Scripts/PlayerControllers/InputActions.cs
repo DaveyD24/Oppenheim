@@ -89,6 +89,30 @@ public class @InputActions : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""CamMove"",
+                    ""type"": ""Value"",
+                    ""id"": ""dc356c48-28e2-4682-98a9-5023e0fb9c5b"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""CamZoom"",
+                    ""type"": ""Value"",
+                    ""id"": ""566d6dc3-9a09-4acb-b4fc-bca1d7922e22"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""CamFollowRotation"",
+                    ""type"": ""Button"",
+                    ""id"": ""4a56bee5-fbe6-467c-aa37-53ecd0d666e5"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -414,7 +438,7 @@ public class @InputActions : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""7e7504e0-4027-40ac-8832-3b532f2907b5"",
-                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""path"": ""<Gamepad>/buttonEast"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
@@ -474,6 +498,94 @@ public class @InputActions : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
                     ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5c89a007-adfc-4845-85cb-6bee280d58bd"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""CamMove"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""458c7522-dea8-4e9a-bc8e-e84e79e291cc"",
+                    ""path"": ""<Gamepad>/rightStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""CamMove"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9441a639-9303-448c-b712-61c26a4f78f5"",
+                    ""path"": ""<Mouse>/scroll/y"",
+                    ""interactions"": """",
+                    ""processors"": ""Scale(factor=0.008333334)"",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""CamZoom"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""1D Axis"",
+                    ""id"": ""5ce92b54-4754-4e10-a064-58b82926ddab"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": ""Scale(factor=0.1)"",
+                    ""groups"": """",
+                    ""action"": ""CamZoom"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""c5000488-65ea-4b2f-a0d6-21e5fda08bc5"",
+                    ""path"": ""<Gamepad>/leftShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CamZoom"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""dc22adae-8820-4da8-a08d-ccc91d5eef84"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CamZoom"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e0cc1351-6883-4b82-b374-e24fe6021d11"",
+                    ""path"": ""<Keyboard>/c"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""CamFollowRotation"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8b3fe644-ea9b-473e-93b1-7b7b900f1f59"",
+                    ""path"": ""<Gamepad>/rightStickPress"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""CamFollowRotation"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1109,6 +1221,9 @@ public class @InputActions : IInputActionCollection, IDisposable
         m_Player_RotatePlayer = m_Player.FindAction("RotatePlayer", throwIfNotFound: true);
         m_Player_HideControls = m_Player.FindAction("HideControls", throwIfNotFound: true);
         m_Player_Pause = m_Player.FindAction("Pause", throwIfNotFound: true);
+        m_Player_CamMove = m_Player.FindAction("CamMove", throwIfNotFound: true);
+        m_Player_CamZoom = m_Player.FindAction("CamZoom", throwIfNotFound: true);
+        m_Player_CamFollowRotation = m_Player.FindAction("CamFollowRotation", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1182,6 +1297,9 @@ public class @InputActions : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_RotatePlayer;
     private readonly InputAction m_Player_HideControls;
     private readonly InputAction m_Player_Pause;
+    private readonly InputAction m_Player_CamMove;
+    private readonly InputAction m_Player_CamZoom;
+    private readonly InputAction m_Player_CamFollowRotation;
     public struct PlayerActions
     {
         private @InputActions m_Wrapper;
@@ -1195,6 +1313,9 @@ public class @InputActions : IInputActionCollection, IDisposable
         public InputAction @RotatePlayer => m_Wrapper.m_Player_RotatePlayer;
         public InputAction @HideControls => m_Wrapper.m_Player_HideControls;
         public InputAction @Pause => m_Wrapper.m_Player_Pause;
+        public InputAction @CamMove => m_Wrapper.m_Player_CamMove;
+        public InputAction @CamZoom => m_Wrapper.m_Player_CamZoom;
+        public InputAction @CamFollowRotation => m_Wrapper.m_Player_CamFollowRotation;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1231,6 +1352,15 @@ public class @InputActions : IInputActionCollection, IDisposable
                 @Pause.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPause;
                 @Pause.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPause;
                 @Pause.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPause;
+                @CamMove.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCamMove;
+                @CamMove.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCamMove;
+                @CamMove.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCamMove;
+                @CamZoom.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCamZoom;
+                @CamZoom.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCamZoom;
+                @CamZoom.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCamZoom;
+                @CamFollowRotation.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCamFollowRotation;
+                @CamFollowRotation.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCamFollowRotation;
+                @CamFollowRotation.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCamFollowRotation;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -1262,6 +1392,15 @@ public class @InputActions : IInputActionCollection, IDisposable
                 @Pause.started += instance.OnPause;
                 @Pause.performed += instance.OnPause;
                 @Pause.canceled += instance.OnPause;
+                @CamMove.started += instance.OnCamMove;
+                @CamMove.performed += instance.OnCamMove;
+                @CamMove.canceled += instance.OnCamMove;
+                @CamZoom.started += instance.OnCamZoom;
+                @CamZoom.performed += instance.OnCamZoom;
+                @CamZoom.canceled += instance.OnCamZoom;
+                @CamFollowRotation.started += instance.OnCamFollowRotation;
+                @CamFollowRotation.performed += instance.OnCamFollowRotation;
+                @CamFollowRotation.canceled += instance.OnCamFollowRotation;
             }
         }
     }
@@ -1460,6 +1599,9 @@ public class @InputActions : IInputActionCollection, IDisposable
         void OnRotatePlayer(InputAction.CallbackContext context);
         void OnHideControls(InputAction.CallbackContext context);
         void OnPause(InputAction.CallbackContext context);
+        void OnCamMove(InputAction.CallbackContext context);
+        void OnCamZoom(InputAction.CallbackContext context);
+        void OnCamFollowRotation(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

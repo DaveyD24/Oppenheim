@@ -31,6 +31,13 @@ public abstract class PlayerController : MonoBehaviour
 
     private PlayerInput pInput;
 
+    private Vector3 PreviousMouseDragPosition; // used when moving the camera with the mouse
+
+    // the variable for handling moving the camera
+    private bool bMouseHeld = false;
+    private Vector2 mouseControlInput;
+    private float camZoomValue;
+
     // input handleing things
     public static IEnumerator DeathWaitTimer { get; private set; }
 
@@ -176,7 +183,14 @@ public abstract class PlayerController : MonoBehaviour
             PlayerInput.FindAction("RotatePlayer").performed += RotatePlayer;
 
             PlayerInput.FindAction("Pause").performed += GamePause;
-            // Inputs.Player.Jump.canceled += Jump;
+
+            // camera inputs
+            PlayerInput.FindAction("CamMove").performed += CameraMove;
+            PlayerInput.FindAction("CamMove").canceled += CameraMove;
+            PlayerInput.FindAction("CamZoom").performed += CameraZoom;
+            PlayerInput.FindAction("CamZoom").canceled += CameraZoom;
+            PlayerInput.FindAction("CamFollowRotation").performed += CameraFollowRotation;
+
             PlayerInput.Enable();
 
             Activate();
@@ -202,6 +216,13 @@ public abstract class PlayerController : MonoBehaviour
             PlayerInput.FindAction("HideControls").performed -= ControlsVisibility;
             PlayerInput.FindAction("Pause").performed -= GamePause;
 
+            // camera inputs
+            PlayerInput.FindAction("CamMove").performed -= CameraMove;
+            PlayerInput.FindAction("CamMove").canceled -= CameraMove;
+            PlayerInput.FindAction("CamZoom").performed -= CameraZoom;
+            PlayerInput.FindAction("CamZoom").canceled -= CameraZoom;
+            PlayerInput.FindAction("CamFollowRotation").performed -= CameraFollowRotation;
+
             PlayerInput.Disable();
             Deactivate();
         }
@@ -225,6 +246,67 @@ public abstract class PlayerController : MonoBehaviour
         UIEvents.PauseGame();
     }
 
+    private void CameraMove(InputAction.CallbackContext ctx)
+    {
+        Debug.Log(ctx.control.name);
+        if (ctx.control.name == "rightButton") // mouse control
+        {
+            bMouseHeld = ctx.control.IsPressed();
+            Debug.Log(bMouseHeld);
+        }
+        else
+        {
+            // must be using gamepad input
+            Vector2 inputAmount = ctx.ReadValue<Vector2>();
+            print(inputAmount);
+            if (Mathf.Abs(inputAmount.x) < DefaultPlayerData.InputDeadZone)
+            {
+                inputAmount.x = 0;
+            }
+
+            if (Mathf.Abs(inputAmount.y) < DefaultPlayerData.InputDeadZone)
+            {
+                inputAmount.y = 0;
+            }
+
+            mouseControlInput = inputAmount;
+        }
+
+        if (ctx.canceled)
+        {
+            GameEvents.CameraMove(gameObject.transform, Vector3.zero, true);
+        }
+    }
+
+    private void CamMoveMouse()
+    {
+        if (bMouseHeld)
+        {
+            Vector3 inputAmount = Vector3.zero;
+            Vector3 mousePosition = Input.mousePosition;
+            inputAmount.x = mousePosition.x - PreviousMouseDragPosition.x;
+            inputAmount.y = mousePosition.y - PreviousMouseDragPosition.y;
+            PreviousMouseDragPosition = mousePosition;
+
+            GameEvents.CameraMove(gameObject.transform, inputAmount);
+        }
+        else if (Mathf.Abs(mouseControlInput.x) >= DefaultPlayerData.InputDeadZone || Mathf.Abs(mouseControlInput.y) >= DefaultPlayerData.InputDeadZone)
+        {
+            // if input has been recieved for the controller apply movement to it
+            GameEvents.CameraMove(gameObject.transform, mouseControlInput * 3);
+        }
+    }
+
+    private void CameraZoom(InputAction.CallbackContext ctx)
+    {
+        camZoomValue = ctx.ReadValue<float>();
+    }
+
+    private void CameraFollowRotation(InputAction.CallbackContext ctx)
+    {
+        GameEvents.CameraFollowRotation(gameObject.transform);
+    }
+
     public void AdjustAbilityValue(int amount)
     {
         AbilityUses += amount;
@@ -234,6 +316,13 @@ public abstract class PlayerController : MonoBehaviour
 
     protected virtual void Update()
     {
+        CamMoveMouse();
+
+        if (!BatMathematics.IsZero(camZoomValue))
+        {
+            GameEvents.CameraZoom(gameObject.transform, camZoomValue);
+        }
+
         if (transform.position.y < 2.5f)
         {
             OnDeath();

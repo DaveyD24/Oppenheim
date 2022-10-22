@@ -62,7 +62,7 @@ public class SwitchManager : MonoBehaviour
     private void Awake()
     {
         playerInputManager = GetComponent<PlayerInputManager>();
-        InputSystem.DisableDevice(Mouse.current);
+        //InputSystem.DisableDevice(Mouse.current);
     }
 
     private void OnEnable()
@@ -101,31 +101,35 @@ public class SwitchManager : MonoBehaviour
     /// <param name="ctx">the info about the input registered.</param>
     private void Joining(InputAction.CallbackContext ctx)
     {
-        // checks if the device currently trying to connect is already connected or not
-        InputControlList<InputDevice> unpairedDevices = UnityEngine.InputSystem.Users.InputUser.GetUnpairedInputDevices();
-        InputDevice deviceUsing = ctx.control.device;
-        bool bIsbeingUsed = true;
-        foreach (InputDevice device in unpairedDevices)
+        // only perform if at least one of the players is active
+        if (Monkey.gameObject.activeSelf || Car.gameObject.activeSelf || Bat.gameObject.activeSelf || Soldier.gameObject.activeSelf)
         {
-            // print(device.name);
-            if (device == deviceUsing)
+            // checks if the device currently trying to connect is already connected or not
+            InputControlList<InputDevice> unpairedDevices = UnityEngine.InputSystem.Users.InputUser.GetUnpairedInputDevices();
+            InputDevice deviceUsing = ctx.control.device;
+            bool bIsbeingUsed = true;
+            foreach (InputDevice device in unpairedDevices)
             {
-                // as the device is listed as unpaired it can be used
-                bIsbeingUsed = false;
-                break;
+                // print(device.name);
+                if (device == deviceUsing)
+                {
+                    // as the device is listed as unpaired it can be used
+                    bIsbeingUsed = false;
+                    break;
+                }
             }
-        }
 
-        // if uncontrolled players exist and this device is not in use, connect it to a player
-        if (playerInputManager.playerCount < playerInputManager.maxPlayerCount && !bIsbeingUsed)
-        {
-            PlayerInput player = playerInputManager.JoinPlayer(playerNo, playerNo, null, ctx.control.device); // a function to auto handle the setup of the new device
-            if (player != null)
+            // if uncontrolled players exist and this device is not in use, connect it to a player
+            if (playerInputManager.playerCount < playerInputManager.maxPlayerCount && !bIsbeingUsed)
             {
-                playerNo += 1;
-                AddPlayer(player);
-                player.actions.FindActionMap("JoiningGame").Disable();
-//                print(player.devices[0].name);
+                PlayerInput player = playerInputManager.JoinPlayer(playerNo, playerNo, null, ctx.control.device); // a function to auto handle the setup of the new device
+                if (player != null)
+                {
+                    playerNo += 1;
+                    AddPlayer(player);
+                    player.actions.FindActionMap("JoiningGame").Disable();
+                    //                print(player.devices[0].name);
+                }
             }
         }
     }
