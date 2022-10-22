@@ -10,7 +10,7 @@ public class EditorSwitchToggle : Editor
 
 		if (GUILayout.Button("Toggle Switch") && Application.isPlaying)
 		{
-			Switch.ToggleSwitch();
+			Switch.OnTriggerEnter(null);
 		}
 
 		GUILayout.Space(20);

@@ -294,6 +294,20 @@ public class ViewportSplit : MonoBehaviour
 		}
 	}
 
+	[Exec("Teleports every player to the Main Spring Arm's Position.")]
+	public static void TP_AllToPos()
+	{
+		if (MainSpringArm)
+		{
+			Get().SwitchManager.GetAllPlayers(out PlayerController[] Players);
+
+			foreach (PlayerController Player in Players)
+			{
+				Player.transform.position = MainSpringArm.transform.position;
+			}
+		}
+	}
+
 #if UNITY_EDITOR
 	void OnDrawGizmos()
 	{

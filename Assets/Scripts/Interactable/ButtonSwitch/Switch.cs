@@ -25,13 +25,13 @@ public class Switch : Interactable, IDataInterface
 		}
 	}
 
-	public virtual void OnTriggerEnter(Collider entered)
+	public virtual void OnTriggerEnter(Collider Entered)
 	{
 		// Turn this Switch ON/OFF.
 		ToggleSwitch();
 
 		// Fires the ON/OFF Broadcasts.
-		CheckBroadcast(entered);
+		CheckBroadcast(Entered);
 	}
 
 	// Trigger this Switch regardless of any reliant Switches.
@@ -60,7 +60,7 @@ public class Switch : Interactable, IDataInterface
 	/// </b><br></br>
 	/// The last Switch to turn ON before this Broadcast.
 	/// </param>
-	void CheckBroadcast(Collider Broadcaster)
+	public void CheckBroadcast(Collider Broadcaster)
 	{
 		if (bIsOn && AreAllReliantSwitchesOn())
 		{
@@ -75,9 +75,9 @@ public class Switch : Interactable, IDataInterface
 	}
 
 	// Also fire ON/OFF Broadcasts if a reliant Switch is triggered.
-	void OnAnyReliantListener(Switch broadcast)
+	void OnAnyReliantListener(Switch Broadcast)
 	{
-		CheckBroadcast(broadcast.Collider);
+		CheckBroadcast(Broadcast.Collider);
 	}
 
 	/// <returns><see langword="true"></see> if all <see cref="ReliantSwitches"/> are <see cref="bIsOn"/>.</returns>
