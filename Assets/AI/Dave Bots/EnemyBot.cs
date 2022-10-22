@@ -33,7 +33,11 @@ public class EnemyBot : MonoBehaviour
         //MoveToNextNode();
         StartTime = Time.time;
         EndTime = StartTime + 2.0f;
-        nextNode = currentNode.CalculateNextNode();
+        do
+        {
+            nextNode = currentNode.CalculateNextNode();
+        }
+        while (currentNode.CalculateNextNode().platformIndex != currentNode.platformIndex);
 
         HeightOffset = this.GetComponent<BoxCollider>().bounds.size.y / 2;
     }
@@ -76,7 +80,11 @@ public class EnemyBot : MonoBehaviour
             else
             {
                 currentNode = nextNode;
-                nextNode = currentNode.CalculateNextNode();
+                do
+                {
+                    nextNode = currentNode.CalculateNextNode();
+                }
+                while (currentNode.CalculateNextNode().platformIndex != currentNode.platformIndex);
                 StartTime = Time.time;
                 EndTime = StartTime + 0.4f;
             }
