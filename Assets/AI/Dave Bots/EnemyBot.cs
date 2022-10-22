@@ -5,9 +5,9 @@ using UnityEngine;
 public class EnemyBot : MonoBehaviour
 {
 
-    float health;
+    public float health;
     public float maxHealth;
-    float damagePerHit;
+    float damagePerHit = 10f;
 
     float movementSpeed = 5.0f;
     bool isActive;
@@ -24,6 +24,9 @@ public class EnemyBot : MonoBehaviour
 
     float Width;
     float Height;
+
+    int spawnCount = 3;
+    bool hasSpawned = false;
 
     // Start is called before the first frame update
     void Start()
@@ -53,7 +56,7 @@ public class EnemyBot : MonoBehaviour
         {
             if (health <= 0)
             {
-                OnDeath();
+                isActive = false;
             }
 
             MoveToNextNode();
@@ -63,6 +66,10 @@ public class EnemyBot : MonoBehaviour
             
             CreateScanner();
             
+        }
+        else
+        {
+            OnDeath();
         }
     }
 
@@ -121,6 +128,10 @@ public class EnemyBot : MonoBehaviour
             if (C.gameObject.CompareTag("Player"))
             {
                 Debug.Log("Player Detected!");
+                if (!hasSpawned)
+                {
+                    SpawnArmedBots();
+                }
             }
         }
     }
@@ -132,8 +143,29 @@ public class EnemyBot : MonoBehaviour
 
     void OnDeath()
     {
-        isActive = false;
         //do some death stuff
+    }
+
+    void SpawnArmedBots()
+    {
+
+            NodeManager nodeManager = GameObject.FindObjectOfType<NodeManager>();
+
+            MovementNode shortestNode = new MovementNode();
+            float shortestDistance = 99999f;
+            foreach (MovementNode M in nodeManager.SpawnPoints)
+            {
+                if (Vector3.Distance(this.transform.position, M.transform.position) < shortestDistance)
+                {
+                    shortestDistance = Vector3.Distance(this.transform.position, M.transform.position);
+                    shortestNode = M;
+                }
+            }
+
+        GameObject ArmedEnemy = Instantiate(nodeManager.armedBotPrefab, shortestNode.transform.position, Quaternion.identity);
+        ArmedEnemy.GetComponent<ArmedBot>().currentNode = shortestNode;
+        hasSpawned = true;
+
     }
 
     private void OnCollisionEnter(Collision collision)

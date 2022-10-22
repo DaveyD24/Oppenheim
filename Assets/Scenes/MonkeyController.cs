@@ -59,6 +59,16 @@ public class MonkeyController : PlayerController
     {
         base.Update();
 
+        if (IsGrounded() && Rb.velocity.magnitude > 0.1f)
+        {
+            Audio.PlayUnique("Footsteps", EAudioPlayOptions.AtTransformPosition | EAudioPlayOptions.DestroyOnEnd);
+        }
+        else
+        {
+            Audio.StopCoroutine("Footsteps");
+        }
+
+
         if (bDidJump)
         {
             currJumpWaitTime -= Time.deltaTime;
@@ -73,6 +83,7 @@ public class MonkeyController : PlayerController
         {
             if (clinging)
             {
+                
                 transform.position = clingPosition;
 
                 // Vector3 desiredPosition = transform.position - Vector3.up;
@@ -82,6 +93,7 @@ public class MonkeyController : PlayerController
             }
             if (hanging)
             {
+                
                 //Debug.Log("I am hanging");
                 //this.transform.position = new Vector3(this.transform.position.x, hangPosition.y, this.transform.position.z);
                 //this.transform.position = hangPosition;
@@ -122,6 +134,8 @@ public class MonkeyController : PlayerController
         // This check is original and untouched.
         if ((IsGrounded() || clinging || hanging) && !bDidJump)
         {
+
+
             // Original: Jump with a modified kinematic equation.
             Rb.velocity += new Vector3(0f, Mathf.Sqrt(jumpHeight * -3f * Physics.gravity.y), 0f);
 
@@ -155,7 +169,7 @@ public class MonkeyController : PlayerController
             bDidJump = true;
             animator.SetTrigger("Jump");
 
-            Audio.Play(RandomSound(), EAudioPlayOptions.FollowEmitter | EAudioPlayOptions.DestroyOnEnd);
+            Audio.Play("Grunt", EAudioPlayOptions.FollowEmitter | EAudioPlayOptions.DestroyOnEnd);
         }
     }
 
@@ -231,6 +245,7 @@ public class MonkeyController : PlayerController
         // Only Cling to something if you're off the ground.
         if (AbilityUses > 0 && collision.transform.CompareTag("Clingable") && !IsGrounded())
         {
+            Audio.PlayUnique("Doof", EAudioPlayOptions.AtTransformPosition | EAudioPlayOptions.DestroyOnEnd);
             clinging = true;
             hanging = false;
             clingPosition = collision.collider.ClosestPoint(transform.position);
@@ -239,6 +254,7 @@ public class MonkeyController : PlayerController
 
         if (AbilityUses > 0 && collision.transform.CompareTag("Hangable") && !IsGrounded())
         {
+            Audio.PlayUnique("Doof", EAudioPlayOptions.AtTransformPosition | EAudioPlayOptions.DestroyOnEnd);
             hanging = true;
             clinging = false;
             hangPosition = this.transform.position;

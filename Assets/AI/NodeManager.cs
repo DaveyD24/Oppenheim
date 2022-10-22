@@ -7,10 +7,13 @@ public class NodeManager : MonoBehaviour
     [SerializeField] float nodeDistance = 2.0f;
     [SerializeField] GameObject nodePrefab;
     [SerializeField] GameObject botPrefab;
+    [SerializeField] public GameObject armedBotPrefab;
     MovementNode NodeToSpawnAt;
 
     float WDistance;
     float HDistance;
+
+    public List<MovementNode> SpawnPoints = new List<MovementNode>();
 
     // Start is called before the first frame update
     void Start()
@@ -56,8 +59,21 @@ public class NodeManager : MonoBehaviour
                 {
                     if (i == RandomxD.x && j == RandomxD.y)
                     {
-                        GameObject Enemy = Instantiate(botPrefab, NodeToSpawnAt.transform.position, Quaternion.identity);
-                        Enemy.GetComponent<EnemyBot>().currentNode = NodeToSpawnAt;
+                        int choice = Random.Range(0, 2);
+                        if (choice == 1)
+                        {
+                            GameObject Enemy = Instantiate(botPrefab, NodeToSpawnAt.transform.position, Quaternion.identity);
+                            Enemy.GetComponent<EnemyBot>().currentNode = NodeToSpawnAt;
+                            SpawnPoints.Add(NodeToSpawnAt);
+                        }
+                        else
+                        {
+                            GameObject Enemy = Instantiate(armedBotPrefab, NodeToSpawnAt.transform.position, Quaternion.identity);
+                            Enemy.GetComponent<ArmedBot>().currentNode = NodeToSpawnAt;
+                            SpawnPoints.Add(NodeToSpawnAt);
+                        }
+                        
+                        
                     }
                 }
             }
