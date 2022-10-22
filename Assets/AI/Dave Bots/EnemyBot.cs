@@ -20,6 +20,8 @@ public class EnemyBot : MonoBehaviour
     float StartTime;
     float EndTime;
 
+    float HeightOffset;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -32,6 +34,8 @@ public class EnemyBot : MonoBehaviour
         StartTime = Time.time;
         EndTime = StartTime + 2.0f;
         nextNode = currentNode.CalculateNextNode();
+
+        HeightOffset = this.GetComponent<BoxCollider>().bounds.size.y / 2;
     }
 
     // Update is called once per frame
@@ -66,7 +70,7 @@ public class EnemyBot : MonoBehaviour
             {
                 //Debug.Log("inwhile");
                 float TimeProgressd = (Time.time - StartTime) / 0.4f;
-                this.transform.position = Vector3.Lerp(currentNode.transform.position, nextNode.transform.position, TimeProgressd);
+                this.transform.position = new Vector3(Vector3.Lerp(currentNode.transform.position, nextNode.transform.position, TimeProgressd).x, currentNode.transform.position.y + HeightOffset, Vector3.Lerp(currentNode.transform.position, nextNode.transform.position, TimeProgressd).z);
                 Debug.Log(TimeProgressd);
             }
             else
