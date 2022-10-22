@@ -45,6 +45,8 @@ public class BreakableObj : UniqueID, IDataInterface
         }
         else
         {
+            Audio.Play("Hit Breakable", EAudioPlayOptions.AtTransformPosition | EAudioPlayOptions.DestroyOnEnd);
+
             Material material = gameObject.GetComponent<MeshRenderer>().material;
 
             GameObject particles = Instantiate(disapearParticles, transform.position, Quaternion.identity);

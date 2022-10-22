@@ -145,6 +145,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!114 &4865792399604372665
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -183,4 +184,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HashMap:
-    Entries: []
+    Entries:
+    - Key: Hit Breakable
+      Value:
+        Clip: {fileID: 8300000, guid: e9d51238162a0584a807c9eb9c5741fe, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 0
+        bLoop: 0
+        Priority: 128
+        Volume: 1
+        Pitch: 1
+        StereoPan: 0
+        SpatialBlend: 0.75
+        ReverbZoneMix: 1

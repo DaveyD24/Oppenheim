@@ -1253,6 +1253,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gizmoSize: 2
+  scaleMultiplier: 25
   add: 2
   currChildHole: 1
   addChildHole: 1
@@ -1423,6 +1424,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &43428969
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1743,6 +1745,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gizmoSize: 2
+  scaleMultiplier: 25
   add: 0
   currChildHole: 0
   addChildHole: 0
@@ -2068,6 +2071,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gizmoSize: 2
+  scaleMultiplier: 25
   add: 3
   currChildHole: 1
   addChildHole: 0
@@ -2284,6 +2288,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &68298653
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -2652,6 +2657,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &95957212
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -3709,6 +3715,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &114824124
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -3965,6 +3972,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gizmoSize: 2
+  scaleMultiplier: 25
   add: 1
   currChildHole: 1
   addChildHole: 1
@@ -6589,6 +6597,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &199738886
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -7237,6 +7246,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &235716132
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -8347,6 +8357,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &283728007
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -8533,6 +8544,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &290091977
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -8937,6 +8949,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &303530402
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -9186,6 +9199,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &325441365
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -10342,6 +10356,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &383367552
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -10596,6 +10611,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gizmoSize: 2
+  scaleMultiplier: 25
   add: 0
   currChildHole: 1
   addChildHole: 0
@@ -11449,6 +11465,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &418765580
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -12018,6 +12035,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &455194615
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -13575,6 +13593,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &530683013
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -13761,6 +13780,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &532585309
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -13917,6 +13937,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &540906296
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -14510,6 +14531,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &583557494
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -14946,6 +14968,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gizmoSize: 2
+  scaleMultiplier: 25
   add: 3
   currChildHole: 1
   addChildHole: 2
@@ -15390,6 +15413,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &628887113
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -16326,6 +16350,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &696017390
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -16608,6 +16633,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &702311682
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -16722,6 +16748,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gizmoSize: 2
+  scaleMultiplier: 25
   add: 1
   currChildHole: 0
   addChildHole: 0
@@ -16892,6 +16919,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &706758166
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -17818,6 +17846,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &727213399
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -18716,6 +18745,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &771698617
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -18998,6 +19028,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &777379713
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -19249,6 +19280,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &782729332
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -19531,6 +19563,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &786801080
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -19995,6 +20028,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &811469217
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -20283,6 +20317,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &836527488
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -20995,6 +21030,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &853509423
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -21274,6 +21310,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &857747406
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -21430,6 +21467,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &864797704
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -22030,6 +22068,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gizmoSize: 2
+  scaleMultiplier: 25
   add: 3
   currChildHole: 0
   addChildHole: 2
@@ -22230,6 +22269,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &920498033
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -22569,6 +22609,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &942498474
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -23053,7 +23094,7 @@ MonoBehaviour:
         bPlayOnAwake: 1
         bLoop: 1
         Priority: 128
-        Volume: 1
+        Volume: 0.25
         Pitch: 1
         StereoPan: 0
         SpatialBlend: 0.75
@@ -23067,7 +23108,7 @@ MonoBehaviour:
         bPlayOnAwake: 1
         bLoop: 1
         Priority: 128
-        Volume: 1
+        Volume: 0.25
         Pitch: 1
         StereoPan: 0
         SpatialBlend: 0.75
@@ -23905,6 +23946,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &988322986
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -24089,6 +24131,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &991179590
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -24369,6 +24412,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &992338533
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -24846,6 +24890,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &1008069514
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -25117,6 +25162,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gizmoSize: 2
+  scaleMultiplier: 25
   add: 0
   currChildHole: 1
   addChildHole: 0
@@ -25287,6 +25333,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &1026099798
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -25501,6 +25548,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &1029102716
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -25657,6 +25705,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &1030712761
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -25968,6 +26017,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gizmoSize: 2
+  scaleMultiplier: 25
   add: 0
   currChildHole: 1
   addChildHole: 0
@@ -26918,6 +26968,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gizmoSize: 2
+  scaleMultiplier: 25
   add: 5
   currChildHole: 1
   addChildHole: 3
@@ -27202,6 +27253,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &1067404695
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -27699,6 +27751,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &1075239648
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -29205,6 +29258,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &1113746274
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -29884,6 +29938,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gizmoSize: 2
+  scaleMultiplier: 25
   add: 1
   currChildHole: 1
   addChildHole: 0
@@ -30181,6 +30236,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &1144484068
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -30913,6 +30969,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gizmoSize: 2
+  scaleMultiplier: 25
   add: 0
   currChildHole: 1
   addChildHole: 0
@@ -31221,6 +31278,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gizmoSize: 2
+  scaleMultiplier: 25
   add: 1
   currChildHole: 1
   addChildHole: 0
@@ -31558,6 +31616,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gizmoSize: 2
+  scaleMultiplier: 25
   add: 1
   currChildHole: 1
   addChildHole: 0
@@ -31790,6 +31849,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &1227916108
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -32153,6 +32213,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &1249614316
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -32367,6 +32428,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &1251655931
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -32523,6 +32585,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &1255660708
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -33624,6 +33687,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gizmoSize: 2
+  scaleMultiplier: 25
   add: 0
   currChildHole: 0
   addChildHole: 0
@@ -33646,6 +33710,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gizmoSize: 2
+  scaleMultiplier: 25
   add: 0
   currChildHole: 0
   addChildHole: 0
@@ -33669,6 +33734,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gizmoSize: 2
+  scaleMultiplier: 25
   add: 0
   currChildHole: 0
   addChildHole: 0
@@ -33691,6 +33757,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gizmoSize: 2
+  scaleMultiplier: 25
   add: 0
   currChildHole: 0
   addChildHole: 0
@@ -33713,6 +33780,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gizmoSize: 2
+  scaleMultiplier: 25
   add: 0
   currChildHole: 1
   addChildHole: 0
@@ -34603,6 +34671,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &1368954287
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -35126,6 +35195,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &1390960309
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -35310,6 +35380,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &1394102573
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -35524,6 +35595,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &1399635212
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -36214,6 +36286,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gizmoSize: 2
+  scaleMultiplier: 25
   add: 1
   currChildHole: 1
   addChildHole: 0
@@ -36523,6 +36596,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gizmoSize: 2
+  scaleMultiplier: 25
   add: 3
   currChildHole: 1
   addChildHole: 0
@@ -36724,6 +36798,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &1436085334
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -37208,6 +37283,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &1459552051
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -37422,6 +37498,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &1459792719
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -37880,6 +37957,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &1491733834
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -38146,6 +38224,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &1495226007
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -38412,6 +38491,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &1499445716
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -38626,6 +38706,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &1502589024
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -38812,6 +38893,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &1504487839
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -39468,6 +39550,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &1538143411
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -39987,6 +40070,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &1574738893
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -40366,6 +40450,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &1576530157
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -40509,6 +40594,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gizmoSize: 2
+  scaleMultiplier: 25
   add: 2
   currChildHole: 1
   addChildHole: 0
@@ -41122,6 +41208,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &1595578890
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -41336,6 +41423,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &1603392630
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -42440,6 +42528,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &1653531794
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -42659,6 +42748,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &1656286707
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -42843,6 +42933,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &1658918843
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -42985,6 +43076,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gizmoSize: 2
+  scaleMultiplier: 25
   add: 0
   currChildHole: 1
   addChildHole: 0
@@ -43806,6 +43898,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &1687510854
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -44011,6 +44104,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gizmoSize: 2
+  scaleMultiplier: 25
   add: 4
   currChildHole: 2
   addChildHole: 0
@@ -44432,6 +44526,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gizmoSize: 2
+  scaleMultiplier: 25
   add: 0
   currChildHole: 1
   addChildHole: 0
@@ -44714,6 +44809,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &1727562032
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -45001,6 +45097,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &1753104625
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -45810,6 +45907,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gizmoSize: 2
+  scaleMultiplier: 25
   add: 0
   currChildHole: 0
   addChildHole: 0
@@ -45980,6 +46078,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &1783998087
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -47264,6 +47363,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gizmoSize: 2
+  scaleMultiplier: 25
   add: 3
   currChildHole: 0
   addChildHole: 2
@@ -47577,6 +47677,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &1836833058
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -48549,6 +48650,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &1872547817
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -49019,6 +49121,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gizmoSize: 2
+  scaleMultiplier: 25
   add: 4
   currChildHole: 1
   addChildHole: 1
@@ -50445,6 +50548,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &1990323968
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -50629,6 +50733,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &1996858912
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -50843,6 +50948,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &1998720743
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -51283,6 +51389,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &2012433811
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -51507,6 +51614,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gizmoSize: 2
+  scaleMultiplier: 25
   add: 0
   currChildHole: 0
   addChildHole: 0
@@ -51823,6 +51931,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &2029647943
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -52510,6 +52619,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gizmoSize: 2
+  scaleMultiplier: 25
   add: 3
   currChildHole: 1
   addChildHole: 2
@@ -52928,6 +53038,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &2080284768
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -53210,6 +53321,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &2099980244
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -53462,6 +53574,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &2104701743
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -53676,6 +53789,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &2104907548
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -54130,6 +54244,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &2127867247
 Rigidbody:
   m_ObjectHideFlags: 0

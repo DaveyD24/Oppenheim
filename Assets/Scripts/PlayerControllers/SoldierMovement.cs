@@ -16,6 +16,8 @@ public class SoldierMovement : PlayerController
 #pragma warning restore SA1202 // Elements should be ordered by access
 
 #endif
+    private AudioSource footAudio;
+    private AudioSource swimAudio;
 
     private bool bDidJump = false;
     private float currJumpWaitTime = 1;
@@ -48,6 +50,11 @@ public class SoldierMovement : PlayerController
         boxCollider = gameObject.GetComponent<BoxCollider>();
         currJumpWaitTime = jumpWaitTime;
 
+        Audio.Play("GunCock", EAudioPlayOptions.AtTransformPosition | EAudioPlayOptions.DestroyOnEnd);
+    }
+
+    protected override void PlayFuelCollectionSound()
+    {
         Audio.Play("GunCock", EAudioPlayOptions.AtTransformPosition | EAudioPlayOptions.DestroyOnEnd);
     }
 
@@ -214,6 +221,7 @@ public class SoldierMovement : PlayerController
 
             animator.SetTrigger("Jump");
             bDidJump = true;
+            Audio.Play("Grunt", EAudioPlayOptions.FollowEmitter);
         }
     }
 
@@ -228,7 +236,7 @@ public class SoldierMovement : PlayerController
         GameObject bullet = Instantiate(BulletPrefab, BulletSpawnPoint.position, BulletSpawnPoint.rotation);
         bullet.GetComponent<Rigidbody>().velocity = BulletSpawnPoint.forward * BulletSpeed;
 
-        Audio.Play("Shot", EAudioPlayOptions.AtTransformPosition | EAudioPlayOptions.DestroyOnEnd);
+        Audio.Play(RandomShotSound(), EAudioPlayOptions.AtTransformPosition | EAudioPlayOptions.DestroyOnEnd);
 
         currAmmoClip -= 1;
         if (currAmmoClip <= 0)
@@ -338,10 +346,66 @@ public class SoldierMovement : PlayerController
         if (IsZero(speedometer.Velocity))
         {
             animator.SetTrigger("Idle");
+
+            if (footAudio != null)
+            {
+                Destroy(footAudio);
+            }
+
+            if (swimAudio != null)
+            {
+                Destroy(swimAudio);
+            }
         }
         else
         {
             animator.SetTrigger("Walk");
+            if (isSwimming && (swimAudio == null))
+            {
+                if (footAudio != null)
+                {
+                    Destroy(footAudio);
+                }
+
+                swimAudio = Audio.Play(RandomSwimSound(), EAudioPlayOptions.FollowEmitter);
+            }
+            else if (footAudio == null && (swimAudio == null || !swimAudio.isPlaying))
+            {
+                if (swimAudio != null)
+                {
+                    Destroy(swimAudio);
+                }
+
+                footAudio = Audio.Play("Footsteps", EAudioPlayOptions.FollowEmitter);
+            }
+        }
+    }
+
+    /// <summary>
+    /// picks one of two sounds to play when shooting, with a higher likelyhood of using the regular shot sound.
+    /// </summary>
+    /// <returns>the sound to play.</returns>
+    private string RandomShotSound()
+    {
+        bool bRandomBool = Random.Range(0f, 1f) < .9f;
+
+        return bRandomBool ? "Shot" : "Shot Crunch";
+    }
+
+    private string RandomSwimSound()
+    {
+        float rand = Random.Range(0f, 1f);
+        if (rand < 0.33f)
+        {
+            return "water1";
+        }
+        else if (rand < 0.66f)
+        {
+            return "water2";
+        }
+        else
+        {
+            return "water3";
         }
     }
 

@@ -46,6 +46,8 @@ public class CarController : PlayerController
     [SerializeField] private float maxFlippedWait = 1.5f;
     private float flippedTime = 3;
 
+    private AudioSource engineAudio;
+
     [field: Header("Dash Settings")]
     [field: Space(1)]
     [field: SerializeField] public LayerMask PlayerLayer { get; private set; }
@@ -143,6 +145,8 @@ public class CarController : PlayerController
         windParticles.Play();
 
         InvokeRepeating("ApplyIndicator", indicatorFrequency, indicatorFrequency);
+
+        PlayEngineSounds();
     }
 
     protected override void Jump(InputAction.CallbackContext ctx)
@@ -162,6 +166,8 @@ public class CarController : PlayerController
         {
             inputAmount.y = 0;
         }
+
+        PlayEngineSounds();
     }
 
     protected override void PerformAbility(InputAction.CallbackContext ctx)
@@ -182,16 +188,6 @@ public class CarController : PlayerController
 
         bIsGrounded = IsGrounded();
         SetWindParticles();
-
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            GameObject.Find("SaveSection (1)").GetComponent<GatherStageObjects>().SaveSection();
-        }
-
-        if (Input.GetKeyDown(KeyCode.O))
-        {
-            GameObject.Find("SaveSection (1)").GetComponent<GatherStageObjects>().LoadSection();
-        }
     }
 
     public override void OnDeath()
@@ -275,7 +271,14 @@ public class CarController : PlayerController
             Vector3 direction = (collision.gameObject.transform.position - boxLevelPos).normalized;
             collision.gameObject.GetComponent<PushableBox>().ApplyMovementForce(direction);
             BCancelDash = true;
+
+            Audio.Play(RandomPushableSound(), EAudioPlayOptions.AtTransformPosition | EAudioPlayOptions.DestroyOnEnd);
         }
+    }
+
+    protected override void PlayFuelCollectionSound()
+    {
+        Audio.Play("Rev", EAudioPlayOptions.Global | EAudioPlayOptions.DestroyOnEnd);
     }
 
     /// <summary>
@@ -526,6 +529,39 @@ public class CarController : PlayerController
         }
     }
 
+    private void PlayEngineSounds()
+    {
+        if (BatMathematics.IsZero(inputAmount.x) && BatMathematics.IsZero(inputAmount.y))
+        {
+            if (engineAudio == null)
+            {
+                engineAudio = Audio.Play(RandomIdleSound(), EAudioPlayOptions.FollowEmitter);
+            }
+            else
+            {
+                Destroy(engineAudio);
+                engineAudio = Audio.Play(RandomIdleSound(), EAudioPlayOptions.FollowEmitter);
+            }
+        }
+        else
+        {
+            Destroy(engineAudio); // play the drive sound when implemented or if none provided just use one of the idle sounds
+        }
+    }
+
+    private string RandomIdleSound()
+    {
+        bool bRandomBool = Random.Range(0f, 1f) < .5f;
+
+        return bRandomBool ? "Engine Idle 2" : "Engine Idle 1";
+    }
+
+    private string RandomPushableSound()
+    {
+        bool bRandomBool = Random.Range(0f, 1f) < .5f;
+
+        return bRandomBool ? "Hit Pushable 1" : "Hit Pushable 2";
+    }
 #if UNITY_EDITOR
     private void SetStartTransform()
     {

@@ -872,6 +872,76 @@ MonoBehaviour:
         StereoPan: 0
         SpatialBlend: 0.75
         ReverbZoneMix: 1
+    - Key: Engine Idle 2
+      Value:
+        Clip: {fileID: 8300000, guid: 275a8113eef248148a339d78fce1e97b, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 0
+        bLoop: 1
+        Priority: 128
+        Volume: 1
+        Pitch: 1
+        StereoPan: 0
+        SpatialBlend: 0.2
+        ReverbZoneMix: 1
+    - Key: Engine Idle 1
+      Value:
+        Clip: {fileID: 8300000, guid: c90df07324fd97e43937da55776d0817, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 0
+        bLoop: 1
+        Priority: 128
+        Volume: 1
+        Pitch: 1
+        StereoPan: 0
+        SpatialBlend: 0.2
+        ReverbZoneMix: 1
+    - Key: Hit Breakable
+      Value:
+        Clip: {fileID: 8300000, guid: e9d51238162a0584a807c9eb9c5741fe, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 0
+        bLoop: 0
+        Priority: 128
+        Volume: 1
+        Pitch: 1
+        StereoPan: 0
+        SpatialBlend: 0.75
+        ReverbZoneMix: 1
+    - Key: Hit Pushable 1
+      Value:
+        Clip: {fileID: 8300000, guid: 1c081d3c44722674f8b1e1ce5a33bf2c, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 0
+        bLoop: 1
+        Priority: 128
+        Volume: 1
+        Pitch: 1
+        StereoPan: 0
+        SpatialBlend: 0.75
+        ReverbZoneMix: 1
+    - Key: Hit Pushable 2
+      Value:
+        Clip: {fileID: 8300000, guid: 557fe3fd8169d5d4e9eadfea78461a67, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 0
+        bLoop: 1
+        Priority: 128
+        Volume: 1
+        Pitch: 1
+        StereoPan: 0
+        SpatialBlend: 0.75
+        ReverbZoneMix: 1
 --- !u!114 &2905989151779824795
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -251,7 +251,9 @@ public abstract class PlayerController : MonoBehaviour
     private void CameraMove(InputAction.CallbackContext ctx)
     {
         Debug.Log(ctx.control.name);
-        if (ctx.control.name == "rightButton") // mouse control
+
+        // mouse control
+        if (ctx.control.name == "rightButton")
         {
             bMouseHeld = ctx.control.IsPressed();
             Debug.Log(bMouseHeld);

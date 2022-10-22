@@ -10,6 +10,7 @@ public class bulletScript : MonoBehaviour
 
     private void Awake()
     {
+        Audio = GetComponent<AudioController>();
         Destroy(gameObject, Life);
     }
 
@@ -19,22 +20,16 @@ public class bulletScript : MonoBehaviour
         if (col.gameObject.CompareTag("Destroyable"))
         {
             Destroy(col.gameObject);
+            Audio.Play("Bullet Break", EAudioPlayOptions.AtTransformPosition);
             Destroy(gameObject);
         }
-
-        if (col.gameObject.TryGetComponent(out BreakableObj breakableObj))
+        else if (col.gameObject.TryGetComponent(out BreakableObj breakableObj))
         {
             breakableObj.OnBreak();
-
-            if (Audio)
-            {
-                Audio.Play("Glass", EAudioPlayOptions.AtTransformPosition | EAudioPlayOptions.DestroyOnEnd);
-            }
         }
-
-        if (col.gameObject.CompareTag("Wall"))
+        else
         {
-            col.gameObject.GetComponent<Rigidbody>().AddForce(5000 * transform.forward);
+            Audio.Play("Bullet Hit", EAudioPlayOptions.AtTransformPosition);
         }
     }
 }
