@@ -884,7 +884,7 @@ MonoBehaviour:
         Volume: 1
         Pitch: 1
         StereoPan: 0
-        SpatialBlend: 0.2
+        SpatialBlend: 0.75
         ReverbZoneMix: 1
     - Key: Engine Idle 1
       Value:
@@ -898,7 +898,7 @@ MonoBehaviour:
         Volume: 1
         Pitch: 1
         StereoPan: 0
-        SpatialBlend: 0.2
+        SpatialBlend: 0.75
         ReverbZoneMix: 1
     - Key: Hit Breakable
       Value:

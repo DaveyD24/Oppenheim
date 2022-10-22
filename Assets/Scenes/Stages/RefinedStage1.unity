@@ -23005,7 +23005,7 @@ MonoBehaviour:
         bPlayOnAwake: 1
         bLoop: 1
         Priority: 128
-        Volume: 0.25
+        Volume: 0.5
         Pitch: 1
         StereoPan: 0
         SpatialBlend: 0.75
@@ -23019,7 +23019,7 @@ MonoBehaviour:
         bPlayOnAwake: 1
         bLoop: 1
         Priority: 128
-        Volume: 0.25
+        Volume: 0.5
         Pitch: 1
         StereoPan: 0
         SpatialBlend: 0.75

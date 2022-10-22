@@ -1,7 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+using EventSystem;
 using TMPro;
+using UnityEngine;
 using UnityEngine.Events;
 
 /// <summary>
@@ -23,7 +24,7 @@ public class ActionSequence : MonoBehaviour
     [SerializeField] private float sentencePauseTime;
     [SerializeField] public TextMeshProUGUI oppenheimText;
     [SerializeField] public GameObject oppenheimObj;
-    [SerializeField] private GameObject blueprintObj;
+    [SerializeField] private ParticleSystem lifeParticles;
 
     [field: SerializeField] public float MaxDistanceAway { get; set; }
 
@@ -40,7 +41,7 @@ public class ActionSequence : MonoBehaviour
 
     private void Start()
     {
-        BuildSequenceTree();
+        // BuildSequenceTree();
     }
 
     private void BuildSequenceTree()
@@ -48,19 +49,20 @@ public class ActionSequence : MonoBehaviour
         WaitSpawnPlayers waitSpawnPlayers = new WaitSpawnPlayers(this);
         PlayDialogue welcomDialogue = new PlayDialogue(this, welcomeDialogue, oppenheimText, talkSpeed, sentencePauseTime); // play the intro welcome text
         MoveCloser checkCloseEnough = new MoveCloser(this, oppenheimObj);
-        PlayDialogue moveDoneDialogue = new PlayDialogue(this, workOrderDialoguePrt1, oppenheimText, talkSpeed, sentencePauseTime); // play the dialogue explaining how to rotate character
-        ShowHideObject showBlueprint = new ShowHideObject(this, blueprintObj, true);
+        // PlayDialogue moveDoneDialogue = new PlayDialogue(this, workOrderDialoguePrt1, oppenheimText, talkSpeed, sentencePauseTime); // play the dialogue explaining how to rotate character
+        // ShowHideObject showBlueprint = new ShowHideObject(this, blueprintObj, true);
         PlayDialogue firstChallengeDialogue = new PlayDialogue(this, workOrderDialoguePrt2, oppenheimText, talkSpeed, sentencePauseTime); // play the dialogue explaining how to rotate character
-        ShowHideObject hideBlueprint = new ShowHideObject(this, blueprintObj, false);
+        // ShowHideObject hideBlueprint = new ShowHideObject(this, blueprintObj, false);
         CycleCamera cycleCamera = new CycleCamera(this, 5);
         InstructionBookSequence instructionBookSequence = new InstructionBookSequence(this);
 
         // popup oppenheim and book appearence
 
-        PlayDialogue rotateCharDialogue = new PlayDialogue(this, cameraDialogue, oppenheimText, talkSpeed, sentencePauseTime); // play the dialogue explaining how to rotate character
+        // PlayDialogue rotateCharDialogue = new PlayDialogue(this, cameraDialogue, oppenheimText, talkSpeed, sentencePauseTime); // play the dialogue explaining how to rotate character
 
         // wait for input to be recieved
         topNode = new Sequence<ActionSequence>(new List<Node<ActionSequence>> { waitSpawnPlayers, welcomDialogue, checkCloseEnough, firstChallengeDialogue, cycleCamera, instructionBookSequence });
+        lifeParticles.Play();
     }
 
     // Update is called once per frame
@@ -75,5 +77,15 @@ public class ActionSequence : MonoBehaviour
     private void OnDrawGizmosSelected()
     {
         Gizmos.DrawWireSphere(oppenheimObj.transform.position, MaxDistanceAway);
+    }
+
+    private void OnEnable()
+    {
+        UIEvents.OnBeginAnnoucement += BuildSequenceTree;
+    }
+
+    private void OnDisable()
+    {
+        UIEvents.OnBeginAnnoucement -= BuildSequenceTree;
     }
 }
