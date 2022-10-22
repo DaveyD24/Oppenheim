@@ -119,15 +119,15 @@ public class SkyBot : MonoBehaviour
     void CreateScanner()
     {
 
-        Vector3 Position = new Vector3(this.transform.position.x + (Width / 2), this.transform.position.y, this.transform.position.z);
-        Vector3 Scale = new Vector3(this.transform.localScale.x * 2, this.transform.localScale.y, this.transform.localScale.z);
+        Vector3 Scale = new Vector3(this.transform.localScale.x, this.transform.localScale.y * 20, this.transform.localScale.z);
+        Vector3 Position = new Vector3(this.transform.position.x, this.transform.position.y - (Scale.y / 2) + HeightOffset, this.transform.position.z);
 
         Collider[] Colliders = Physics.OverlapBox(Position, Scale, this.transform.rotation);
         foreach (Collider C in Colliders)
         {
             if (C.gameObject.CompareTag("Player"))
             {
-                Debug.Log("Player Detected!");
+                Debug.Log("Sky Bot Has Deteced The Player!!!!!!!");
                 if (!hasSpawned)
                 {
                     //do something else
@@ -156,9 +156,11 @@ public class SkyBot : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        Gizmos.color = Color.red;
-        Vector3 Scale = new Vector3(this.transform.localScale.x * 2, this.transform.localScale.y, this.transform.localScale.z);
-        Vector3 Position = new Vector3(this.transform.position.x + (Width / 2), this.transform.position.y, this.transform.position.z);
+        Gizmos.color = Color.magenta;
+        
+        Vector3 Scale = new Vector3(this.transform.localScale.x, this.transform.localScale.y * 20, this.transform.localScale.z);
+        Vector3 Position = new Vector3(this.transform.position.x, this.transform.position.y - (Scale.y / 2) + HeightOffset, this.transform.position.z);
+
         Gizmos.DrawWireCube(Position, Scale);
     }
 }

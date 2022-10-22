@@ -10,6 +10,7 @@ public class NodeManager : MonoBehaviour
     [SerializeField] public GameObject armedBotPrefab;
     [SerializeField] public GameObject skyBotPrefab;
     MovementNode NodeToSpawnAt;
+    MovementNode SkyNodeToSpawnAt;
 
     float WDistance;
     float HDistance;
@@ -82,6 +83,61 @@ public class NodeManager : MonoBehaviour
 
             counter++;
         }
+
+        GameObject[] AllSkyPlatforms = GameObject.FindGameObjectsWithTag("SkyPlatform");
+
+        int counter2 = 0;
+        foreach (GameObject G in AllSkyPlatforms)
+        {
+
+            BoxCollider Collider = G.GetComponent<BoxCollider>();
+
+            float Width = Collider.bounds.size.x;
+            float Height = Collider.bounds.size.z;
+
+            WDistance = Width / nodeDistance;
+            WDistance = Mathf.Floor(WDistance);
+            WDistance = Width / WDistance;
+
+            HDistance = Height / nodeDistance;
+            HDistance = Mathf.Floor(HDistance);
+            HDistance = Height / HDistance;
+
+            int HNodeCount = Mathf.CeilToInt(Width / WDistance);
+            int VNodeCount = Mathf.CeilToInt(Height / HDistance);
+
+            //Vector3 StartPoint = new Vector3(Width - (Width / 2), G.transform.position.y, Height - (Height / 2));
+            Vector3 StartPoint = new Vector3(G.transform.position.x - (Width / 2), G.transform.position.y, G.transform.position.z - (Height / 2));
+
+            Debug.Log(StartPoint);
+
+            Vector2 RandomxD = GetRandomNodePoint(HNodeCount, VNodeCount);
+            List<MovementNode> GeneratedNodes = GenerateSkyNodes(StartPoint, HNodeCount, VNodeCount, counter2, RandomxD);
+
+            foreach (MovementNode M in GeneratedNodes)
+            {
+                M.ConnectNodes();
+            }
+
+            for (int j = 0; j <= VNodeCount; j++)
+            {
+                for (int i = 0; i <= HNodeCount; i++)
+                {
+                    if (i == RandomxD.x && j == RandomxD.y)
+                    {
+
+                        GameObject Enemy = Instantiate(skyBotPrefab, SkyNodeToSpawnAt.transform.position, Quaternion.identity);
+                        Enemy.GetComponent<SkyBot>().currentNode = SkyNodeToSpawnAt;
+                    }
+                }
+            }
+
+
+            counter++;
+        }
+
+
+
     }
 
     // Update is called once per frame
@@ -107,6 +163,33 @@ public class NodeManager : MonoBehaviour
                 if (i == RandomXD.x && j == RandomXD.y)
                 {
                     NodeToSpawnAt = Mn;
+                }
+
+                NodesGenerated.Add(Mn);
+
+                nextNameNumber++;
+            }
+        }
+        return NodesGenerated;
+    }
+
+    List<MovementNode> GenerateSkyNodes(Vector3 StartPoint, int HorizontalCount, int VerticalCount, int PlatformIndex, Vector2 RandomXD)
+    {
+        List<MovementNode> NodesGenerated = new List<MovementNode>();
+        int nextNameNumber = 0;
+        for (int j = 0; j <= VerticalCount; j++)
+        {
+            for (int i = 0; i <= HorizontalCount; i++)
+            {
+                Vector3 Position = new Vector3(StartPoint.x + (i * WDistance), StartPoint.y, StartPoint.z + (j * HDistance));
+                GameObject NewNode = Instantiate(nodePrefab, Position, Quaternion.identity);
+                NewNode.name = "Node" + nextNameNumber;
+                MovementNode Mn = NewNode.GetComponent<MovementNode>();
+                Mn.platformIndex = PlatformIndex;
+
+                if (i == RandomXD.x && j == RandomXD.y)
+                {
+                    SkyNodeToSpawnAt = Mn;
                 }
 
                 NodesGenerated.Add(Mn);
