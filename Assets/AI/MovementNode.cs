@@ -51,9 +51,26 @@ public class MovementNode : MonoBehaviour
 
                 Vector3 Midpoint = (this.transform.position + n.transform.position) / 2;
 
-                if (Physics.CheckSphere(Midpoint, nodeDistance / 10))
+                Collider[] OverlappingColliders = Physics.OverlapSphere(Midpoint, nodeDistance / 10);
+
+                if (OverlappingColliders.Length == 0)
                 {
-                    connectedNodes.Add(n);
+                    continue;
+                }
+                else
+                {
+                    bool doConnect = true;
+                    foreach (Collider C in OverlappingColliders)
+                    {
+                        if (!C.gameObject.CompareTag("NodePlatform"))
+                        {
+                            doConnect = false;
+                        }
+                    }
+                    if (doConnect)
+                    {
+                        connectedNodes.Add(n);
+                    }
                 }
             }
         }
