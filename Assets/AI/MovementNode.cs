@@ -49,7 +49,7 @@ public class MovementNode : MonoBehaviour
         foreach (MovementNode n in allNodes)
         {
             float distance = Vector3.Distance(this.transform.position, n.transform.position);
-            if (distance <= nodeDistance)
+            if (distance <= nodeDistance && n != this)
             {
 
                 Vector3 Midpoint = (this.transform.position + n.transform.position) / 2;

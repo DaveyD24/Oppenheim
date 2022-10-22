@@ -11,10 +11,14 @@ public class EnemyBot : MonoBehaviour
 
     float movementSpeed = 5.0f;
     bool isActive;
+    bool doLerp = true;
 
     //MovementNode spawnNode;
     public MovementNode currentNode;
-    MovementNode nextNode;
+    public MovementNode nextNode;
+
+    float StartTime;
+    float EndTime;
 
     // Start is called before the first frame update
     void Start()
@@ -22,18 +26,26 @@ public class EnemyBot : MonoBehaviour
         //nextNode = currentNode.GetNextNode();
         isActive = true;
         health = maxHealth;
+
+        //InvokeRepeating("MoveToNextNode", 0.1f, 4f);
+        //MoveToNextNode();
+        StartTime = Time.time;
+        EndTime = StartTime + 2.0f;
+        nextNode = currentNode.CalculateNextNode();
     }
 
     // Update is called once per frame
     void Update()
     {
-        while (isActive)
+        if (isActive)
         {
             if (health <= 0)
             {
                 OnDeath();
             }
+
             MoveToNextNode();
+            
         }
     }
 
@@ -41,11 +53,39 @@ public class EnemyBot : MonoBehaviour
     {
         if (currentNode != null)
         {
-            Debug.Log("hmmm");
-            nextNode = currentNode.CalculateNextNode();
-            Vector3.Lerp(this.transform.position, nextNode.transform.position, movementSpeed * Time.deltaTime);
-            currentNode = nextNode;
+            //this.transform.position = currentNode.transform.position;
+            //Debug.Log("hmmm");
+            
+
+            // this.transform.position = new Vector3(Vector3.Lerp(this.transform.position, nextNode.transform.position, 0.2f).x, 0, Vector3.Lerp(this.transform.position, nextNode.transform.position, 0.2f).z);
+
+
+
+
+            if (Time.time < EndTime)
+            {
+                //Debug.Log("inwhile");
+                float TimeProgressd = (Time.time - StartTime) / 0.4f;
+                this.transform.position = Vector3.Lerp(currentNode.transform.position, nextNode.transform.position, TimeProgressd);
+                Debug.Log(TimeProgressd);
+            }
+            else
+            {
+                currentNode = nextNode;
+                nextNode = currentNode.CalculateNextNode();
+                StartTime = Time.time;
+                EndTime = StartTime + 0.4f;
+            }
+
+
+
+            //this.transform.position = Vector3.Lerp(currentNode.transform.position, nextNode.transform.position, 0.2f);
+            //this.transform.position = Vector3.move
+
+            //currentNode = nextNode;
+            //Debug.Log("Part2");
         }
+        //yield return new WaitForFixedUpdate();
     }
 
     void TakeDamage()

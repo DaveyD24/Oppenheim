@@ -76,12 +76,14 @@ public class NodeManager : MonoBehaviour
     List<MovementNode> GenerateNodes(Vector3 StartPoint, int HorizontalCount, int VerticalCount, int PlatformIndex, Vector2 RandomXD)
     {
         List<MovementNode> NodesGenerated = new List<MovementNode>();
+        int nextNameNumber = 0;
         for (int j = 0; j <= VerticalCount; j++)
         {
             for (int i = 0; i <= HorizontalCount; i++)
             {
                 Vector3 Position = new Vector3(StartPoint.x + (i * WDistance), StartPoint.y, StartPoint.z + (j * HDistance));
                 GameObject NewNode = Instantiate(nodePrefab, Position, Quaternion.identity);
+                NewNode.name = "Node" + nextNameNumber;
                 MovementNode Mn = NewNode.GetComponent<MovementNode>();
                 Mn.platformIndex = PlatformIndex;
 
@@ -91,6 +93,8 @@ public class NodeManager : MonoBehaviour
                 }
 
                 NodesGenerated.Add(Mn);
+
+                nextNameNumber++;
             }
         }
         return NodesGenerated;
