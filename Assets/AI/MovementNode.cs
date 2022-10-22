@@ -25,6 +25,8 @@ public class MovementNode : MonoBehaviour
     private float nodeDistance = 2.0f;
     private MovementNode nextNode;
 
+    [SerializeField] public int platformIndex; 
+
     NodeManager nodeManager;
 
     // Start is called before the first frame update
@@ -38,6 +40,7 @@ public class MovementNode : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
+        
     }
 
     public void ConnectNodes()
@@ -76,15 +79,20 @@ public class MovementNode : MonoBehaviour
         }
     }
 
-    public void CalculateNextNode()
+    public MovementNode CalculateNextNode()
     {
-        int nodeCount = connectedNodes.Count;
-        int random = Random.Range(0, nodeCount + 1);
-        nextNode = connectedNodes[random];
+        if (connectedNodes.Count > 0)
+        {
+            int nodeCount = connectedNodes.Count;
+            int random = Random.Range(0, nodeCount);
+            return connectedNodes[random];
+        }
+        return null;
     }
 
     public MovementNode GetNextNode()
     {
+        CalculateNextNode();
         return nextNode;
     }
 
