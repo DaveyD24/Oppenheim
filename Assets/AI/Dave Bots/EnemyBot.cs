@@ -22,6 +22,9 @@ public class EnemyBot : MonoBehaviour
 
     float HeightOffset;
 
+    float Width;
+    float Height;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -40,6 +43,7 @@ public class EnemyBot : MonoBehaviour
         while (currentNode.CalculateNextNode().platformIndex != currentNode.platformIndex);
 
         HeightOffset = this.GetComponent<BoxCollider>().bounds.size.y / 2;
+        Width = this.GetComponent<BoxCollider>().bounds.size.x;
     }
 
     // Update is called once per frame
@@ -55,8 +59,9 @@ public class EnemyBot : MonoBehaviour
             MoveToNextNode();
 
             Vector3 targetPosition = new Vector3(nextNode.transform.position.x, this.transform.position.y, nextNode.transform.position.z);
-
             this.transform.LookAt(targetPosition);
+            
+            CreateScanner();
             
         }
     }
@@ -79,7 +84,7 @@ public class EnemyBot : MonoBehaviour
                 //Debug.Log("inwhile");
                 float TimeProgressd = (Time.time - StartTime) / 0.4f;
                 this.transform.position = new Vector3(Vector3.Lerp(currentNode.transform.position, nextNode.transform.position, TimeProgressd).x, currentNode.transform.position.y + HeightOffset, Vector3.Lerp(currentNode.transform.position, nextNode.transform.position, TimeProgressd).z);
-                Debug.Log(TimeProgressd);
+                //Debug.Log(TimeProgressd);
             }
             else
             {
@@ -104,6 +109,22 @@ public class EnemyBot : MonoBehaviour
         //yield return new WaitForFixedUpdate();
     }
 
+    void CreateScanner()
+    {
+
+        Vector3 Position = new Vector3(this.transform.position.x + (Width / 2), this.transform.position.y, this.transform.position.z);
+        Vector3 Scale = new Vector3(this.transform.localScale.x * 2, this.transform.localScale.y, this.transform.localScale.z);
+
+        Collider[] Colliders = Physics.OverlapBox(Position, Scale, this.transform.rotation);
+        foreach (Collider C in Colliders)
+        {
+            if (C.gameObject.CompareTag("Player"))
+            {
+                Debug.Log("Player Detected!");
+            }
+        }
+    }
+
     void TakeDamage()
     {
         health = health - damagePerHit;
@@ -121,5 +142,13 @@ public class EnemyBot : MonoBehaviour
         {
             TakeDamage();
         }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Vector3 Scale = new Vector3(this.transform.localScale.x * 2, this.transform.localScale.y, this.transform.localScale.z);
+        Vector3 Position = new Vector3(this.transform.position.x + (Width / 2), this.transform.position.y, this.transform.position.z);
+        Gizmos.DrawWireCube(Position, Scale);
     }
 }
