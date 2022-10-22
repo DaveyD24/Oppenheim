@@ -8,6 +8,7 @@ public class NodeManager : MonoBehaviour
     [SerializeField] GameObject nodePrefab;
     [SerializeField] GameObject botPrefab;
     [SerializeField] public GameObject armedBotPrefab;
+    [SerializeField] public GameObject skyBotPrefab;
     MovementNode NodeToSpawnAt;
 
     float WDistance;

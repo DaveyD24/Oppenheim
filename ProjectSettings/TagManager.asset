@@ -14,6 +14,8 @@ TagManager:
   - Blueprint
   - Hangable
   - NodePlatform
+  - Bullet
+  - SkyPlatform
   layers:
   - Default
   - TransparentFX

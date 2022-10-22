@@ -65,7 +65,7 @@ public class MovementNode : MonoBehaviour
                     bool doConnect = true;
                     foreach (Collider C in OverlappingColliders)
                     {
-                        if (!C.gameObject.CompareTag("NodePlatform"))
+                        if (!C.gameObject.CompareTag("NodePlatform") && !C.gameObject.CompareTag("SkyPlatform"))
                         {
                             doConnect = false;
                         }
