@@ -460,14 +460,7 @@ public abstract class PlayerController : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Blueprint"))
         {
-            if (SceneManager.GetActiveScene().name == "RefinedStage1")
-            {
-                UIEvents.SceneChange("Stage2");
-            }
-            else
-            {
-                UIEvents.SceneChange("WinScene");
-            }
+            UIEvents.SceneChange(collision.gameObject.GetComponent<Blueprint>().NextScene);
         }
     }
 

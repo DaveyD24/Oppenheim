@@ -20071,6 +20071,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3745763833110007993, guid: 3b2fd21f4623c5f449640b0298e0617c, type: 3}
+      propertyPath: <NextScene>k__BackingField
+      value: Stage2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3b2fd21f4623c5f449640b0298e0617c, type: 3}
 --- !u!1 &386424226
