@@ -2346,7 +2346,7 @@ MonoBehaviour:
         ReverbZoneMix: 1
     - Key: Doof
       Value:
-        Clip: {fileID: 8300000, guid: 08fcdcb7ca53a6d4581c06c39381634f, type: 3}
+        Clip: {fileID: 8300000, guid: 01597a26aa75ecc49bc92909870a4c7b, type: 3}
         bMute: 0
         bBypassEffects: 0
         bBypassReverbZones: 0
