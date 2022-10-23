@@ -11,6 +11,8 @@ public class TutorialUIManager : MonoBehaviour
 
 	TutorialUI CurrentCornerShowing;
 
+	bool bUseBillboardEffects;
+
 	void Awake()
 	{
 		if (!Instance)
@@ -22,6 +24,14 @@ public class TutorialUIManager : MonoBehaviour
 			Debug.LogError($"Ensure there is only one {nameof(TutorialUIManager)} in the scene!");
 			Debug.Break();
 		}
+	}
+
+	void Update()
+	{
+		if (!bUseBillboardEffects)
+			return;
+
+
 	}
 
 	public static TutorialUIManager Get() => Instance;
