@@ -88,7 +88,7 @@ public class Checkpoint : MonoBehaviour, IDataInterface
             }
 
             SaveSectionsData?.Invoke();
-            GameEvents.RespawnPlayersOnly(true);
+            GameEvents.RespawnPlayersOnly(false);
 
             audio.Play("Activated", EAudioPlayOptions.AtTransformPosition | EAudioPlayOptions.Global | EAudioPlayOptions.DestroyOnEnd);
 
