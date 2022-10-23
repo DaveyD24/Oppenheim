@@ -11,7 +11,7 @@ public class CycleCamera : Node<ActionSequence>
     private int settingAt = 0;
     private float timePerItem;
 
-    private string[] cameraSequence = new string[] { "Move Camera", "Zoom In/Out", "Follow Player's Rotation", "Move" };
+    private string[] cameraSequence = new string[] { "Move Camera", "Zoom In/Out", "Move" };
 
     public CycleCamera(ActionSequence blackboard, float timePerItem)
     {

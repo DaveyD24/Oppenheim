@@ -20,7 +20,7 @@ public class bulletScript : MonoBehaviour
         if (col.gameObject.CompareTag("Destroyable"))
         {
             Destroy(col.gameObject);
-            Audio.Play("Bullet Break", EAudioPlayOptions.AtTransformPosition);
+            Audio.Play("Bullet Break", EAudioPlayOptions.AtTransformPosition | EAudioPlayOptions.DestroyOnEnd);
             Destroy(gameObject);
         }
         else if (col.gameObject.TryGetComponent(out BreakableObj breakableObj))
@@ -29,7 +29,7 @@ public class bulletScript : MonoBehaviour
         }
         else
         {
-            Audio.Play("Bullet Hit", EAudioPlayOptions.AtTransformPosition);
+            Audio.Play("Bullet Hit", EAudioPlayOptions.AtTransformPosition | EAudioPlayOptions.DestroyOnEnd);
         }
     }
 }

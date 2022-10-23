@@ -191,7 +191,7 @@ public abstract class PlayerController : MonoBehaviour
             PlayerInput.FindAction("CamMove").canceled += CameraMove;
             PlayerInput.FindAction("CamZoom").performed += CameraZoom;
             PlayerInput.FindAction("CamZoom").canceled += CameraZoom;
-            PlayerInput.FindAction("CamFollowRotation").performed += CameraFollowRotation;
+            // PlayerInput.FindAction("CamFollowRotation").performed += CameraFollowRotation;
 
             PlayerInput.Enable();
 
@@ -223,7 +223,7 @@ public abstract class PlayerController : MonoBehaviour
             PlayerInput.FindAction("CamMove").canceled -= CameraMove;
             PlayerInput.FindAction("CamZoom").performed -= CameraZoom;
             PlayerInput.FindAction("CamZoom").canceled -= CameraZoom;
-            PlayerInput.FindAction("CamFollowRotation").performed -= CameraFollowRotation;
+            // PlayerInput.FindAction("CamFollowRotation").performed -= CameraFollowRotation;
 
             PlayerInput.Disable();
             Deactivate();

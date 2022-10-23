@@ -1410,6 +1410,7 @@ GameObject:
   - component: {fileID: 2906621057576288446}
   - component: {fileID: 5685952495652347760}
   - component: {fileID: 4788485138714141084}
+  - component: {fileID: 7788870796987637304}
   m_Layer: 5
   m_Name: FuelBackground
   m_TagString: Untagged
@@ -1477,6 +1478,20 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &7788870796987637304
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1688039975569992954}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 407105df7abd2e142a97260cca4852df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Target: {fileID: 6638865728829573730}
+  ScreenOffset: {x: 45, y: -45, z: 0}
 --- !u!1 &1744698156210734324
 GameObject:
   m_ObjectHideFlags: 0
@@ -1931,7 +1946,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 1
+  m_UiScaleMode: 0
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 800, y: 600}

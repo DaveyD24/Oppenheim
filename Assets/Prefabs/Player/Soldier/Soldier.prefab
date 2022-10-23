@@ -110,6 +110,7 @@ GameObject:
   - component: {fileID: 2090305775195298927}
   - component: {fileID: 4162787463824075119}
   - component: {fileID: 1707869243296510330}
+  - component: {fileID: 3776475937070438596}
   m_Layer: 5
   m_Name: FuelBackground
   m_TagString: Untagged
@@ -177,6 +178,20 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &3776475937070438596
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 154573407821051382}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 407105df7abd2e142a97260cca4852df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Target: {fileID: 5654260496683680184}
+  ScreenOffset: {x: 45, y: -45, z: 0}
 --- !u!1 &206789013233973699
 GameObject:
   m_ObjectHideFlags: 0
@@ -1845,7 +1860,7 @@ MonoBehaviour:
   <MovementSpeed>k__BackingField: 6
   <RotationSpeed>k__BackingField: 250
   <Health>k__BackingField: 0
-  <FallDamageThreshold>k__BackingField: 10
+  <FallDamageThreshold>k__BackingField: 25
   groundCheckPosition: {x: 0, y: 0, z: 0}
   <GroundCheckRadius>k__BackingField: 0.3
   trackingCamera: {fileID: 0}
@@ -3207,7 +3222,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 1
+  m_UiScaleMode: 0
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 800, y: 600}

@@ -193,7 +193,7 @@ public class AudioController : MonoBehaviour
 			Source.Play();
 
 			if (bDestroyOnEnd && !Source.loop)
-				Destroy(Source, A.ClipDuration());
+				Destroy(Emitter, A.ClipDuration());
 
 			return Source;
 		}
