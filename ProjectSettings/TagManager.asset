@@ -12,6 +12,10 @@ TagManager:
   - Wall
   - Water
   - Blueprint
+  - Hangable
+  - NodePlatform
+  - Bullet
+  - SkyPlatform
   layers:
   - Default
   - TransparentFX
