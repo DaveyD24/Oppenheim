@@ -17,6 +17,8 @@ using TMPro;
 [RequireComponent(typeof(Rigidbody), typeof(AudioController))]
 public abstract class PlayerController : MonoBehaviour
 {
+    [Tooltip("When on the tutorial level do not give three ability used so need to check when it is")]
+    [SerializeField] private bool bIsTutorialLevel = false;
     [SerializeField] private GameObject controlObj;
     [SerializeField] private GameObject abilityActiveObj;
     [SerializeField] private TextMeshProUGUI abilityTxt;
@@ -31,6 +33,13 @@ public abstract class PlayerController : MonoBehaviour
 
     private PlayerInput pInput;
 
+    private Vector3 PreviousMouseDragPosition; // used when moving the camera with the mouse
+
+    // the variable for handling moving the camera
+    private bool bMouseHeld = false;
+    private Vector2 mouseControlInput;
+    private float camZoomValue;
+
     // input handleing things
     public static IEnumerator DeathWaitTimer { get; private set; }
 
@@ -40,7 +49,7 @@ public abstract class PlayerController : MonoBehaviour
 
     public Rigidbody Rb { get; private set; }
 
-    public int AbilityUses { get; private set; } = 3;
+    [field: SerializeField] public int AbilityUses { get; private set; } = 3;
 
     public AudioController Audio { get; private set; }
 
@@ -63,7 +72,7 @@ public abstract class PlayerController : MonoBehaviour
 
     [field: SerializeField] protected float Health { get; private set; }
 
-    [field: SerializeField, Min(25f)] protected float FallDamageThreshold { get; private set; }
+    [field: SerializeField, Min(10)] protected float FallDamageThreshold { get; private set; }
 
     [field: SerializeField] protected Vector3 groundCheckPosition;
 
@@ -176,7 +185,14 @@ public abstract class PlayerController : MonoBehaviour
             PlayerInput.FindAction("RotatePlayer").performed += RotatePlayer;
 
             PlayerInput.FindAction("Pause").performed += GamePause;
-            // Inputs.Player.Jump.canceled += Jump;
+
+            // camera inputs
+            PlayerInput.FindAction("CamMove").performed += CameraMove;
+            PlayerInput.FindAction("CamMove").canceled += CameraMove;
+            PlayerInput.FindAction("CamZoom").performed += CameraZoom;
+            PlayerInput.FindAction("CamZoom").canceled += CameraZoom;
+            PlayerInput.FindAction("CamFollowRotation").performed += CameraFollowRotation;
+
             PlayerInput.Enable();
 
             Activate();
@@ -202,6 +218,13 @@ public abstract class PlayerController : MonoBehaviour
             PlayerInput.FindAction("HideControls").performed -= ControlsVisibility;
             PlayerInput.FindAction("Pause").performed -= GamePause;
 
+            // camera inputs
+            PlayerInput.FindAction("CamMove").performed -= CameraMove;
+            PlayerInput.FindAction("CamMove").canceled -= CameraMove;
+            PlayerInput.FindAction("CamZoom").performed -= CameraZoom;
+            PlayerInput.FindAction("CamZoom").canceled -= CameraZoom;
+            PlayerInput.FindAction("CamFollowRotation").performed -= CameraFollowRotation;
+
             PlayerInput.Disable();
             Deactivate();
         }
@@ -225,6 +248,69 @@ public abstract class PlayerController : MonoBehaviour
         UIEvents.PauseGame();
     }
 
+    private void CameraMove(InputAction.CallbackContext ctx)
+    {
+        Debug.Log(ctx.control.name);
+
+        // mouse control
+        if (ctx.control.name == "rightButton")
+        {
+            bMouseHeld = ctx.control.IsPressed();
+            Debug.Log(bMouseHeld);
+        }
+        else
+        {
+            // must be using gamepad input
+            Vector2 inputAmount = ctx.ReadValue<Vector2>();
+            print(inputAmount);
+            if (Mathf.Abs(inputAmount.x) < DefaultPlayerData.InputDeadZone)
+            {
+                inputAmount.x = 0;
+            }
+
+            if (Mathf.Abs(inputAmount.y) < DefaultPlayerData.InputDeadZone)
+            {
+                inputAmount.y = 0;
+            }
+
+            mouseControlInput = inputAmount;
+        }
+
+        if (ctx.canceled)
+        {
+            GameEvents.CameraMove(gameObject.transform, Vector3.zero, true);
+        }
+    }
+
+    private void CamMoveMouse()
+    {
+        if (bMouseHeld)
+        {
+            Vector3 inputAmount = Vector3.zero;
+            Vector3 mousePosition = Input.mousePosition;
+            inputAmount.x = mousePosition.x - PreviousMouseDragPosition.x;
+            inputAmount.y = mousePosition.y - PreviousMouseDragPosition.y;
+            PreviousMouseDragPosition = mousePosition;
+
+            GameEvents.CameraMove(gameObject.transform, inputAmount);
+        }
+        else if (Mathf.Abs(mouseControlInput.x) >= DefaultPlayerData.InputDeadZone || Mathf.Abs(mouseControlInput.y) >= DefaultPlayerData.InputDeadZone)
+        {
+            // if input has been recieved for the controller apply movement to it
+            GameEvents.CameraMove(gameObject.transform, mouseControlInput * 3);
+        }
+    }
+
+    private void CameraZoom(InputAction.CallbackContext ctx)
+    {
+        camZoomValue = ctx.ReadValue<float>();
+    }
+
+    private void CameraFollowRotation(InputAction.CallbackContext ctx)
+    {
+        GameEvents.CameraFollowRotation(gameObject.transform);
+    }
+
     public void AdjustAbilityValue(int amount)
     {
         AbilityUses += amount;
@@ -234,6 +320,13 @@ public abstract class PlayerController : MonoBehaviour
 
     protected virtual void Update()
     {
+        CamMoveMouse();
+
+        if (!BatMathematics.IsZero(camZoomValue))
+        {
+            GameEvents.CameraZoom(gameObject.transform, camZoomValue);
+        }
+
         if (transform.position.y < 2.5f)
         {
             OnDeath();
@@ -271,7 +364,7 @@ public abstract class PlayerController : MonoBehaviour
 
     protected virtual void Start()
     {
-        playerCanvas.gameObject.transform.parent = null;
+        playerCanvas.gameObject.transform.SetParent(null, false);
         SaveData(null);
         Rb = GetComponent<Rigidbody>();
         switchManager = FindObjectOfType<SwitchManager>();
@@ -283,6 +376,12 @@ public abstract class PlayerController : MonoBehaviour
         startRotation = transform.rotation;
 
         GameEvents.OnAddPlayerSwitch(PlayerIdSO.PlayerID);
+
+        if (bIsTutorialLevel)
+        {
+            AbilityUses = 0;
+        }
+
         AdjustAbilityValue(0);
     }
 
@@ -311,6 +410,8 @@ public abstract class PlayerController : MonoBehaviour
         GameEvents.OnDeactivatePlayer += DeactivateInput;
 
         GameEvents.OnSavePlayerData += SaveData;
+
+        GameEvents.OnRespawnPlayersOnly += RespawnPositionSet;
     }
 
     protected virtual void OnDisable()
@@ -324,6 +425,7 @@ public abstract class PlayerController : MonoBehaviour
         GameEvents.OnDeactivatePlayer -= DeactivateInput;
 
         GameEvents.OnSavePlayerData -= SaveData;
+        GameEvents.OnRespawnPlayersOnly -= RespawnPositionSet;
     }
 
     protected virtual void OnDrawGizmosSelected()
@@ -358,14 +460,7 @@ public abstract class PlayerController : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Blueprint"))
         {
-            if (SceneManager.GetActiveScene().name == "RefinedStage1")
-            {
-                UIEvents.SceneChange("Stage2");
-            }
-            else
-            {
-                UIEvents.SceneChange("WinScene");
-            }
+            UIEvents.SceneChange(collision.gameObject.GetComponent<Blueprint>().NextScene);
         }
     }
 
@@ -391,24 +486,7 @@ public abstract class PlayerController : MonoBehaviour
     protected virtual void Respawn()
     {
         // respawning code...
-        Rb.velocity = Vector3.zero;
-        Rb.angularVelocity = Vector3.zero;
-
-        if (!Checkpoint.BUseCheckpointPos)
-        {
-            Rb.transform.position = startPosition;
-            transform.rotation = startRotation;
-        }
-        else
-        {
-            // calculate the radius around the checkpoint at which the players are to spawn
-            Vector3 centrePos = Checkpoint.RespawnPosition;
-            float currentAngle = (90 * PlayerIdSO.PlayerID * Mathf.PI) / 180.0f;
-            Vector3 playerPos = centrePos + new Vector3(Mathf.Cos(currentAngle) * DefaultPlayerData.RadiusFromCheckpiont, DefaultPlayerData.CheckpointYOffset, Mathf.Sin(currentAngle) * DefaultPlayerData.RadiusFromCheckpiont);
-
-            Rb.transform.position = playerPos;
-            transform.rotation = Quaternion.identity;
-        }
+        RespawnPositionSet();
 
         if (PlayerInput != null)
         {
@@ -416,6 +494,42 @@ public abstract class PlayerController : MonoBehaviour
         }
 
         LoadData();
+    }
+
+    /// <summary>
+    /// When respawning set the players position to be at the latest checkpoint.
+    /// </summary>
+    /// <param name="bInactiveOnly">do only players which are inactive and not being controlled respawn?.</param>
+    private void RespawnPositionSet(bool bInactiveOnly = false)
+    {
+        if (!bInactiveOnly || !Active)
+        {
+            Rb.velocity = Vector3.zero;
+            Rb.angularVelocity = Vector3.zero;
+
+            if (!Checkpoint.BUseCheckpointPos)
+            {
+                Rb.transform.position = startPosition;
+                transform.rotation = startRotation;
+            }
+            else
+            {
+                // calculate the radius around the checkpoint at which the players are to spawn
+                Vector3 centrePos = Checkpoint.RespawnPosition;
+                float currentAngle = (90 * PlayerIdSO.PlayerID * Mathf.PI) / 180.0f;
+                Vector3 playerPos = centrePos + new Vector3(Mathf.Cos(currentAngle) * DefaultPlayerData.RadiusFromCheckpiont, DefaultPlayerData.CheckpointYOffset, Mathf.Sin(currentAngle) * DefaultPlayerData.RadiusFromCheckpiont);
+
+                Rb.transform.position = playerPos;
+                transform.rotation = Quaternion.identity;
+            }
+
+            Instantiate(DefaultPlayerData.RespawnParticles, transform.position + (Vector3.down * 1), Quaternion.identity);
+
+            if (!bInactiveOnly)
+            {
+                Audio.Play("Respawn", EAudioPlayOptions.AtTransformPosition | EAudioPlayOptions.Global | EAudioPlayOptions.DestroyOnEnd);
+            }
+        }
     }
 
     private void LoseInput(PlayerInput player)
@@ -455,7 +569,7 @@ public abstract class PlayerController : MonoBehaviour
         AnalyticsService.Instance.Flush();
 #endif
 
-        yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(2);
         GameEvents.Die();
         DeathWaitTimer = null;
     }
@@ -481,7 +595,7 @@ public abstract class PlayerController : MonoBehaviour
             // determine amount of fuel to ignore when saving, so that on a reset to this checkpoint no extra fuel gets added
             int numInvalidAbilities = fuelDataReset[PlayerIdSO.PlayerID];
             int saveAbilityAmount = AbilityUses - (numInvalidAbilities * 5);
-            if (saveAbilityAmount < 3)
+            if (saveAbilityAmount < 3 && !bIsTutorialLevel)
             {
                 // as only save whenever reach a checkpoint, ensure the player gets enough ability uses
                 saveAbilityAmount = 3;

@@ -6,12 +6,13 @@ public class PushableBox : UniqueID, IDataInterface
 {
     private Rigidbody rb;
     [SerializeField] private float power;
+    private float sphereRadius = 19;
     [SerializeField] private bool bNotSave = false;
 
     private float waitTime = 0.1f;
     private bool bCanAddForce = true;
 
-    public void ApplyMovementForce(Vector3 direction)
+    public void ApplyMovementForce(Vector3 direction, bool bApplyForceToNeighbours = true)
     {
         if (bCanAddForce)
         {
@@ -26,10 +27,29 @@ public class PushableBox : UniqueID, IDataInterface
                 direction.z = direction.z > 0 ? 1 : -1;
             }
 
-            rb.AddForce(direction * power, ForceMode.VelocityChange);
+            rb.AddExplosionForce(power, transform.position - (direction * 3), sphereRadius, 2, ForceMode.VelocityChange);
+
+            // for each neighbour apply a force in the direction of movement as well
+            if (bApplyForceToNeighbours)
+            {
+                Collider[] colliders = Physics.OverlapSphere(transform.position, sphereRadius);
+                foreach (Collider box in colliders)
+                {
+                    if (box.gameObject.TryGetComponent(out PushableBox pushableBox))
+                    {
+                        pushableBox.ApplyMovementForce(direction, false);
+                    }
+                }
+            }
+
             bCanAddForce = false;
             StartCoroutine(ForceWait());
         }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        //Gizmos.DrawSphere(transform.position, sphereRadius);
     }
 
     private void Awake()

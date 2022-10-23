@@ -10,6 +10,8 @@ public class FuelCollectible : UniqueID, IDataInterface
 {
     [SerializeField] private GameObject collectParticles;
 
+    public static bool BShownTutUI { get; set; } = false;
+
     [field: SerializeField] public PlayerIdObject PlayerId { get; private set; } // the id of the player whose fuel gets updated
 
     private void Start()
@@ -23,7 +25,11 @@ public class FuelCollectible : UniqueID, IDataInterface
         {
             IsCollected();
 
-           if (other.TryGetComponent(out PlayerController player)) {  }
+            if (!BShownTutUI)
+            {
+                BShownTutUI = true;
+                UIEvents.TutorialUIPopup("Ability Uses", "I lacked the power, you will need to collect your characters item to recharge your ability", 10);
+            }
         }
     }
 

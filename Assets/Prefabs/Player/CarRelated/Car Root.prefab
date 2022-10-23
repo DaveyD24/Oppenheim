@@ -48,19 +48,19 @@ WheelCollider:
   m_SuspensionDistance: 0.3
   m_ForceAppPointDistance: 1.48
   m_Mass: 5
-  m_WheelDampingRate: 2
+  m_WheelDampingRate: 0.4
   m_ForwardFriction:
-    m_ExtremumSlip: 0.4
+    m_ExtremumSlip: 0.1
     m_ExtremumValue: 1
     m_AsymptoteSlip: 0.5
     m_AsymptoteValue: 0.75
     m_Stiffness: 1.5
   m_SidewaysFriction:
-    m_ExtremumSlip: 0.2
+    m_ExtremumSlip: 0.1
     m_ExtremumValue: 1
     m_AsymptoteSlip: 0.5
     m_AsymptoteValue: 0.75
-    m_Stiffness: 1
+    m_Stiffness: 1.5
   m_Enabled: 1
 --- !u!1 &2530152371154723370
 GameObject:
@@ -185,19 +185,19 @@ WheelCollider:
   m_SuspensionDistance: 0.3
   m_ForceAppPointDistance: 1.48
   m_Mass: 5
-  m_WheelDampingRate: 2
+  m_WheelDampingRate: 0.4
   m_ForwardFriction:
-    m_ExtremumSlip: 0.4
+    m_ExtremumSlip: 0.1
     m_ExtremumValue: 1
     m_AsymptoteSlip: 0.5
     m_AsymptoteValue: 0.75
     m_Stiffness: 1.5
   m_SidewaysFriction:
-    m_ExtremumSlip: 0.2
+    m_ExtremumSlip: 0.1
     m_ExtremumValue: 1
     m_AsymptoteSlip: 0.5
     m_AsymptoteValue: 0.75
-    m_Stiffness: 1
+    m_Stiffness: 1.5
   m_Enabled: 1
 --- !u!1 &2719143150951923883
 GameObject:
@@ -386,19 +386,19 @@ WheelCollider:
   m_SuspensionDistance: 0.3
   m_ForceAppPointDistance: 1.48
   m_Mass: 5
-  m_WheelDampingRate: 2
+  m_WheelDampingRate: 0.4
   m_ForwardFriction:
-    m_ExtremumSlip: 0.4
+    m_ExtremumSlip: 0.1
     m_ExtremumValue: 1
     m_AsymptoteSlip: 0.5
     m_AsymptoteValue: 0.75
     m_Stiffness: 1.5
   m_SidewaysFriction:
-    m_ExtremumSlip: 0.2
+    m_ExtremumSlip: 0.1
     m_ExtremumValue: 1
     m_AsymptoteSlip: 0.5
     m_AsymptoteValue: 0.75
-    m_Stiffness: 1
+    m_Stiffness: 1.5
   m_Enabled: 1
 --- !u!1 &4496762552416869903
 GameObject:
@@ -703,10 +703,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3178a24f59c2d564b9fd5da0eac81b71, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bIsTutorialLevel: 0
   controlObj: {fileID: 4803520262443742586}
   abilityActiveObj: {fileID: 7570476759281605505}
   abilityTxt: {fileID: 9051217099164248355}
   playerCanvas: {fileID: 8731067970433128939}
+  <AbilityUses>k__BackingField: 3
   HumanPlayerIndex: 0
   <PlayerIdSO>k__BackingField: {fileID: 11400000, guid: a6ba5f247f9af9242bb3d3700fe06543, type: 2}
   <DefaultPlayerData>k__BackingField: {fileID: 11400000, guid: edaf631a83ce6ea42aa9463c9228f767, type: 2}
@@ -736,7 +738,7 @@ MonoBehaviour:
   indicatorMat: {fileID: 2100000, guid: 99b51c67b4a1109438cc9f4d00af213e, type: 2}
   normalLightMat: {fileID: -2499569385991133865, guid: 87a4ac2e4093d9540b395e877017022b, type: 3}
   indicatorFrequency: 0.5
-  breakTorque: 10
+  breakTorque: 150
   tailLights: {fileID: 3055996272150503839, guid: 87a4ac2e4093d9540b395e877017022b, type: 3}
   illumimatedTailLights: {fileID: 2100000, guid: f542b70cbeae5da46a195e88ad395722, type: 2}
   trail: {fileID: 2909080915507810006, guid: 2f5c050b1de117f469a6f2a317adad9d, type: 3}
@@ -859,6 +861,90 @@ MonoBehaviour:
     - Key: Skid
       Value:
         Clip: {fileID: 8300000, guid: 65f2286e406b7914897f60cc42a19630, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 0
+        bLoop: 0
+        Priority: 128
+        Volume: 1
+        Pitch: 1
+        StereoPan: 0
+        SpatialBlend: 0.75
+        ReverbZoneMix: 1
+    - Key: Engine Idle 2
+      Value:
+        Clip: {fileID: 8300000, guid: 275a8113eef248148a339d78fce1e97b, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 0
+        bLoop: 1
+        Priority: 128
+        Volume: 1
+        Pitch: 1
+        StereoPan: 0
+        SpatialBlend: 0.75
+        ReverbZoneMix: 1
+    - Key: Engine Idle 1
+      Value:
+        Clip: {fileID: 8300000, guid: c90df07324fd97e43937da55776d0817, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 0
+        bLoop: 1
+        Priority: 128
+        Volume: 1
+        Pitch: 1
+        StereoPan: 0
+        SpatialBlend: 0.75
+        ReverbZoneMix: 1
+    - Key: Hit Breakable
+      Value:
+        Clip: {fileID: 8300000, guid: e9d51238162a0584a807c9eb9c5741fe, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 0
+        bLoop: 0
+        Priority: 128
+        Volume: 1
+        Pitch: 1
+        StereoPan: 0
+        SpatialBlend: 0.75
+        ReverbZoneMix: 1
+    - Key: Hit Pushable 1
+      Value:
+        Clip: {fileID: 8300000, guid: 1c081d3c44722674f8b1e1ce5a33bf2c, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 0
+        bLoop: 1
+        Priority: 128
+        Volume: 1
+        Pitch: 1
+        StereoPan: 0
+        SpatialBlend: 0.75
+        ReverbZoneMix: 1
+    - Key: Hit Pushable 2
+      Value:
+        Clip: {fileID: 8300000, guid: 557fe3fd8169d5d4e9eadfea78461a67, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 0
+        bLoop: 1
+        Priority: 128
+        Volume: 1
+        Pitch: 1
+        StereoPan: 0
+        SpatialBlend: 0.75
+        ReverbZoneMix: 1
+    - Key: Respawn
+      Value:
+        Clip: {fileID: 8300000, guid: 27c204490e10f114785058fb32abf4bc, type: 3}
         bMute: 0
         bBypassEffects: 0
         bBypassReverbZones: 0
@@ -6530,7 +6616,7 @@ HingeJoint:
   m_Anchor: {x: 1.21, y: 0.31403217, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 1.2100585, y: 0, z: -0.31391853}
+  m_ConnectedAnchor: {x: 1.2100585, y: 0, z: -0.3140414}
   m_UseSpring: 1
   m_Spring:
     spring: 20
@@ -6602,19 +6688,19 @@ WheelCollider:
   m_SuspensionDistance: 0.3
   m_ForceAppPointDistance: 1.48
   m_Mass: 5
-  m_WheelDampingRate: 2
+  m_WheelDampingRate: 0.4
   m_ForwardFriction:
-    m_ExtremumSlip: 0.4
+    m_ExtremumSlip: 0.1
     m_ExtremumValue: 1
     m_AsymptoteSlip: 0.5
     m_AsymptoteValue: 0.75
     m_Stiffness: 1.5
   m_SidewaysFriction:
-    m_ExtremumSlip: 0.2
+    m_ExtremumSlip: 0.1
     m_ExtremumValue: 1
     m_AsymptoteSlip: 0.5
     m_AsymptoteValue: 0.75
-    m_Stiffness: 1
+    m_Stiffness: 1.5
   m_Enabled: 1
 --- !u!1 &6506869876024129226
 GameObject:

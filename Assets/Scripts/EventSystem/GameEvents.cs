@@ -1,18 +1,30 @@
 namespace EventSystem
 {
     using System;
-    using UnityEngine.InputSystem;
-    using UnityEngine;
     using System.Collections.Generic;
+    using UnityEngine;
+    using UnityEngine.InputSystem;
 
     /// <summary>
     /// A base class handleing all game events where two or more objects need to communicate with each other.
     /// </summary>
     public static class GameEvents
     {
+
+        // actions for when player controller uses the camera
+        public static Action<Transform, float> OnCameraZoom { get; set; }
+
+        public static Action<Transform, Vector3, bool> OnCameraMove { get; set; }
+
+        public static Action<Transform> OnCameraFollowRotation { get; set; }
+
         public static Action OnDashCarCollide { get; set; }
 
         public static Action OnDie { get; set; }
+
+        public static Action<bool> OnRespawnPlayersOnly { get; set; }
+
+        public static Func<int> OnGetNumberActive { get; set; }
 
         public static Action<int[]> OnSavePlayerData { get; set; }
 
@@ -26,6 +38,9 @@ namespace EventSystem
 
         public static Action<int, PlayerInput> OnActivatePlayer { get; set; }
 
+        // in the below func the last argument(bool) is the return type while the others two are the input parameters
+        public static Func<float, Vector3, bool> OnPlayerCompareDistance { get; set; } // used to enable the players distance to another object to be calculated and compared
+
         public static Action<int> OnDeactivatePlayer { get; set; }
 
         public static void DashCarCollide()
@@ -33,7 +48,7 @@ namespace EventSystem
             OnDashCarCollide?.Invoke(); // not yet implemented
         }
 
-        [Exec(Description = "WOAH OHO OH")]
+        [Exec(Description = "WOAH OHO OH")] // ????? what?
         public static void CollectFuel(int playerId)
         {
             OnCollectFuel?.Invoke(playerId);
@@ -42,6 +57,11 @@ namespace EventSystem
         public static void SavePlayerData(int[] fuelDataReset)
         {
             OnSavePlayerData?.Invoke(fuelDataReset);
+        }
+
+        public static void RespawnPlayersOnly(bool bOnlyInactive)
+        {
+            OnRespawnPlayersOnly?.Invoke(bOnlyInactive);
         }
 
         public static void Die()
@@ -55,6 +75,16 @@ namespace EventSystem
             OnDie?.Invoke();
         }
 
+        public static int GetNumberPlayersActive()
+        {
+            if (OnGetNumberActive != null)
+            {
+                return OnGetNumberActive();
+            }
+
+            return 0;
+        }
+
         public static int[] GatherInvalidSaveFuel()
         {
             if (OnGatherInvalidSaveFuel != null)
@@ -63,6 +93,16 @@ namespace EventSystem
             }
 
             return null;
+        }
+
+        public static bool PlayerCompareDistance(float distance, Vector3 otherPosition)
+        {
+            if (OnPlayerCompareDistance != null)
+            {
+                return OnPlayerCompareDistance(distance, otherPosition);
+            }
+
+            return false;
         }
 
         // the below methods are to do with player input and adding/removing a player from the active list
@@ -84,6 +124,22 @@ namespace EventSystem
         public static void DeactivatePlayer(int currentPlayerId)
         {
             OnDeactivatePlayer?.Invoke(currentPlayerId);
+        }
+
+        // below are the events related to moving the camera with input recieved from the player controller class
+        public static void CameraMove(Transform transform, Vector3 inputAmount, bool bCamFinished = false)
+        {
+            OnCameraMove?.Invoke(transform, inputAmount, bCamFinished);
+        }
+
+        public static void CameraZoom(Transform transform, float scrollAmount)
+        {
+            OnCameraZoom?.Invoke(transform, scrollAmount);
+        }
+
+        public static void CameraFollowRotation(Transform transform)
+        {
+            OnCameraFollowRotation?.Invoke(transform);
         }
     }
 }

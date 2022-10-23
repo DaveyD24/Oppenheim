@@ -7,6 +7,8 @@ public class Blueprint : MonoBehaviour
 	[SerializeField] float Speed = 1f;
 	[SerializeField] float RotationSpeed = 1f;
 
+	[field: SerializeField] public string NextScene { get; private set; }
+
 	void Update()
 	{
 		float Sine = Mathf.Sin(Time.time * Speed) * Time.deltaTime;

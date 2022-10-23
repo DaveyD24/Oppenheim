@@ -2,6 +2,7 @@ using UnityEngine;
 using static UnityEngine.Extensions.XVector;
 using static global::BatMathematics;
 using static global::MDebug;
+using EventSystem;
 
 public class SpringArm : MonoBehaviour
 {
@@ -110,15 +111,12 @@ public class SpringArm : MonoBehaviour
 		}
 	}
 
-	void Update()
+	private void Update()
 	{
-		UpdateRotationOnMouse();
+		// UpdateRotationOnMouse();
 		PanCameraOnMouse();
 
-		if (Input.GetKeyDown(KeyCode.C))
-			bInheritRotation = !bInheritRotation;
-
-		ScrollDistance();
+		//ScrollDistance();
 
 		if (bNoClip)
 		{
@@ -151,6 +149,29 @@ public class SpringArm : MonoBehaviour
 				Camera.position += kNoClipSpeed * Time.deltaTime * Vector3.up;
 			}
 		}
+	}
+
+	private void InheritRotation(Transform playerTransform)
+	{
+		// only do if control is from the player the camera is tracking or camera tracking all players through average tracking
+		if (Target == playerTransform || bIsAverageTracking)
+		{
+			bInheritRotation = !bInheritRotation;
+		}
+	}
+
+	private void OnEnable()
+	{
+		GameEvents.OnCameraMove += UpdateRotationOnMouse;
+		GameEvents.OnCameraZoom += ScrollDistance;
+		GameEvents.OnCameraFollowRotation += InheritRotation;
+	}
+
+	private void OnDisable()
+	{
+		GameEvents.OnCameraMove -= UpdateRotationOnMouse;
+		GameEvents.OnCameraZoom -= ScrollDistance;
+		GameEvents.OnCameraFollowRotation += InheritRotation;
 	}
 
 	Vector3 SmoothPositionVelocity;
@@ -389,56 +410,56 @@ public class SpringArm : MonoBehaviour
 		return TargetAxis;
 	}
 
-	void ScrollDistance()
+	private void ScrollDistance(Transform playerTransform, float scrollValue)
 	{
-		if (bEnableScrollToDistance)
+		if (bEnableScrollToDistance && (playerTransform == Target || bIsAverageTracking))
 		{
-			Distance += Input.mouseScrollDelta.y * (bInvertZ ? -1f : 1f) * -ScrollSensitivity;
+			Distance += scrollValue * (bInvertZ ? -1f : 1f) * -ScrollSensitivity;
 
 			Distance = Mathf.Clamp(Distance, 1, MaxDistance);
 		}
 	}
 
-	void UpdateRotationOnMouse()
+	void UpdateRotationOnMouse(Transform playerTransform, Vector3 inputAmount, bool bCamFinished = false)
 	{
-		Vector3 MousePosition = Input.mousePosition;
-
-		if (Input.GetMouseButton(1))
+		// only perform the action if the input is comming from the player this camera is following
+		if (playerTransform == Target || bIsAverageTracking)
 		{
-			float DeltaX = (MousePosition.x - PreviousMouseDragPosition.x) * OrbitSensitivity * Time.deltaTime;
-			float DeltaY = (MousePosition.y - PreviousMouseDragPosition.y) * OrbitSensitivity * Time.deltaTime;
-
-			DetermineInverse(ref DeltaX, ref DeltaY);
-
-			if (!bInheritRotation || bIsAverageTracking)
+			if (!bCamFinished)
 			{
-				GimbalRotation.x += DeltaX;
-				CameraRotation.y += DeltaX;
+				float DeltaX = inputAmount.x * OrbitSensitivity * Time.deltaTime;
+				float DeltaY = inputAmount.y * OrbitSensitivity * Time.deltaTime;
 
-				if (GimbalRotation.y - DeltaY < MinMaxOrbitAngle.y && GimbalRotation.y - DeltaY >= MinMaxOrbitAngle.x)
+				DetermineInverse(ref DeltaX, ref DeltaY);
+
+				if (!bInheritRotation || bIsAverageTracking)
 				{
-					GimbalRotation.y -= DeltaY;
-					CameraRotation.x -= DeltaY;
+					GimbalRotation.x += DeltaX;
+					CameraRotation.y += DeltaX;
+
+					if (GimbalRotation.y - DeltaY < MinMaxOrbitAngle.y && GimbalRotation.y - DeltaY >= MinMaxOrbitAngle.x)
+					{
+						GimbalRotation.y -= DeltaY;
+						CameraRotation.x -= DeltaY;
+					}
+				}
+				else
+				{
+					CameraRotationInherited.x -= DeltaY;
+					CameraRotationInherited.y += DeltaX;
+
+					if (GimbalRotationInherited.y - DeltaY < MinMaxOrbitAngle.y && GimbalRotationInherited.y - DeltaY >= MinMaxOrbitAngle.x)
+					{
+						GimbalRotationInherited.y -= DeltaY;
+					}
 				}
 			}
 			else
 			{
-				CameraRotationInherited.x -= DeltaY;
-				CameraRotationInherited.y += DeltaX;
-
-				if (GimbalRotationInherited.y - DeltaY < MinMaxOrbitAngle.y && GimbalRotationInherited.y - DeltaY >= MinMaxOrbitAngle.x)
-				{
-					GimbalRotationInherited.y -= DeltaY;
-				}
+				GimbalRotationInherited = DefaultGimbalRotation;
+				CameraRotationInherited = DefaultCameraRotation;
 			}
 		}
-		else
-		{
-			GimbalRotationInherited = DefaultGimbalRotation;
-			CameraRotationInherited = DefaultCameraRotation;
-		}
-
-		PreviousMouseDragPosition = MousePosition;
 	}
 
 	void DetermineInverse(ref float DeltaX, ref float DeltaY)
@@ -451,7 +472,7 @@ public class SpringArm : MonoBehaviour
 		static void Inverse(ref float F) => F *= -1f;
 	}
 
-	void PanCameraOnMouse()
+	private void PanCameraOnMouse()
 	{
 		Vector3 MousePosition = Input.mousePosition;
 

@@ -35,6 +35,7 @@ public class BreakableObj : UniqueID, IDataInterface
             for (int i = gameObject.transform.childCount - 1; i >= 0; i--)
             {
                 gameObject.transform.GetChild(i).gameObject.AddComponent<Rigidbody>().AddForce(1500 * transform.forward);
+                gameObject.transform.GetChild(i).gameObject.AddComponent<GlassSizeChange>();
                 gameObject.transform.GetChild(i).gameObject.AddComponent<MeshCollider>().convex = true;
                 gameObject.transform.GetChild(i).gameObject.GetComponent<MeshRenderer>().enabled = true;
                 gameObject.transform.GetChild(i).parent = null;
@@ -44,6 +45,8 @@ public class BreakableObj : UniqueID, IDataInterface
         }
         else
         {
+            Audio.Play("Hit Breakable", EAudioPlayOptions.AtTransformPosition | EAudioPlayOptions.DestroyOnEnd);
+
             Material material = gameObject.GetComponent<MeshRenderer>().material;
 
             GameObject particles = Instantiate(disapearParticles, transform.position, Quaternion.identity);

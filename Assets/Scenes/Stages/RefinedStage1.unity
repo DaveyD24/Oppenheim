@@ -339,6 +339,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &1185212
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -835,6 +836,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &5784036
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1059,6 +1061,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &6413992
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1354,6 +1357,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &6473152
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -4456,6 +4460,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &68162483
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -4887,6 +4892,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &79386930
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -5141,6 +5147,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &81790958
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -8130,6 +8137,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &127601141
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -8934,6 +8942,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &136556441
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -12184,6 +12193,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &207107916
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -13828,6 +13838,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &247486494
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -14327,6 +14338,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &261352403
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -14540,6 +14552,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &262248328
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -15079,6 +15092,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &275404008
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -17246,6 +17260,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &319542077
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -17474,6 +17489,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &319656264
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -19471,6 +19487,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &376774495
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -19789,6 +19806,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &381187285
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -20002,6 +20020,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &381433206
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -20130,6 +20149,10 @@ PrefabInstance:
     - target: {fileID: 3654281983787433712, guid: 3b2fd21f4623c5f449640b0298e0617c, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3745763833110007993, guid: 3b2fd21f4623c5f449640b0298e0617c, type: 3}
+      propertyPath: <NextScene>k__BackingField
+      value: Stage2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3b2fd21f4623c5f449640b0298e0617c, type: 3}
@@ -20630,6 +20653,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &399572006
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -20820,7 +20844,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 400202868}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a2064e8b40d6b8d489aaa35fee922680, type: 3}
   m_Name: 
@@ -22042,6 +22066,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &425835984
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -22728,6 +22753,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &436199122
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -23062,7 +23088,7 @@ MonoBehaviour:
         bPlayOnAwake: 1
         bLoop: 1
         Priority: 128
-        Volume: 1
+        Volume: 0.5
         Pitch: 1
         StereoPan: 0
         SpatialBlend: 0.75
@@ -23076,7 +23102,7 @@ MonoBehaviour:
         bPlayOnAwake: 1
         bLoop: 1
         Priority: 128
-        Volume: 1
+        Volume: 0.5
         Pitch: 1
         StereoPan: 0
         SpatialBlend: 0.75
@@ -27661,6 +27687,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &537510804
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -30980,6 +31007,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &612148320
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -33123,6 +33151,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &656780544
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -33819,6 +33848,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &675359799
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -34918,6 +34948,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &687817723
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -36040,6 +36071,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &701422799
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -38620,6 +38652,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &756053941
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -39753,6 +39786,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &781730538
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -40007,6 +40041,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &789803235
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -40714,6 +40749,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &796538844
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -40996,6 +41032,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &797431764
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -43673,6 +43710,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &859733361
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -43983,6 +44021,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &860281134
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -45254,6 +45293,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &885619496
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -46359,6 +46399,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &907318003
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -46543,6 +46584,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &910236370
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -47520,6 +47562,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 10
+  waitMoveTime: 5
   minHeight: 3.405452
   maxHeight: 0.3480795
   bDoScaleInstead: 1
@@ -48034,6 +48077,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &946210048
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -52183,6 +52227,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &1020160102
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -58251,6 +58296,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &1191966121
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -59752,6 +59798,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &1237298689
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -60034,7 +60081,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9eeb29e5a82fb724f8a4df5591aa6f53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bDrawSpringArmLine: 0
   bDrawRotationalLines: 0
+  bDrawAdvancedCollisionLines: 0
   Camera: {fileID: 1239824856}
   Target: {fileID: 1857306253}
   TargetOffset: {x: 0, y: 0, z: 0}
@@ -60045,15 +60094,24 @@ MonoBehaviour:
   GimbalRotation: {x: 0, y: 24.4, z: 0}
   CameraRotation: {x: 17.8, y: 0, z: 0}
   bInheritRotation: 1
-  bEnableScrollToDistance: 1
-  ScrollSensitivity: 1
+  bInheritPitch: 0
   DefaultGimbalRotation: {x: 0, y: 27.75, z: 0}
   DefaultCameraRotation: {x: 29.17, y: 0, z: 0}
+  bEnableScrollToDistance: 1
+  ScrollSensitivity: 1
+  MaxDistance: 30
   OrbitSensitivity: 15
+  MinMaxOrbitAngle: {x: 1, y: 70}
+  bPermanentlyChangePanTargetOffset: 0
+  MaxPanDistance: 5
   bInvertX: 0
   bInvertY: 0
   bInvertZ: 0
   bRunCollisionChecks: 1
+  bUseAdvancedCollisionBehaviour: 0
+  bForceAdvancedBehaviour: 0
+  AdvancedCollisionActivationDistance: 1
+  MaxAdvancedCollisionAngle: 0
   OnlyCollideWith:
     serializedVersion: 2
     m_Bits: 256
@@ -60582,6 +60640,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &1251142548
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -60666,6 +60725,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 10
+  waitMoveTime: 5
   minHeight: 52.45799
   maxHeight: 68.95799
   bDoScaleInstead: 0
@@ -63687,6 +63747,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &1313776377
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -64597,6 +64658,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &1333246671
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -65431,7 +65493,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1343374064
 RectTransform:
   m_ObjectHideFlags: 0
@@ -69104,6 +69166,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &1410770458
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -69952,6 +70015,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &1426293571
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -71881,6 +71945,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &1473178765
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -73560,6 +73625,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &1534915344
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -74530,6 +74596,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &1550612357
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -74961,6 +75028,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &1564089409
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -75565,6 +75633,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &1568628071
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -76521,6 +76590,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &1583839281
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -77040,6 +77110,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &1589242327
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -77308,6 +77379,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &1592813789
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -78114,6 +78186,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &1607817876
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -78271,6 +78344,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &1609267530
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -80809,6 +80883,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &1664415618
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -82515,6 +82590,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 10
+  waitMoveTime: 5
   minHeight: 54.11469
   maxHeight: 73.15469
   bDoScaleInstead: 0
@@ -83730,6 +83806,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &1707829295
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -85002,6 +85079,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &1722934597
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -85458,6 +85536,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &1731096291
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -89720,7 +89799,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1841033173
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -90025,6 +90104,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &1846801469
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -90800,6 +90880,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &1862957407
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -97873,6 +97954,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &2031331220
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -100158,6 +100240,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &2080826146
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -101351,6 +101434,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &2110643660
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -102469,6 +102553,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &2125199540
 Rigidbody:
   m_ObjectHideFlags: 0

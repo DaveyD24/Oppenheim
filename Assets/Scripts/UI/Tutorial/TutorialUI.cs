@@ -1,4 +1,5 @@
 using System.Collections;
+using EventSystem;
 using UnityEngine;
 using TMP = TMPro.TextMeshProUGUI;
 
@@ -13,6 +14,8 @@ public class TutorialUI : MonoBehaviour
 	[SerializeField] EEquation InEquation;
 	[SerializeField] EEquation OutEquation;
 	[SerializeField] float TimeToTarget = 2.5f;
+
+	[SerializeField] private SetControlsUI setControlsUI;
 
 
 	Vector2 Origin, Target;
@@ -48,13 +51,28 @@ public class TutorialUI : MonoBehaviour
 		}
 	}
 
-	public void Set(string TitleText, string ContentsText, float Duration = 10f)
+	public void Set(string TitleText, string ContentsText, float Duration = 10f, bool bShowInstructions = false, string controlsTitle = "")
 	{
 		Title.text = TitleText;
 		Contents.text = ContentsText;
 
 		Invoke(nameof(Hide), Duration);
 		Invoke(nameof(Destroy), Duration + 1f);
+
+		if (bShowInstructions)
+		{
+			string[] inputDeviceNames = UIEvents.GetInputTypes();
+			if (inputDeviceNames.Length >= 2)
+			{
+				setControlsUI.SetControlsActive(controlsTitle, inputDeviceNames.Length, inputDeviceNames[0], inputDeviceNames[1]);
+			}
+			else if (inputDeviceNames.Length == 1)
+			{
+				setControlsUI.SetControlsActive(controlsTitle, inputDeviceNames.Length, inputDeviceNames[0], string.Empty);
+			}
+
+			Debug.Log("Setup Images Properly: " + inputDeviceNames.Length);
+		}
 	}
 
 	public void Show() { bInterpolatable = true; bIsShowing = true; t = 0f; }

@@ -9,9 +9,16 @@ public class TutorialUICollider : MonoBehaviour
 
 	[Header("Popup Position Settings")]
 	[SerializeField] bool bShowInCorner;
+
+	[Tooltip("If true, the title must match the ID of the control sprite from the control sprite map on the in place template")]
+	[SerializeField] bool bShowControls;
+	[SerializeField] string controlsTitle; // the title to display for the controls text
+
 	[SerializeField] TutorialUI CornerTemplate;
 	[SerializeField] TutorialUI InPlaceTemplate;
 	[SerializeField] Vector3 InPlacePosition;
+	[SerializeField] private Canvas tutorialCanvasParentWorld;
+
 
 	TutorialUI Current;
 	int PlayerCount = 0;
@@ -30,32 +37,38 @@ public class TutorialUICollider : MonoBehaviour
 		MainCamera = Camera.main;
 	}
 
-	void Update()
+	private void Update()
 	{
 		if (bShowInCorner || !Current)
+		{
 			return;
+		}
 
 		Current.Rect.position = MainCamera.WorldToScreenPoint(transform.position + InPlacePosition);
 	}
 
-	void OnTriggerEnter(Collider other)
+	private void OnTriggerEnter(Collider other)
 	{
 		if (other.CompareTag("Player"))
 		{
 			++PlayerCount;
 
-			if (bShowInCorner)
+			// only spawn in if no players have interacted with it
+			if (PlayerCount <= 1)
 			{
-				Current = TutorialUIManager.Get().Show(Title, Contents, kAVeryLongTime);
-			}
-			else
-			{
-				ShowInPlace();
+				if (bShowInCorner)
+				{
+					Current = TutorialUIManager.Get().Show(Title, Contents, kAVeryLongTime, bShowControls, controlsTitle);
+				}
+				else
+				{
+					ShowInPlace();
+				}
 			}
 		}
 	}
 
-	void OnTriggerExit(Collider other)
+	private void OnTriggerExit(Collider other)
 	{
 		if (other.CompareTag("Player"))
 		{
@@ -69,20 +82,22 @@ public class TutorialUICollider : MonoBehaviour
 		}
 	}
 
-	void ShowInPlace()
+	private void ShowInPlace()
 	{
-		TutorialUI InPlace = Instantiate(InPlaceTemplate, TutorialUIManager.Get().TutorialCanvasParent.transform);
-		InPlace.Set(Title, Contents, kAVeryLongTime);
+		TutorialUI InPlace = Instantiate(InPlaceTemplate, TutorialUIManager.Get().TutorialCanvasParent.transform); // tutorialCanvasParentWorld.transform);
+		InPlace.Set(Title, Contents, kAVeryLongTime, bShowControls, controlsTitle);
 
 		InPlace.Rect.anchorMin = InPlace.Rect.anchorMax = InPlace.Rect.localScale = new Vector2(.5f, .5f);
 		InPlace.Rect.anchoredPosition = Vector2.zero;
 		InPlace.Blur.SetActive(false);
 
+		InPlace.transform.position = transform.position + InPlacePosition;
+
 		Current = InPlace;
 	}
 
 #if UNITY_EDITOR
-	void OnDrawGizmos()
+	private void OnDrawGizmos()
 	{
 		Gizmos.color = Color.cyan;
 		Gizmos.DrawSphere(transform.position + InPlacePosition, .15f);

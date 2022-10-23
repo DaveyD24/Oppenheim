@@ -2280,10 +2280,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fcaa7093491068a42b1584d4e7d2d01b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bIsTutorialLevel: 0
   controlObj: {fileID: 1380014017272559542}
   abilityActiveObj: {fileID: 4292051421636100735}
   abilityTxt: {fileID: 8866032319640643977}
   playerCanvas: {fileID: 3499526161415638220}
+  <AbilityUses>k__BackingField: 3
   HumanPlayerIndex: 0
   <PlayerIdSO>k__BackingField: {fileID: 11400000, guid: 0aca3aa46054d22439aa2cb351a6753d, type: 2}
   <DefaultPlayerData>k__BackingField: {fileID: 11400000, guid: edaf631a83ce6ea42aa9463c9228f767, type: 2}
@@ -2291,7 +2293,7 @@ MonoBehaviour:
   <MovementSpeed>k__BackingField: 5
   <RotationSpeed>k__BackingField: 250
   <Health>k__BackingField: 0
-  <FallDamageThreshold>k__BackingField: 25
+  <FallDamageThreshold>k__BackingField: 20
   groundCheckPosition: {x: 0, y: -0.5, z: 0}
   <GroundCheckRadius>k__BackingField: 0.3
   trackingCamera: {fileID: 0}
@@ -2387,6 +2389,20 @@ MonoBehaviour:
     - Key: Grunt
       Value:
         Clip: {fileID: 8300000, guid: b5f8e66b908f27c4597f49e3815de588, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 0
+        bLoop: 0
+        Priority: 128
+        Volume: 1
+        Pitch: 1
+        StereoPan: 0
+        SpatialBlend: 0.75
+        ReverbZoneMix: 1
+    - Key: Respawn
+      Value:
+        Clip: {fileID: 8300000, guid: 27c204490e10f114785058fb32abf4bc, type: 3}
         bMute: 0
         bBypassEffects: 0
         bBypassReverbZones: 0

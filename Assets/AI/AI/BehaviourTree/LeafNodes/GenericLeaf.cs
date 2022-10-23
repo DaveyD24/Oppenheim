@@ -22,7 +22,7 @@ public class GenericLeaf : Node<GenericBot>
     // called each update frame that this node returns running fall
     public override ENodeState Evaluate()
     {
-        return ENodeState.Running; // can be whatever retrun is nessesary
+        return ENodeState.Running; // can be whatever return is nessesary
     }
 
     // when this node ends its execution, by either returning a failed or success node state
