@@ -11,39 +11,43 @@ public class AimingScript : MonoBehaviour
     [SerializeField] private float maxAngle = 90;
     [SerializeField] private float closestDist = Mathf.Infinity;
     [SerializeField] private GameObject closestObj = null;
-    private Collider[] objNearby;
+    private GameObject[] objNearby;
 
     private Quaternion targetRotation;
     private Quaternion lookAt;
 
+
+    void Start(){
+         objNearby = GameObject.FindGameObjectsWithTag("Breakable");
+    }
+
     void Update()
     {
         FindTarget();
-        
         //face direction if there is a breakable object in view, else just look forward
-        if (objInFieldOfView(fovStartPoint) && closestObj != null){
+        if (objInFieldOfView(fovStartPoint) && closestObj != null)
+        {
             Vector3 direction = closestObj.transform.position - transform.position;
             targetRotation = Quaternion.LookRotation(direction);
             lookAt = Quaternion.RotateTowards(transform.rotation, targetRotation, Time.deltaTime * lookSpeed);
             transform.rotation = lookAt;
         }
-        else{
+        else
+        {
             targetRotation = Quaternion.Euler(0,0,0);
             transform.localRotation = Quaternion.RotateTowards(
                 transform.localRotation, targetRotation, Time.deltaTime * lookSpeed);
-        }
-
-        
+        } 
     }
     
     //find closest object that is breakable
     private void FindTarget()
     {
-        objNearby = Physics.OverlapSphere(this.transform.position, 100f);
-        foreach (Collider obj in objNearby) 
+        //objNearby = Physics.OverlapSphere(this.transform.position, 100f);
+        foreach (GameObject obj in objNearby) 
         {
-            if (obj.GetComponent<Collider>().tag == "Breakable") {
-                float breakableDist = (obj.gameObject.transform.position - this.transform.position).sqrMagnitude;
+            //if (obj.GetComponent<Collider>().tag == "Breakable") {
+                float breakableDist = (obj.transform.position - this.transform.position).sqrMagnitude;
                 Debug.Log("calculating breakable dis");
                 if (breakableDist < closestDist)
                 {
@@ -51,10 +55,10 @@ public class AimingScript : MonoBehaviour
                     closestObj = obj.gameObject;
                     Debug.Log("THIS ONE CLOSER");
                 }
-            }
-            else{
+            //}
+            /*else{
                 Debug.Log("not breakable");
-            }
+            }*/
         }
         Debug.DrawLine(this.transform.position, closestObj.transform.position);
     }
