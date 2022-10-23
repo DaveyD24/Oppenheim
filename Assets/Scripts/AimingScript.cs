@@ -52,7 +52,7 @@ public class AimingScript : MonoBehaviour
                 if (breakableDist < closestDist)
                 {
                     closestDist = breakableDist;
-                    closestObj = obj.gameObject;
+                    closestObj = obj;
                     Debug.Log("THIS ONE CLOSER");
                 }
             //}
