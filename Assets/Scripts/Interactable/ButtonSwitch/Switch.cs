@@ -102,19 +102,26 @@ public class Switch : Interactable, IDataInterface
 	public void LoadData(SectionData data)
 #pragma warning restore SA1202 // Elements should be ordered by access
 	{
-		bIsOn = data.SwitchData.Dictionary[SaveID];
-		if (bIsOn)
+		if (!BNotSaveData)
 		{
-			SwitchedOn?.Invoke();
-		}
-		else
-		{
-			SwitchedOff?.Invoke();
+			Debug.Log(gameObject.name);
+			bIsOn = data.SwitchData.Dictionary[SaveID];
+			if (bIsOn)
+			{
+				SwitchedOn?.Invoke();
+			}
+			else
+			{
+				SwitchedOff?.Invoke();
+			}
 		}
 	}
 
 	public void SaveData(SectionData data)
 	{
-		data.SwitchData.Dictionary.Add(SaveID, bIsOn);
+		if (!BNotSaveData)
+		{
+			data.SwitchData.Dictionary.Add(SaveID, bIsOn);
+		}
 	}
 }

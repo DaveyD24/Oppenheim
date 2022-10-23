@@ -16,6 +16,8 @@ public class DefaultPlayerDataObject : ScriptableObject
 
     [field: SerializeField] public GameObject DustParticles { get; private set; }
 
+    [field: SerializeField] public GameObject RespawnParticles { get; private set; }
+
     [field: SerializeField] public float dustParticlesCollisionSpeed { get; private set; }
 
     [field: SerializeField] public float CheckpointYOffset { get; private set; }

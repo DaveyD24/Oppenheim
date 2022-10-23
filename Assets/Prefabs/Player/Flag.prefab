@@ -9689,6 +9689,7 @@ GameObject:
   - component: {fileID: 1331101235}
   - component: {fileID: 1331101234}
   - component: {fileID: 6814906282723537613}
+  - component: {fileID: 2302947694216087364}
   m_Layer: 0
   m_Name: Flag
   m_TagString: Untagged
@@ -9816,6 +9817,10 @@ MonoBehaviour:
   minY: 2.820513
   maxY: 16.63
   activateParticles: {fileID: 227985496}
+  SaveSectionsData:
+    m_PersistentCalls:
+      m_Calls: []
+  ResetSectionsFuelData: []
 --- !u!54 &1331101235
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -9869,6 +9874,34 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 26.628958, y: 34.34211, z: 76.62012}
   m_Center: {x: 0.95152044, y: 16.341497, z: -14.703906}
+--- !u!114 &2302947694216087364
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3807437224311690048}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdf51a863cc80a541bd21546cf8cfb67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HashMap:
+    Entries:
+    - Key: Activated
+      Value:
+        Clip: {fileID: 8300000, guid: ac99de8eb8869fb41ad3d58eacb3b213, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 0
+        bLoop: 0
+        Priority: 128
+        Volume: 1
+        Pitch: 1
+        StereoPan: 0
+        SpatialBlend: 0.75
+        ReverbZoneMix: 1
 --- !u!1 &6265053706037485534
 GameObject:
   m_ObjectHideFlags: 0

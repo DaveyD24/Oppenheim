@@ -79,6 +79,7 @@ public class SwitchManager : MonoBehaviour
         GameEvents.OnAddPlayerSwitch += AddInactive;
         GameEvents.OnRotatePlayer += RotatePlayer;
         GameEvents.OnPlayerCompareDistance += CompareControlledPlayerDistance;
+        GameEvents.OnGetNumberActive += NumberPlayersActive;
 
         UIEvents.OnGetInputTypes += GetInputControlMethods;
     }
@@ -91,6 +92,7 @@ public class SwitchManager : MonoBehaviour
         GameEvents.OnAddPlayerSwitch -= AddInactive;
         GameEvents.OnRotatePlayer -= RotatePlayer;
         GameEvents.OnPlayerCompareDistance -= CompareControlledPlayerDistance;
+        GameEvents.OnGetNumberActive -= NumberPlayersActive;
 
         UIEvents.OnGetInputTypes -= GetInputControlMethods;
     }
@@ -306,5 +308,10 @@ public class SwitchManager : MonoBehaviour
     {
         GetAllPlayers(out PlayerController[] players);
         return Array.Find(players, p => p.PlayerIdSO.PlayerID == playerID);
+    }
+
+    private int NumberPlayersActive()
+    {
+        return controlledPlayers.Count;
     }
 }

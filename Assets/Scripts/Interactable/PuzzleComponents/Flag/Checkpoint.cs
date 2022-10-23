@@ -27,6 +27,8 @@ public class Checkpoint : MonoBehaviour, IDataInterface
     [SerializeField] public GatherStageObjects[] ResetSectionsFuelData;
 
     private Tween flagMoveTween;
+    private bool bCheckpointActivated = false;
+    private AudioController audio; 
 
     public static Vector3 RespawnPosition { get; private set; }
 
@@ -35,15 +37,19 @@ public class Checkpoint : MonoBehaviour, IDataInterface
     private void Start()
     {
         flagTransform = transform.GetChild(0);
-        flagUpAmount = (maxY - minY) / 4;
+        BUseCheckpointPos = false; // as its just loading in and this is static reset it as a new level has loaded in
+        audio = gameObject.GetComponent<AudioController>();
+
+        // flagUpAmount = (maxY - minY) / 4;
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            int playerId = other.gameObject.transform.root.gameObject.GetComponent<PlayerController>().PlayerIdSO.PlayerID;
-            if (!seenId.Contains(playerId))
+            PlayerController playerController = other.gameObject.transform.root.gameObject.GetComponent<PlayerController>();
+            int playerId = playerController.PlayerIdSO.PlayerID;
+            if (playerController.IsActive() && !seenId.Contains(playerId))
             {
                 seenId.Add(playerId);
                 UpdateFlag();
@@ -63,12 +69,17 @@ public class Checkpoint : MonoBehaviour, IDataInterface
             flagPos = flagTransform.localPosition;
         }
 
-        flagPos.y += flagUpAmount;
+        // determine rest position of the flag
+        int numActivePlayers = GameEvents.GetNumberPlayersActive();
+        flagUpAmount = (maxY - minY) / numActivePlayers;
+        flagPos.y = minY + (flagUpAmount * seenId.Count);
 
         flagMoveTween = new Tween(flagTransform.localPosition, flagPos, Time.time, animationDuration);
 
-        if (seenId.Count >= 4)
+        // when all active players have collided with this checkpoint set it as the active checkpoint
+        if (seenId.Count >= numActivePlayers)
         {
+            bCheckpointActivated = true;
             RespawnPosition = transform.position;
             activateParticles.Play();
             if (!BUseCheckpointPos)
@@ -77,6 +88,9 @@ public class Checkpoint : MonoBehaviour, IDataInterface
             }
 
             SaveSectionsData?.Invoke();
+            GameEvents.RespawnPlayersOnly(true);
+
+            audio.Play("Activated", EAudioPlayOptions.AtTransformPosition | EAudioPlayOptions.Global | EAudioPlayOptions.DestroyOnEnd);
 
             // find all fuel which has been collected on sections that do not get saved so that these fuel values do not get saved along with it
             // this ensures that when a player dies and the section resets they do not have abilities gathered which should have been reset
@@ -92,9 +106,7 @@ public class Checkpoint : MonoBehaviour, IDataInterface
 
             GameEvents.SavePlayerData(fuelDataReset);
 
-            // somehow need to get the number of each collectible type gathered in the non-save sections of the level.
-
-            // SceneManager.LoadScene("WinScene");
+            // save to analytics every time a checkpoint is fully activated
 #if !UNITY_EDITOR
 		Dictionary<string, object> eventData = new Dictionary<string, object>();
 		eventData.Add("Position", transform.position.ToString());
@@ -129,15 +141,16 @@ public class Checkpoint : MonoBehaviour, IDataInterface
         }
         else
         {
+            // as not fully active, reset it completely
             flagTransform.localPosition = new Vector3(flagTransform.localPosition.x, minY, flagTransform.localPosition.z);
             seenId.Clear();
             flagMoveTween = null;
-            flagUpAmount = (maxY - minY) / 4;
+            // flagUpAmount = (maxY - minY) / 4;
         }
     }
 
     public void SaveData(SectionData data)
     {
-        data.BIsCheckpointComplete = seenId.Count >= 4;
+        data.BIsCheckpointComplete = bCheckpointActivated;
     }
 }

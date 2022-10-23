@@ -1,9 +1,9 @@
 namespace EventSystem
 {
     using System;
-    using UnityEngine.InputSystem;
-    using UnityEngine;
     using System.Collections.Generic;
+    using UnityEngine;
+    using UnityEngine.InputSystem;
 
     /// <summary>
     /// A base class handleing all game events where two or more objects need to communicate with each other.
@@ -21,6 +21,10 @@ namespace EventSystem
         public static Action OnDashCarCollide { get; set; }
 
         public static Action OnDie { get; set; }
+
+        public static Action<bool> OnRespawnPlayersOnly { get; set; }
+
+        public static Func<int> OnGetNumberActive { get; set; }
 
         public static Action<int[]> OnSavePlayerData { get; set; }
 
@@ -55,6 +59,11 @@ namespace EventSystem
             OnSavePlayerData?.Invoke(fuelDataReset);
         }
 
+        public static void RespawnPlayersOnly(bool bOnlyInactive)
+        {
+            OnRespawnPlayersOnly?.Invoke(bOnlyInactive);
+        }
+
         public static void Die()
         {
             // reset all sections of the level to their current saved state
@@ -64,6 +73,16 @@ namespace EventSystem
             }
 
             OnDie?.Invoke();
+        }
+
+        public static int GetNumberPlayersActive()
+        {
+            if (OnGetNumberActive != null)
+            {
+                return OnGetNumberActive();
+            }
+
+            return 0;
         }
 
         public static int[] GatherInvalidSaveFuel()
@@ -107,6 +126,7 @@ namespace EventSystem
             OnDeactivatePlayer?.Invoke(currentPlayerId);
         }
 
+        // below are the events related to moving the camera with input recieved from the player controller class
         public static void CameraMove(Transform transform, Vector3 inputAmount, bool bCamFinished = false)
         {
             OnCameraMove?.Invoke(transform, inputAmount, bCamFinished);

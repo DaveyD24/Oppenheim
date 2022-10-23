@@ -410,6 +410,8 @@ public abstract class PlayerController : MonoBehaviour
         GameEvents.OnDeactivatePlayer += DeactivateInput;
 
         GameEvents.OnSavePlayerData += SaveData;
+
+        GameEvents.OnRespawnPlayersOnly += RespawnPositionSet;
     }
 
     protected virtual void OnDisable()
@@ -423,6 +425,7 @@ public abstract class PlayerController : MonoBehaviour
         GameEvents.OnDeactivatePlayer -= DeactivateInput;
 
         GameEvents.OnSavePlayerData -= SaveData;
+        GameEvents.OnRespawnPlayersOnly -= RespawnPositionSet;
     }
 
     protected virtual void OnDrawGizmosSelected()
@@ -490,24 +493,7 @@ public abstract class PlayerController : MonoBehaviour
     protected virtual void Respawn()
     {
         // respawning code...
-        Rb.velocity = Vector3.zero;
-        Rb.angularVelocity = Vector3.zero;
-
-        if (!Checkpoint.BUseCheckpointPos)
-        {
-            Rb.transform.position = startPosition;
-            transform.rotation = startRotation;
-        }
-        else
-        {
-            // calculate the radius around the checkpoint at which the players are to spawn
-            Vector3 centrePos = Checkpoint.RespawnPosition;
-            float currentAngle = (90 * PlayerIdSO.PlayerID * Mathf.PI) / 180.0f;
-            Vector3 playerPos = centrePos + new Vector3(Mathf.Cos(currentAngle) * DefaultPlayerData.RadiusFromCheckpiont, DefaultPlayerData.CheckpointYOffset, Mathf.Sin(currentAngle) * DefaultPlayerData.RadiusFromCheckpiont);
-
-            Rb.transform.position = playerPos;
-            transform.rotation = Quaternion.identity;
-        }
+        RespawnPositionSet();
 
         if (PlayerInput != null)
         {
@@ -515,6 +501,42 @@ public abstract class PlayerController : MonoBehaviour
         }
 
         LoadData();
+    }
+
+    /// <summary>
+    /// When respawning set the players position to be at the latest checkpoint.
+    /// </summary>
+    /// <param name="bInactiveOnly">do only players which are inactive and not being controlled respawn?.</param>
+    private void RespawnPositionSet(bool bInactiveOnly = false)
+    {
+        if (!bInactiveOnly || !Active)
+        {
+            Rb.velocity = Vector3.zero;
+            Rb.angularVelocity = Vector3.zero;
+
+            if (!Checkpoint.BUseCheckpointPos)
+            {
+                Rb.transform.position = startPosition;
+                transform.rotation = startRotation;
+            }
+            else
+            {
+                // calculate the radius around the checkpoint at which the players are to spawn
+                Vector3 centrePos = Checkpoint.RespawnPosition;
+                float currentAngle = (90 * PlayerIdSO.PlayerID * Mathf.PI) / 180.0f;
+                Vector3 playerPos = centrePos + new Vector3(Mathf.Cos(currentAngle) * DefaultPlayerData.RadiusFromCheckpiont, DefaultPlayerData.CheckpointYOffset, Mathf.Sin(currentAngle) * DefaultPlayerData.RadiusFromCheckpiont);
+
+                Rb.transform.position = playerPos;
+                transform.rotation = Quaternion.identity;
+            }
+
+            Instantiate(DefaultPlayerData.RespawnParticles, transform.position + (Vector3.down * 1), Quaternion.identity);
+
+            if (!bInactiveOnly)
+            {
+                Audio.Play("Respawn", EAudioPlayOptions.AtTransformPosition | EAudioPlayOptions.Global | EAudioPlayOptions.DestroyOnEnd);
+            }
+        }
     }
 
     private void LoseInput(PlayerInput player)
@@ -554,7 +576,7 @@ public abstract class PlayerController : MonoBehaviour
         AnalyticsService.Instance.Flush();
 #endif
 
-        yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(2);
         GameEvents.Die();
         DeathWaitTimer = null;
     }

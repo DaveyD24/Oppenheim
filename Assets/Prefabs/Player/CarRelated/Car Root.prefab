@@ -942,6 +942,20 @@ MonoBehaviour:
         StereoPan: 0
         SpatialBlend: 0.75
         ReverbZoneMix: 1
+    - Key: Respawn
+      Value:
+        Clip: {fileID: 8300000, guid: 27c204490e10f114785058fb32abf4bc, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 0
+        bLoop: 0
+        Priority: 128
+        Volume: 1
+        Pitch: 1
+        StereoPan: 0
+        SpatialBlend: 0.75
+        ReverbZoneMix: 1
 --- !u!114 &2905989151779824795
 MonoBehaviour:
   m_ObjectHideFlags: 0

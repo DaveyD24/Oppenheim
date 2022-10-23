@@ -3,7 +3,9 @@ guid: 9589d07c2cbcc7d48912869397d6c2af
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - <DustParticles>k__BackingField: {instanceID: 0}
+  - <RespawnParticles>k__BackingField: {fileID: 142817430231947956, guid: 8022b364a05b7ec4e95d4ffa9a97b50a, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
