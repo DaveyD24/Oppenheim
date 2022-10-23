@@ -2370,6 +2370,34 @@ MonoBehaviour:
         StereoPan: 0
         SpatialBlend: 0.75
         ReverbZoneMix: 1
+    - Key: Footsteps
+      Value:
+        Clip: {fileID: 8300000, guid: b2cd24a708107cf4f8a79b72b6e04734, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 0
+        bLoop: 0
+        Priority: 128
+        Volume: 1
+        Pitch: 1
+        StereoPan: 0
+        SpatialBlend: 0.75
+        ReverbZoneMix: 1
+    - Key: Grunt
+      Value:
+        Clip: {fileID: 8300000, guid: b5f8e66b908f27c4597f49e3815de588, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 0
+        bLoop: 0
+        Priority: 128
+        Volume: 1
+        Pitch: 1
+        StereoPan: 0
+        SpatialBlend: 0.75
+        ReverbZoneMix: 1
 --- !u!114 &2582253947113007348
 MonoBehaviour:
   m_ObjectHideFlags: 0
