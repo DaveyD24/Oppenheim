@@ -1775,6 +1775,7 @@ GameObject:
   - component: {fileID: 7418030357996614338}
   - component: {fileID: 707257446435360162}
   - component: {fileID: 3163964536523772284}
+  - component: {fileID: 3779590130917346317}
   m_Layer: 7
   m_Name: Soldier
   m_TagString: Player
@@ -2076,6 +2077,23 @@ MonoBehaviour:
   bShouldPrecomputeOutline: 0
   BakeKeys: []
   BakeValues: []
+--- !u!114 &3779590130917346317
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3182380755078332306}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1998c005e1d0f20458d066a623cf35c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  aimPosition: {fileID: 0}
+  fovStartPoint: {fileID: 3182380755078332398}
+  lookSpeed: 200
+  maxAngle: 90
+  closestDist: Infinity
 --- !u!1 &3182380755078332308
 GameObject:
   m_ObjectHideFlags: 0

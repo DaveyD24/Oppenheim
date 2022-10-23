@@ -30,7 +30,12 @@ public class SoldierMovement : PlayerController
     [SerializeField] private float jumpHeight = 3f;
     [SerializeField] private GameObject ragdol;
     [SerializeField] private GameObject baseMesh;
+    //[SerializeField] private GameObject gun;
+    //[SerializeField] private Collider[] objNearby;
     private BoxCollider boxCollider;
+    //private float closestDist = Mathf.Infinity;
+    //private Collider closestObj = null;
+    
 
     private int maxAmmoClip = 10;
     private int currAmmoClip = 10;
@@ -97,6 +102,28 @@ public class SoldierMovement : PlayerController
                 bDidJump = false;
             }
         }
+    }
+
+    private void FindTarget()
+    {
+        /*objNearby = Physics.OverlapSphere(this.soldierTransform.position, 50f);
+        foreach (Collider obj in objNearby) 
+        {
+            if (obj.tag == "Breakable") {
+                float breakableDist = (obj.transform.position - this.transform.position).sqrMagnitude;
+                if (breakableDist < closestDist)
+                {
+                    closestDist = breakableDist;
+                    closestObj = obj;
+                }
+            }
+        }
+        Debug.DrawLine(this.transform.position, closestObj.transform.position);*/
+    }
+
+    private void AutoAim()
+    {
+        //gun.transform.LookAt(closestObj.transform);
     }
 
     // Swimming
@@ -408,6 +435,8 @@ public class SoldierMovement : PlayerController
             return "water3";
         }
     }
+
+
 
 #if UNITY_EDITOR
     private void SetStartTransform()
