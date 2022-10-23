@@ -24,9 +24,11 @@ public class MonkeyController : PlayerController
     private Speedometer speedometer;
 
     private bool clinging = false;
+    private bool hanging = false;
     private ContactPoint contactPoint;
 
     private Vector3 clingPosition;
+    private Vector3 hangPosition;
 
     private bool bDidJump = false;
     private float currJumpWaitTime = 1;
@@ -58,6 +60,16 @@ public class MonkeyController : PlayerController
     {
         base.Update();
 
+        if (IsGrounded() && Rb.velocity.magnitude > 0.1f)
+        {
+            //Audio.PlayUnique("Footsteps", EAudioPlayOptions.AtTransformPosition | EAudioPlayOptions.DestroyOnEnd);
+        }
+        else
+        {
+            //Audio.StopCoroutine("Footsteps");
+        }
+
+
         if (bDidJump)
         {
             currJumpWaitTime -= Time.deltaTime;
@@ -86,6 +98,7 @@ public class MonkeyController : PlayerController
         {
             if (clinging)
             {
+                
                 transform.position = clingPosition;
 
                 // Vector3 desiredPosition = transform.position - Vector3.up;
@@ -93,8 +106,16 @@ public class MonkeyController : PlayerController
                 // transform.position = gradual;
                 Rb.velocity = Vector3.zero;
             }
+            if (hanging)
+            {
+                
+                //Debug.Log("I am hanging");
+                //this.transform.position = new Vector3(this.transform.position.x, hangPosition.y, this.transform.position.z);
+                //this.transform.position = hangPosition;
+                Rb.constraints = RigidbodyConstraints.FreezePositionY;
+            }
 
-            Rb.useGravity = !clinging;
+            Rb.useGravity = (!clinging && !hanging);
         }
 
         // Rotate towards Movement.
@@ -143,8 +164,10 @@ public class MonkeyController : PlayerController
         }
 
         // This check is original and untouched.
-        if ((IsGrounded() || clinging) && !bDidJump) // buggy if jumping and moving at the same time.
+        if ((IsGrounded() || clinging || hanging) && !bDidJump)
         {
+
+
             // Original: Jump with a modified kinematic equation.
             Rb.velocity += new Vector3(0f, Mathf.Sqrt(jumpHeight * -3f * Physics.gravity.y), 0f);
 
@@ -161,16 +184,24 @@ public class MonkeyController : PlayerController
                     Rb.angularVelocity = Vector3.zero;
                     AdjustAbilityValue(-1);
                 }
+                if (hanging)
+                {
+                    Debug.Log("Unhang");
+                    hanging = false;
+                    Rb.constraints = RigidbodyConstraints.None;
+                }
+
             }
             else
             {
                 clinging = false;
+                hanging = false;
             }
 
             bDidJump = true;
             animator.SetTrigger("Jump");
 
-            Audio.Play(RandomSound(), EAudioPlayOptions.FollowEmitter | EAudioPlayOptions.DestroyOnEnd);
+            //Audio.Play("Grunt", EAudioPlayOptions.FollowEmitter | EAudioPlayOptions.DestroyOnEnd);
         }
     }
 
@@ -251,9 +282,19 @@ public class MonkeyController : PlayerController
                 clinging = true;
             }
 
+            //Audio.PlayUnique("Doof", EAudioPlayOptions.AtTransformPosition | EAudioPlayOptions.DestroyOnEnd);
+            hanging = false;
             clingPosition = collision.collider.ClosestPoint(transform.position);
             contactPoint = collision.GetContact(0);
             bStillClinging = true;
+        }
+
+        if (AbilityUses > 0 && collision.transform.CompareTag("Hangable") && !IsGrounded())
+        {
+            //Audio.PlayUnique("Doof", EAudioPlayOptions.AtTransformPosition | EAudioPlayOptions.DestroyOnEnd);
+            hanging = true;
+            clinging = false;
+            hangPosition = this.transform.position;
         }
     }
 
@@ -265,6 +306,10 @@ public class MonkeyController : PlayerController
         {
             clinging = false;
             bStillClinging = false;
+        }
+        if (collision.transform.CompareTag("Hangable"))
+        {
+            hanging = false;
         }
     }
 
