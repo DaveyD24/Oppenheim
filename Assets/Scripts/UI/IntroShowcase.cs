@@ -83,6 +83,6 @@ public class IntroShowcase : MonoBehaviour
         enabled = false;
         camMoveTween = null;
         introUIBanner.gameObject.SetActive(false);
-        // UIEvents.BeginAnnoucement(); // Skip this as well.
+        UIEvents.BeginAnnoucement(); // Skip this as well.
     }
 }

@@ -19,6 +19,8 @@ public class TutorialUICollider : MonoBehaviour
 	[SerializeField] Vector3 InPlacePosition;
 	[SerializeField] private Canvas tutorialCanvasParentWorld;
 
+	[SerializeField] EnforceFaceCamera Billboard;
+
 
 	TutorialUI Current;
 	int PlayerCount = 0;
@@ -44,7 +46,8 @@ public class TutorialUICollider : MonoBehaviour
 			return;
 		}
 
-		Current.Rect.position = MainCamera.WorldToScreenPoint(transform.position + InPlacePosition);
+		//Current.Rect.position = MainCamera.WorldToScreenPoint(transform.position + InPlacePosition);
+		Current.transform.position = transform.position + InPlacePosition;
 	}
 
 	private void OnTriggerEnter(Collider other)
@@ -63,6 +66,11 @@ public class TutorialUICollider : MonoBehaviour
 				else
 				{
 					ShowInPlace();
+
+					if (other.TryGetComponent(out PlayerController PlayerController))
+					{
+						Billboard.SetBillboardTarget(PlayerController.TrackingCamera.transform);
+					}
 				}
 			}
 		}
@@ -84,11 +92,11 @@ public class TutorialUICollider : MonoBehaviour
 
 	private void ShowInPlace()
 	{
-		TutorialUI InPlace = Instantiate(InPlaceTemplate, TutorialUIManager.Get().TutorialCanvasParent.transform); // tutorialCanvasParentWorld.transform);
+		TutorialUI InPlace = Instantiate(InPlaceTemplate, tutorialCanvasParentWorld.transform);
 		InPlace.Set(Title, Contents, kAVeryLongTime, bShowControls, controlsTitle);
 
-		InPlace.Rect.anchorMin = InPlace.Rect.anchorMax = InPlace.Rect.localScale = new Vector2(.5f, .5f);
-		InPlace.Rect.anchoredPosition = Vector2.zero;
+		//InPlace.Rect.anchorMin = InPlace.Rect.anchorMax = InPlace.Rect.localScale = new Vector2(.5f, .5f);
+		//InPlace.Rect.anchoredPosition = Vector2.zero;
 		InPlace.Blur.SetActive(false);
 
 		InPlace.transform.position = transform.position + InPlacePosition;
