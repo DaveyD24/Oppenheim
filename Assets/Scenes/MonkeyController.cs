@@ -201,7 +201,7 @@ public class MonkeyController : PlayerController
             bDidJump = true;
             animator.SetTrigger("Jump");
 
-            //Audio.Play("Grunt", EAudioPlayOptions.FollowEmitter | EAudioPlayOptions.DestroyOnEnd);
+            Audio.Play("Grunt", EAudioPlayOptions.FollowEmitter | EAudioPlayOptions.DestroyOnEnd);
         }
     }
 
@@ -282,7 +282,7 @@ public class MonkeyController : PlayerController
                 clinging = true;
             }
 
-            //Audio.PlayUnique("Doof", EAudioPlayOptions.AtTransformPosition | EAudioPlayOptions.DestroyOnEnd);
+            Audio.Play("Doof", EAudioPlayOptions.AtTransformPosition | EAudioPlayOptions.DestroyOnEnd);
             hanging = false;
             clingPosition = collision.collider.ClosestPoint(transform.position);
             contactPoint = collision.GetContact(0);
@@ -291,7 +291,7 @@ public class MonkeyController : PlayerController
 
         if (AbilityUses > 0 && collision.transform.CompareTag("Hangable") && !IsGrounded())
         {
-            //Audio.PlayUnique("Doof", EAudioPlayOptions.AtTransformPosition | EAudioPlayOptions.DestroyOnEnd);
+            Audio.Play("Doof", EAudioPlayOptions.AtTransformPosition | EAudioPlayOptions.DestroyOnEnd);
             hanging = true;
             clinging = false;
             hangPosition = this.transform.position;
