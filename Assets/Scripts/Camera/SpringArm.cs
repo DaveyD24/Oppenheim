@@ -1,12 +1,17 @@
-using System;
 using UnityEngine;
+using static UnityEngine.Extensions.XVector;
+using static global::BatMathematics;
+using static global::MDebug;
+using EventSystem;
 
 public class SpringArm : MonoBehaviour
 {
 
 #if UNITY_EDITOR
 	[Header("Debug Options. [EDITOR ONLY]")]
+	[SerializeField] bool bDrawSpringArmLine;
 	[SerializeField] bool bDrawRotationalLines;
+	[SerializeField] bool bDrawAdvancedCollisionLines;
 	[Space(10)]
 #endif
 
@@ -17,22 +22,42 @@ public class SpringArm : MonoBehaviour
 
 	[HideInInspector] public Camera CameraComponent;
 
+	/// <summary>Is this SpringArm tracking an Average Position?</summary>
+	[Header("ViewportSplit Controls [Read Only]")]
+	[ReadOnly] public bool bIsAverageTracking;
+	/// <summary>Is this Spring Arm temporary and should not initialise itself?</summary>
+	[ReadOnly] public bool bIsSecondarySpringArm;
+
 	[Header("Spring Arm Settings.")]
 	public float Distance;
+	/// <summary>Rotation relative to Target.</summary>
 	[SerializeField] Vector3 GimbalRotation;
+	/// <summary>Rotation of the View Camera.</summary>
 	[SerializeField] Vector3 CameraRotation;
-	[SerializeField] bool bInheritRotation;
-	[Space(5)]
-	[SerializeField] bool bEnableScrollToDistance;
-	[SerializeField] float ScrollSensitivity;
+	public bool bInheritRotation;
+	[SerializeField] bool bInheritPitch;
 	[HideInInspector, SerializeField] Vector3 DefaultGimbalRotation;
 	[HideInInspector, SerializeField] Vector3 DefaultCameraRotation;
+
+	[Header("Scroll Settings")]
+	[SerializeField] bool bEnableScrollToDistance;
+	[SerializeField] float ScrollSensitivity;
+	[SerializeField] float MaxDistance = 30;
+
+	[Header("Orbit Settings")]
 	[SerializeField] float OrbitSensitivity = 1f;
+	[SerializeField] Vector2 MinMaxOrbitAngle = new Vector2(1f, 70f);
+
+	[Header("Pan Settings")]
+	[SerializeField] bool bPermanentlyChangePanTargetOffset;
+	[SerializeField] float MaxPanDistance = 5f;
+
 	Vector2 PreviousMouseDragPosition;
 	Vector3 GimbalRotationInherited;
 	Vector3 CameraRotationInherited;
 	Vector2 PreviousMousePanPosition;
 	Vector3 OriginalTargetOffset;
+	float PitchDegrees;
 
 	[Header("Inverse Settings.")]
 	[SerializeField] bool bInvertX; // Inverse LR dragging Orbit Controls.
@@ -41,7 +66,15 @@ public class SpringArm : MonoBehaviour
 
 	[Header("Collisions")]
 	[SerializeField] bool bRunCollisionChecks;
+	[SerializeField] bool bUseAdvancedCollisionBehaviour;
+	[SerializeField] bool bForceAdvancedBehaviour;
+	[SerializeField] float AdvancedCollisionActivationDistance;
+	[SerializeField] float MaxAdvancedCollisionAngle;
 	[SerializeField] LayerMask OnlyCollideWith;
+	bool bIsAdvancedBehaviourEffective;
+	Vector3 AdvancedForwardVector;
+	Vector3 AdvancedRightVector;
+	bool bHasSetAdvancedVectors;
 
 	[Header("Lag Settings")]
 	[SerializeField] float PositionalLagStrength = .2f;
@@ -56,45 +89,112 @@ public class SpringArm : MonoBehaviour
 	[SerializeField] float DistanceLimit;
 	Matrix4x4 DefaultProjection;
 
+	bool bNoClip = false;
+
 	void Start()
 	{
-		DefaultGimbalRotation = GimbalRotation;
-		DefaultCameraRotation = CameraRotation;
+		// Secondary Spring Arms are initialised in ViewportSplit::SetSecondaryTarget().
+		if (!bIsSecondarySpringArm)
+		{
+			DefaultGimbalRotation = GimbalRotation;
+			DefaultCameraRotation = CameraRotation;
 
-		GimbalRotationInherited = DefaultGimbalRotation;
-		CameraRotationInherited = DefaultCameraRotation;
+			GimbalRotationInherited = DefaultGimbalRotation;
+			CameraRotationInherited = DefaultCameraRotation;
 
-		OriginalTargetOffset = TargetOffset;
+			OriginalTargetOffset = TargetOffset;
 
-		CameraComponent = GetComponent<Camera>();
-		DefaultProjection = CameraComponent.projectionMatrix;
+			CameraComponent = GetComponent<Camera>();
+			DefaultProjection = CameraComponent.projectionMatrix;
 
-		ViewportSplit.SetMainSpringArm(this);
+			ViewportSplit.SetMainSpringArm(this);
+		}
 	}
 
-	void Update()
+	private void Update()
 	{
-		UpdateRotationOnMouse();
+		// UpdateRotationOnMouse();
 		PanCameraOnMouse();
 
-		if (Input.GetKeyDown(KeyCode.C))
-			bInheritRotation = !bInheritRotation;
+		//ScrollDistance();
 
-		ScrollDistance();
+		if (bNoClip)
+		{
+			const float kNoClipSpeed = 25f;
+
+			if (Input.GetKey(KeyCode.W))
+			{
+				Camera.position += kNoClipSpeed * Time.deltaTime * Camera.forward;
+			}
+			else if (Input.GetKey(KeyCode.S))
+			{
+				Camera.position -= kNoClipSpeed * Time.deltaTime * Camera.forward;
+			}
+
+			if (Input.GetKey(KeyCode.D))
+			{
+				Camera.position += kNoClipSpeed * Time.deltaTime * Camera.right;
+			}
+			else if (Input.GetKey(KeyCode.A))
+			{
+				Camera.position -= kNoClipSpeed * Time.deltaTime * Camera.right;
+			}
+
+			if (Input.GetKey(KeyCode.Q))
+			{
+				Camera.position -= kNoClipSpeed * Time.deltaTime * Vector3.up;
+			}
+			else if (Input.GetKey(KeyCode.E))
+			{
+				Camera.position += kNoClipSpeed * Time.deltaTime * Vector3.up;
+			}
+		}
 	}
+
+	private void InheritRotation(Transform playerTransform)
+	{
+		// only do if control is from the player the camera is tracking or camera tracking all players through average tracking
+		if (Target == playerTransform || bIsAverageTracking)
+		{
+			bInheritRotation = !bInheritRotation;
+		}
+	}
+
+	private void OnEnable()
+	{
+		GameEvents.OnCameraMove += UpdateRotationOnMouse;
+		GameEvents.OnCameraZoom += ScrollDistance;
+		GameEvents.OnCameraFollowRotation += InheritRotation;
+	}
+
+	private void OnDisable()
+	{
+		GameEvents.OnCameraMove -= UpdateRotationOnMouse;
+		GameEvents.OnCameraZoom -= ScrollDistance;
+		GameEvents.OnCameraFollowRotation += InheritRotation;
+	}
+
+	Vector3 SmoothPositionVelocity;
 
 	void FixedUpdate()
 	{
-		Camera.position = Vector3.Lerp(Camera.position, TargetPosition, PositionalLagStrength);
-		Camera.rotation = Quaternion.Slerp(Camera.rotation, TargetRotation, RotationalLagStrength);
+		if (bNoClip)
+			return;
+
+		Camera.SetPositionAndRotation(
+			Vector3.SmoothDamp(Camera.position, TargetPosition, ref SmoothPositionVelocity, PositionalLagStrength),
+			Quaternion.Slerp(Camera.rotation, TargetRotation, RotationalLagStrength)
+		);
 
 		PlaceCamera();
 	}
 
+#if false
 	void OnPreCull()
 	{
 		//ComputeProjection();
 	}
+#endif
 
 	void PlaceCamera()
 	{
@@ -103,7 +203,7 @@ public class SpringArm : MonoBehaviour
 		Vector3 FinalPosition;
 		Quaternion FinalRotation = Quaternion.Euler(CameraRotation);
 
-		if (!bInheritRotation)
+		if (!bInheritRotation || bIsAverageTracking)
 		{
 			float VerticalOrbit = GimbalRotation.x;
 			float HorizontalOrbit = -GimbalRotation.y;
@@ -128,10 +228,21 @@ public class SpringArm : MonoBehaviour
 		}
 		else
 		{
-			// Rotates the Camera around Target, given the Gimbal Rotation's Pitch (Y).
-			// As a side-effect, this also inherits the Yaw.
-			Quaternion InheritRotation = Quaternion.AngleAxis(GimbalRotationInherited.y, Target.right);
-			ArmDirection = (InheritRotation * Target.forward).normalized;
+			if (bInheritPitch && Physics.Raycast(Target.position + Vector3.up, Vector3.down, out RaycastHit Ground, 5f, OnlyCollideWith))
+			{
+				PitchDegrees = 90f-V2PYR(Ground.normal).x;
+			}
+			else
+			{
+				PitchDegrees = 0f;
+			}
+
+			// Rotates the Spring Arm around to face the Target's forward vector.
+			// Ignores the Target's Y-Axis, replacing it with the Yaw rotation,
+			// relative to the Target, after inheritance.
+			ArmDirection = Target.forward;
+			ArmDirection.y = Mathf.Sin((-GimbalRotationInherited.y - PitchDegrees) * Mathf.Deg2Rad);
+			ArmDirection.Normalize();
 
 			FinalRotation = GetInheritedRotation();
 		}
@@ -155,15 +266,115 @@ public class SpringArm : MonoBehaviour
 		Ray FOV = new Ray(TP, -Direction);
 		bool bViewToTargetBlocked = Physics.Raycast(FOV, out RaycastHit Hit, Distance, OnlyCollideWith);
 
+		Quaternion Rotation = !bInheritRotation || bIsAverageTracking
+					? Quaternion.Euler(CameraRotation)
+					: GetInheritedRotation();
+
 		if (bViewToTargetBlocked)
 		{
-			Vector3 Point = Hit.point - FOV.direction;
-			SetPositionAndRotation(Point, bInheritRotation
-				? GetInheritedRotation()
-				: Quaternion.Euler(CameraRotation));
+			// Run Collision Checks NORMALLY if:
+			// The Ground Normal Pitch Degrees is greater than 10 degrees. OR                                  // If greater than 10 degrees, use Advanced.
+			// We're not Forcing Advanced Collision Behaviour AND EITHER ANY OF:                               // If Forcing Advanced Collision, use Advanced.
+			// We're not even using the Advanced Collision Behaviour OR                                        // If we are using Advanced Collision, continue evaluating...
+			// We're not Inheriting Rotation OR                                                                // If we are using Advanced Collision, we *must* also be Inheriting Rotation, continue evaluating if so...
+			// The distance between the wall and the Target is greater than the Advanced Distance Threshold.   // If the wall is 'close enough' to the Target, finally use Advanced Collision.
+			if (!IsZero(PitchDegrees, 10f) || (!bForceAdvancedBehaviour && !bUseAdvancedCollisionBehaviour ||
+				!bInheritRotation || Hit.distance > AdvancedCollisionActivationDistance))
+			{
+				Vector3 Point = Hit.point - FOV.direction;
+				SetPositionAndRotation(Point, Rotation);
+			}
+			// Fail-safe checks. Here we sort of redefine what Force Advanced Behaviour means...
+			// If the above fails, but we're still forcing the use of Advanced, we can still do it regardless if we're Inheriting Rotations.
+			// Otherwise, if we're not using Force, the Advanced Behaviour must use Inherit Rotation.
+			else if (bForceAdvancedBehaviour || bInheritRotation)
+			{
+				RunAdvancedCollision(TP, Hit, Rotation, -Direction);
+			}
+			// Otherwise, skip the frame.
 		}
 
+		// bIsAdvancedBehaviourEffective = bViewToTargetBlocked;
+
+		if (!bIsAdvancedBehaviourEffective)
+			bHasSetAdvancedVectors = false;
+
 		return bViewToTargetBlocked;
+	}
+
+	private void RunAdvancedCollision(Vector3 TP, RaycastHit Hit, Quaternion Rotation, Vector3 FallbackDirection)
+	{
+		if (!bHasSetAdvancedVectors)
+		{
+			AdvancedForwardVector = Target.forward;
+			AdvancedRightVector = Target.right;
+
+			bHasSetAdvancedVectors = true;
+		}
+
+		bIsAdvancedBehaviourEffective = true;
+
+#if UNITY_EDITOR
+		if (bDrawAdvancedCollisionLines)
+		{
+			DrawArrow(transform.position, AdvancedForwardVector, Color.blue);
+			DrawArrow(transform.position, AdvancedRightVector, Color.red);
+		}
+#endif
+
+		// Dynamically adjust the angle to be inversely proportional to the distance with the Wall and the Max Spring Arm Distance.
+		float DeltaAngle = 90f * ((Distance - Hit.distance) / Distance);
+		ClampMax(ref DeltaAngle, MaxAdvancedCollisionAngle);
+
+		// Make and Rotate L and R Vectors Rotated by the above Angle.
+		Vector3 TargetDirectionToCamera = (Hit.point - TP).FNormalised();
+		Vector3 Right = RotateVector(TargetDirectionToCamera, Vector3.up, DeltaAngle);
+		Vector3 Left = RotateVector(TargetDirectionToCamera, Vector3.up, -DeltaAngle);
+
+		Ray RR = new Ray(TP, Right);
+		Ray RL = new Ray(TP, Left);
+
+		// If the above Rays don't hit anything, set default positions for L and R at Distance units away from Target.
+		Vector3 PointRight = TP + Right * Distance;
+		Vector3 PointLeft = TP + Left * Distance;
+
+#if UNITY_EDITOR
+		if (bDrawAdvancedCollisionLines)
+			DrawArrow(TP, TargetDirectionToCamera * Hit.distance, Color.yellow);
+#endif
+
+		bool bRHit = Physics.Raycast(RR, out RaycastHit RHit, Distance, OnlyCollideWith);
+		bool bLHit = Physics.Raycast(RL, out RaycastHit LHit, Distance, OnlyCollideWith);
+
+		if (bRHit)
+		{
+			PointRight = RHit.point;
+#if UNITY_EDITOR
+			if (bDrawAdvancedCollisionLines)
+				DrawArrow(TP, Right * RHit.distance, Color.red);
+#endif
+		}
+
+		if (bLHit)
+		{
+			PointLeft = LHit.point;
+#if UNITY_EDITOR
+			if (bDrawAdvancedCollisionLines)
+				DrawArrow(TP, Left * LHit.distance, Color.green);
+#endif
+		}
+
+		// Look at TargetPos() while still maintaining the inherited Pitch rotation.
+		Camera.LookAt(TP);
+		Camera.localEulerAngles = new Vector3(CameraRotationInherited.x, Camera.localEulerAngles.y, Camera.localEulerAngles.z);
+
+		// Choose the Ray furthest away from Target.
+		SetPositionAndRotation(
+			SqrDist(TP, PointRight) < SqrDist(TP, PointLeft)
+				? PointLeft
+				: PointRight,
+			Rotation
+		);
 	}
 
 	void SetPositionAndRotation(Vector3 FinalPosition, Quaternion FinalRotation)
@@ -188,128 +399,166 @@ public class SpringArm : MonoBehaviour
 
 	Quaternion GetInheritedRotation()
 	{
-		return Quaternion.Euler(new Vector3(GetInheritedAxis(Target.localEulerAngles.x) + CameraRotationInherited.x, CameraRotationInherited.y + GetInheritedAxis(Target.localEulerAngles.y)));
+		return Quaternion.Euler(new Vector3(CameraRotationInherited.x + PitchDegrees *.5f, CameraRotationInherited.y + GetInheritedAxis(Target.localEulerAngles.y)));
 	}
 
 	float GetInheritedAxis(float AxisAngle)
 	{
 		float TargetAxis = AxisAngle;
 		if (TargetAxis < 0f)
-			TargetAxis = 360f - TargetAxis;
+			TargetAxis = 360f + TargetAxis; // TargetAxis is negative.
 		return TargetAxis;
 	}
 
-	void ScrollDistance()
+	private void ScrollDistance(Transform playerTransform, float scrollValue)
 	{
-		if (bEnableScrollToDistance)
+		if (bEnableScrollToDistance && (playerTransform == Target || bIsAverageTracking))
 		{
-			Distance += Input.mouseScrollDelta.y * (bInvertZ ? -1f : 1f) * -ScrollSensitivity;
+			Distance += scrollValue * (bInvertZ ? -1f : 1f) * -ScrollSensitivity;
 
-			Distance = Mathf.Clamp(Distance, 1, 30);
+			Distance = Mathf.Clamp(Distance, 1, MaxDistance);
 		}
 	}
 
-	void UpdateRotationOnMouse()
+	void UpdateRotationOnMouse(Transform playerTransform, Vector3 inputAmount, bool bCamFinished = false)
 	{
-		Vector3 MousePosition = Input.mousePosition;
-
-		if (Input.GetMouseButton(1))
+		// only perform the action if the input is comming from the player this camera is following
+		if (playerTransform == Target || bIsAverageTracking)
 		{
-			float DeltaX = (MousePosition.x - PreviousMouseDragPosition.x) * OrbitSensitivity;
-			float DeltaY = (MousePosition.y - PreviousMouseDragPosition.y) * OrbitSensitivity;
-
-			DetermineInverse(ref DeltaX, ref DeltaY);
-
-			if (!bInheritRotation)
+			if (!bCamFinished)
 			{
-				GimbalRotation.x += DeltaX;
-				CameraRotation.y += DeltaX;
+				float DeltaX = inputAmount.x * OrbitSensitivity * Time.deltaTime;
+				float DeltaY = inputAmount.y * OrbitSensitivity * Time.deltaTime;
 
-				if (GimbalRotation.y - DeltaY < 70 && GimbalRotation.y - DeltaY >= -70)
+				DetermineInverse(ref DeltaX, ref DeltaY);
+
+				if (!bInheritRotation || bIsAverageTracking)
 				{
-					GimbalRotation.y -= DeltaY;
-					CameraRotation.x -= DeltaY;
+					GimbalRotation.x += DeltaX;
+					CameraRotation.y += DeltaX;
+
+					if (GimbalRotation.y - DeltaY < MinMaxOrbitAngle.y && GimbalRotation.y - DeltaY >= MinMaxOrbitAngle.x)
+					{
+						GimbalRotation.y -= DeltaY;
+						CameraRotation.x -= DeltaY;
+					}
+				}
+				else
+				{
+					CameraRotationInherited.x -= DeltaY;
+					CameraRotationInherited.y += DeltaX;
+
+					if (GimbalRotationInherited.y - DeltaY < MinMaxOrbitAngle.y && GimbalRotationInherited.y - DeltaY >= MinMaxOrbitAngle.x)
+					{
+						GimbalRotationInherited.y -= DeltaY;
+					}
 				}
 			}
 			else
 			{
-				CameraRotationInherited.y += DeltaX;
-
-				if (GimbalRotationInherited.y - DeltaY < 70 && GimbalRotationInherited.y - DeltaY >= -70)
-				{
-					GimbalRotationInherited.y -= DeltaY;
-				}
+				GimbalRotationInherited = DefaultGimbalRotation;
+				CameraRotationInherited = DefaultCameraRotation;
 			}
 		}
-		else
-		{
-			GimbalRotationInherited = DefaultGimbalRotation;
-			CameraRotationInherited = DefaultCameraRotation;
-		}
-
-		PreviousMouseDragPosition = MousePosition;
 	}
 
 	void DetermineInverse(ref float DeltaX, ref float DeltaY)
 	{
 		if (bInvertX)
 			Inverse(ref DeltaX);
-		else if (bInvertY)
+		if (bInvertY)
 			Inverse(ref DeltaY);
 
 		static void Inverse(ref float F) => F *= -1f;
 	}
 
-
-	void PanCameraOnMouse()
+	private void PanCameraOnMouse()
 	{
 		Vector3 MousePosition = Input.mousePosition;
 
 		if (Input.GetMouseButton(2))
 		{
-			float DeltaX = (MousePosition.x - PreviousMousePanPosition.x) * OrbitSensitivity;
-			float DeltaY = (MousePosition.y - PreviousMousePanPosition.y) * OrbitSensitivity;
+			float DeltaX = (MousePosition.x - PreviousMousePanPosition.x) * OrbitSensitivity * OrbitSensitivity * Time.deltaTime;
+			float DeltaY = (MousePosition.y - PreviousMousePanPosition.y) * OrbitSensitivity * OrbitSensitivity * Time.deltaTime;
 
 			// Ensure 'Right' and 'Up' is relative to the Camera.
 			TargetOffset -= DeltaX * Time.deltaTime * Camera.right + DeltaY * Time.deltaTime * Camera.up;
-			TargetOffset = Vector3.ClampMagnitude(TargetOffset, 5f);
+			TargetOffset = Vector3.ClampMagnitude(TargetOffset, MaxPanDistance);
 		}
 		else
 		{
-			TargetOffset = Vector3.Lerp(TargetOffset, OriginalTargetOffset, .2f);
+			if (!bPermanentlyChangePanTargetOffset)
+				TargetOffset = Vector3.Lerp(TargetOffset, OriginalTargetOffset, .2f);
 		}
 
 		PreviousMousePanPosition = MousePosition;
 	}
 
+	public void GetForwardRight(out Vector3 Forward, out Vector3 Right)
+	{
+		Forward = transform.forward;
+		Right = transform.right;
+
+#if false // Kept for Options.
+		bool bCheck = bIsAdvancedBehaviourEffective && bInheritRotation;
+
+		Forward = bCheck
+			? transform.forward
+			: transform.forward;
+
+		Right = bCheck
+			? transform.right
+			: transform.right;
+#endif
+	}
+
+	[Exec("Toggles No Clip on the first Spring Arm.")]
+	public void NoClia()
+	{
+		bNoClip = !bNoClip;
+
+		if (!bNoClip)
+			TargetOffset = OriginalTargetOffset;
+	}
+
+	[Exec("Teleports this Spring Arm's Target to the current position.")]
+	public void TP_Pos()
+	{
+		if (bNoClip)
+			NoClia();
+
+		Target.position = transform.position;
+	}
+
+#if false
 	void ComputeProjection()
 	{
 		if (bUseCustomProjection && Distance > 3)
 		{
-			Debug.Log(name +"__");
-			Plane = Target;
+			Plane = Camera;
 
-			if (Physics.Linecast(Target.position, Camera.position, out RaycastHit Intercept, 256))
+			if (Physics.Linecast(Target.position, Camera.position, out RaycastHit Intercept, OnlyCollideWith))
 			{
 				NearClipDistance = Intercept.distance;
 			}
 			else
 			{
-				NearClipDistance = Distance * .5f;
+				CameraComponent.projectionMatrix = DefaultProjection;
+				return;
 			}
 
-			int Dot = Math.Sign(Vector3.Dot(Plane.forward, Target.position - Camera.position));
+			int Dot = Math.Sign(Vector3.Dot(Plane.forward, (Target.position - Camera.position).normalized));
 			Vector3 CameraWorldPosition = CameraComponent.worldToCameraMatrix.MultiplyPoint(Target.position);
-			Vector3 CameraNormal = CameraComponent.worldToCameraMatrix.MultiplyVector(Plane.forward) * Dot;
+			Vector3 CameraNormal = CameraComponent.worldToCameraMatrix.MultiplyVector((Target.position - Camera.position).normalized) * 1;
 
 			float CameraDistance = -Vector3.Dot(CameraWorldPosition, CameraNormal) + NearClipDistance;
 
 			// If the Camera is too close to the Target, don't use oblique projection.
 			if (Mathf.Abs(CameraDistance) > DistanceLimit)
 			{
-				Vector4 clipPlaneCameraSpace = new Vector4(CameraNormal.x, CameraNormal.y, CameraNormal.z, CameraDistance);
+				Vector4 ClipPlaneCameraSpace = new Vector4(CameraNormal.x, CameraNormal.y, CameraNormal.z, CameraDistance);
 
-				CameraComponent.projectionMatrix = CameraComponent.CalculateObliqueMatrix(clipPlaneCameraSpace);
+				CameraComponent.projectionMatrix = CameraComponent.CalculateObliqueMatrix(ClipPlaneCameraSpace);
 			}
 			else
 			{
@@ -318,10 +567,12 @@ public class SpringArm : MonoBehaviour
 		}
 		else
 		{
-			Debug.Log(name + " HUH?");
 			CameraComponent.projectionMatrix = DefaultProjection;
 		}
 	}
+#endif
+
+#region Settings
 
 	public SpringArmSettings GetSettings()
 	{
@@ -428,6 +679,8 @@ public class SpringArm : MonoBehaviour
 		DefaultProjection = Settings.DefaultProjection;
 	}
 
+#endregion
+
 #if UNITY_EDITOR
 	void OnValidate()
 	{
@@ -438,13 +691,22 @@ public class SpringArm : MonoBehaviour
 
 		PositionalLagStrength = Mathf.Clamp(PositionalLagStrength, Vector3.kEpsilon, 1f);
 		RotationalLagStrength = Mathf.Clamp(RotationalLagStrength, Vector3.kEpsilon, 1f);
+
+		AdvancedCollisionActivationDistance = Mathf.Clamp(AdvancedCollisionActivationDistance, 1, MaxDistance);
 	}
 
 	void OnDrawGizmosSelected()
 	{
-		if (Camera && Target)
+		if (bDrawSpringArmLine && Camera && Target)
 			Debug.DrawLine(TargetPos(), Camera.position, Color.red);
 	}
+
+	//void OnGUI()
+	//{
+	//	GUI.Label(new Rect(100, 50, 250, 250), $"Is Advanced Collision On? {bIsAdvancedBehaviourEffective}");
+	//	GUI.Label(new Rect(100, 75, 250, 250), $"Adv Forward: {AdvancedForwardVector:F2}");
+	//	GUI.Label(new Rect(100, 100, 250, 250), $"Adv Right: {AdvancedRightVector:F2}");
+	//}
 #endif
 
 }

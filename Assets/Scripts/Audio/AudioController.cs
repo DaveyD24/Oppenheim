@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Extensions;
 
 /// <summary>
 /// An Audio Controller for Oppenheim.
@@ -16,6 +15,22 @@ public class AudioController : MonoBehaviour
 	{
 		HashMap.Construct(out Map);
 		Unique = new Dictionary<int, AudioSource>();
+		// Playing = new Dictionary<string, PlayingData>();
+
+		foreach (KeyValuePair<string, AudioData> PlayOnAwake in HashMap)
+		{
+			if (PlayOnAwake.Value.bPlayOnAwake)
+			{
+				Play(PlayOnAwake.Key);
+			}
+		}
+	}
+
+	/// Called with <see cref="UnityEngine.Events.UnityEvent"/> through <see cref="Interactable"/>.
+	public void PlayFromInteractable(string SoundName)
+	{
+		EAudioPlayOptions Options = EAudioPlayOptions.AtTransformPosition | EAudioPlayOptions.DestroyOnEnd;
+		Play(SoundName, Options);
 	}
 
 	/// <summary>Plays <paramref name="SoundName"/> at <paramref name="Position"/>.</summary>
@@ -91,15 +106,15 @@ public class AudioController : MonoBehaviour
 	/// <returns>The <see cref="AudioSource"/> used to play <paramref name="SoundName"/>.</returns>
 	public AudioSource Play(string SoundName, EAudioPlayOptions Options, float PlaybackLead = 0f)
 	{
-		byte OptionsAsByte;
-		bool bDestroyOnEnd;
-		MaskOptions(Options, out OptionsAsByte, out bDestroyOnEnd);
+		MaskOptions(Options, out byte OptionsAsByte, out bool bDestroyOnEnd);
 
 		return PlayAudioSignature(SoundName, OptionsAsByte, bDestroyOnEnd, PlaybackLead);
 	}
 
-	public AudioSource PlayAudioSignature(string SoundName, byte OptionsAsByte, bool bDestroyOnEnd, float PlaybackLead = 0f)
+	AudioSource PlayAudioSignature(string SoundName, byte OptionsAsByte, bool bDestroyOnEnd, float PlaybackLead = 0f)
 	{
+		// PrunePlaying();
+
 		if ((OptionsAsByte & (byte)EAudioPlayOptions.Global) == (byte)EAudioPlayOptions.Global)
 		{
 			return Play(SoundName, PlaybackLead);
@@ -123,6 +138,8 @@ public class AudioController : MonoBehaviour
 	/// <param name="PlaybackLead">The time in seconds to fast forward.</param>
 	public AudioSource Play(string SoundName, float PlaybackLead = 0f)
 	{
+		// PrunePlaying();
+
 		Spawn(out GameObject Spawned, true);
 		AudioSource Global = PlayFollow(SoundName, Spawned, true, PlaybackLead);
 
@@ -134,6 +151,30 @@ public class AudioController : MonoBehaviour
 		return Global;
 	}
 
+	///// <summary>Stops <paramref name="SoundName"/> if it is playing.</summary>
+	///// <param name="SoundName"></param>
+	//public void Stop(string SoundName)
+	//{
+	//	PrunePlaying();
+
+	//	if (Playing.ContainsKey(SoundName))
+	//	{
+	//		PlayingData Data = Playing[SoundName];
+	//		Data.Source.Stop();
+
+	//		if (Data.bIsStandalone)
+	//		{
+	//			// Destroy the GameObject (PlayAtTransformPosition).
+	//			Destroy(Data.Source.gameObject);
+	//		}
+	//		else
+	//		{
+	//			// Destroy the AudioSource Component (PlayFollow).
+	//			Destroy(Data.Source);
+	//		}
+	//	}
+	//}
+
 	/// <summary>Plays <paramref name="SoundName"/> at the world position of <paramref name="Emitter"/>.</summary>
 	/// <param name="SoundName">The name of the Sound to play.</param>
 	/// <param name="Emitter">The <see cref="Transform.position"/> <paramref name="SoundName"/> will play at.</param>
@@ -141,7 +182,7 @@ public class AudioController : MonoBehaviour
 	/// <see langword="true"/> to Destroy the new <see cref="GameObject"/>
 	/// once <paramref name="SoundName"/> finishes playing.</param>
 	/// <param name="PlaybackLead">The time in seconds to fast forward.</param>
-	public AudioSource PlayAtTransformPosition(string SoundName, GameObject Emitter, bool bDestroyOnEnd, float PlaybackLead = 0f)
+	AudioSource PlayAtTransformPosition(string SoundName, GameObject Emitter, bool bDestroyOnEnd, float PlaybackLead = 0f)
 	{
 		if (Get(SoundName, out AudioData A))
 		{
@@ -151,8 +192,8 @@ public class AudioController : MonoBehaviour
 			Source.time = PlaybackLead;
 			Source.Play();
 
-			if (bDestroyOnEnd)
-				Destroy(Source, A.ClipDuration());
+			if (bDestroyOnEnd && !Source.loop)
+				Destroy(Emitter, A.ClipDuration());
 
 			return Source;
 		}
@@ -168,7 +209,7 @@ public class AudioController : MonoBehaviour
 	/// once <paramref name="SoundName"/> finishes playing.
 	/// </param>
 	/// <param name="PlaybackLead">The time in seconds to fast forward.</param>
-	public AudioSource PlayFollow(string SoundName, GameObject Emitter, bool bDestroyComponentOnEnd, float PlaybackLead = 0f)
+	AudioSource PlayFollow(string SoundName, GameObject Emitter, bool bDestroyComponentOnEnd, float PlaybackLead = 0f)
 	{
 		if (Get(SoundName, out AudioData A))
 		{
@@ -176,7 +217,7 @@ public class AudioController : MonoBehaviour
 			Source.time = PlaybackLead;
 			Source.Play();
 
-			if (bDestroyComponentOnEnd)
+			if (bDestroyComponentOnEnd && !Source.loop)
 				Destroy(Source, A.ClipDuration());
 
 			return Source;
@@ -226,6 +267,18 @@ public class AudioController : MonoBehaviour
 		Debug.LogError($"{name}'s Audio Controller could not find Sound {Name}!");
 		return false;
 	}
+
+	//void PrunePlaying()
+	//{
+	//	List<string> SoundsToPrune = new List<string>();
+
+	//	foreach (KeyValuePair<string, PlayingData> P in Playing)
+	//		if (P.Value.HasElapsed())
+	//			SoundsToPrune.Add(P.Key);
+
+	//	foreach (string S in SoundsToPrune)
+	//		Playing.Remove(S);
+	//}
 }
 
 /// <summary>A dodgy <see cref="AudioSource"/> replica.</summary>
@@ -252,7 +305,7 @@ public class AudioData
 	/// <param name="Source"><see langword="out"/> the attached <see cref="AudioSource"/> component.</param>
 	public void Construct(GameObject Emitter, out AudioSource Source)
 	{
-		Source = Emitter.GetOrAddComponent<AudioSource>();
+		Source = Emitter.AddComponent<AudioSource>();
 
 		Source.clip = Clip;
 		Source.mute = bMute;
@@ -275,6 +328,28 @@ public class AudioData
 	public float ClipDuration(float BufferTimeLeeway = 0f)
 	{
 		return Clip.length + BufferTimeLeeway;
+	}
+}
+
+public struct PlayingData
+{
+	public AudioSource Source;
+	public bool bIsStandalone;
+	float StartTime;
+	AudioData Data;
+
+	public PlayingData(AudioData Data, AudioSource Source, bool bIsStandalone)
+	{
+		this.Source = Source;
+		this.bIsStandalone = bIsStandalone;
+		StartTime = Time.time;
+		this.Data = Data;
+	}
+
+	public bool HasElapsed()
+	{
+		// Looped Sounds must be terminated manually.
+		return !Data.bLoop && Time.time - StartTime >= Data.ClipDuration();
 	}
 }
 

@@ -3,7 +3,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class Switch : Interactable
+public class Switch : Interactable, IDataInterface
 {
 	public UnityEvent SwitchedOn;
 	public UnityEvent SwitchedOff;
@@ -16,7 +16,7 @@ public class Switch : Interactable
 
 	Action<Switch> ReliantListeners;
 
-	void Start()
+	public void Start()
 	{
 		// Attach the main Listener to the Switches that this Switch relies on.
 		foreach (Switch Reliant in ReliantSwitches)
@@ -60,7 +60,7 @@ public class Switch : Interactable
 	/// </b><br></br>
 	/// The last Switch to turn ON before this Broadcast.
 	/// </param>
-	void CheckBroadcast(Collider Broadcaster)
+	public void CheckBroadcast(Collider Broadcaster)
 	{
 		if (bIsOn && AreAllReliantSwitchesOn())
 		{
@@ -84,8 +84,44 @@ public class Switch : Interactable
 	bool AreAllReliantSwitchesOn()
 	{
 		if (ReliantSwitches.Length == 0)
+		{
 			return true;
+		}
 
 		return ReliantSwitches.All(Switch => Switch.bIsOn);
+	}
+
+#if UNITY_EDITOR
+	void OnMouseDown()
+	{
+		ToggleSwitch();
+	}
+#endif
+
+#pragma warning disable SA1202 // Elements should be ordered by access
+	public void LoadData(SectionData data)
+#pragma warning restore SA1202 // Elements should be ordered by access
+	{
+		if (!BNotSaveData)
+		{
+			Debug.Log(gameObject.name);
+			bIsOn = data.SwitchData.Dictionary[SaveID];
+			if (bIsOn)
+			{
+				SwitchedOn?.Invoke();
+			}
+			else
+			{
+				SwitchedOff?.Invoke();
+			}
+		}
+	}
+
+	public void SaveData(SectionData data)
+	{
+		if (!BNotSaveData)
+		{
+			data.SwitchData.Dictionary.Add(SaveID, bIsOn);
+		}
 	}
 }

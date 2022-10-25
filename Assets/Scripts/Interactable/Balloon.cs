@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.Extensions;
 using URandom = UnityEngine.Random; // Differentiate between System.Random and UnityEngine.Random.
 
-public class Balloon : MonoBehaviour
+public class Balloon : UniqueID, IDataInterface
 {
 	[SerializeField] private GameObject boxToAttach;
 	[SerializeField] private LineRenderer lineRenderer;
@@ -21,22 +21,34 @@ public class Balloon : MonoBehaviour
 
 	[SerializeField, ReadOnly] Material StandardMaterial;
 
-	[SerializeField, Tooltip("The attached Box at the end of the String."), ReadOnly] GameObject Box;
+	[SerializeField, Tooltip("The attached Box at the end of the String.")] GameObject Box;
 
-	float RandomBobSpeed;
+	private Quaternion attachedBoxRotation;
 
-	void Start()
+	private float RandomBobSpeed;
+
+	private void Start()
 	{
 		RandomBobSpeed = URandom.Range(.5f, 2.5f);
 
 		if (!Box)
 		{
-			// SpawnBox();
+			SpawnBox();
 		}
 
 		lineRenderer = GetComponent<LineRenderer>();
 		lineRenderer.positionCount = 2;
 		lineRenderer.SetPosition(0, boxToAttach.transform.position);
+
+		attachedBoxRotation = boxToAttach.transform.rotation;
+		Destroy(boxToAttach.GetComponent<Collider>());
+
+		if (TryGetComponent(out MeshRenderer MR))
+		{
+			MR.sharedMaterial = new Material(StandardMaterial);
+
+			MR.sharedMaterial.SetColor("_Color", bRandomiseColour ? URandom.ColorHSV(.1f, .9f, 1f, 1f) : BalloonColour);
+		}
 	}
 
 	void Update()
@@ -71,7 +83,8 @@ public class Balloon : MonoBehaviour
 		else
         {
 			boxToAttach.GetComponent<Rigidbody>().isKinematic = false;
-        }
+			boxToAttach.AddComponent<BoxCollider>();
+		}
 
 #if !UNITY_EDITOR
 		Dictionary<string, object> eventData = new Dictionary<string, object>();
@@ -81,7 +94,7 @@ public class Balloon : MonoBehaviour
 #endif
 
 		// Mark this Balloon for destruction.
-		Destroy(gameObject);
+		gameObject.SetActive(false);
 	}
 
 	private void SpawnBox()
@@ -95,25 +108,46 @@ public class Balloon : MonoBehaviour
 		RaycastHit hit;
 		Physics.Raycast(transform.position, Vector3.down * 100, out hit);
 		lineRenderer.SetPosition(1, hit.point);
+		lineRenderer.SetPosition(0, boxToAttach.transform.position);
 	}
 
-	private void OnValidate()
+#pragma warning disable SA1202 // Elements should be ordered by access
+	public void LoadData(SectionData data)
+#pragma warning restore SA1202 // Elements should be ordered by access
 	{
-		// Spawn a Box in Editor.
-		if (!Box && AttachmentPoint && boxToAttach)
+		if (data.Balloons.Contains(SaveID))
 		{
-			SpawnBox();
+			gameObject.SetActive(true);
+
+			boxToAttach.GetComponent<Rigidbody>().isKinematic = true;
+			if (boxToAttach.TryGetComponent(out BoxCollider boxCollider))
+            {
+				Destroy(boxCollider);
+            }
+
+			boxToAttach.transform.parent = AttachmentPoint;
+
+			boxToAttach.transform.position = AttachmentPoint.position;
+			boxToAttach.transform.rotation = attachedBoxRotation;
 		}
-
-		if (!Application.isPlaying && TryGetComponent(out MeshRenderer MR))
+		else
 		{
-			MR.sharedMaterial = new Material(StandardMaterial);
+			// as this item has been destroyed do not enable it to exist
+			gameObject.SetActive(false);
 
-			MR.sharedMaterial.SetColor("_Color",
-				bRandomiseColour
-					? URandom.ColorHSV(.1f, .9f, 1f, 1f)
-					: BalloonColour
-			);
+			// handle the attached box as well
+			boxToAttach.GetComponent<Rigidbody>().isKinematic = false;
+			boxToAttach.GetOrAddComponent<BoxCollider>();
+			boxToAttach.GetComponent<PushableBox>().LoadData(data);
+		}
+	}
+
+	public void SaveData(SectionData data)
+	{
+		if (gameObject.activeSelf)
+		{
+			// only save this item if it has not been destroyed
+			data.Balloons.Add(SaveID);
 		}
 	}
 }

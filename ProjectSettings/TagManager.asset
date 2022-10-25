@@ -12,6 +12,10 @@ TagManager:
   - Wall
   - Water
   - Blueprint
+  - Hangable
+  - NodePlatform
+  - Bullet
+  - SkyPlatform
   layers:
   - Default
   - TransparentFX
@@ -22,9 +26,9 @@ TagManager:
   - IgnorePlayer
   - Player
   - CameraCollide
-  - 
-  - 
-  - 
+  - FanIgnore
+  - FanOnly
+  - Invisible Wall
   - 
   - 
   - 
@@ -48,4 +52,7 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: 1
+    uniqueID: 3759797153
     locked: 0

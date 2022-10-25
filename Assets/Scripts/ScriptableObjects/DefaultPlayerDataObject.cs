@@ -12,10 +12,17 @@ public class DefaultPlayerDataObject : ScriptableObject
     [field: SerializeField] public AnimationCurve DecreaseFuelAmount { get; private set; }
 
     [field: Range(0, 1)]
-    [field: SerializeField] public float FuelLoseMultiplier { get; private set; }
+    [field: SerializeField] public float InputDeadZone { get; private set; }
 
     [field: SerializeField] public GameObject DustParticles { get; private set; }
+
+    [field: SerializeField] public GameObject RespawnParticles { get; private set; }
+
     [field: SerializeField] public float dustParticlesCollisionSpeed { get; private set; }
+
+    [field: SerializeField] public float CheckpointYOffset { get; private set; }
+
+    [field: SerializeField] public float RadiusFromCheckpiont { get; private set; }
 
     public float MaxFuel { get; private set; } = 100;
 }

@@ -1,14 +1,27 @@
 using System.Collections;
 using System.Collections.Generic;
+using EventSystem;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class CarController : PlayerController
 {
+#if UNITY_EDITOR
+    [field: Header("Start Reset")]
+    [field: ContextMenuItem("Set Start Transform", "SetStartTransform")]
+#pragma warning disable SA1202 // Elements should be ordered by access
+    [field: SerializeField] public Vector3 StageStartPosition { get; set; }
+
+    [field: ContextMenuItem("Move to Start", "MoveToStartTransform")]
+    [field: SerializeField] public Quaternion StageStartRotation { get; set; }
+#pragma warning restore SA1202 // Elements should be ordered by access
+
+#endif
+
     [SerializeField] public List<AxleInfo> axleInfos; // the information about each individual axle
     private bool bIsGrounded = true;
 
-    private Node dashTopNode;
+    private Node<CarController> dashTopNode;
 
     [Header("Steering")]
     [Space(1)]
@@ -33,6 +46,8 @@ public class CarController : PlayerController
     [SerializeField] private float maxFlippedWait = 1.5f;
     private float flippedTime = 3;
 
+    private AudioSource engineAudio;
+
     [field: Header("Dash Settings")]
     [field: Space(1)]
     [field: SerializeField] public LayerMask PlayerLayer { get; private set; }
@@ -44,6 +59,10 @@ public class CarController : PlayerController
     [field: SerializeField] public Vector3 DashOffset { get; private set; }
 
     [field: SerializeField] public Material DashBodyMaterial { get; private set; }
+
+    [field: SerializeField] public float DashGroundCheckLength { get; private set; } = 2;
+
+    [SerializeField] public bool BCancelDash { get; set; } = false;
 
     [Header("Wind Particles")]
     [Space(1)]
@@ -126,6 +145,8 @@ public class CarController : PlayerController
         windParticles.Play();
 
         InvokeRepeating("ApplyIndicator", indicatorFrequency, indicatorFrequency);
+
+        PlayEngineSounds();
     }
 
     protected override void Jump(InputAction.CallbackContext ctx)
@@ -136,14 +157,26 @@ public class CarController : PlayerController
     protected override void Movement(InputAction.CallbackContext ctx)
     {
         inputAmount = ctx.ReadValue<Vector2>();
+        if (Mathf.Abs(inputAmount.x) < DefaultPlayerData.InputDeadZone)
+        {
+            inputAmount.x = 0;
+        }
+
+        if (Mathf.Abs(inputAmount.y) < DefaultPlayerData.InputDeadZone)
+        {
+            inputAmount.y = 0;
+        }
+
+        PlayEngineSounds();
     }
 
     protected override void PerformAbility(InputAction.CallbackContext ctx)
     {
         // note buggs out and fails if the car's wheels currently are not moving at all, otherwise it is fine
-        if (!BIsDash && BAnyWheelGrounded && Active)
+        if (AbilityUses > 0 && !BIsDash && BAnyWheelGrounded && Active)
         {
             BIsDash = true;
+            AdjustAbilityValue(-1);
 
             Audio.PlayUnique("Rev", EAudioPlayOptions.FollowEmitter | EAudioPlayOptions.DestroyOnEnd);
         }
@@ -160,6 +193,12 @@ public class CarController : PlayerController
     public override void OnDeath()
     {
         base.OnDeath();
+        inputAmount = Vector2.zero;
+        if (BIsDash)
+        {
+            BCancelDash = true;
+        }
+
         foreach (AxleInfo axleInfo in axleInfos)
         {
             axleInfo.LeftWheel.gameObject.SetActive(false);
@@ -186,11 +225,19 @@ public class CarController : PlayerController
         Gizmos.color = Color.green;
         Gizmos.DrawCube(DashOffset + transform.position, Vector3.one * .25f);
         Gizmos.color = Color.red;
+
+        Gizmos.DrawLine(transform.position, transform.position + (Vector3.down * DashGroundCheckLength));
     }
 
     protected override void Respawn()
     {
         base.Respawn();
+        inputAmount = Vector2.zero;
+        if (BIsDash)
+        {
+            BCancelDash = true;
+        }
+
         foreach (AxleInfo axleInfo in axleInfos)
         {
             if (axleInfo.LeftWheel != null)
@@ -220,8 +267,18 @@ public class CarController : PlayerController
 
         if (collision.gameObject.CompareTag("Wall") && BIsDash)
         {
-            collision.gameObject.GetComponent<Rigidbody>().AddForce(50000 * transform.forward);
+            Vector3 boxLevelPos = new Vector3(transform.position.x, collision.gameObject.transform.position.y, transform.position.z);
+            Vector3 direction = (collision.gameObject.transform.position - boxLevelPos).normalized;
+            collision.gameObject.GetComponent<PushableBox>().ApplyMovementForce(direction);
+            BCancelDash = true;
+
+            Audio.Play(RandomPushableSound(), EAudioPlayOptions.AtTransformPosition | EAudioPlayOptions.DestroyOnEnd);
         }
+    }
+
+    protected override void PlayFuelCollectionSound()
+    {
+        Audio.Play("Rev", EAudioPlayOptions.Global | EAudioPlayOptions.DestroyOnEnd);
     }
 
     /// <summary>
@@ -407,7 +464,7 @@ public class CarController : PlayerController
         DashPerform dashPerform = new DashPerform(this); // perform the dash ability
         DashTransition dashEnd = new DashTransition(this, 1, true); // play the animation to transition back to normal
 
-        dashTopNode = new Sequence(new List<Node> { dashInit, dashPerform, dashEnd });
+        dashTopNode = new Sequence<CarController>(new List<Node<CarController>> { dashInit, dashPerform, dashEnd });
     }
 
     private void ApplyIndicator()
@@ -471,4 +528,51 @@ public class CarController : PlayerController
             }
         }
     }
+
+    private void PlayEngineSounds()
+    {
+        if (BatMathematics.IsZero(inputAmount.x) && BatMathematics.IsZero(inputAmount.y))
+        {
+            if (engineAudio == null)
+            {
+                engineAudio = Audio.Play(RandomIdleSound(), EAudioPlayOptions.FollowEmitter);
+            }
+            else
+            {
+                Destroy(engineAudio);
+                engineAudio = Audio.Play(RandomIdleSound(), EAudioPlayOptions.FollowEmitter);
+            }
+        }
+        else
+        {
+            Destroy(engineAudio); // play the drive sound when implemented or if none provided just use one of the idle sounds
+        }
+    }
+
+    private string RandomIdleSound()
+    {
+        bool bRandomBool = Random.Range(0f, 1f) < .5f;
+
+        return bRandomBool ? "Engine Idle 2" : "Engine Idle 1";
+    }
+
+    private string RandomPushableSound()
+    {
+        bool bRandomBool = Random.Range(0f, 1f) < .5f;
+
+        return bRandomBool ? "Hit Pushable 1" : "Hit Pushable 2";
+    }
+#if UNITY_EDITOR
+    private void SetStartTransform()
+    {
+        StageStartPosition = transform.position;
+        StageStartRotation = transform.rotation;
+    }
+
+    private void MoveToStartTransform()
+    {
+        transform.rotation = StageStartRotation;
+        transform.position = StageStartPosition;
+    }
+#endif
 }

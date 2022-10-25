@@ -2,18 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Forklift : MonoBehaviour
+public class Forklift : MonoBehaviour, IDataInterface
 {
     [SerializeField] private float moveSpeed;
+    [Min(0)] [Tooltip("The amount of time to wait before it begins to move")]
+    [SerializeField] private float waitMoveTime = 5;
 
-    private const float minHeight = 36.5f;
-    private const float maxHeight = 52.5f;
+    [SerializeField] private float minHeight = 36.5f;
+    [SerializeField] private float maxHeight = 52.5f;
+    [SerializeField] private bool bDoScaleInstead = false;
 
-    Transform liftPos;
-    Vector3 pos;
-    Tween moveTween;
+    private Transform liftPos;
+    private Vector3 startPos;
+    private Tween moveTween;
 
-    IEnumerator moveWait;
+    private IEnumerator moveWait;
 
     public void MoveUp()
     {
@@ -35,19 +38,42 @@ public class Forklift : MonoBehaviour
 
     private void Start()
     {
-        liftPos = transform.GetChild(0);
-        pos = liftPos.position;
+        liftPos = transform.childCount > 0 ? transform.GetChild(0) : transform;
+
+        if (bDoScaleInstead)
+        {
+            startPos = liftPos.transform.localScale;
+        }
+        else
+        {
+            startPos = liftPos.position;
+        }
     }
 
     private void Update()
     {
         if (moveTween != null)
         {
-            liftPos.position = moveTween.UpdatePosition();
+            if (bDoScaleInstead)
+            {
+                liftPos.transform.localScale = moveTween.UpdatePosition();
+            }
+            else
+            {
+                liftPos.position = moveTween.UpdatePosition();
+            }
 
             if (moveTween.IsComplete())
             {
-                liftPos.position = moveTween.EndPos;
+                if (bDoScaleInstead)
+                {
+                    liftPos.transform.localScale = moveTween.EndPos;
+                }
+                else
+                {
+                    liftPos.position = moveTween.EndPos;
+                }
+
                 moveTween = null;
             }
         }
@@ -56,17 +82,29 @@ public class Forklift : MonoBehaviour
     private IEnumerator MoveWait(bool bIsUpMove)
     {
         Debug.Log("Moving the item upwards");
-        yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(waitMoveTime);
 
         if (!bIsUpMove)
         {
-            moveTween = new Tween(new Vector3(pos.x, maxHeight, pos.z), new Vector3(pos.x, minHeight, pos.z), Time.time, moveSpeed);
+                moveTween = new Tween(liftPos.position, new Vector3(startPos.x, minHeight, startPos.z), Time.time, moveSpeed);
         }
         else
         {
-            moveTween = new Tween(new Vector3(pos.x, minHeight, pos.z), new Vector3(pos.x, maxHeight, pos.z), Time.time, moveSpeed);
+            moveTween = new Tween(liftPos.position, new Vector3(startPos.x, maxHeight, startPos.z), Time.time, moveSpeed);
         }
 
         moveWait = null;
+    }
+
+    public void LoadData(SectionData data)
+    {
+        moveTween = null;
+        StopAllCoroutines();
+        moveWait = null;
+    }
+
+    public void SaveData(SectionData data)
+    {
+        // do nothing
     }
 }

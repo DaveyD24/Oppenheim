@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 4820817046882638238}
   - component: {fileID: 1411997471}
   - component: {fileID: 4865792399604372665}
+  - component: {fileID: 4779399796495295637}
   m_Layer: 0
   m_Name: BreakableBox 1
   m_TagString: Untagged
@@ -141,6 +142,10 @@ MonoBehaviour:
   - {fileID: 1739996986757713006}
   meshRenderers:
   - {fileID: 1739996986756979602}
+  bFreezeXPos: 0
+  bFreezeYPos: 0
+  bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!114 &4865792399604372665
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -153,6 +158,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c063374186f95aa4fa0105c57d27aff0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <BIdUnchangeable>k__BackingField: 0
+  <BNotSaveData>k__BackingField: 0
+  <SaveID>k__BackingField: 0
   bDoShatter: 0
   disapearParticles: {fileID: 8301482204331656129, guid: e705f6d2f0bbc0c41823f34653bc816a, type: 3}
   particleColour:
@@ -162,3 +170,32 @@ MonoBehaviour:
   - {fileID: 2100000, guid: a6c931368a0a99048ad3fdf6686516ad, type: 2}
   - {fileID: 2100000, guid: 7fe75fcedb091424dac32af5b357daa4, type: 2}
   shatterPower: 1500
+  Audio: {fileID: 0}
+--- !u!114 &4779399796495295637
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1739996986754718220}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdf51a863cc80a541bd21546cf8cfb67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HashMap:
+    Entries:
+    - Key: Hit Breakable
+      Value:
+        Clip: {fileID: 8300000, guid: e9d51238162a0584a807c9eb9c5741fe, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 0
+        bLoop: 0
+        Priority: 128
+        Volume: 1
+        Pitch: 1
+        StereoPan: 0
+        SpatialBlend: 0.75
+        ReverbZoneMix: 1

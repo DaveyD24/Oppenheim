@@ -5,6 +5,17 @@ using static UnityEngine.InputSystem.InputAction;
 
 public class MonkeyController : PlayerController
 {
+#if UNITY_EDITOR
+    [field: Header("Start Reset")]
+    [field: ContextMenuItem("Set Start Transform", "SetStartTransform")]
+#pragma warning disable SA1202 // Elements should be ordered by access
+    [field: SerializeField] public Vector3 StageStartPosition { get; set; }
+
+    [field: ContextMenuItem("Move to Start", "MoveToStartTransform")]
+    [field: SerializeField] public Quaternion StageStartRotation { get; set; }
+#pragma warning restore SA1202 // Elements should be ordered by access
+
+#endif
 
     private float jumpHeight = 2.0f;
     private Vector3 move;
@@ -13,17 +24,20 @@ public class MonkeyController : PlayerController
     private Speedometer speedometer;
 
     private bool clinging = false;
+    private bool hanging = false;
     private ContactPoint contactPoint;
 
     private Vector3 clingPosition;
+    private Vector3 hangPosition;
 
     private bool bDidJump = false;
     private float currJumpWaitTime = 1;
     [SerializeField] private float jumpWaitTime = 1;
     [SerializeField] private GameObject ragdol;
     [SerializeField] private GameObject baseMesh;
-    [SerializeField] private GameObject monkeyCamera;
     private BoxCollider boxCollider;
+
+    private bool bStillClinging = false; // if the monkey is still clinging even after jumping, as it never actually left the wall
 
     private enum State
     {
@@ -46,6 +60,16 @@ public class MonkeyController : PlayerController
     {
         base.Update();
 
+        if (IsGrounded() && Rb.velocity.magnitude > 0.1f)
+        {
+            //Audio.PlayUnique("Footsteps", EAudioPlayOptions.AtTransformPosition | EAudioPlayOptions.DestroyOnEnd);
+        }
+        else
+        {
+            //Audio.StopCoroutine("Footsteps");
+        }
+
+
         if (bDidJump)
         {
             currJumpWaitTime -= Time.deltaTime;
@@ -53,6 +77,20 @@ public class MonkeyController : PlayerController
             {
                 currJumpWaitTime = jumpWaitTime;
                 bDidJump = false;
+
+                // if still clinging to an object, even though the jump has finished
+                if (bStillClinging)
+                {
+                    if (AbilityUses > 0)
+                    {
+                        clinging = true;
+                    }
+                    else
+                    {
+                        bStillClinging = false;
+                        clinging = false;
+                    }
+                }
             }
         }
 
@@ -60,6 +98,7 @@ public class MonkeyController : PlayerController
         {
             if (clinging)
             {
+                
                 transform.position = clingPosition;
 
                 // Vector3 desiredPosition = transform.position - Vector3.up;
@@ -67,15 +106,30 @@ public class MonkeyController : PlayerController
                 // transform.position = gradual;
                 Rb.velocity = Vector3.zero;
             }
+            if (hanging)
+            {
+                
+                //Debug.Log("I am hanging");
+                //this.transform.position = new Vector3(this.transform.position.x, hangPosition.y, this.transform.position.z);
+                //this.transform.position = hangPosition;
+                Rb.constraints = RigidbodyConstraints.FreezePositionY;
+            }
 
-            Rb.useGravity = !clinging;
+            Rb.useGravity = (!clinging && !hanging);
         }
 
         // Rotate towards Movement.
         if (move != Vector3.zero)
         {
-            Vector3 cameraRelativeDirection = DirectionRelativeToTransform(monkeyCamera.transform, move);
-            AlignTransformToMovement(transform, cameraRelativeDirection, RotationSpeed, Vector3.up);
+            Vector3 cameraRelativeDirection = DirectionRelativeToTransform(TrackingCamera.transform, move);
+
+            // if walking backwards and the camera is inheriting, do not rotate around as its disorienting
+            if (move.x == 0 && move.z < 0 && TrackingCamera.bInheritRotation)
+            {
+                cameraRelativeDirection *= -1;
+            }
+
+            AlignTransformToMovement(transform, cameraRelativeDirection, RotationSpeed * Time.deltaTime, Vector3.up);
         }
     }
 
@@ -87,6 +141,16 @@ public class MonkeyController : PlayerController
         }
 
         move = ctx.ReadValue<Vector2>();
+
+        if (Mathf.Abs(move.x) < DefaultPlayerData.InputDeadZone)
+        {
+            move.x = 0;
+        }
+
+        if (Mathf.Abs(move.y) < DefaultPlayerData.InputDeadZone)
+        {
+            move.y = 0;
+        }
 
         // Convert 2D to 3D movement.
         move = new Vector3(move.x, 0, move.y).normalized;
@@ -100,27 +164,44 @@ public class MonkeyController : PlayerController
         }
 
         // This check is original and untouched.
-        if ((IsGrounded() || clinging) && !bDidJump)
+        if ((IsGrounded() || clinging || hanging) && !bDidJump)
         {
+
+
             // Original: Jump with a modified kinematic equation.
             Rb.velocity += new Vector3(0f, Mathf.Sqrt(jumpHeight * -3f * Physics.gravity.y), 0f);
 
             // If we were clinging onto something, we want to jump in the opposite direction
             // as if the Monkey is jumping off the wall.
-            if (clinging)
+            if (AbilityUses > 0)
             {
-                Rb.velocity += contactPoint.normal;
-                clinging = false;
+                if (clinging)
+                {
+                    Rb.velocity += contactPoint.normal;
+                    clinging = false; // issue as if never actually exit the transform, it will never be entered again and thus never register as clinging
 
-                // Stop any weird rotations.
-                Rb.angularVelocity = Vector3.zero;
+                    // Stop any weird rotations.
+                    Rb.angularVelocity = Vector3.zero;
+                    AdjustAbilityValue(-1);
+                }
+                if (hanging)
+                {
+                    Debug.Log("Unhang");
+                    hanging = false;
+                    Rb.constraints = RigidbodyConstraints.None;
+                }
+
+            }
+            else
+            {
+                clinging = false;
+                hanging = false;
             }
 
             bDidJump = true;
-            Debug.Log("yeet");
             animator.SetTrigger("Jump");
 
-            Audio.Play(RandomSound(), EAudioPlayOptions.FollowEmitter | EAudioPlayOptions.DestroyOnEnd);
+            Audio.Play("Grunt", EAudioPlayOptions.FollowEmitter | EAudioPlayOptions.DestroyOnEnd);
         }
     }
 
@@ -137,11 +218,24 @@ public class MonkeyController : PlayerController
     public override void OnDeath()
     {
         base.OnDeath();
+        move = Vector3.zero;
+        clinging = false;
+        bDidJump = false;
+
         baseMesh.SetActive(false);
         boxCollider.enabled = false;
         ragdol.SetActive(true);
         Rb.isKinematic = true;
         ragdol.transform.position = transform.position;
+    }
+
+    /// <summary>
+    /// checks if jumping while also having been clung to an object.
+    /// </summary>
+    /// <returns>if it is cling jumping or not.</returns>
+    public bool IsClingJump()
+    {
+        return animator.GetCurrentAnimatorStateInfo(0).IsName("ClimbJump") || clinging;
     }
 
     protected override void Respawn()
@@ -150,13 +244,19 @@ public class MonkeyController : PlayerController
         boxCollider.enabled = true;
         ragdol.SetActive(false);
         Rb.isKinematic = false;
+
+        move = Vector3.zero;
+        clinging = false;
+        bDidJump = false;
         base.Respawn();
     }
 
+#if UNITY_EDITOR
     private void OnGUI()
     {
         GUI.Label(new Rect(100, 65, 250, 250), $"Clinging? {(clinging ? "Yes" : "No")}");
     }
+#endif
 
     protected override void FixedUpdate()
     {
@@ -164,7 +264,7 @@ public class MonkeyController : PlayerController
 
         speedometer.Record(this);
 
-        Vector3 cameraRelativeDirection = DirectionRelativeToTransform(monkeyCamera.transform, move);
+        Vector3 cameraRelativeDirection = DirectionRelativeToTransform(TrackingCamera.transform, move);
         Rb.MovePosition(Rb.position + (MovementSpeed * Time.fixedDeltaTime * cameraRelativeDirection));
         DetermineAnimationState();
         speedometer.Mark();
@@ -175,12 +275,26 @@ public class MonkeyController : PlayerController
         base.OnCollisionEnter(collision);
 
         // Only Cling to something if you're off the ground.
-        if (collision.transform.CompareTag("Clingable") && !IsGrounded())
+        if (collision.transform.CompareTag("Clingable"))
         {
-            Debug.Log("dsadfs");
-            clinging = true;
+            if (AbilityUses > 0 && !IsGrounded())
+            {
+                clinging = true;
+            }
+
+            Audio.Play("Doof", EAudioPlayOptions.AtTransformPosition | EAudioPlayOptions.DestroyOnEnd);
+            hanging = false;
             clingPosition = collision.collider.ClosestPoint(transform.position);
             contactPoint = collision.GetContact(0);
+            bStillClinging = true;
+        }
+
+        if (AbilityUses > 0 && collision.transform.CompareTag("Hangable") && !IsGrounded())
+        {
+            Audio.Play("Doof", EAudioPlayOptions.AtTransformPosition | EAudioPlayOptions.DestroyOnEnd);
+            hanging = true;
+            clinging = false;
+            hangPosition = this.transform.position;
         }
     }
 
@@ -191,6 +305,11 @@ public class MonkeyController : PlayerController
         if (collision.transform.CompareTag("Clingable"))
         {
             clinging = false;
+            bStillClinging = false;
+        }
+        if (collision.transform.CompareTag("Hangable"))
+        {
+            hanging = false;
         }
     }
 
@@ -198,13 +317,13 @@ public class MonkeyController : PlayerController
     {
         if (!bDidJump)
         {
-            if (IsZero(speedometer.Velocity))
-            {
-                animator.SetTrigger("Idle");
-            }
-            else if (clinging)
+            if (clinging)
             {
                 animator.SetTrigger("Climb");
+            }
+            else if (IsZero(speedometer.Velocity))
+            {
+                animator.SetTrigger("Idle");
             }
             else
             {
@@ -213,10 +332,36 @@ public class MonkeyController : PlayerController
         }
     }
 
+    protected override void OnDustParticles(Vector3 Position)
+    {
+        base.OnDustParticles(Position);
+
+        Audio.Play("Doof", EAudioPlayOptions.AtTransformPosition | EAudioPlayOptions.DestroyOnEnd);
+    }
+
+    protected override void PlayFuelCollectionSound()
+    {
+        Audio.Play("Munch", EAudioPlayOptions.Global | EAudioPlayOptions.DestroyOnEnd);
+    }
+
     string RandomSound()
     {
         bool bRandomBool = Random.Range(0f, 1f) < .5f;
 
-        return bRandomBool ? "Scream":"OOH AHH";
+        return bRandomBool ? "Scream" : "OOH AHH";
     }
+
+#if UNITY_EDITOR
+    private void SetStartTransform()
+    {
+        StageStartPosition = transform.position;
+        StageStartRotation = transform.rotation;
+    }
+
+    private void MoveToStartTransform()
+    {
+        transform.rotation = StageStartRotation;
+        transform.position = StageStartPosition;
+    }
+#endif
 }

@@ -6,7 +6,7 @@ public class GridPathfinding : MonoBehaviour
 {
 #if UNITY_EDITOR
     private NavigationNode[,,] grid;
-    // [SerializeField] MeshFilter meshFilter;
+    [SerializeField] private MeshFilter meshFilter;
     [Tooltip("The width of the grid which can be searched")]
     [SerializeField] private int width;
     [Tooltip("The height of the grid which can be searched")]
@@ -15,11 +15,13 @@ public class GridPathfinding : MonoBehaviour
     [SerializeField] private int depth;
     [Tooltip("The size each tile in the grid")]
     [SerializeField] private int tileSize;
+    [SerializeField] private bool bGlobalPosition = false;
     [Tooltip("The offset of the grid from the world origin")]
     [SerializeField] private Vector3 offset;
     [SerializeField] private LayerMask groundLayer;
     [ContextMenuItem("Generate the Grid", "GenerateGrid")]
     [SerializeField] private bool bShowGrid = false;
+    [SerializeField] private bool bPathValidCollide = true;
 
     [ContextMenuItem("Generate a path from this object to the goal", "GenerateWirePath")]
     public GameObject goalObject;
@@ -28,7 +30,7 @@ public class GridPathfinding : MonoBehaviour
     private List<NavigationNode> closedSet = new List<NavigationNode>(); // the list of nodes which have been seen, and evaluated
 
     // Start is called before the first frame update
-    private void GenerateGrid()
+    public void GenerateGrid()
     {
         grid = new NavigationNode[width, height, depth];
         for (int i = 0; i < width; i++)
@@ -37,7 +39,8 @@ public class GridPathfinding : MonoBehaviour
             {
                 for (int k = 0; k < depth; k++)
                 {
-                    if (Physics.CheckSphere(PointToWorld(i, j, k), tileSize * 0.5f, groundLayer))
+                    bool bHit = Physics.CheckSphere(PointToWorld(i, j, k), tileSize * 0.5f, groundLayer);
+                    if ((bHit && bPathValidCollide) || (!bHit && !bPathValidCollide))
                     {
                         grid[i, j, k] = new NavigationNode(i, j, k);
                     }
@@ -61,7 +64,7 @@ public class GridPathfinding : MonoBehaviour
         lineRenderer.SetPosition(0, goalObject.transform.position);
         lineRenderer.SetPosition(lineRenderer.positionCount - 1, transform.position);
 
-        // CreateMeshPath.MakeCube(meshFilter, path); temporarily disable and fix up for sprint 4
+        // CreateMeshPath.MakeCube(meshFilter, path); // temporarily disable and fix up for sprint 4
     }
 
     private void OnDrawGizmos()
@@ -85,16 +88,16 @@ public class GridPathfinding : MonoBehaviour
         }
     }
 
-    Vector3 PointToWorld(int x, int y, int z)
+    public Vector3 PointToWorld(int x, int y, int z)
     {
-        Vector3 pointOffset = offset;
+        Vector3 pointOffset = TransformOffset();
 
         return new Vector3(x * tileSize, y * tileSize, z * tileSize) + pointOffset;
     }
 
     public void WorldToPoint(Vector3 worldPoint)
     {
-        worldPoint -= offset;
+        worldPoint -= TransformOffset();
 
         int x = Mathf.CeilToInt(worldPoint.x / tileSize);
         int y = Mathf.CeilToInt(worldPoint.y / tileSize);
@@ -104,11 +107,11 @@ public class GridPathfinding : MonoBehaviour
     /// <summary>
     /// find a valid node on the grid for the position, checking neighbours if the initially choosen one is not valid.
     /// </summary>
-    /// <param name="position">the position checking, either being the paths start or end</param>
+    /// <param name="position">the position checking, either being the paths start or end.</param>
     /// <returns>A position on the grid.</returns>
-    (int, int, int) FindValidCell(Vector3 position)
+    public (int, int, int) FindValidCell(Vector3 position)
     {
-        position -= offset;
+        position -= TransformOffset();
         int gridX = Mathf.Clamp(Mathf.RoundToInt(position.x / tileSize), 0, width - 1);
         int gridY = Mathf.Clamp(Mathf.RoundToInt(position.y / tileSize), 0, height - 1);
         int gridZ = Mathf.Clamp(Mathf.RoundToInt(position.z / tileSize), 0, depth - 1);
@@ -231,7 +234,7 @@ public class GridPathfinding : MonoBehaviour
         return new List<Vector3>();
     }
 
-    NavigationNode LowestFCost()
+    public NavigationNode LowestFCost()
     {
         NavigationNode current = openSet[0];
 
@@ -247,14 +250,14 @@ public class GridPathfinding : MonoBehaviour
         return current; // the node with the current shortest path
     }
 
-    List<Vector3> RecalculatePath(int targetX, int targetY, int targetZ, int startX, int startY, int startZ)
+    public List<Vector3> RecalculatePath(int targetX, int targetY, int targetZ, int startX, int startY, int startZ)
     {
         List<Vector3> worldPoints = new List<Vector3>();
         NavigationNode current = grid[targetX, targetY, targetZ];
         worldPoints.Add(PointToWorld(current.x, current.y, current.z));
 
-        // Debug.Log(targetX + "  " + startX + "  " + targetY + "  " + startY + "  " + targetZ + "  " + startZ);
-        while (current.x != startX || current.y != startY || current.z != startZ) // while not at the start position yet
+        // while not at the start position yet
+        while (current.x != startX || current.y != startY || current.z != startZ) 
         {
             worldPoints.Add(PointToWorld(current.x, current.y, current.z));
             current = current.parent;
@@ -291,6 +294,18 @@ public class GridPathfinding : MonoBehaviour
                     }
                 }
             }
+        }
+    }
+
+    private Vector3 TransformOffset()
+    {
+        if (bGlobalPosition)
+        {
+            return offset;
+        }
+        else
+        {
+            return transform.position + offset;
         }
     }
 #endif

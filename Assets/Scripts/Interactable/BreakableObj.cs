@@ -2,8 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// an object which when shot or dashed into either shatters into pieces or simply disapears and plays a particle effeect.
+/// </summary>
 [RequireComponent(typeof(AudioController))]
-public class BreakableObj : MonoBehaviour
+public class BreakableObj : UniqueID, IDataInterface
 {
     [Tooltip("Should this item break into pieces when broken, or should it just disapear")]
     [SerializeField] private bool bDoShatter = true;
@@ -16,7 +19,7 @@ public class BreakableObj : MonoBehaviour
 
     [ReadOnly] public AudioController Audio;
 
-    void Start()
+    private void Start()
     {
         Audio = GetComponent<AudioController>();
     }
@@ -32,6 +35,7 @@ public class BreakableObj : MonoBehaviour
             for (int i = gameObject.transform.childCount - 1; i >= 0; i--)
             {
                 gameObject.transform.GetChild(i).gameObject.AddComponent<Rigidbody>().AddForce(1500 * transform.forward);
+                gameObject.transform.GetChild(i).gameObject.AddComponent<GlassSizeChange>();
                 gameObject.transform.GetChild(i).gameObject.AddComponent<MeshCollider>().convex = true;
                 gameObject.transform.GetChild(i).gameObject.GetComponent<MeshRenderer>().enabled = true;
                 gameObject.transform.GetChild(i).parent = null;
@@ -41,6 +45,8 @@ public class BreakableObj : MonoBehaviour
         }
         else
         {
+            Audio.Play("Hit Breakable", EAudioPlayOptions.AtTransformPosition | EAudioPlayOptions.DestroyOnEnd);
+
             Material material = gameObject.GetComponent<MeshRenderer>().material;
 
             GameObject particles = Instantiate(disapearParticles, transform.position, Quaternion.identity);
@@ -68,7 +74,44 @@ public class BreakableObj : MonoBehaviour
             {
                 particelRenderer.material = particleColour[4];
             }
-            Destroy(gameObject);
+
+            gameObject.SetActive(false);
+        }
+    }
+
+    public void LoadData(SectionData data)
+    {
+        if (!bDoShatter)
+        {
+            if (data.GeneralPhysicsObject.Dictionary.ContainsKey(SaveID) && data.GeneralPhysicsObject.Dictionary.TryGetValue(SaveID, out GeneralPhysicsObjectData boxData))
+            {
+                Rigidbody rb = gameObject.GetComponent<Rigidbody>();
+                rb.angularVelocity = boxData.AngularVelocity;
+                transform.position = boxData.Position;
+                transform.rotation = boxData.Rotation;
+                rb.velocity = boxData.Velocity;
+                gameObject.SetActive(true);
+            }
+            else
+            {
+                gameObject.SetActive(false);
+            }
+        }
+    }
+
+    public void SaveData(SectionData data)
+    {
+        if (!bDoShatter && gameObject.activeSelf)
+        {
+            Rigidbody rb = gameObject.GetComponent<Rigidbody>();
+
+            GeneralPhysicsObjectData boxData = new GeneralPhysicsObjectData();
+            boxData.AngularVelocity = rb.angularVelocity;
+            boxData.Position = transform.position;
+            boxData.Rotation = transform.rotation;
+            boxData.Velocity = rb.velocity;
+
+            data.GeneralPhysicsObject.Dictionary.Add(SaveID, boxData);
         }
     }
 }

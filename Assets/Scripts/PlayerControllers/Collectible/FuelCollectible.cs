@@ -6,10 +6,13 @@ using UnityEngine;
 /// <summary>
 /// Class to handle what occurs when any player collides with any fuel object.
 /// </summary>
-public class FuelCollectible : MonoBehaviour
+public class FuelCollectible : UniqueID, IDataInterface
 {
-    [SerializeField] private PlayerIdObject playerId; // the id of the player whose fuel gets updated
     [SerializeField] private GameObject collectParticles;
+
+    public static bool BShownTutUI { get; set; } = false;
+
+    [field: SerializeField] public PlayerIdObject PlayerId { get; private set; } // the id of the player whose fuel gets updated
 
     private void Start()
     {
@@ -21,15 +24,43 @@ public class FuelCollectible : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
             IsCollected();
+
+            if (!BShownTutUI)
+            {
+                BShownTutUI = true;
+                UIEvents.TutorialUIPopup("Ability Uses", "I lacked the power, you will need to collect your characters item to recharge your ability", 10);
+            }
         }
     }
 
     private void IsCollected()
     {
-        GameEvents.CollectFuel(playerId.PlayerID);
+        GameEvents.CollectFuel(PlayerId.PlayerID);
         Instantiate(collectParticles, transform.position, Quaternion.identity);
-        Debug.Log("Fuel Collection");
+
         // collection particle system and sound effect
-        Destroy(gameObject);
+        gameObject.SetActive(false);
+    }
+
+#pragma warning disable SA1202 // Elements should be ordered by access
+    public void LoadData(SectionData data)
+#pragma warning restore SA1202 // Elements should be ordered by access
+    {
+        if (data.AbilityItems.Contains(SaveID))
+        {
+            gameObject.SetActive(true);
+        }
+        else
+        {
+            gameObject.SetActive(false);
+        }
+    }
+
+    public void SaveData(SectionData data)
+    {
+        if (gameObject.activeSelf)
+        {
+            data.AbilityItems.Add(SaveID);
+        }
     }
 }

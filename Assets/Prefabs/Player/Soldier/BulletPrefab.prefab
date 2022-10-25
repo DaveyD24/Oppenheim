@@ -12,9 +12,10 @@ GameObject:
   - component: {fileID: 1859860186272881963}
   - component: {fileID: 1859860186272881960}
   - component: {fileID: 3015008811790525440}
+  - component: {fileID: 3491983121608802607}
   m_Layer: 0
   m_Name: BulletPrefab
-  m_TagString: Untagged
+  m_TagString: Bullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -76,6 +77,49 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <Life>k__BackingField: 6
+  Audio: {fileID: 0}
+--- !u!114 &3491983121608802607
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1859860186272881942}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdf51a863cc80a541bd21546cf8cfb67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HashMap:
+    Entries:
+    - Key: Bullet Break
+      Value:
+        Clip: {fileID: 8300000, guid: 718368c51257d3b42912da1baed7e225, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 0
+        bLoop: 0
+        Priority: 0
+        Volume: 0
+        Pitch: 0
+        StereoPan: 0
+        SpatialBlend: 0
+        ReverbZoneMix: 0
+    - Key: Bullet Hit
+      Value:
+        Clip: {fileID: 8300000, guid: eeac6d0cef053d04f9b68975cd824170, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 0
+        bLoop: 0
+        Priority: 0
+        Volume: 0
+        Pitch: 0
+        StereoPan: 0
+        SpatialBlend: 0
+        ReverbZoneMix: 0
 --- !u!1 &4338799911509632212
 GameObject:
   m_ObjectHideFlags: 0

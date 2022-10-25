@@ -36,6 +36,9 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  <FuelLoseMultiplier>k__BackingField: 0.01
+  <InputDeadZone>k__BackingField: 0.325
   <DustParticles>k__BackingField: {fileID: 6197338229895351634, guid: e071970770248be4bba934296afbcfc6, type: 3}
+  <RespawnParticles>k__BackingField: {fileID: 142817430231947956, guid: 8022b364a05b7ec4e95d4ffa9a97b50a, type: 3}
   <dustParticlesCollisionSpeed>k__BackingField: 5
+  <CheckpointYOffset>k__BackingField: 1
+  <RadiusFromCheckpiont>k__BackingField: 2

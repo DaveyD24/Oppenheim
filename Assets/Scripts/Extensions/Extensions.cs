@@ -1,4 +1,5 @@
-﻿
+﻿using static global::BatMathematics;
+
 namespace UnityEngine.Extensions
 {
 	public static class XVector
@@ -11,6 +12,10 @@ namespace UnityEngine.Extensions
 
 			return X * X + Y * Y + Z * Z;
 		}
+
+		public static float SqrDist(Vector3 V1, Vector3 V2) => V1.SquareDistance(V2);
+
+		public static Vector3 FNormalised(this Vector3 V) => V * FInverseSqrt(V.sqrMagnitude);
 	}
 
 	public static class XGameObject

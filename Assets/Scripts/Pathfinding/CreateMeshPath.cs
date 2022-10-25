@@ -55,7 +55,7 @@ public static class CreateMeshPath
         return fv;
     }
 
-    public static void MakeCube(MeshFilter meshFilter, List<Vector3> trailPath, float wireSize = 0.025f)
+    public static void MakeCube(MeshFilter meshFilter, List<Vector3> trailPath, float wireSize = 0.1f)
     {
     //    testVertices
     //    {
