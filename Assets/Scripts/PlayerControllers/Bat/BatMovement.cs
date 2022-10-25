@@ -199,15 +199,8 @@ public class BatMovement : MonoBehaviour
 		{
 			ThrowMove = Context.action.ReadValue<Vector2>();
 
-			if (Mathf.Abs(ThrowMove.x) < Bat.DefaultPlayerData.InputDeadZone)
-			{
-				ThrowMove.x = 0;
-			}
-
-			if (Mathf.Abs(ThrowMove.y) < Bat.DefaultPlayerData.InputDeadZone)
-			{
-				ThrowMove.y = 0;
-			}
+			ThrowMove.x = Bat.AjustMovementValue(ThrowMove.x);
+			ThrowMove.y = Bat.AjustMovementValue(ThrowMove.y);
 		}
 		else
 		{

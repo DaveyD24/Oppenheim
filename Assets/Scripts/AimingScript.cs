@@ -16,16 +16,16 @@ public class AimingScript : MonoBehaviour
     private Quaternion targetRotation;
     private Quaternion lookAt;
 
-
-    void Start(){
-         objNearby = GameObject.FindGameObjectsWithTag("Breakable");
+    private void Start()
+    {
+        objNearby = GameObject.FindGameObjectsWithTag("Breakable");
     }
 
-    void Update()
+    private void Update()
     {
         FindTarget();
-        //face direction if there is a breakable object in view, else just look forward
-        if (objInFieldOfView(fovStartPoint) && closestObj != null)
+        // face direction if there is a breakable object in view, else just look forward
+        if (ObjInFieldOfView(fovStartPoint) && closestObj != null)
         {
             Vector3 direction = closestObj.transform.position - transform.position;
             targetRotation = Quaternion.LookRotation(direction);
@@ -37,42 +37,49 @@ public class AimingScript : MonoBehaviour
             targetRotation = Quaternion.Euler(0,0,0);
             transform.localRotation = Quaternion.RotateTowards(
                 transform.localRotation, targetRotation, Time.deltaTime * lookSpeed);
-        } 
+        }
     }
-    
-    //find closest object that is breakable
+
+    // find closest object that is breakable
     private void FindTarget()
     {
-        //objNearby = Physics.OverlapSphere(this.transform.position, 100f);
-        foreach (GameObject obj in objNearby) 
+        // objNearby = Physics.OverlapSphere(this.transform.position, 100f);
+        foreach (GameObject obj in objNearby)
         {
-            //if (obj.GetComponent<Collider>().tag == "Breakable") {
-                float breakableDist = (obj.transform.position - this.transform.position).sqrMagnitude;
-                Debug.Log("calculating breakable dis");
-                if (breakableDist < closestDist)
-                {
-                    closestDist = breakableDist;
-                    closestObj = obj;
-                    Debug.Log("THIS ONE CLOSER");
-                }
-            //}
+            // if (obj.GetComponent<Collider>().tag == "Breakable") {
+            float breakableDist = (obj.transform.position - this.transform.position).sqrMagnitude;
+            Debug.Log("calculating breakable dis");
+            if (breakableDist < closestDist)
+            {
+                closestDist = breakableDist;
+                closestObj = obj;
+                Debug.Log("THIS ONE CLOSER");
+            }
+
+            // }
             /*else{
                 Debug.Log("not breakable");
             }*/
         }
-        Debug.DrawLine(this.transform.position, closestObj.transform.position);
+
+        if (closestObj != null)
+        {
+            Debug.DrawLine(this.transform.position, closestObj.transform.position);
+        }
     }
 
-    //check if the player POV can see the object
-    private bool objInFieldOfView(GameObject thePlayer){
-        
+    // check if the player POV can see the object
+    private bool ObjInFieldOfView(GameObject thePlayer)
+    {
         Vector3 targetDir = closestObj.transform.position - transform.position;
         float angle = Vector3.Angle(targetDir, thePlayer.transform.forward);
 
-        if (angle < maxAngle){
+        if (angle < maxAngle)
+        {
             return true;
         }
-        else{
+        else
+        {
             return false;
         }
     }

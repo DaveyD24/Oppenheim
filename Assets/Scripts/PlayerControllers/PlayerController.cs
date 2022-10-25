@@ -621,6 +621,26 @@ public abstract class PlayerController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// take an input axis and limit it by a dead zone so that it can have better controllability on a controller.
+    /// </summary>
+    /// <param name="value">The current amount the specified control has has moved.</param>
+    /// <returns>the value one adjusted by the deadzone amount.</returns>
+    public float AjustMovementValue(float value)
+    {
+        if (Mathf.Abs(value) < DefaultPlayerData.InputDeadZone)
+        {
+            value = 0;
+        }
+        else
+        {
+            // map the ratio from InputDeadZone - 1 to 0 - 1 for further controllability
+            value = ((value - DefaultPlayerData.InputDeadZone) / (1 - DefaultPlayerData.InputDeadZone) * (1 - 0)) + 0;
+        }
+
+        return value;
+    }
+
     protected virtual void OnDustParticles(Vector3 Position)
     {
         Instantiate(DefaultPlayerData.DustParticles, Position, Quaternion.identity);

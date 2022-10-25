@@ -8,16 +8,17 @@ public class Button : MonoBehaviour
 {
     [SerializeField] private GameObject pauseMenu;
 
+    private IEnumerator enumerator;
+
     public void ChangeScene(string scene)
     {
         Time.timeScale = 1;
         string currScene = SceneManager.GetActiveScene().name;
-
-        SceneManager.LoadScene(scene);
-
-        // SceneManager.LoadSceneAsync("TransitionScene", LoadSceneMode.Additive);
-        // StartCoroutine(WaitTransition(scene, currScene));
-        //SceneManager.LoadScene(scene);
+        if (enumerator == null)
+        {
+            enumerator = WaitTransition(currScene, scene);
+            StartCoroutine(enumerator);
+        }
     }
 
     public void Quit()
@@ -50,19 +51,24 @@ public class Button : MonoBehaviour
         Time.timeScale = pauseMenu.activeSelf ? 0 : 1;
     }
 
-    private IEnumerator WaitTransition(string scene, string currScene)
+    /// <summary>
+    /// wait until the scene transition has loaded in before continuing.
+    /// </summary>
+    /// <param name="currScene">the current scene on.</param>
+    /// <param name="nextScene">the next scene to load in.</param>
+    /// <returns>null.</returns>
+    private IEnumerator WaitTransition(string currScene, string nextScene)
     {
-        yield return new WaitForSeconds(0.5f);
-
-        var asyncWait = SceneManager.LoadSceneAsync(scene, LoadSceneMode.Additive);
+        var asyncWait = SceneManager.LoadSceneAsync("TransitionScene", LoadSceneMode.Additive);
 
         while (!asyncWait.isDone)
         {
             yield return null;
         }
 
-        GameObject.Find("CanvasTransition").GetComponent<TransitionWait>().EndTransition();
-
-        SceneManager.UnloadSceneAsync(currScene);
+        // SceneManager.LoadScene(scene);
+        GameObject.Find("CanvasTransition").GetComponent<TransitionWait>().StartTransition(currScene, nextScene);
+        enumerator = null;
+        ////SceneManager.LoadScene(scene);
     }
 }
