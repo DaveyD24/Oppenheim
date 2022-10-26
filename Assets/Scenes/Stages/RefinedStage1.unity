@@ -1006,7 +1006,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HashMap:
-    Entries: []
+    Entries:
+    - Key: Hit Breakable
+      Value:
+        Clip: {fileID: 8300000, guid: e9d51238162a0584a807c9eb9c5741fe, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 0
+        bLoop: 0
+        bUseFader: 0
+        Fader:
+          TimeToFull: 0
+        Priority: 128
+        Volume: 1
+        Pitch: 1
+        StereoPan: 0
+        SpatialBlend: 0.75
+        ReverbZoneMix: 1
 --- !u!114 &6413990
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4405,7 +4422,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HashMap:
-    Entries: []
+    Entries:
+    - Key: Hit Breakable
+      Value:
+        Clip: {fileID: 8300000, guid: e9d51238162a0584a807c9eb9c5741fe, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 0
+        bLoop: 0
+        bUseFader: 0
+        Fader:
+          TimeToFull: 0
+        Priority: 128
+        Volume: 1
+        Pitch: 1
+        StereoPan: 0
+        SpatialBlend: 0.75
+        ReverbZoneMix: 1
 --- !u!114 &68162481
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5092,7 +5126,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HashMap:
-    Entries: []
+    Entries:
+    - Key: Hit Breakable
+      Value:
+        Clip: {fileID: 8300000, guid: e9d51238162a0584a807c9eb9c5741fe, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 0
+        bLoop: 0
+        bUseFader: 0
+        Fader:
+          TimeToFull: 0
+        Priority: 128
+        Volume: 1
+        Pitch: 1
+        StereoPan: 0
+        SpatialBlend: 0.75
+        ReverbZoneMix: 1
 --- !u!114 &81790956
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8082,7 +8133,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HashMap:
-    Entries: []
+    Entries:
+    - Key: Hit Breakable
+      Value:
+        Clip: {fileID: 8300000, guid: e9d51238162a0584a807c9eb9c5741fe, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 0
+        bLoop: 0
+        bUseFader: 0
+        Fader:
+          TimeToFull: 0
+        Priority: 128
+        Volume: 1
+        Pitch: 1
+        StereoPan: 0
+        SpatialBlend: 0.75
+        ReverbZoneMix: 1
 --- !u!114 &127601139
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14283,7 +14351,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HashMap:
-    Entries: []
+    Entries:
+    - Key: Hit Breakable
+      Value:
+        Clip: {fileID: 8300000, guid: e9d51238162a0584a807c9eb9c5741fe, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 0
+        bLoop: 0
+        bUseFader: 0
+        Fader:
+          TimeToFull: 0
+        Priority: 128
+        Volume: 1
+        Pitch: 1
+        StereoPan: 0
+        SpatialBlend: 0.75
+        ReverbZoneMix: 1
 --- !u!114 &261352401
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17127,7 +17212,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HashMap:
-    Entries: []
+    Entries:
+    - Key: Hit Breakable
+      Value:
+        Clip: {fileID: 8300000, guid: e9d51238162a0584a807c9eb9c5741fe, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 0
+        bLoop: 0
+        bUseFader: 0
+        Fader:
+          TimeToFull: 0
+        Priority: 128
+        Volume: 1
+        Pitch: 1
+        StereoPan: 0
+        SpatialBlend: 0.75
+        ReverbZoneMix: 1
 --- !u!114 &319542075
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19673,7 +19775,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HashMap:
-    Entries: []
+    Entries:
+    - Key: Hit Breakable
+      Value:
+        Clip: {fileID: 8300000, guid: e9d51238162a0584a807c9eb9c5741fe, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 0
+        bLoop: 0
+        bUseFader: 0
+        Fader:
+          TimeToFull: 0
+        Priority: 128
+        Volume: 1
+        Pitch: 1
+        StereoPan: 0
+        SpatialBlend: 0.75
+        ReverbZoneMix: 1
 --- !u!114 &381187283
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23009,6 +23128,9 @@ MonoBehaviour:
         bBypassReverbZones: 0
         bPlayOnAwake: 1
         bLoop: 1
+        bUseFader: 0
+        Fader:
+          TimeToFull: 0
         Priority: 128
         Volume: 0.5
         Pitch: 1
@@ -23023,6 +23145,9 @@ MonoBehaviour:
         bBypassReverbZones: 0
         bPlayOnAwake: 1
         bLoop: 1
+        bUseFader: 0
+        Fader:
+          TimeToFull: 0
         Priority: 128
         Volume: 0.5
         Pitch: 1
@@ -25144,11 +25269,14 @@ MonoBehaviour:
         bBypassReverbZones: 0
         bPlayOnAwake: 0
         bLoop: 0
+        bUseFader: 0
+        Fader:
+          TimeToFull: 0
         Priority: 1
         Volume: 1
         Pitch: 1
         StereoPan: 0
-        SpatialBlend: 0.75
+        SpatialBlend: 0
         ReverbZoneMix: 1
 --- !u!64 &483867999
 MeshCollider:
@@ -39908,7 +40036,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HashMap:
-    Entries: []
+    Entries:
+    - Key: Hit Breakable
+      Value:
+        Clip: {fileID: 8300000, guid: e9d51238162a0584a807c9eb9c5741fe, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 0
+        bLoop: 0
+        bUseFader: 0
+        Fader:
+          TimeToFull: 0
+        Priority: 128
+        Volume: 1
+        Pitch: 1
+        StereoPan: 0
+        SpatialBlend: 0.75
+        ReverbZoneMix: 1
 --- !u!114 &789803233
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -43577,7 +43722,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HashMap:
-    Entries: []
+    Entries:
+    - Key: Hit Breakable
+      Value:
+        Clip: {fileID: 8300000, guid: e9d51238162a0584a807c9eb9c5741fe, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 0
+        bLoop: 0
+        bUseFader: 0
+        Fader:
+          TimeToFull: 0
+        Priority: 128
+        Volume: 1
+        Pitch: 1
+        StereoPan: 0
+        SpatialBlend: 0.75
+        ReverbZoneMix: 1
 --- !u!114 &859733359
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -46266,7 +46428,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HashMap:
-    Entries: []
+    Entries:
+    - Key: Hit Breakable
+      Value:
+        Clip: {fileID: 8300000, guid: e9d51238162a0584a807c9eb9c5741fe, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 0
+        bLoop: 0
+        bUseFader: 0
+        Fader:
+          TimeToFull: 0
+        Priority: 128
+        Volume: 1
+        Pitch: 1
+        StereoPan: 0
+        SpatialBlend: 0.75
+        ReverbZoneMix: 1
 --- !u!114 &907318001
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -46451,7 +46630,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HashMap:
-    Entries: []
+    Entries:
+    - Key: Hit Breakable
+      Value:
+        Clip: {fileID: 8300000, guid: e9d51238162a0584a807c9eb9c5741fe, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 0
+        bLoop: 0
+        bUseFader: 0
+        Fader:
+          TimeToFull: 0
+        Priority: 128
+        Volume: 1
+        Pitch: 1
+        StereoPan: 0
+        SpatialBlend: 0.75
+        ReverbZoneMix: 1
 --- !u!114 &910236368
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -48425,11 +48621,14 @@ MonoBehaviour:
         bBypassReverbZones: 0
         bPlayOnAwake: 0
         bLoop: 0
+        bUseFader: 0
+        Fader:
+          TimeToFull: 0
         Priority: 1
         Volume: 1
         Pitch: 1
         StereoPan: 0
-        SpatialBlend: 0.75
+        SpatialBlend: 0
         ReverbZoneMix: 1
 --- !u!64 &956703907
 MeshCollider:
@@ -52094,7 +52293,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HashMap:
-    Entries: []
+    Entries:
+    - Key: Hit Breakable
+      Value:
+        Clip: {fileID: 8300000, guid: e9d51238162a0584a807c9eb9c5741fe, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 0
+        bLoop: 0
+        bUseFader: 0
+        Fader:
+          TimeToFull: 0
+        Priority: 128
+        Volume: 1
+        Pitch: 1
+        StereoPan: 0
+        SpatialBlend: 0.75
+        ReverbZoneMix: 1
 --- !u!114 &1020160100
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -59957,8 +60173,8 @@ Camera:
   m_GameObject: {fileID: 1239824851}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0.41176474, g: 0.38431376, b: 0.36078432, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -64525,7 +64741,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HashMap:
-    Entries: []
+    Entries:
+    - Key: Hit Breakable
+      Value:
+        Clip: {fileID: 8300000, guid: e9d51238162a0584a807c9eb9c5741fe, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 0
+        bLoop: 0
+        bUseFader: 0
+        Fader:
+          TimeToFull: 0
+        Priority: 128
+        Volume: 1
+        Pitch: 1
+        StereoPan: 0
+        SpatialBlend: 0.75
+        ReverbZoneMix: 1
 --- !u!114 &1333246669
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -73394,7 +73627,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HashMap:
-    Entries: []
+    Entries:
+    - Key: Hit Breakable
+      Value:
+        Clip: {fileID: 8300000, guid: e9d51238162a0584a807c9eb9c5741fe, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 0
+        bLoop: 0
+        bUseFader: 0
+        Fader:
+          TimeToFull: 0
+        Priority: 128
+        Volume: 1
+        Pitch: 1
+        StereoPan: 0
+        SpatialBlend: 0.75
+        ReverbZoneMix: 1
 --- !u!114 &1534915342
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -74797,7 +75047,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HashMap:
-    Entries: []
+    Entries:
+    - Key: Hit Breakable
+      Value:
+        Clip: {fileID: 8300000, guid: e9d51238162a0584a807c9eb9c5741fe, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 0
+        bLoop: 0
+        bUseFader: 0
+        Fader:
+          TimeToFull: 0
+        Priority: 128
+        Volume: 1
+        Pitch: 1
+        StereoPan: 0
+        SpatialBlend: 0.75
+        ReverbZoneMix: 1
 --- !u!114 &1564089407
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -76359,7 +76626,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HashMap:
-    Entries: []
+    Entries:
+    - Key: Hit Breakable
+      Value:
+        Clip: {fileID: 8300000, guid: e9d51238162a0584a807c9eb9c5741fe, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 0
+        bLoop: 0
+        bUseFader: 0
+        Fader:
+          TimeToFull: 0
+        Priority: 128
+        Volume: 1
+        Pitch: 1
+        StereoPan: 0
+        SpatialBlend: 0.75
+        ReverbZoneMix: 1
 --- !u!114 &1583839279
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -78113,7 +78397,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HashMap:
-    Entries: []
+    Entries:
+    - Key: Hit Breakable
+      Value:
+        Clip: {fileID: 8300000, guid: e9d51238162a0584a807c9eb9c5741fe, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 0
+        bLoop: 0
+        bUseFader: 0
+        Fader:
+          TimeToFull: 0
+        Priority: 128
+        Volume: 1
+        Pitch: 1
+        StereoPan: 0
+        SpatialBlend: 0.75
+        ReverbZoneMix: 1
 --- !u!114 &1609267528
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -85305,7 +85606,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HashMap:
-    Entries: []
+    Entries:
+    - Key: Hit Breakable
+      Value:
+        Clip: {fileID: 8300000, guid: e9d51238162a0584a807c9eb9c5741fe, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 0
+        bLoop: 0
+        bUseFader: 0
+        Fader:
+          TimeToFull: 0
+        Priority: 128
+        Volume: 1
+        Pitch: 1
+        StereoPan: 0
+        SpatialBlend: 0.75
+        ReverbZoneMix: 1
 --- !u!114 &1731096289
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -88673,11 +88991,14 @@ MonoBehaviour:
         bBypassReverbZones: 0
         bPlayOnAwake: 0
         bLoop: 0
+        bUseFader: 0
+        Fader:
+          TimeToFull: 0
         Priority: 1
         Volume: 1
         Pitch: 1
         StereoPan: 0
-        SpatialBlend: 0.75
+        SpatialBlend: 0
         ReverbZoneMix: 1
 --- !u!64 &1817934279
 MeshCollider:
@@ -89873,7 +90194,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HashMap:
-    Entries: []
+    Entries:
+    - Key: Hit Breakable
+      Value:
+        Clip: {fileID: 8300000, guid: e9d51238162a0584a807c9eb9c5741fe, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 0
+        bLoop: 0
+        bUseFader: 0
+        Fader:
+          TimeToFull: 0
+        Priority: 128
+        Volume: 1
+        Pitch: 1
+        StereoPan: 0
+        SpatialBlend: 0.75
+        ReverbZoneMix: 1
 --- !u!114 &1846801467
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -90543,11 +90881,14 @@ MonoBehaviour:
         bBypassReverbZones: 0
         bPlayOnAwake: 0
         bLoop: 0
+        bUseFader: 0
+        Fader:
+          TimeToFull: 0
         Priority: 1
         Volume: 1
         Pitch: 1
         StereoPan: 0
-        SpatialBlend: 0.75
+        SpatialBlend: 0
         ReverbZoneMix: 1
 --- !u!64 &1862826194
 MeshCollider:
@@ -90649,7 +90990,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HashMap:
-    Entries: []
+    Entries:
+    - Key: Hit Breakable
+      Value:
+        Clip: {fileID: 8300000, guid: e9d51238162a0584a807c9eb9c5741fe, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 0
+        bLoop: 0
+        bUseFader: 0
+        Fader:
+          TimeToFull: 0
+        Priority: 128
+        Volume: 1
+        Pitch: 1
+        StereoPan: 0
+        SpatialBlend: 0.75
+        ReverbZoneMix: 1
 --- !u!114 &1862957405
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -97645,7 +98003,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HashMap:
-    Entries: []
+    Entries:
+    - Key: Hit Breakable
+      Value:
+        Clip: {fileID: 8300000, guid: e9d51238162a0584a807c9eb9c5741fe, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 0
+        bLoop: 0
+        bUseFader: 0
+        Fader:
+          TimeToFull: 0
+        Priority: 128
+        Volume: 1
+        Pitch: 1
+        StereoPan: 0
+        SpatialBlend: 0.75
+        ReverbZoneMix: 1
 --- !u!114 &2031331218
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -99931,7 +100306,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HashMap:
-    Entries: []
+    Entries:
+    - Key: Hit Breakable
+      Value:
+        Clip: {fileID: 8300000, guid: e9d51238162a0584a807c9eb9c5741fe, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 0
+        bLoop: 0
+        bUseFader: 0
+        Fader:
+          TimeToFull: 0
+        Priority: 128
+        Volume: 1
+        Pitch: 1
+        StereoPan: 0
+        SpatialBlend: 0.75
+        ReverbZoneMix: 1
 --- !u!114 &2080826144
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -101125,7 +101517,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HashMap:
-    Entries: []
+    Entries:
+    - Key: Hit Breakable
+      Value:
+        Clip: {fileID: 8300000, guid: e9d51238162a0584a807c9eb9c5741fe, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 0
+        bLoop: 0
+        bUseFader: 0
+        Fader:
+          TimeToFull: 0
+        Priority: 128
+        Volume: 1
+        Pitch: 1
+        StereoPan: 0
+        SpatialBlend: 0.75
+        ReverbZoneMix: 1
 --- !u!114 &2110643658
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -102244,7 +102653,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HashMap:
-    Entries: []
+    Entries:
+    - Key: Hit Breakable
+      Value:
+        Clip: {fileID: 8300000, guid: e9d51238162a0584a807c9eb9c5741fe, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 0
+        bLoop: 0
+        bUseFader: 0
+        Fader:
+          TimeToFull: 0
+        Priority: 128
+        Volume: 1
+        Pitch: 1
+        StereoPan: 0
+        SpatialBlend: 0.75
+        ReverbZoneMix: 1
 --- !u!114 &2125199538
 MonoBehaviour:
   m_ObjectHideFlags: 0
