@@ -48,12 +48,12 @@ public class AimingScript : MonoBehaviour
         {
             // if (obj.GetComponent<Collider>().tag == "Breakable") {
             float breakableDist = (obj.transform.position - this.transform.position).sqrMagnitude;
-            Debug.Log("calculating breakable dis");
+            // Debug.Log("calculating breakable dis");
             if (breakableDist < closestDist)
             {
                 closestDist = breakableDist;
                 closestObj = obj;
-                Debug.Log("THIS ONE CLOSER");
+                // Debug.Log("THIS ONE CLOSER");
             }
 
             // }
@@ -71,16 +71,21 @@ public class AimingScript : MonoBehaviour
     // check if the player POV can see the object
     private bool ObjInFieldOfView(GameObject thePlayer)
     {
-        Vector3 targetDir = closestObj.transform.position - transform.position;
-        float angle = Vector3.Angle(targetDir, thePlayer.transform.forward);
+        if (closestObj != null)
+        {
+            Vector3 targetDir = closestObj.transform.position - transform.position;
+            float angle = Vector3.Angle(targetDir, thePlayer.transform.forward);
 
-        if (angle < maxAngle)
-        {
-            return true;
+            if (angle < maxAngle)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
-        else
-        {
-            return false;
-        }
+
+        return false;
     }
 }

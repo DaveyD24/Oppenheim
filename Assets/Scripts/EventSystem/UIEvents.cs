@@ -2,12 +2,17 @@ namespace EventSystem
 {
     using System;
     using UnityEngine;
+    using UnityEngine.InputSystem;
 
     /// <summary>
     /// A base class handleing all game events where two or more objects need to communicate with each other.
     /// </summary>
     public static class UIEvents
     {
+        public static Action<PlayerInput, string> OnPlayerConnectionUIAdd { get; set; }
+
+        public static Action<PlayerInput> OnPlayerConnectionRemove { get; set; }
+
         public static Action<int, float> OnFuelChanged { get; set; }
 
         public static Action<string> OnSceneChange { get; set; }
@@ -29,6 +34,16 @@ namespace EventSystem
         public static Func<string[]> OnGetInputTypes { get; set; }
 
         public static Func<string, string, Sprite> OnGetControlSprite { get; set; }
+
+        public static void PlayerConnectionUIAdd(PlayerInput input, string deviceName)
+        {
+            OnPlayerConnectionUIAdd?.Invoke(input, deviceName);
+        }
+
+        public static void PlayerConnectionRemove(PlayerInput input)
+        {
+            OnPlayerConnectionRemove?.Invoke(input);
+        }
 
         public static void FuelChanged(int playerID, float currentFuel)
         {

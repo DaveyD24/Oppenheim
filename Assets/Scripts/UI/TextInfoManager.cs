@@ -6,6 +6,9 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
+/// <summary>
+/// Old script, should be removed at some point
+/// </summary>
 public class TextInfoManager : MonoBehaviour
 {
     private InputActions Inputs;

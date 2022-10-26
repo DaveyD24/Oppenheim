@@ -96,7 +96,7 @@ public class BatMovement : MonoBehaviour
 
 	private void FixedUpdate()
 	{
-		if (!Bat.TrackingCamera)
+		if (!Bat.TrackingCamera || !Bat.Active)
 		{
 			return;
 		}
@@ -170,7 +170,7 @@ public class BatMovement : MonoBehaviour
 			// if walking backwards and the camera is inheriting, do not rotate around as its disorienting
 			if (!(GroundMovement.x == 0 && GroundMovement.z < 0 && Bat.TrackingCamera.bInheritRotation))
 			{
-				AlignTransformToMovement(transform, MovementVector, Bat.YawSpeed, Vector3.up);
+				AlignTransformToMovement(transform, GroundMovement, Bat.YawSpeed, Vector3.up);
 			}
 
 			MDebug.DrawArrow(transform.position, MovementVector, Color.magenta);

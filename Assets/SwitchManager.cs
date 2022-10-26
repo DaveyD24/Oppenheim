@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using EventSystem;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class SwitchManager : MonoBehaviour
 {
@@ -10,11 +11,13 @@ public class SwitchManager : MonoBehaviour
     private int playerNo = 0;
 
     // a list of each input and the id of the player connected to it
-    private List<KeyValuePair<PlayerInput, int>> playerInputConnection = new List<KeyValuePair<PlayerInput, int>>(); // a list so that it is ordered and can ensure that player 1, 2 etc will always be in the correct order
-    private List<int> controlledPlayers = new List<int>();
-    private List<int> uncontrolledPlayers = new List<int>();
+    public static List<KeyValuePair<PlayerInput, int>> PlayerInputConnection { get; set; } = new List<KeyValuePair<PlayerInput, int>>(); // a list so that it is ordered and can ensure that player 1, 2 etc will always be in the correct order
 
-    private int numberOfPlayers = 0;
+    public List<int> ControlledPlayers { get; set; } = new List<int>();
+
+    public List<int> UncontrolledPlayers { get; set; } = new List<int>();
+
+    public int NumberOfPlayers { get; set; } = 0;
 
     [SerializeField] private InputActions joinAction; // the input for joining as a new controller
 
@@ -55,14 +58,14 @@ public class SwitchManager : MonoBehaviour
 
         for (int i = 0; i < active.Count; ++i)
         {
-                outActivePlayerTransforms[i] = active[i].transform;
+            outActivePlayerTransforms[i] = active[i].transform;
         }
     }
 
     private void Awake()
     {
         playerInputManager = GetComponent<PlayerInputManager>();
-        //InputSystem.DisableDevice(Mouse.current);
+        // InputSystem.DisableDevice(Mouse.current);
     }
 
     private void OnEnable()
@@ -80,8 +83,10 @@ public class SwitchManager : MonoBehaviour
         GameEvents.OnRotatePlayer += RotatePlayer;
         GameEvents.OnPlayerCompareDistance += CompareControlledPlayerDistance;
         GameEvents.OnGetNumberActive += NumberPlayersActive;
+        GameEvents.OnAddActiveInputs += AddActiveInputsToPlayers;
 
         UIEvents.OnGetInputTypes += GetInputControlMethods;
+        UIEvents.OnPlayerConnectionRemove += PlayerRemoved;
     }
 
     private void OnDisable()
@@ -93,8 +98,10 @@ public class SwitchManager : MonoBehaviour
         GameEvents.OnRotatePlayer -= RotatePlayer;
         GameEvents.OnPlayerCompareDistance -= CompareControlledPlayerDistance;
         GameEvents.OnGetNumberActive -= NumberPlayersActive;
+        GameEvents.OnAddActiveInputs -= AddActiveInputsToPlayers;
 
         UIEvents.OnGetInputTypes -= GetInputControlMethods;
+        UIEvents.OnPlayerConnectionRemove -= PlayerRemoved;
     }
 
     /// <summary>
@@ -104,10 +111,12 @@ public class SwitchManager : MonoBehaviour
     private void Joining(InputAction.CallbackContext ctx)
     {
         // only perform if at least one of the players is active
-        if (Monkey.gameObject.activeSelf || Car.gameObject.activeSelf || Bat.gameObject.activeSelf || Soldier.gameObject.activeSelf)
+        bool bIsPlayerJoinScene = SceneManager.GetActiveScene().name == "Player Join";
+        if (bIsPlayerJoinScene || Monkey.gameObject.activeSelf || Car.gameObject.activeSelf || Bat.gameObject.activeSelf || Soldier.gameObject.activeSelf)
         {
             // checks if the device currently trying to connect is already connected or not
             InputControlList<InputDevice> unpairedDevices = UnityEngine.InputSystem.Users.InputUser.GetUnpairedInputDevices();
+
             InputDevice deviceUsing = ctx.control.device;
             bool bIsbeingUsed = true;
             foreach (InputDevice device in unpairedDevices)
@@ -125,12 +134,13 @@ public class SwitchManager : MonoBehaviour
             if (playerInputManager.playerCount < playerInputManager.maxPlayerCount && !bIsbeingUsed)
             {
                 PlayerInput player = playerInputManager.JoinPlayer(playerNo, playerNo, null, ctx.control.device); // a function to auto handle the setup of the new device
+                Debug.Log(player.gameObject.name);
                 if (player != null)
                 {
                     playerNo += 1;
-                    AddPlayer(player);
+                    AddPlayer(player, bIsPlayerJoinScene);
                     player.actions.FindActionMap("JoiningGame").Disable();
-                    //                print(player.devices[0].name);
+                    // print(player.devices[0].name);
                 }
             }
         }
@@ -140,7 +150,7 @@ public class SwitchManager : MonoBehaviour
     /// gets the specific player this input is connected with.
     /// </summary>
     /// <param name="player">The current device specific control setup using.</param>
-    private void AddPlayer(PlayerInput player)
+    private void AddPlayer(PlayerInput player, bool bIsPlayerJoinScene)
     {
         // controlledPlayers.Add(player);
         // print("Device Used to join: " + player.devices[0].name);
@@ -148,20 +158,74 @@ public class SwitchManager : MonoBehaviour
 
         (int playerToControl, int playerID) = FindUncontrolledPlayer();
 
-        if (playerToControl != -1)
+        if (playerToControl != -1 || bIsPlayerJoinScene)
         {
-            playerInputConnection.Add(new KeyValuePair<PlayerInput, int>(player, playerID));
+            PlayerInputConnection.Add(new KeyValuePair<PlayerInput, int>(player, playerID));
 
-            controlledPlayers.Add(playerID);
-            uncontrolledPlayers.RemoveAt(playerToControl);
+            if (playerToControl != -1)
+            {
+                ControlledPlayers.Add(playerID);
+                UncontrolledPlayers.RemoveAt(playerToControl);
 
-            numberOfPlayers++;
-            GetPlayerByID(playerID).HumanPlayerIndex = (EPlayer)numberOfPlayers;
+                GetPlayerByID(playerID).HumanPlayerIndex = (EPlayer)NumberOfPlayers;
+            }
 
-            GameEvents.ActivatePlayer(playerID, player);
+            NumberOfPlayers++;
+
+            if (bIsPlayerJoinScene)
+            {
+                UIEvents.PlayerConnectionUIAdd(player, player.devices[0].name);
+                Debug.Log("showing new UI");
+            }
+            else
+            {
+                GameEvents.ActivatePlayer(playerID, player);
+            }
 
             // Debug.Log("New Player Added: " + playerAdded);
             // print("Is Joining Enabled: " + player.playerIndex);
+        }
+    }
+
+    private void AddActiveInputsToPlayers()
+    {
+        for (int i = 0; i < PlayerInputConnection.Count; i++)
+        {
+            AddInputToPlayer(PlayerInputConnection[i].Key, i, PlayerInputConnection[i].Value);
+            Debug.Log("qwesrdfghj");
+        }
+    }
+
+    /// <summary>
+    /// if an input method already exists simply add it to one of the players.
+    /// </summary>
+    private void AddInputToPlayer(PlayerInput input, int inputConnectionIndex, int playerIndex)
+    {
+        if (playerIndex == -1)
+        {
+            (int playerToControl, int playerID) = FindUncontrolledPlayer();
+
+            if (playerToControl != -1)
+            {
+                PlayerInputConnection[inputConnectionIndex] = new KeyValuePair<PlayerInput, int>(input, playerID);
+
+                ControlledPlayers.Add(playerID);
+                UncontrolledPlayers.RemoveAt(playerToControl);
+                NumberOfPlayers++;
+
+                GetPlayerByID(playerID).HumanPlayerIndex = (EPlayer)NumberOfPlayers;
+
+                GameEvents.ActivatePlayer(playerID, input);
+                Debug.Log("Player To Activate: " + playerID);
+
+                // Debug.Log("New Player Added: " + playerAdded);
+                // print("Is Joining Enabled: " + player.playerIndex);
+            }
+        }
+        else
+        {
+            // as this input already mapped to a specific player, just connect it to that player
+            GameEvents.ActivatePlayer(playerIndex, input);
         }
     }
 
@@ -172,7 +236,7 @@ public class SwitchManager : MonoBehaviour
     /// <param name="playerInput">The input system information this player has.</param>
     private void RotatePlayer(int currentPlayerId, PlayerInput playerInput)
     {
-        if (uncontrolledPlayers.Count > 0)
+        if (UncontrolledPlayers.Count > 0)
         {
             GameEvents.DeactivatePlayer(currentPlayerId);
 
@@ -180,13 +244,13 @@ public class SwitchManager : MonoBehaviour
             if (playerToControl != -1)
             {
                 // activate the choosen uncontrolled player
-                controlledPlayers.Add(playerID);
-                uncontrolledPlayers.RemoveAt(playerToControl);
+                ControlledPlayers.Add(playerID);
+                UncontrolledPlayers.RemoveAt(playerToControl);
                 GameEvents.ActivatePlayer(playerID, playerInput);
 
                 // deactivate the current controlled player
-                uncontrolledPlayers.Add(currentPlayerId);
-                controlledPlayers.Remove(currentPlayerId);
+                UncontrolledPlayers.Add(currentPlayerId);
+                ControlledPlayers.Remove(currentPlayerId);
 
                 PlayerController inControl = GetPlayerByID(playerID);
                 PlayerController outControl = GetPlayerByID(currentPlayerId);
@@ -204,10 +268,10 @@ public class SwitchManager : MonoBehaviour
     {
         int playerToControl = -1;
         int playerID = -1;
-        if (uncontrolledPlayers.Count > 0)
+        if (UncontrolledPlayers.Count > 0)
         {
             playerToControl = 0;
-            playerID = uncontrolledPlayers[playerToControl];
+            playerID = UncontrolledPlayers[playerToControl];
         }
 
         return (playerToControl, playerID);
@@ -227,7 +291,7 @@ public class SwitchManager : MonoBehaviour
     /// <param name="playerId">The id of the player.</param>
     private void AddInactive(int playerId)
     {
-        uncontrolledPlayers.Add(playerId);
+        UncontrolledPlayers.Add(playerId);
     }
 
     /// <summary>
@@ -248,7 +312,7 @@ public class SwitchManager : MonoBehaviour
             }
         }
 
-        return numDistancesValid > 0 && numberOfPlayers >= controlledPlayers.Count;
+        return numDistancesValid > 0 && NumberOfPlayers >= ControlledPlayers.Count;
     }
 
     /// <summary>
@@ -257,15 +321,31 @@ public class SwitchManager : MonoBehaviour
     /// <returns>a list of the name of each players input device.</returns>
     private string[] GetInputControlMethods()
     {
-        string[] inputNames = new string[playerInputConnection.Count];
+        string[] inputNames = new string[PlayerInputConnection.Count];
 
-        for (int i = 0; i < playerInputConnection.Count; i++)
+        for (int i = 0; i < PlayerInputConnection.Count; i++)
         {
-            inputNames[i] = playerInputConnection[i].Key.devices[0].name;
+            inputNames[i] = PlayerInputConnection[i].Key.devices[0].name;
             print("Player Input Device Name: " + inputNames[i]);
         }
 
         return inputNames;
+    }
+
+    private void PlayerRemoved(PlayerInput input)
+    {
+        foreach (var item in PlayerInputConnection)
+        {
+            // loop through until find the one looking for
+            if (item.Key == input)
+            {
+                input.actions.FindActionMap("JoiningGame").Enable();
+                PlayerInputConnection.Remove(item);
+                Destroy(item.Key.gameObject);
+                NumberOfPlayers--;
+                return;
+            }
+        }
     }
 
     // TODO: fix up the player left method so it can properly handle when a player has left the game
@@ -278,7 +358,7 @@ public class SwitchManager : MonoBehaviour
     //
     //     --numberOfPlayers;
     // }
-    public int GetNumberOfPlayers() => numberOfPlayers;
+    public int GetNumberOfPlayers() => NumberOfPlayers;
 
     /// <summary>Get every Player in the game.</summary>
     public void GetAllPlayers(out PlayerController[] outPlayers)
@@ -296,7 +376,7 @@ public class SwitchManager : MonoBehaviour
     {
         List<PlayerController> retVal = new List<PlayerController>();
 
-        foreach (int iD in controlledPlayers)
+        foreach (int iD in ControlledPlayers)
         {
             retVal.Add(GetPlayerByID(iD));
         }
@@ -312,6 +392,6 @@ public class SwitchManager : MonoBehaviour
 
     private int NumberPlayersActive()
     {
-        return controlledPlayers.Count;
+        return ControlledPlayers.Count;
     }
 }

@@ -20,6 +20,8 @@ namespace EventSystem
 
         public static Action OnDashCarCollide { get; set; }
 
+        public static Action OnAddActiveInputs { get; set; }
+
         public static Action OnDie { get; set; }
 
         public static Action<bool> OnRespawnPlayersOnly { get; set; }
@@ -52,6 +54,11 @@ namespace EventSystem
         public static void CollectFuel(int playerId)
         {
             OnCollectFuel?.Invoke(playerId);
+        }
+
+        public static void AddActiveInputs()
+        {
+            OnAddActiveInputs?.Invoke();
         }
 
         public static void SavePlayerData(int[] fuelDataReset)

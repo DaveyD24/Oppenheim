@@ -2,11 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using EventSystem;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
 public class Button : MonoBehaviour
 {
     [SerializeField] private GameObject pauseMenu;
+    [SerializeField] private GameObject firstPauseButton;
 
     private IEnumerator enumerator;
 
@@ -19,6 +21,8 @@ public class Button : MonoBehaviour
             enumerator = WaitTransition(currScene, scene);
             StartCoroutine(enumerator);
         }
+
+        print(Event.current.isMouse || Event.current.isKey);
     }
 
     public void Quit()
@@ -49,6 +53,8 @@ public class Button : MonoBehaviour
     {
         pauseMenu.SetActive(!pauseMenu.activeSelf);
         Time.timeScale = pauseMenu.activeSelf ? 0 : 1;
+
+        UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(firstPauseButton);
     }
 
     /// <summary>

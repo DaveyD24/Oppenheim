@@ -45,7 +45,7 @@ public class NodeManager : MonoBehaviour
             //Vector3 StartPoint = new Vector3(Width - (Width / 2), G.transform.position.y, Height - (Height / 2));
             Vector3 StartPoint = new Vector3(G.transform.position.x - (Width / 2), G.transform.position.y, G.transform.position.z - (Height / 2));
 
-            Debug.Log(StartPoint);
+            // Debug.Log(StartPoint);
 
             Vector2 RandomxD = GetRandomNodePoint(HNodeCount, VNodeCount);
             List<MovementNode> GeneratedNodes =  GenerateNodes(StartPoint, HNodeCount, VNodeCount, counter, RandomxD);
@@ -106,10 +106,10 @@ public class NodeManager : MonoBehaviour
             int HNodeCount = Mathf.CeilToInt(Width / WDistance);
             int VNodeCount = Mathf.CeilToInt(Height / HDistance);
 
-            //Vector3 StartPoint = new Vector3(Width - (Width / 2), G.transform.position.y, Height - (Height / 2));
+            // Vector3 StartPoint = new Vector3(Width - (Width / 2), G.transform.position.y, Height - (Height / 2));
             Vector3 StartPoint = new Vector3(G.transform.position.x - (Width / 2), G.transform.position.y, G.transform.position.z - (Height / 2));
 
-            Debug.Log(StartPoint);
+            // Debug.Log(StartPoint);
 
             Vector2 RandomxD = GetRandomNodePoint(HNodeCount, VNodeCount);
             List<MovementNode> GeneratedNodes = GenerateSkyNodes(StartPoint, HNodeCount, VNodeCount, counter2, RandomxD);

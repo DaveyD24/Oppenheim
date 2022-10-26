@@ -159,8 +159,6 @@ public class MonkeyController : PlayerController
         // This check is original and untouched.
         if ((IsGrounded() || clinging || hanging) && !bDidJump)
         {
-
-
             // Original: Jump with a modified kinematic equation.
             Rb.velocity += new Vector3(0f, Mathf.Sqrt(jumpHeight * -3f * Physics.gravity.y), 0f);
 

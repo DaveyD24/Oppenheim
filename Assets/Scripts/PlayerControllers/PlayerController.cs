@@ -257,21 +257,17 @@ public abstract class PlayerController : MonoBehaviour
         {
             bMouseHeld = ctx.control.IsPressed();
             Debug.Log(bMouseHeld);
+
+            // when initially pressed set it appropriatly
+            PreviousMouseDragPosition = Input.mousePosition;
         }
         else
         {
             // must be using gamepad input
             Vector2 inputAmount = ctx.ReadValue<Vector2>();
             print(inputAmount);
-            if (Mathf.Abs(inputAmount.x) < DefaultPlayerData.InputDeadZone)
-            {
-                inputAmount.x = 0;
-            }
-
-            if (Mathf.Abs(inputAmount.y) < DefaultPlayerData.InputDeadZone)
-            {
-                inputAmount.y = 0;
-            }
+            inputAmount.x = AjustMovementValue(inputAmount.x);
+            inputAmount.y = AjustMovementValue(inputAmount.y);
 
             mouseControlInput = inputAmount;
         }
@@ -287,14 +283,14 @@ public abstract class PlayerController : MonoBehaviour
         if (bMouseHeld)
         {
             Vector3 inputAmount = Vector3.zero;
-            Vector3 mousePosition = Input.mousePosition;
+            Vector3 mousePosition = new Vector3(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"), 0);
             inputAmount.x = mousePosition.x - PreviousMouseDragPosition.x;
             inputAmount.y = mousePosition.y - PreviousMouseDragPosition.y;
             PreviousMouseDragPosition = mousePosition;
 
-            GameEvents.CameraMove(gameObject.transform, inputAmount);
+            GameEvents.CameraMove(gameObject.transform, mousePosition * 60);
         }
-        else if (Mathf.Abs(mouseControlInput.x) >= DefaultPlayerData.InputDeadZone || Mathf.Abs(mouseControlInput.y) >= DefaultPlayerData.InputDeadZone)
+        else if (Mathf.Abs(mouseControlInput.x) > 0 || Mathf.Abs(mouseControlInput.y) > 0)
         {
             // if input has been recieved for the controller apply movement to it
             GameEvents.CameraMove(gameObject.transform, mouseControlInput * 3);

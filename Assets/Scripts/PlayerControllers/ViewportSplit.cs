@@ -53,7 +53,7 @@ public class ViewportSplit : MonoBehaviour
 		if (Average)
 		{
 			SetCameraPositions();
-			Debug.Log("Checking Camera Fine to Rotate");
+			// Debug.Log("Checking Camera Fine to Rotate");
 		}
 
 #if MICHAEL_TESTING

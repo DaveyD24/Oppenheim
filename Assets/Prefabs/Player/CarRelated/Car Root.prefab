@@ -921,7 +921,7 @@ MonoBehaviour:
         bBypassEffects: 0
         bBypassReverbZones: 0
         bPlayOnAwake: 0
-        bLoop: 1
+        bLoop: 0
         Priority: 128
         Volume: 1
         Pitch: 1
@@ -935,7 +935,7 @@ MonoBehaviour:
         bBypassEffects: 0
         bBypassReverbZones: 0
         bPlayOnAwake: 0
-        bLoop: 1
+        bLoop: 0
         Priority: 128
         Volume: 1
         Pitch: 1
@@ -6616,7 +6616,7 @@ HingeJoint:
   m_Anchor: {x: 1.21, y: 0.31403217, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 1.2100585, y: 0, z: -0.3140414}
+  m_ConnectedAnchor: {x: 1.2100585, y: 0, z: -0.31391853}
   m_UseSpring: 1
   m_Spring:
     spring: 20

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using EventSystem;
 
 public class WaitSpawnPlayers : Node<ActionSequence>
 {
@@ -38,6 +39,7 @@ public class WaitSpawnPlayers : Node<ActionSequence>
 
         yield return new WaitForSeconds(1);
         bIsDone = true;
+        GameEvents.AddActiveInputs();
     }
 
     public override void End()

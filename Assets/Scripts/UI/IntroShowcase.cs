@@ -65,6 +65,7 @@ public class IntroShowcase : MonoBehaviour
                 camMoveTween = null;
                 introUIBanner.gameObject.SetActive(false);
                 UIEvents.BeginAnnoucement();
+                GameEvents.AddActiveInputs();
             }
         }
     }
