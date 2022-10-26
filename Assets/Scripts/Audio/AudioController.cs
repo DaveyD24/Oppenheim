@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -49,6 +48,8 @@ public class AudioController : MonoBehaviour
 			Source.time = PlaybackLead;
 			Source.Play();
 			Destroy(Spawned, Data.ClipDuration());
+
+			Data.IfFadeThenFade(this, Source, Data);
 
 			return Source;
 		}
@@ -195,6 +196,8 @@ public class AudioController : MonoBehaviour
 			if (bDestroyOnEnd && !Source.loop)
 				Destroy(Emitter, A.ClipDuration());
 
+			A.IfFadeThenFade(this, Source, A);
+
 			return Source;
 		}
 
@@ -219,6 +222,8 @@ public class AudioController : MonoBehaviour
 
 			if (bDestroyComponentOnEnd && !Source.loop)
 				Destroy(Source, A.ClipDuration());
+
+			A.IfFadeThenFade(this, Source, A);
 
 			return Source;
 		}
@@ -279,84 +284,4 @@ public class AudioController : MonoBehaviour
 	//	foreach (string S in SoundsToPrune)
 	//		Playing.Remove(S);
 	//}
-}
-
-/// <summary>A dodgy <see cref="AudioSource"/> replica.</summary>
-[Serializable]
-public class AudioData
-{
-	public AudioClip Clip;
-	public bool bMute;
-	public bool bBypassEffects;
-	public bool bBypassReverbZones;
-	public bool bPlayOnAwake;
-	public bool bLoop;
-
-	[Space]
-	[Range(0, 256)] public int Priority = 128;
-	[Range(0, 1)] public float Volume = 1f;
-	[Range(-3, 3)] public float Pitch = 1f;
-	[Range(-1, 1)] public float StereoPan = 0f;
-	[Range(0, 1)] public float SpatialBlend = .75f;
-	[Range(0, 1.1f)] public float ReverbZoneMix = 1f;
-
-	/// <summary>Replicates attaching an <see cref="AudioSource"/> component.</summary>
-	/// <param name="Emitter">Gets or attaches an <see cref="AudioSource"/> component.</param>
-	/// <param name="Source"><see langword="out"/> the attached <see cref="AudioSource"/> component.</param>
-	public void Construct(GameObject Emitter, out AudioSource Source)
-	{
-		Source = Emitter.AddComponent<AudioSource>();
-
-		Source.clip = Clip;
-		Source.mute = bMute;
-		Source.bypassEffects = bBypassEffects;
-		Source.bypassReverbZones = bBypassReverbZones;
-		Source.playOnAwake = bPlayOnAwake;
-		Source.loop = bLoop;
-
-		Source.priority = Priority;
-		Source.volume = Volume;
-		Source.pitch = Pitch;
-		Source.panStereo = StereoPan;
-		Source.spatialBlend = SpatialBlend;
-		Source.reverbZoneMix = ReverbZoneMix;
-	}
-
-	/// <summary>The duration of this <see cref="Clip"/> in seconds.</summary>
-	/// <param name="BufferTimeLeeway">+- dead audio offset.</param>
-	/// <returns>The duration in seconds.</returns>
-	public float ClipDuration(float BufferTimeLeeway = 0f)
-	{
-		return Clip.length + BufferTimeLeeway;
-	}
-}
-
-public struct PlayingData
-{
-	public AudioSource Source;
-	public bool bIsStandalone;
-	float StartTime;
-	AudioData Data;
-
-	public PlayingData(AudioData Data, AudioSource Source, bool bIsStandalone)
-	{
-		this.Source = Source;
-		this.bIsStandalone = bIsStandalone;
-		StartTime = Time.time;
-		this.Data = Data;
-	}
-
-	public bool HasElapsed()
-	{
-		// Looped Sounds must be terminated manually.
-		return !Data.bLoop && Time.time - StartTime >= Data.ClipDuration();
-	}
-}
-
-public enum EAudioPlayOptions : byte
-{
-	Global = 1,
-	AtTransformPosition = 2,
-	FollowEmitter = 4,
-	DestroyOnEnd = 8
 }

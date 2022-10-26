@@ -90,6 +90,8 @@ public class BatEvents : MonoBehaviour
 	{
 		if (WindGush)
 		{
+			Bat.Audio.StopAllCoroutines();
+
 			while (!BatMathematics.IsZero(WindGush.volume))
 			{
 				WindGush.volume -= Time.deltaTime;
