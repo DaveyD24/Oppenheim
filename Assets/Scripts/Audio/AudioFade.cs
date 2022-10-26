@@ -40,7 +40,6 @@ public struct AudioFade
 		while (T <= 1f)
 		{
 			T += Time.deltaTime * InverseTime;
-			Debug.Log($"{Source.volume:F2} {Data.Volume:F2} {T:F2}");
 			Source.volume = Mathf.Lerp(0f, Data.Volume, T);
 
 			yield return null;

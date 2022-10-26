@@ -118,6 +118,11 @@ public class AudioController : MonoBehaviour
 
 		if ((OptionsAsByte & (byte)EAudioPlayOptions.Global) == (byte)EAudioPlayOptions.Global)
 		{
+			if (OptionsAsByte > (byte)EAudioPlayOptions.Global)
+			{
+				Debug.LogError($"{EAudioPlayOptions.Global} takes precedence over others. Use one or the other.");
+			}
+
 			return Play(SoundName, PlaybackLead);
 		}
 		else if ((OptionsAsByte & (byte)EAudioPlayOptions.AtTransformPosition) == (byte)EAudioPlayOptions.AtTransformPosition)
@@ -254,7 +259,7 @@ public class AudioController : MonoBehaviour
 	/// <param name="bTieToThis"><see langword="true"/> to parent <paramref name="Spawned"/> to this <see cref="AudioController"/>.</param>
 	void Spawn(out GameObject Spawned, bool bTieToThis)
 	{
-		Spawned = new GameObject();
+		Spawned = new GameObject($"{name}");
 
 		if (bTieToThis)
 			Spawned.transform.parent = transform;

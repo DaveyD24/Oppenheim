@@ -103,4 +103,13 @@ public static class StaticCheats
 		foreach (Transform T in Players)
 			T.position = Coordinates;
 	}
+
+	[Exec("Disables the invisible boundaries around Stage 1.")]
+	public static void DisableBoundaries()
+	{
+		GameObject Boundaries = GameObject.Find("Invisible Colliders");
+
+		if (Boundaries)
+			Boundaries.SetActive(false);
+	}
 }

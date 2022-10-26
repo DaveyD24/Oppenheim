@@ -508,13 +508,13 @@ MonoBehaviour:
         ReverbZoneMix: 1
     - Key: Wind Gush
       Value:
-        Clip: {fileID: 8300000, guid: f5d09d48c6021f54591eb6983d272e2e, type: 3}
+        Clip: {fileID: 8300000, guid: 61814fdaaeec9f446a805d74bfc7de54, type: 3}
         bMute: 0
         bBypassEffects: 0
         bBypassReverbZones: 0
         bPlayOnAwake: 0
         bLoop: 1
-        bUseFader: 1
+        bUseFader: 0
         Fader:
           TimeToFull: 5
         Priority: 128
@@ -553,6 +553,40 @@ MonoBehaviour:
           TimeToFull: 0
         Priority: 128
         Volume: 1
+        Pitch: 1
+        StereoPan: 0
+        SpatialBlend: 0.75
+        ReverbZoneMix: 1
+    - Key: Sqwark
+      Value:
+        Clip: {fileID: 8300000, guid: be9c61f8a8449e845b65b8c8996cf930, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 0
+        bLoop: 0
+        bUseFader: 0
+        Fader:
+          TimeToFull: 0
+        Priority: 128
+        Volume: 1
+        Pitch: 1
+        StereoPan: 0
+        SpatialBlend: 0.75
+        ReverbZoneMix: 1
+    - Key: Crash
+      Value:
+        Clip: {fileID: 8300000, guid: ce3ab9109f5001e44847d8bfd11c9b6f, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 0
+        bLoop: 0
+        bUseFader: 0
+        Fader:
+          TimeToFull: 0
+        Priority: 128
+        Volume: 0.6
         Pitch: 1
         StereoPan: 0
         SpatialBlend: 0.75
