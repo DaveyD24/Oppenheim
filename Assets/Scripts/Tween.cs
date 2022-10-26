@@ -177,7 +177,7 @@ public class Tween
         float timeFraction = (Time.time - StartTime) / Duration;
         timeFraction = Mathf.Clamp(timeFraction, 0.0f, 1.0f);
         timeFraction = Mathf.Pow(2, 10 * (timeFraction - 1));
-        Debug.Log(timeFraction);
+        // Debug.Log(timeFraction);
         return Vector3.Lerp(StartPos, EndPos, timeFraction);
     }
 }

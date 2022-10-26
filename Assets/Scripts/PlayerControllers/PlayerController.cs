@@ -516,18 +516,18 @@ public abstract class PlayerController : MonoBehaviour
             {
                 // calculate the radius around the checkpoint at which the players are to spawn
                 Vector3 centrePos = Checkpoint.RespawnPosition;
-                float currentAngle = (90 * PlayerIdSO.PlayerID * Mathf.PI) / 180.0f;
+                float currentAngle = 90 * PlayerIdSO.PlayerID * Mathf.Deg2Rad;
                 Vector3 playerPos = centrePos + new Vector3(Mathf.Cos(currentAngle) * DefaultPlayerData.RadiusFromCheckpiont, DefaultPlayerData.CheckpointYOffset, Mathf.Sin(currentAngle) * DefaultPlayerData.RadiusFromCheckpiont);
 
                 Rb.transform.position = playerPos;
                 transform.rotation = Quaternion.identity;
             }
 
-            Instantiate(DefaultPlayerData.RespawnParticles, transform.position + (Vector3.down * 1), Quaternion.identity);
+            Instantiate(DefaultPlayerData.RespawnParticles, transform.position + Vector3.down, Quaternion.identity);
 
             if (!bInactiveOnly)
             {
-                Audio.Play("Respawn", EAudioPlayOptions.AtTransformPosition | EAudioPlayOptions.Global | EAudioPlayOptions.DestroyOnEnd);
+                Audio.Play("Respawn", EAudioPlayOptions.AtTransformPosition | EAudioPlayOptions.DestroyOnEnd);
             }
         }
     }
