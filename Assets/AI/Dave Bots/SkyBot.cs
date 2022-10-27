@@ -28,6 +28,8 @@ public class SkyBot : MonoBehaviour
     int spawnCount = 3;
     bool hasSpawned = false;
 
+    float ShelfScale;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -64,6 +66,7 @@ public class SkyBot : MonoBehaviour
             Vector3 targetPosition = new Vector3(nextNode.transform.position.x, this.transform.position.y, nextNode.transform.position.z);
             this.transform.LookAt(targetPosition);
 
+            GetNearestShelf();
             CreateScanner();
 
         }
@@ -116,10 +119,34 @@ public class SkyBot : MonoBehaviour
         //yield return new WaitForFixedUpdate();
     }
 
-    void CreateScanner()
+    void GetNearestShelf()
     {
 
         Vector3 Scale = new Vector3(this.transform.localScale.x, this.transform.localScale.y * 20, this.transform.localScale.z);
+        Vector3 Position = new Vector3(this.transform.position.x, this.transform.position.y - (Scale.y / 2) + HeightOffset, this.transform.position.z);
+        Collider[] Colliders = Physics.OverlapBox(Position, Scale, this.transform.rotation);
+
+        float closestDistance = 999999;
+
+        foreach(Collider C in Colliders)
+        {
+            if (C.gameObject.CompareTag("Shelf"))
+            {
+                if (Vector3.Distance(C.gameObject.transform.position, this.transform.position) < closestDistance)
+                {
+                    closestDistance = Vector3.Distance(C.gameObject.transform.position, this.transform.position);
+                    ShelfScale = Vector3.Distance(C.gameObject.transform.position, this.transform.position);
+                }
+            }
+        }
+    }
+
+    void CreateScanner()
+    {
+        
+        
+
+        Vector3 Scale = new Vector3(this.transform.localScale.x, (this.transform.localScale.y * 0) + ShelfScale, this.transform.localScale.z);
         Vector3 Position = new Vector3(this.transform.position.x, this.transform.position.y - (Scale.y / 2) + HeightOffset, this.transform.position.z);
 
         Collider[] Colliders = Physics.OverlapBox(Position, Scale, this.transform.rotation);
@@ -157,8 +184,8 @@ public class SkyBot : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.magenta;
-        
-        Vector3 Scale = new Vector3(this.transform.localScale.x, this.transform.localScale.y * 20, this.transform.localScale.z);
+
+        Vector3 Scale = new Vector3(this.transform.localScale.x, (this.transform.localScale.y * 0) + ShelfScale, this.transform.localScale.z);
         Vector3 Position = new Vector3(this.transform.position.x, this.transform.position.y - (Scale.y / 2) + HeightOffset, this.transform.position.z);
 
         Gizmos.DrawWireCube(Position, Scale);
