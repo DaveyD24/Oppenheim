@@ -175,6 +175,7 @@ public class MonkeyController : PlayerController
                     Rb.angularVelocity = Vector3.zero;
                     AdjustAbilityValue(-1);
                 }
+
                 if (hanging)
                 {
                     Debug.Log("Unhang");

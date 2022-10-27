@@ -19,7 +19,8 @@ public abstract class PlayerController : MonoBehaviour
 {
     [Tooltip("When on the tutorial level do not give three ability used so need to check when it is")]
     [SerializeField] private bool bIsTutorialLevel = false;
-    [SerializeField] private GameObject controlObj;
+
+    // [SerializeField] private GameObject controlObj;
     [SerializeField] private GameObject abilityActiveObj;
     [SerializeField] private TextMeshProUGUI abilityTxt;
     [SerializeField] private Canvas playerCanvas;
@@ -129,11 +130,6 @@ public abstract class PlayerController : MonoBehaviour
     {
         Active = true;
         UIEvents.CanvasStateChanged(PlayerIdSO.PlayerID, true);
-        if (!bControlsHidden)
-        {
-            controlObj.SetActive(true);
-            bControlsHidden = false;
-        }
 
         abilityActiveObj.SetActive(true);
     }
@@ -142,10 +138,6 @@ public abstract class PlayerController : MonoBehaviour
     {
         Active = false;
         UIEvents.CanvasStateChanged(PlayerIdSO.PlayerID, false);
-        if (controlObj != null)
-        {
-            controlObj.SetActive(false);
-        }
 
         if (abilityActiveObj != null)
         {
@@ -180,8 +172,6 @@ public abstract class PlayerController : MonoBehaviour
             // Inputs.Player.Ability.canceled += PerformAbility;
             PlayerInput.FindAction("Jump").performed += Jump;
 
-            PlayerInput.FindAction("HideControls").performed += ControlsVisibility;
-
             PlayerInput.FindAction("RotatePlayer").performed += RotatePlayer;
 
             PlayerInput.FindAction("Pause").performed += GamePause;
@@ -215,7 +205,6 @@ public abstract class PlayerController : MonoBehaviour
             // Inputs.Player.Ability.canceled += PerformAbility;
             PlayerInput.FindAction("Jump").performed -= Jump;
             PlayerInput.FindAction("RotatePlayer").performed -= RotatePlayer;
-            PlayerInput.FindAction("HideControls").performed -= ControlsVisibility;
             PlayerInput.FindAction("Pause").performed -= GamePause;
 
             // camera inputs
@@ -236,12 +225,6 @@ public abstract class PlayerController : MonoBehaviour
     protected abstract void Jump(InputAction.CallbackContext ctx);
 
     protected abstract void PerformAbility(InputAction.CallbackContext ctx);
-
-    private void ControlsVisibility(InputAction.CallbackContext ctx)
-    {
-        controlObj.SetActive(!controlObj.activeSelf);
-        bControlsHidden = !bControlsHidden;
-    }
 
     private void GamePause(InputAction.CallbackContext ctx)
     {
@@ -630,9 +613,22 @@ public abstract class PlayerController : MonoBehaviour
         }
         else
         {
-            // map the ratio from InputDeadZone - 1 to 0 - 1 for further controllability
-            value = ((value - DefaultPlayerData.InputDeadZone) / (1 - DefaultPlayerData.InputDeadZone) * (1 - 0)) + 0;
+            // below uses the formula new_value = ( (old_value - old_min) / (old_max - old_min) ) * (new_max - new_min) + new_min
+            if (value > 0)
+            {
+                // map the ratio from InputDeadZone - 1 to 0 - 1 for further controllability
+                value = (((value - DefaultPlayerData.InputDeadZone) * (1 - 0)) / (1 - DefaultPlayerData.InputDeadZone)) + 0;
+                value = Mathf.Clamp(value, 0, 1);
+            }
+            else
+            {
+                value = (((value - -1) * (0 - -1)) / (-DefaultPlayerData.InputDeadZone - 1)) + -1;
+                value = Mathf.Clamp(value, -1, 0);
+            }
         }
+
+        // clamp the value as for some reason the negative direction gives a larger value than the positive one
+        //value = Mathf.Clamp(value, -1, 1);
 
         return value;
     }

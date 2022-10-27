@@ -21,8 +21,6 @@ public class Button : MonoBehaviour
             enumerator = WaitTransition(currScene, scene);
             StartCoroutine(enumerator);
         }
-
-        print(Event.current.isMouse || Event.current.isKey);
     }
 
     public void Quit()

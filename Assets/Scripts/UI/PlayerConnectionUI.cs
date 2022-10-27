@@ -58,9 +58,16 @@ public class PlayerConnectionUI : MonoBehaviour
 
     private void Start()
     {
-        foreach (var item in SwitchManager.PlayerInputConnection)
+        if (SwitchManager.PlayerInputConnection.Count > 0)
         {
-            AddPlayer(item.Key, item.Key.devices[0].name);
+            foreach (var item in SwitchManager.PlayerInputConnection)
+            {
+                AddPlayer(item.Key, item.Key.devices[0].name);
+            }
+        }
+        else if (GetDeviceUsingAsInput.DeviceUsingForInput != null)
+        {
+            UIEvents.AddSpecificDevice(GetDeviceUsingAsInput.DeviceUsingForInput, true);
         }
     }
 
@@ -75,6 +82,11 @@ public class PlayerConnectionUI : MonoBehaviour
                 item.WaitTxt.SetActive(false);
                 item.DisconnectBtn.SetActive(true);
                 item.ControllerImg.gameObject.SetActive(true);
+
+                if (deviceName == "Mouse")
+                {
+                    deviceName = "Keyboard";
+                }
 
                 if (deviceName != "Keyboard")
                 {

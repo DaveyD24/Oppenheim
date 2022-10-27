@@ -37,9 +37,10 @@ public class WaitSpawnPlayers : Node<ActionSequence>
             player.SetActive(true);
         }
 
+        GameEvents.AddActiveInputs();
+
         yield return new WaitForSeconds(1);
         bIsDone = true;
-        GameEvents.AddActiveInputs();
     }
 
     public override void End()

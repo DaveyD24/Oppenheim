@@ -20,8 +20,19 @@ public class SetControlsUI : MonoBehaviour
 
     public void SetControlsActive(string controlName, int numPlayers, string input1Name, string input2Name)
     {
-        headerTxt.gameObject.SetActive(true);
+        //headerTxt.gameObject.SetActive(true);
         headerTxt.text = controlName;
+
+        // as while joined for actual controlling characters, the input system largely sees the keyboard and mouse as seperate tell it to use the keyboard controls when seen the mouse 
+        if (input1Name == "Mouse")
+        {
+            input1Name = "Keyboard";
+        }
+
+        if (input2Name == "Mouse")
+        {
+            input2Name = "Keyboard";
+        }
 
         // convert all non-keyboard input devices to use the gamepad controls for the xbox controller as UI as no need to have them all setup when cannot test with them all
         if (input1Name != "Keyboard")

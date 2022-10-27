@@ -704,7 +704,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bIsTutorialLevel: 0
-  controlObj: {fileID: 4803520262443742586}
   abilityActiveObj: {fileID: 7570476759281605505}
   abilityTxt: {fileID: 9051217099164248355}
   playerCanvas: {fileID: 8731067970433128939}

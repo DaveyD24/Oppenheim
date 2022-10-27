@@ -1261,6 +1261,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pauseMenu: {fileID: 0}
+  firstPauseButton: {fileID: 0}
 --- !u!114 &1435693857
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1767,7 +1768,7 @@ MonoBehaviour:
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 571870188}
-    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnLeft: {fileID: 571870188}
     m_SelectOnRight: {fileID: 1051413529}
   m_Transition: 1
   m_Colors:

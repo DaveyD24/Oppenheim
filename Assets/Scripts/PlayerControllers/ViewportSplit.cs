@@ -104,7 +104,7 @@ public class ViewportSplit : MonoBehaviour
                 return;
             }
 
-            List<PlayerController> Active = Get().SwitchManager.GetActivePlayers();
+			List<PlayerController> Active = Get().SwitchManager.GetActivePlayers();
 
 			int P1, P2, P3, P4;
 			P1 = P2 = P3 = P4 = -1;
@@ -112,28 +112,28 @@ public class ViewportSplit : MonoBehaviour
 			for (int i = 0; i < Active.Count; ++i)
 			{
 				if (Active[i].HumanPlayerIndex == EPlayer.P1)
-                {
-                    P1 = i;
-                }
-                else if (Active[i].HumanPlayerIndex == EPlayer.P2)
-                {
-                    P2 = i;
-                }
+				{
+					P1 = i;
+				}
+				else if (Active[i].HumanPlayerIndex == EPlayer.P2)
+				{
+					P2 = i;
+				}
 
 				// 3-4 Players are not supported...
-                else if (Active[i].HumanPlayerIndex == EPlayer.P3)
-                {
-                    P3 = i;
-                }
-                else if (Active[i].HumanPlayerIndex == EPlayer.P4)
-                {
-                    P4 = i;
-                }
-            }
+				else if (Active[i].HumanPlayerIndex == EPlayer.P3)
+				{
+					P3 = i;
+				}
+				else if (Active[i].HumanPlayerIndex == EPlayer.P4)
+				{
+					P4 = i;
+				}
+			}
 
 #if UNITY_EDITOR
 			// Check if Michael is stupid.
-			Debug.Assert(P2 != -1, "ViewportSplit::SetCameraPosition() -> ArePlayersTooFar(...) returned true with only 1 active player!");
+			////Debug.Assert(P2 != -1, "ViewportSplit::SetCameraPosition() -> ArePlayersTooFar(...) returned true with only 1 active player!");
 
 			Debug.Assert(P3 == -1 && P4 == -1, "3-4 Players are not supported by Viewport Split!");
 #endif

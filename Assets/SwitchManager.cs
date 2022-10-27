@@ -87,6 +87,7 @@ public class SwitchManager : MonoBehaviour
 
         UIEvents.OnGetInputTypes += GetInputControlMethods;
         UIEvents.OnPlayerConnectionRemove += PlayerRemoved;
+        UIEvents.OnAddSpecificDevice += JoinSpecificDevice;
     }
 
     private void OnDisable()
@@ -102,6 +103,7 @@ public class SwitchManager : MonoBehaviour
 
         UIEvents.OnGetInputTypes -= GetInputControlMethods;
         UIEvents.OnPlayerConnectionRemove -= PlayerRemoved;
+        UIEvents.OnAddSpecificDevice -= JoinSpecificDevice;
     }
 
     /// <summary>
@@ -116,7 +118,6 @@ public class SwitchManager : MonoBehaviour
         {
             // checks if the device currently trying to connect is already connected or not
             InputControlList<InputDevice> unpairedDevices = UnityEngine.InputSystem.Users.InputUser.GetUnpairedInputDevices();
-
             InputDevice deviceUsing = ctx.control.device;
             bool bIsbeingUsed = true;
             foreach (InputDevice device in unpairedDevices)
@@ -133,16 +134,20 @@ public class SwitchManager : MonoBehaviour
             // if uncontrolled players exist and this device is not in use, connect it to a player
             if (playerInputManager.playerCount < playerInputManager.maxPlayerCount && !bIsbeingUsed)
             {
-                PlayerInput player = playerInputManager.JoinPlayer(playerNo, playerNo, null, ctx.control.device); // a function to auto handle the setup of the new device
-                Debug.Log(player.gameObject.name);
-                if (player != null)
-                {
-                    playerNo += 1;
-                    AddPlayer(player, bIsPlayerJoinScene);
-                    player.actions.FindActionMap("JoiningGame").Disable();
-                    // print(player.devices[0].name);
-                }
+                JoinSpecificDevice(deviceUsing, bIsPlayerJoinScene);
             }
+        }
+    }
+
+    private void JoinSpecificDevice(InputDevice device, bool bIsPlayerJoinScene)
+    {
+        PlayerInput player = playerInputManager.JoinPlayer(playerNo, playerNo, null, device); // a function to auto handle the setup of the new device
+        if (player != null)
+        {
+            playerNo += 1;
+            AddPlayer(player, bIsPlayerJoinScene);
+            player.actions.FindActionMap("JoiningGame").Disable();
+            // print(player.devices[0].name);
         }
     }
 
@@ -166,8 +171,8 @@ public class SwitchManager : MonoBehaviour
             {
                 ControlledPlayers.Add(playerID);
                 UncontrolledPlayers.RemoveAt(playerToControl);
-
                 GetPlayerByID(playerID).HumanPlayerIndex = (EPlayer)NumberOfPlayers;
+                Debug.Log("New Player Added: " + playerID + " Count:" + ControlledPlayers.Count);
             }
 
             NumberOfPlayers++;
@@ -175,7 +180,6 @@ public class SwitchManager : MonoBehaviour
             if (bIsPlayerJoinScene)
             {
                 UIEvents.PlayerConnectionUIAdd(player, player.devices[0].name);
-                Debug.Log("showing new UI");
             }
             else
             {
@@ -187,12 +191,17 @@ public class SwitchManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// for all players which already have input setup when loading into a new level add these inputs to the appropriate players.
+    /// </summary>
     private void AddActiveInputsToPlayers()
     {
         for (int i = 0; i < PlayerInputConnection.Count; i++)
         {
             AddInputToPlayer(PlayerInputConnection[i].Key, i, PlayerInputConnection[i].Value);
-            Debug.Log("qwesrdfghj");
+            playerNo++;
+
+            // issue occuring if this is called after the player connects to the game
         }
     }
 
@@ -209,14 +218,14 @@ public class SwitchManager : MonoBehaviour
             {
                 PlayerInputConnection[inputConnectionIndex] = new KeyValuePair<PlayerInput, int>(input, playerID);
 
-                ControlledPlayers.Add(playerID);
+                ControlledPlayers.Add(playerID); // issle likly being caused by adding input at same time pressing r key
                 UncontrolledPlayers.RemoveAt(playerToControl);
                 NumberOfPlayers++;
 
                 GetPlayerByID(playerID).HumanPlayerIndex = (EPlayer)NumberOfPlayers;
 
                 GameEvents.ActivatePlayer(playerID, input);
-                Debug.Log("Player To Activate: " + playerID);
+                Debug.LogError("Player To Activate: " + playerID);
 
                 // Debug.Log("New Player Added: " + playerAdded);
                 // print("Is Joining Enabled: " + player.playerIndex);
@@ -224,6 +233,16 @@ public class SwitchManager : MonoBehaviour
         }
         else
         {
+            if (!ControlledPlayers.Contains(playerIndex))
+            {
+                ControlledPlayers.Add(playerIndex);
+                Debug.Log("Added Input: " + playerIndex + "amount: " + ControlledPlayers.Count);
+                UncontrolledPlayers.Remove(playerIndex);
+            }
+
+            NumberOfPlayers++;
+            GetPlayerByID(playerIndex).HumanPlayerIndex = (EPlayer)NumberOfPlayers;
+
             // as this input already mapped to a specific player, just connect it to that player
             GameEvents.ActivatePlayer(playerIndex, input);
         }
@@ -236,7 +255,7 @@ public class SwitchManager : MonoBehaviour
     /// <param name="playerInput">The input system information this player has.</param>
     private void RotatePlayer(int currentPlayerId, PlayerInput playerInput)
     {
-        if (UncontrolledPlayers.Count > 0)
+        if (UncontrolledPlayers.Count > 0 && ControlledPlayers.Count <= PlayerInputConnection.Count)
         {
             GameEvents.DeactivatePlayer(currentPlayerId);
 
@@ -246,16 +265,30 @@ public class SwitchManager : MonoBehaviour
                 // activate the choosen uncontrolled player
                 ControlledPlayers.Add(playerID);
                 UncontrolledPlayers.RemoveAt(playerToControl);
-                GameEvents.ActivatePlayer(playerID, playerInput);
 
                 // deactivate the current controlled player
                 UncontrolledPlayers.Add(currentPlayerId);
-                ControlledPlayers.Remove(currentPlayerId);
+
+                for (int i = 0; i < ControlledPlayers.Count; i++)
+                {
+                    if (ControlledPlayers[i] == currentPlayerId)
+                    {
+                        ControlledPlayers.RemoveAt(i);
+                        break;
+                    }
+                }
+
+                if (ControlledPlayers.Count > PlayerInputConnection.Count)
+                {
+                    Debug.LogAssertion("failed to remove the item: " + currentPlayerId);
+                }
 
                 PlayerController inControl = GetPlayerByID(playerID);
                 PlayerController outControl = GetPlayerByID(currentPlayerId);
                 inControl.HumanPlayerIndex = outControl.HumanPlayerIndex;
                 outControl.HumanPlayerIndex = EPlayer.None;
+
+                GameEvents.ActivatePlayer(playerID, playerInput);
             }
         }
     }
@@ -326,7 +359,7 @@ public class SwitchManager : MonoBehaviour
         for (int i = 0; i < PlayerInputConnection.Count; i++)
         {
             inputNames[i] = PlayerInputConnection[i].Key.devices[0].name;
-            print("Player Input Device Name: " + inputNames[i]);
+            //print("Player Input Device Name: " + inputNames[i]);
         }
 
         return inputNames;

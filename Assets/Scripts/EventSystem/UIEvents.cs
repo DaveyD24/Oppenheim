@@ -9,6 +9,8 @@ namespace EventSystem
     /// </summary>
     public static class UIEvents
     {
+        public static Action<InputDevice, bool> OnAddSpecificDevice { get; set; }
+
         public static Action<PlayerInput, string> OnPlayerConnectionUIAdd { get; set; }
 
         public static Action<PlayerInput> OnPlayerConnectionRemove { get; set; }
@@ -43,6 +45,11 @@ namespace EventSystem
         public static void PlayerConnectionRemove(PlayerInput input)
         {
             OnPlayerConnectionRemove?.Invoke(input);
+        }
+
+        public static void AddSpecificDevice(InputDevice device, bool bIsPlayerJoinScene)
+        {
+            OnAddSpecificDevice?.Invoke(device, bIsPlayerJoinScene);
         }
 
         public static void FuelChanged(int playerID, float currentFuel)

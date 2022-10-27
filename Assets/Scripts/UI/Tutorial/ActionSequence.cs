@@ -49,16 +49,9 @@ public class ActionSequence : MonoBehaviour
         WaitSpawnPlayers waitSpawnPlayers = new WaitSpawnPlayers(this);
         PlayDialogue welcomDialogue = new PlayDialogue(this, welcomeDialogue, oppenheimText, talkSpeed, sentencePauseTime); // play the intro welcome text
         MoveCloser checkCloseEnough = new MoveCloser(this, oppenheimObj);
-        // PlayDialogue moveDoneDialogue = new PlayDialogue(this, workOrderDialoguePrt1, oppenheimText, talkSpeed, sentencePauseTime); // play the dialogue explaining how to rotate character
-        // ShowHideObject showBlueprint = new ShowHideObject(this, blueprintObj, true);
         PlayDialogue firstChallengeDialogue = new PlayDialogue(this, workOrderDialoguePrt2, oppenheimText, talkSpeed, sentencePauseTime); // play the dialogue explaining how to rotate character
-        // ShowHideObject hideBlueprint = new ShowHideObject(this, blueprintObj, false);
         CycleCamera cycleCamera = new CycleCamera(this, 5);
         InstructionBookSequence instructionBookSequence = new InstructionBookSequence(this);
-
-        // popup oppenheim and book appearence
-
-        // PlayDialogue rotateCharDialogue = new PlayDialogue(this, cameraDialogue, oppenheimText, talkSpeed, sentencePauseTime); // play the dialogue explaining how to rotate character
 
         // wait for input to be recieved
         topNode = new Sequence<ActionSequence>(new List<Node<ActionSequence>> { waitSpawnPlayers, welcomDialogue, checkCloseEnough, firstChallengeDialogue, cycleCamera, instructionBookSequence });

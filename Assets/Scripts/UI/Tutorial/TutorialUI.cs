@@ -61,6 +61,7 @@ public class TutorialUI : MonoBehaviour
 
 		if (bShowInstructions)
 		{
+			Contents.gameObject.SetActive(false);
 			string[] inputDeviceNames = UIEvents.GetInputTypes();
 			if (inputDeviceNames.Length >= 2)
 			{
