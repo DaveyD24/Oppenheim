@@ -72,6 +72,14 @@ public abstract class PlayerController : MonoBehaviour
     SwitchManager switchManager;
     float FollowSpeed = 0.001f;
 
+    MovementNode currentNode;
+    MovementNode nextNode;
+
+    float StartTime;
+    float EndTime;
+
+    float HeightOffset;
+
     protected InputActionAsset Inputs { get; private set; }
 
     public virtual bool IsGrounded()
@@ -225,6 +233,13 @@ public abstract class PlayerController : MonoBehaviour
         {
             // AdjustFuelValue(-DefaultPlayerData.DecreaseFuelAmount.Evaluate(CurrentFuel / DefaultPlayerData.MaxFuel) * Time.deltaTime * DefaultPlayerData.FuelLoseMultiplier);
         }
+        else
+        {
+            if (isFarEnoughAway)
+            {
+                MoveToNextNode();
+            }
+        }
 
         if (switchManager.GetActivePlayer() != null)
         {
@@ -251,6 +266,55 @@ public abstract class PlayerController : MonoBehaviour
         // AdjustFuelValue(-DefaultPlayerData.DecreaseFuelAmount.Evaluate(CurrentFuel / DefaultPlayerData.MaxFuel) * Time.deltaTime);
     }
 
+    void MoveToNextNode()
+    {
+        if (currentNode != null)
+        {
+            //this.transform.position = currentNode.transform.position;
+            //Debug.Log("hmmm");
+
+
+            // this.transform.position = new Vector3(Vector3.Lerp(this.transform.position, nextNode.transform.position, 0.2f).x, 0, Vector3.Lerp(this.transform.position, nextNode.transform.position, 0.2f).z);
+
+
+
+
+            if (Time.time < EndTime)
+            {
+                //Debug.Log("inwhile");
+                if (currentNode != null && nextNode != null)
+                {
+                    float TimeProgressd = (Time.time - StartTime) / 0.4f;
+                    this.transform.position = new Vector3(Vector3.Lerp(currentNode.transform.position, nextNode.transform.position, TimeProgressd).x, currentNode.transform.position.y /*+ HeightOffset*/, Vector3.Lerp(currentNode.transform.position, nextNode.transform.position, TimeProgressd).z);
+                }
+                    //Debug.Log(TimeProgressd);
+            }
+            else
+            {
+                if (switchManager.GetActivePlayer() != null)
+                {
+                    currentNode = nextNode;
+                    do
+                    {
+                        nextNode = currentNode.CalculateNextNodeTowardsPoint(switchManager.GetActivePlayer().transform.position);
+                    }
+                    while (currentNode.CalculateNextNodeTowardsPoint(switchManager.GetActivePlayer().transform.position).platformIndex != currentNode.platformIndex);
+                    StartTime = Time.time;
+                    EndTime = StartTime + 0.4f;
+                }
+            }
+
+
+
+            //this.transform.position = Vector3.Lerp(currentNode.transform.position, nextNode.transform.position, 0.2f);
+            //this.transform.position = Vector3.move
+
+            //currentNode = nextNode;
+            //Debug.Log("Part2");
+        }
+        //yield return new WaitForFixedUpdate();
+    }
+
     protected virtual void Start()
     {
         SaveData(null);
@@ -266,6 +330,21 @@ public abstract class PlayerController : MonoBehaviour
 
         GameEvents.OnAddPlayerSwitch(PlayerIdSO.PlayerID);
         AdjustAbilityValue(0);
+
+        StartTime = Time.time;
+        EndTime = StartTime + 2.0f;
+        if (currentNode == null)
+        {
+            currentNode = MovementNode.GetClosestNode(this.gameObject);
+        }
+        Debug.LogError(currentNode.gameObject.name);
+        do
+        {
+            nextNode = currentNode.CalculateNextNode();
+        }    
+        while (currentNode.CalculateNextNode().platformIndex != currentNode.platformIndex);
+        Debug.LogError(nextNode.gameObject.name);
+        HeightOffset = this.GetComponent<BoxCollider>().bounds.size.y / 2;
     }
 
     public virtual void OnDeath()
