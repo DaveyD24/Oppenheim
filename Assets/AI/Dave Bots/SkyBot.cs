@@ -47,7 +47,7 @@ public class SkyBot : MonoBehaviour
         }
         while (currentNode.CalculateNextNode().platformIndex != currentNode.platformIndex);
 
-        HeightOffset = this.GetComponent<BoxCollider>().bounds.size.y / 2;
+        HeightOffset = this.GetComponent<BoxCollider>().bounds.size.y / 2.0f;
         Width = this.GetComponent<BoxCollider>().bounds.size.x;
     }
 

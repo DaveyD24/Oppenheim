@@ -16,6 +16,7 @@ TagManager:
   - NodePlatform
   - Bullet
   - SkyPlatform
+  - Shelf
   layers:
   - Default
   - TransparentFX

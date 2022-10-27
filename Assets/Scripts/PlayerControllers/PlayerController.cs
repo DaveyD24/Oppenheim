@@ -232,12 +232,14 @@ public abstract class PlayerController : MonoBehaviour
         if (Active)
         {
             // AdjustFuelValue(-DefaultPlayerData.DecreaseFuelAmount.Evaluate(CurrentFuel / DefaultPlayerData.MaxFuel) * Time.deltaTime * DefaultPlayerData.FuelLoseMultiplier);
+            //Rb.isKinematic = false;
         }
         else
         {
             if (isFarEnoughAway)
             {
-                MoveToNextNode();
+                //Rb.isKinematic = true;
+                //MoveToNextNode();
             }
         }
 
@@ -285,7 +287,7 @@ public abstract class PlayerController : MonoBehaviour
                 if (currentNode != null && nextNode != null)
                 {
                     float TimeProgressd = (Time.time - StartTime) / 0.4f;
-                    this.transform.position = new Vector3(Vector3.Lerp(currentNode.transform.position, nextNode.transform.position, TimeProgressd).x, currentNode.transform.position.y /*+ HeightOffset*/, Vector3.Lerp(currentNode.transform.position, nextNode.transform.position, TimeProgressd).z);
+                    this.transform.position = new Vector3(Vector3.Lerp(currentNode.transform.position, nextNode.transform.position, TimeProgressd).x, currentNode.transform.position.y + HeightOffset, Vector3.Lerp(currentNode.transform.position, nextNode.transform.position, TimeProgressd).z);
                 }
                     //Debug.Log(TimeProgressd);
             }
@@ -344,7 +346,18 @@ public abstract class PlayerController : MonoBehaviour
         }    
         while (currentNode.CalculateNextNode().platformIndex != currentNode.platformIndex);
         Debug.LogError(nextNode.gameObject.name);
-        HeightOffset = this.GetComponent<BoxCollider>().bounds.size.y / 2;
+
+        if (this as CarController)
+        {
+            GameObject CarBody = transform.GetChild(1).gameObject;
+            HeightOffset = CarBody.GetComponent<MeshCollider>().bounds.size.y / 2.0f;
+        }
+        else
+        {
+            HeightOffset = this.GetComponent<BoxCollider>().bounds.size.y / 2.0f;
+        }
+
+
     }
 
     public virtual void OnDeath()
@@ -408,7 +421,7 @@ public abstract class PlayerController : MonoBehaviour
         // {
         //     Debug.Log($"{name} collided with {collision.collider.name} at {relativeVelocity:F2}m/s");
         // }
-        if (bTakeFallDamage)
+        if (bTakeFallDamage && IsActive())
         {
             TakeFallDamage(/*relativeVelocity*/);
         }
