@@ -287,7 +287,7 @@ MonoBehaviour:
   <DefaultPlayerData>k__BackingField: {fileID: 11400000, guid: edaf631a83ce6ea42aa9463c9228f767, type: 2}
   <Bouyancy>k__BackingField: 0
   <MovementSpeed>k__BackingField: 5
-  <RotationSpeed>k__BackingField: 3
+  <RotationSpeed>k__BackingField: 7
   <Health>k__BackingField: 1
   <FallDamageThreshold>k__BackingField: 27
   groundCheckPosition: {x: 0, y: 0.5, z: 0}
@@ -497,6 +497,9 @@ MonoBehaviour:
         bBypassReverbZones: 0
         bPlayOnAwake: 0
         bLoop: 0
+        bUseFader: 0
+        Fader:
+          TimeToFull: 0
         Priority: 128
         Volume: 1
         Pitch: 1
@@ -505,12 +508,15 @@ MonoBehaviour:
         ReverbZoneMix: 1
     - Key: Wind Gush
       Value:
-        Clip: {fileID: 8300000, guid: f5d09d48c6021f54591eb6983d272e2e, type: 3}
+        Clip: {fileID: 8300000, guid: 61814fdaaeec9f446a805d74bfc7de54, type: 3}
         bMute: 0
         bBypassEffects: 0
         bBypassReverbZones: 0
         bPlayOnAwake: 0
         bLoop: 1
+        bUseFader: 0
+        Fader:
+          TimeToFull: 5
         Priority: 128
         Volume: 1
         Pitch: 1
@@ -525,6 +531,9 @@ MonoBehaviour:
         bBypassReverbZones: 0
         bPlayOnAwake: 0
         bLoop: 0
+        bUseFader: 0
+        Fader:
+          TimeToFull: 0
         Priority: 128
         Volume: 1
         Pitch: 1
@@ -539,8 +548,45 @@ MonoBehaviour:
         bBypassReverbZones: 0
         bPlayOnAwake: 0
         bLoop: 0
+        bUseFader: 0
+        Fader:
+          TimeToFull: 0
         Priority: 128
         Volume: 1
+        Pitch: 1
+        StereoPan: 0
+        SpatialBlend: 0.75
+        ReverbZoneMix: 1
+    - Key: Sqwark
+      Value:
+        Clip: {fileID: 8300000, guid: be9c61f8a8449e845b65b8c8996cf930, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 0
+        bLoop: 0
+        bUseFader: 0
+        Fader:
+          TimeToFull: 0
+        Priority: 128
+        Volume: 1
+        Pitch: 1
+        StereoPan: 0
+        SpatialBlend: 0.75
+        ReverbZoneMix: 1
+    - Key: Crash
+      Value:
+        Clip: {fileID: 8300000, guid: ce3ab9109f5001e44847d8bfd11c9b6f, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 0
+        bLoop: 0
+        bUseFader: 0
+        Fader:
+          TimeToFull: 0
+        Priority: 128
+        Volume: 0.6
         Pitch: 1
         StereoPan: 0
         SpatialBlend: 0.75
