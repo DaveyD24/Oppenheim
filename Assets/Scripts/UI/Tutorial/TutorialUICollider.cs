@@ -67,9 +67,9 @@ public class TutorialUICollider : MonoBehaviour
 				{
 					ShowInPlace();
 
-					if (other.TryGetComponent(out PlayerController PlayerController))
+					if (other.TryGetComponent(out PlayerController playerController) || other.transform.root.TryGetComponent(out playerController))
 					{
-						Billboard.SetBillboardTarget(PlayerController.TrackingCamera.transform);
+						Billboard.SetBillboardTarget(playerController.TrackingCamera.transform);
 					}
 				}
 			}
