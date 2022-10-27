@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine;
 
-[Serializable]
+[Serializable, Obsolete("Not used anymore with new Audio Assets.")]
 public struct AudioFade
 {
 	[Tooltip("The time it takes for this Audio Clip to reach maximum Volume.")]

@@ -22434,7 +22434,7 @@ MonoBehaviour:
   bDrawAdvancedCollisionLines: 1
   Camera: {fileID: 927938372}
   Target: {fileID: 325547747}
-  TargetOffset: {x: 0, y: 0, z: 0}
+  TargetOffset: {x: 0, y: 1, z: 0}
   CameraComponent: {fileID: 0}
   bIsAverageTracking: 0
   bIsSecondarySpringArm: 0
@@ -22447,7 +22447,7 @@ MonoBehaviour:
   DefaultCameraRotation: {x: 29.17, y: 0, z: 0}
   bEnableScrollToDistance: 1
   ScrollSensitivity: 1
-  MaxDistance: 16
+  MinMaxDistance: {x: 6, y: 30}
   OrbitSensitivity: 15
   MinMaxOrbitAngle: {x: 1, y: 70}
   bPermanentlyChangePanTargetOffset: 0
@@ -22500,7 +22500,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 927938367}
   m_LocalRotation: {x: 0.09584575, y: 0, z: 0, w: 0.9953962}
-  m_LocalPosition: {x: 0.91, y: 143.99763, z: -19.864971}
+  m_LocalPosition: {x: 0.91, y: 144.99763, z: -19.864971}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1035479372}
@@ -23091,14 +23091,11 @@ MonoBehaviour:
     - Key: Factory Ambient
       Value:
         Clip: {fileID: 8300000, guid: 92b7e6d3f6501e04cae40611d0851ab0, type: 3}
-        bMute: 1
+        bMute: 0
         bBypassEffects: 0
         bBypassReverbZones: 0
         bPlayOnAwake: 1
         bLoop: 1
-        bUseFader: 0
-        Fader:
-          TimeToFull: 0
         Priority: 128
         Volume: 0.5
         Pitch: 1
@@ -23108,14 +23105,11 @@ MonoBehaviour:
     - Key: Factory Ambient with Music
       Value:
         Clip: {fileID: 8300000, guid: 2e1561d69871f754e86c372aea63d0fd, type: 3}
-        bMute: 1
+        bMute: 0
         bBypassEffects: 0
         bBypassReverbZones: 0
         bPlayOnAwake: 1
         bLoop: 1
-        bUseFader: 0
-        Fader:
-          TimeToFull: 0
         Priority: 128
         Volume: 0.5
         Pitch: 1

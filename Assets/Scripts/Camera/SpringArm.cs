@@ -42,7 +42,7 @@ public class SpringArm : MonoBehaviour
 	[Header("Scroll Settings")]
 	[SerializeField] bool bEnableScrollToDistance;
 	[SerializeField] float ScrollSensitivity;
-	[SerializeField] float MaxDistance = 30;
+	[SerializeField] Vector2 MinMaxDistance = new Vector2(1, 30);
 
 	[Header("Orbit Settings")]
 	[SerializeField] float OrbitSensitivity = 1f;
@@ -416,7 +416,7 @@ public class SpringArm : MonoBehaviour
 		{
 			Distance += scrollValue * (bInvertZ ? -1f : 1f) * -ScrollSensitivity;
 
-			Distance = Mathf.Clamp(Distance, 1, MaxDistance);
+			Distance = Mathf.Clamp(Distance, MinMaxDistance.x, MinMaxDistance.y);
 		}
 	}
 
@@ -692,7 +692,7 @@ public class SpringArm : MonoBehaviour
 		PositionalLagStrength = Mathf.Clamp(PositionalLagStrength, Vector3.kEpsilon, 1f);
 		RotationalLagStrength = Mathf.Clamp(RotationalLagStrength, Vector3.kEpsilon, 1f);
 
-		AdvancedCollisionActivationDistance = Mathf.Clamp(AdvancedCollisionActivationDistance, 1, MaxDistance);
+		AdvancedCollisionActivationDistance = Mathf.Clamp(AdvancedCollisionActivationDistance, MinMaxDistance.x, MinMaxDistance.y);
 	}
 
 	void OnDrawGizmosSelected()

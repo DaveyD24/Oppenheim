@@ -14,7 +14,6 @@ public class AudioController : MonoBehaviour
 	{
 		HashMap.Construct(out Map);
 		Unique = new Dictionary<int, AudioSource>();
-		// Playing = new Dictionary<string, PlayingData>();
 
 		foreach (KeyValuePair<string, AudioData> PlayOnAwake in HashMap)
 		{
@@ -48,8 +47,6 @@ public class AudioController : MonoBehaviour
 			Source.time = PlaybackLead;
 			Source.Play();
 			Destroy(Spawned, Data.ClipDuration());
-
-			Data.IfFadeThenFade(this, Source, Data);
 
 			return Source;
 		}
@@ -114,8 +111,6 @@ public class AudioController : MonoBehaviour
 
 	AudioSource PlayAudioSignature(string SoundName, byte OptionsAsByte, bool bDestroyOnEnd, float PlaybackLead = 0f)
 	{
-		// PrunePlaying();
-
 		if ((OptionsAsByte & (byte)EAudioPlayOptions.Global) == (byte)EAudioPlayOptions.Global)
 		{
 			if (OptionsAsByte > (byte)EAudioPlayOptions.Global)
@@ -144,8 +139,6 @@ public class AudioController : MonoBehaviour
 	/// <param name="PlaybackLead">The time in seconds to fast forward.</param>
 	public AudioSource Play(string SoundName, float PlaybackLead = 0f)
 	{
-		// PrunePlaying();
-
 		Spawn(out GameObject Spawned, true);
 		AudioSource Global = PlayFollow(SoundName, Spawned, true, PlaybackLead);
 
@@ -156,30 +149,6 @@ public class AudioController : MonoBehaviour
 
 		return Global;
 	}
-
-	///// <summary>Stops <paramref name="SoundName"/> if it is playing.</summary>
-	///// <param name="SoundName"></param>
-	//public void Stop(string SoundName)
-	//{
-	//	PrunePlaying();
-
-	//	if (Playing.ContainsKey(SoundName))
-	//	{
-	//		PlayingData Data = Playing[SoundName];
-	//		Data.Source.Stop();
-
-	//		if (Data.bIsStandalone)
-	//		{
-	//			// Destroy the GameObject (PlayAtTransformPosition).
-	//			Destroy(Data.Source.gameObject);
-	//		}
-	//		else
-	//		{
-	//			// Destroy the AudioSource Component (PlayFollow).
-	//			Destroy(Data.Source);
-	//		}
-	//	}
-	//}
 
 	/// <summary>Plays <paramref name="SoundName"/> at the world position of <paramref name="Emitter"/>.</summary>
 	/// <param name="SoundName">The name of the Sound to play.</param>
@@ -200,8 +169,6 @@ public class AudioController : MonoBehaviour
 
 			if (bDestroyOnEnd && !Source.loop)
 				Destroy(Emitter, A.ClipDuration());
-
-			A.IfFadeThenFade(this, Source, A);
 
 			return Source;
 		}
@@ -227,8 +194,6 @@ public class AudioController : MonoBehaviour
 
 			if (bDestroyComponentOnEnd && !Source.loop)
 				Destroy(Source, A.ClipDuration());
-
-			A.IfFadeThenFade(this, Source, A);
 
 			return Source;
 		}
@@ -277,16 +242,4 @@ public class AudioController : MonoBehaviour
 		Debug.LogError($"{name}'s Audio Controller could not find Sound {Name}!");
 		return false;
 	}
-
-	//void PrunePlaying()
-	//{
-	//	List<string> SoundsToPrune = new List<string>();
-
-	//	foreach (KeyValuePair<string, PlayingData> P in Playing)
-	//		if (P.Value.HasElapsed())
-	//			SoundsToPrune.Add(P.Key);
-
-	//	foreach (string S in SoundsToPrune)
-	//		Playing.Remove(S);
-	//}
 }

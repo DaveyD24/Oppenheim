@@ -1015,9 +1015,6 @@ MonoBehaviour:
         bBypassReverbZones: 0
         bPlayOnAwake: 0
         bLoop: 0
-        bUseFader: 0
-        Fader:
-          TimeToFull: 0
         Priority: 128
         Volume: 1
         Pitch: 1
@@ -4486,9 +4483,6 @@ MonoBehaviour:
         bBypassReverbZones: 0
         bPlayOnAwake: 0
         bLoop: 0
-        bUseFader: 0
-        Fader:
-          TimeToFull: 0
         Priority: 128
         Volume: 1
         Pitch: 1
@@ -5190,9 +5184,6 @@ MonoBehaviour:
         bBypassReverbZones: 0
         bPlayOnAwake: 0
         bLoop: 0
-        bUseFader: 0
-        Fader:
-          TimeToFull: 0
         Priority: 128
         Volume: 1
         Pitch: 1
@@ -8197,9 +8188,6 @@ MonoBehaviour:
         bBypassReverbZones: 0
         bPlayOnAwake: 0
         bLoop: 0
-        bUseFader: 0
-        Fader:
-          TimeToFull: 0
         Priority: 128
         Volume: 1
         Pitch: 1
@@ -14415,9 +14403,6 @@ MonoBehaviour:
         bBypassReverbZones: 0
         bPlayOnAwake: 0
         bLoop: 0
-        bUseFader: 0
-        Fader:
-          TimeToFull: 0
         Priority: 128
         Volume: 1
         Pitch: 1
@@ -17276,9 +17261,6 @@ MonoBehaviour:
         bBypassReverbZones: 0
         bPlayOnAwake: 0
         bLoop: 0
-        bUseFader: 0
-        Fader:
-          TimeToFull: 0
         Priority: 128
         Volume: 1
         Pitch: 1
@@ -19839,9 +19821,6 @@ MonoBehaviour:
         bBypassReverbZones: 0
         bPlayOnAwake: 0
         bLoop: 0
-        bUseFader: 0
-        Fader:
-          TimeToFull: 0
         Priority: 128
         Volume: 1
         Pitch: 1
@@ -23183,9 +23162,6 @@ MonoBehaviour:
         bBypassReverbZones: 0
         bPlayOnAwake: 1
         bLoop: 1
-        bUseFader: 0
-        Fader:
-          TimeToFull: 0
         Priority: 128
         Volume: 0.5
         Pitch: 1
@@ -23200,9 +23176,6 @@ MonoBehaviour:
         bBypassReverbZones: 0
         bPlayOnAwake: 1
         bLoop: 1
-        bUseFader: 0
-        Fader:
-          TimeToFull: 0
         Priority: 128
         Volume: 0.5
         Pitch: 1
@@ -25324,9 +25297,6 @@ MonoBehaviour:
         bBypassReverbZones: 0
         bPlayOnAwake: 0
         bLoop: 0
-        bUseFader: 0
-        Fader:
-          TimeToFull: 0
         Priority: 1
         Volume: 1
         Pitch: 1
@@ -40100,9 +40070,6 @@ MonoBehaviour:
         bBypassReverbZones: 0
         bPlayOnAwake: 0
         bLoop: 0
-        bUseFader: 0
-        Fader:
-          TimeToFull: 0
         Priority: 128
         Volume: 1
         Pitch: 1
@@ -43786,9 +43753,6 @@ MonoBehaviour:
         bBypassReverbZones: 0
         bPlayOnAwake: 0
         bLoop: 0
-        bUseFader: 0
-        Fader:
-          TimeToFull: 0
         Priority: 128
         Volume: 1
         Pitch: 1
@@ -46492,9 +46456,6 @@ MonoBehaviour:
         bBypassReverbZones: 0
         bPlayOnAwake: 0
         bLoop: 0
-        bUseFader: 0
-        Fader:
-          TimeToFull: 0
         Priority: 128
         Volume: 1
         Pitch: 1
@@ -46694,9 +46655,6 @@ MonoBehaviour:
         bBypassReverbZones: 0
         bPlayOnAwake: 0
         bLoop: 0
-        bUseFader: 0
-        Fader:
-          TimeToFull: 0
         Priority: 128
         Volume: 1
         Pitch: 1
@@ -48676,9 +48634,6 @@ MonoBehaviour:
         bBypassReverbZones: 0
         bPlayOnAwake: 0
         bLoop: 0
-        bUseFader: 0
-        Fader:
-          TimeToFull: 0
         Priority: 1
         Volume: 1
         Pitch: 1
@@ -52357,9 +52312,6 @@ MonoBehaviour:
         bBypassReverbZones: 0
         bPlayOnAwake: 0
         bLoop: 0
-        bUseFader: 0
-        Fader:
-          TimeToFull: 0
         Priority: 128
         Volume: 1
         Pitch: 1
@@ -60292,7 +60244,7 @@ MonoBehaviour:
   DefaultCameraRotation: {x: 29.17, y: 0, z: 0}
   bEnableScrollToDistance: 1
   ScrollSensitivity: 1
-  MaxDistance: 30
+  MinMaxDistance: {x: 6, y: 30}
   OrbitSensitivity: 15
   MinMaxOrbitAngle: {x: 1, y: 70}
   bPermanentlyChangePanTargetOffset: 0
@@ -60303,7 +60255,7 @@ MonoBehaviour:
   bRunCollisionChecks: 1
   bUseAdvancedCollisionBehaviour: 0
   bForceAdvancedBehaviour: 0
-  AdvancedCollisionActivationDistance: 1
+  AdvancedCollisionActivationDistance: 6
   MaxAdvancedCollisionAngle: 0
   OnlyCollideWith:
     serializedVersion: 2
@@ -64806,9 +64758,6 @@ MonoBehaviour:
         bBypassReverbZones: 0
         bPlayOnAwake: 0
         bLoop: 0
-        bUseFader: 0
-        Fader:
-          TimeToFull: 0
         Priority: 128
         Volume: 1
         Pitch: 1
@@ -73692,9 +73641,6 @@ MonoBehaviour:
         bBypassReverbZones: 0
         bPlayOnAwake: 0
         bLoop: 0
-        bUseFader: 0
-        Fader:
-          TimeToFull: 0
         Priority: 128
         Volume: 1
         Pitch: 1
@@ -75112,9 +75058,6 @@ MonoBehaviour:
         bBypassReverbZones: 0
         bPlayOnAwake: 0
         bLoop: 0
-        bUseFader: 0
-        Fader:
-          TimeToFull: 0
         Priority: 128
         Volume: 1
         Pitch: 1
@@ -76691,9 +76634,6 @@ MonoBehaviour:
         bBypassReverbZones: 0
         bPlayOnAwake: 0
         bLoop: 0
-        bUseFader: 0
-        Fader:
-          TimeToFull: 0
         Priority: 128
         Volume: 1
         Pitch: 1
@@ -78462,9 +78402,6 @@ MonoBehaviour:
         bBypassReverbZones: 0
         bPlayOnAwake: 0
         bLoop: 0
-        bUseFader: 0
-        Fader:
-          TimeToFull: 0
         Priority: 128
         Volume: 1
         Pitch: 1
@@ -85671,9 +85608,6 @@ MonoBehaviour:
         bBypassReverbZones: 0
         bPlayOnAwake: 0
         bLoop: 0
-        bUseFader: 0
-        Fader:
-          TimeToFull: 0
         Priority: 128
         Volume: 1
         Pitch: 1
@@ -89047,9 +88981,6 @@ MonoBehaviour:
         bBypassReverbZones: 0
         bPlayOnAwake: 0
         bLoop: 0
-        bUseFader: 0
-        Fader:
-          TimeToFull: 0
         Priority: 1
         Volume: 1
         Pitch: 1
@@ -90259,9 +90190,6 @@ MonoBehaviour:
         bBypassReverbZones: 0
         bPlayOnAwake: 0
         bLoop: 0
-        bUseFader: 0
-        Fader:
-          TimeToFull: 0
         Priority: 128
         Volume: 1
         Pitch: 1
@@ -90937,9 +90865,6 @@ MonoBehaviour:
         bBypassReverbZones: 0
         bPlayOnAwake: 0
         bLoop: 0
-        bUseFader: 0
-        Fader:
-          TimeToFull: 0
         Priority: 1
         Volume: 1
         Pitch: 1
@@ -91055,9 +90980,6 @@ MonoBehaviour:
         bBypassReverbZones: 0
         bPlayOnAwake: 0
         bLoop: 0
-        bUseFader: 0
-        Fader:
-          TimeToFull: 0
         Priority: 128
         Volume: 1
         Pitch: 1
@@ -98068,9 +97990,6 @@ MonoBehaviour:
         bBypassReverbZones: 0
         bPlayOnAwake: 0
         bLoop: 0
-        bUseFader: 0
-        Fader:
-          TimeToFull: 0
         Priority: 128
         Volume: 1
         Pitch: 1
@@ -100371,9 +100290,6 @@ MonoBehaviour:
         bBypassReverbZones: 0
         bPlayOnAwake: 0
         bLoop: 0
-        bUseFader: 0
-        Fader:
-          TimeToFull: 0
         Priority: 128
         Volume: 1
         Pitch: 1
@@ -101582,9 +101498,6 @@ MonoBehaviour:
         bBypassReverbZones: 0
         bPlayOnAwake: 0
         bLoop: 0
-        bUseFader: 0
-        Fader:
-          TimeToFull: 0
         Priority: 128
         Volume: 1
         Pitch: 1
@@ -102718,9 +102631,6 @@ MonoBehaviour:
         bBypassReverbZones: 0
         bPlayOnAwake: 0
         bLoop: 0
-        bUseFader: 0
-        Fader:
-          TimeToFull: 0
         Priority: 128
         Volume: 1
         Pitch: 1

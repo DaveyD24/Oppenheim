@@ -852,9 +852,6 @@ MonoBehaviour:
         bBypassReverbZones: 0
         bPlayOnAwake: 0
         bLoop: 0
-        bUseFader: 0
-        Fader:
-          TimeToFull: 0
         Priority: 128
         Volume: 0.848
         Pitch: 1
@@ -869,49 +866,40 @@ MonoBehaviour:
         bBypassReverbZones: 0
         bPlayOnAwake: 0
         bLoop: 0
-        bUseFader: 0
-        Fader:
-          TimeToFull: 0
         Priority: 128
-        Volume: 1
+        Volume: 0.5
         Pitch: 1
         StereoPan: 0
         SpatialBlend: 0.75
         ReverbZoneMix: 1
     - Key: Engine Idle 2
       Value:
-        Clip: {fileID: 8300000, guid: 275a8113eef248148a339d78fce1e97b, type: 3}
+        Clip: {fileID: 8300000, guid: 6c7ebe84279da5d4c8887b4f67a0f526, type: 3}
         bMute: 0
         bBypassEffects: 0
         bBypassReverbZones: 0
         bPlayOnAwake: 0
         bLoop: 1
-        bUseFader: 0
-        Fader:
-          TimeToFull: 0
         Priority: 128
-        Volume: 1
+        Volume: 0.75
         Pitch: 1
         StereoPan: 0
         SpatialBlend: 0.75
-        ReverbZoneMix: 1
+        ReverbZoneMix: 0.2
     - Key: Engine Idle 1
       Value:
-        Clip: {fileID: 8300000, guid: c90df07324fd97e43937da55776d0817, type: 3}
+        Clip: {fileID: 8300000, guid: 53f546f406bd3614ebd64e78aff2eed0, type: 3}
         bMute: 0
         bBypassEffects: 0
         bBypassReverbZones: 0
         bPlayOnAwake: 0
         bLoop: 1
-        bUseFader: 0
-        Fader:
-          TimeToFull: 0
         Priority: 128
-        Volume: 1
+        Volume: 0.35
         Pitch: 1
         StereoPan: 0
-        SpatialBlend: 0.75
-        ReverbZoneMix: 1
+        SpatialBlend: 1
+        ReverbZoneMix: 0.2
     - Key: Hit Breakable
       Value:
         Clip: {fileID: 8300000, guid: e9d51238162a0584a807c9eb9c5741fe, type: 3}
@@ -920,9 +908,6 @@ MonoBehaviour:
         bBypassReverbZones: 0
         bPlayOnAwake: 0
         bLoop: 0
-        bUseFader: 0
-        Fader:
-          TimeToFull: 0
         Priority: 128
         Volume: 1
         Pitch: 1
@@ -937,9 +922,6 @@ MonoBehaviour:
         bBypassReverbZones: 0
         bPlayOnAwake: 0
         bLoop: 0
-        bUseFader: 0
-        Fader:
-          TimeToFull: 0
         Priority: 128
         Volume: 1
         Pitch: 1
@@ -954,9 +936,6 @@ MonoBehaviour:
         bBypassReverbZones: 0
         bPlayOnAwake: 0
         bLoop: 0
-        bUseFader: 0
-        Fader:
-          TimeToFull: 0
         Priority: 128
         Volume: 1
         Pitch: 1
@@ -971,9 +950,20 @@ MonoBehaviour:
         bBypassReverbZones: 0
         bPlayOnAwake: 0
         bLoop: 0
-        bUseFader: 0
-        Fader:
-          TimeToFull: 0
+        Priority: 128
+        Volume: 1
+        Pitch: 1
+        StereoPan: 0
+        SpatialBlend: 0.75
+        ReverbZoneMix: 1
+    - Key: Death
+      Value:
+        Clip: {fileID: 8300000, guid: 6f894ac58ff13104bb7b1de2075a34ad, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 0
+        bLoop: 0
         Priority: 128
         Volume: 1
         Pitch: 1
