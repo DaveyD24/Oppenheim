@@ -282,6 +282,11 @@ public abstract class PlayerController : MonoBehaviour
         }
     }
 
+    void LateUpdate()
+    {
+        PreviousMouseDragPosition = Input.mousePosition;
+    }
+
     private void CamMoveMouse()
     {
         if (bMouseHeld)
@@ -290,7 +295,6 @@ public abstract class PlayerController : MonoBehaviour
             Vector3 mousePosition = Input.mousePosition;
             inputAmount.x = mousePosition.x - PreviousMouseDragPosition.x;
             inputAmount.y = mousePosition.y - PreviousMouseDragPosition.y;
-            PreviousMouseDragPosition = mousePosition;
 
             GameEvents.CameraMove(gameObject.transform, inputAmount);
         }
