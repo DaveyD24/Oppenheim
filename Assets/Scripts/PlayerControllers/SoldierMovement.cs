@@ -30,11 +30,14 @@ public class SoldierMovement : PlayerController
     [SerializeField] private float jumpHeight = 3f;
     [SerializeField] private GameObject ragdol;
     [SerializeField] private GameObject baseMesh;
+    [SerializeField] private GameObject fovStartPoint;
+    [SerializeField] private float lookSpeed;
+    [SerializeField] private float maxAngle = 90;
+    [SerializeField] GameObject target;
+    [SerializeField] GameObject closestObject = null;
+    [SerializeField] private float range;
     //[SerializeField] private GameObject gun;
-    //[SerializeField] private Collider[] objNearby;
     private BoxCollider boxCollider;
-    //private float closestDist = Mathf.Infinity;
-    //private Collider closestObj = null;
     
 
     private int maxAmmoClip = 10;
@@ -105,32 +108,47 @@ public class SoldierMovement : PlayerController
         }
     }
 
-    private void FindTarget()
-    {
-        /*objNearby = Physics.OverlapSphere(this.soldierTransform.position, 50f);
-        foreach (Collider obj in objNearby) 
-        {
-            if (obj.tag == "Breakable") {
-                float breakableDist = (obj.transform.position - this.transform.position).sqrMagnitude;
-                if (breakableDist < closestDist)
-                {
-                    closestDist = breakableDist;
-                    closestObj = obj;
-                }
-            }
-        }
-        Debug.DrawLine(this.transform.position, closestObj.transform.position);*/
+    private void SetTarget() {
+          range = Mathf.Infinity;
+          float shortestDistance = range;
+
+          Collider[] colliders = Physics.OverlapSphere(this.transform.position, 1000f);
+          foreach (var c in colliders)
+          {
+               if (c.gameObject.CompareTag("Breakable"))
+               {
+                    if (Vector3.Distance(this.transform.position, c.gameObject.transform.position) < shortestDistance)
+                    {
+                        shortestDistance = Vector3.Distance(this.transform.position, c.gameObject.transform.position);
+                        closestObject = c.gameObject;
+                    }
+               }
+          }
+          if (closestObject != null)
+          {
+               target = closestObject;
+          }
+          else {
+            target = null;
+          }
     }
 
-    private void AutoAim()
-    {
-        //gun.transform.LookAt(closestObj.transform);
+    private bool objInFieldOfView(GameObject thePlayer){
+        
+        Vector3 targetDir = closestObject.transform.position - transform.position;
+        float angle = Vector3.Angle(targetDir, thePlayer.transform.forward);
+
+        if (angle < maxAngle){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
     // Swimming
     public bool isSwimming = false;
     public float swimSpeed;
-    public Transform target;
 
     // public float Rigidbody3D rb;
     public Transform soldierTransform;
@@ -261,8 +279,20 @@ public class SoldierMovement : PlayerController
         }
 
         animator.SetTrigger("Fire");
-        GameObject bullet = Instantiate(BulletPrefab, BulletSpawnPoint.position, BulletSpawnPoint.rotation);
+        
+        if (target != null && objInFieldOfView(fovStartPoint)){
+            Vector3 directionToFire = (target.transform.position - this.transform.position).normalized;
+            GameObject bullet = Instantiate(BulletPrefab, BulletSpawnPoint.position, Quaternion.identity);
+            Rigidbody rb = bullet.GetComponent<Rigidbody>();
+            rb.velocity = directionToFire * BulletSpeed;
+        }
+        else
+        {
+            GameObject bullet = Instantiate(BulletPrefab, BulletSpawnPoint.position, BulletSpawnPoint.rotation);
         bullet.GetComponent<Rigidbody>().velocity = BulletSpawnPoint.forward * BulletSpeed;
+        }
+        
+
 
         Audio.Play(RandomShotSound(), EAudioPlayOptions.AtTransformPosition | EAudioPlayOptions.DestroyOnEnd);
 
@@ -282,6 +312,7 @@ public class SoldierMovement : PlayerController
     protected override void FixedUpdate()
     {
         base.FixedUpdate();
+        SetTarget();
         speedometer.Record(this);
 
         Vector3 cameraRelativeDirection = DirectionRelativeToTransform(TrackingCamera.transform, move);
