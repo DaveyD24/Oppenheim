@@ -11,10 +11,6 @@ public class AudioData
 	public bool bPlayOnAwake;
 	public bool bLoop;
 
-	[Header("Fade")]
-	public bool bUseFader;
-	public AudioFade Fader;
-
 	[Space]
 	[Range(0, 256)] public int Priority = 128;
 	[Range(0, 1)] public float Volume = 1f;
@@ -51,14 +47,5 @@ public class AudioData
 	public float ClipDuration(float BufferTimeLeeway = 0f)
 	{
 		return Clip.length + BufferTimeLeeway;
-	}
-
-	public void IfFadeThenFade(MonoBehaviour Emitter, AudioSource Source, AudioData Data)
-	{
-		if (bUseFader && Fader.TimeToFull != 0f)
-		{
-			Fader.Construct(Emitter, Source, Data);
-			Fader.Execute();
-		}
 	}
 }

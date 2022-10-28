@@ -87,6 +87,7 @@ public class SwitchManager : MonoBehaviour
         GameEvents.OnRotatePlayer += RotatePlayer;
         GameEvents.OnPlayerCompareDistance += CompareControlledPlayerDistance;
         GameEvents.OnGetNumberActive += NumberPlayersActive;
+        GameEvents.OnAddActiveInputs = null;
         GameEvents.OnAddActiveInputs += AddActiveInputsToPlayers;
 
         UIEvents.OnGetInputTypes += GetInputControlMethods;
@@ -174,15 +175,14 @@ public class SwitchManager : MonoBehaviour
         {
             PlayerInputConnection.Add(new KeyValuePair<PlayerInput, int>(player, playerID));
 
+            NumberOfPlayers++;
             if (playerToControl != -1)
             {
                 ControlledPlayers.Add(playerID);
                 UncontrolledPlayers.RemoveAt(playerToControl);
                 GetPlayerByID(playerID).HumanPlayerIndex = (EPlayer)NumberOfPlayers;
-                Debug.Log("New Player Added: " + playerID + " Count:" + ControlledPlayers.Count);
+                Debug.Log("New Player Added: " + playerID + " Count:" + ControlledPlayers.Count + " dd: " + NumberOfPlayers);
             }
-
-            NumberOfPlayers++;
 
             if (bIsPlayerJoinScene)
             {
@@ -205,6 +205,7 @@ public class SwitchManager : MonoBehaviour
     {
         for (int i = 0; i < PlayerInputConnection.Count; i++)
         {
+            // NumberOfPlayers++;
             AddInputToPlayer(PlayerInputConnection[i].Key, i, PlayerInputConnection[i].Value);
             playerNo++;
 
@@ -217,6 +218,7 @@ public class SwitchManager : MonoBehaviour
     /// </summary>
     private void AddInputToPlayer(PlayerInput input, int inputConnectionIndex, int playerIndex)
     {
+        // if the input is not connected to a player
         if (playerIndex == -1)
         {
             (int playerToControl, int playerID) = FindUncontrolledPlayer();
@@ -228,6 +230,7 @@ public class SwitchManager : MonoBehaviour
                 ControlledPlayers.Add(playerID); // issle likly being caused by adding input at same time pressing r key
                 UncontrolledPlayers.RemoveAt(playerToControl);
                 NumberOfPlayers++;
+                Debug.Log("Number of players: " + NumberOfPlayers);
 
                 GetPlayerByID(playerID).HumanPlayerIndex = (EPlayer)NumberOfPlayers;
 
@@ -239,6 +242,9 @@ public class SwitchManager : MonoBehaviour
         }
         else
         {
+            // if the input is connected to a player
+            NumberOfPlayers++;
+            Debug.Log("Number of players: " + NumberOfPlayers);
             if (!ControlledPlayers.Contains(playerIndex))
             {
                 ControlledPlayers.Add(playerIndex);
@@ -246,7 +252,6 @@ public class SwitchManager : MonoBehaviour
                 UncontrolledPlayers.Remove(playerIndex);
             }
 
-            NumberOfPlayers++;
             GetPlayerByID(playerIndex).HumanPlayerIndex = (EPlayer)NumberOfPlayers;
 
             // as this input already mapped to a specific player, just connect it to that player

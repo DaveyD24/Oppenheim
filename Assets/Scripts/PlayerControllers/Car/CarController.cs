@@ -215,6 +215,8 @@ public class CarController : PlayerController
             // axleInfo.LeftWheelDeath.GetComponent<Rigidbody>().AddForce(100 * -transform.right);
             // axleInfo.RightWheelDeath.GetComponent<Rigidbody>().AddForce(100 * transform.right);
         }
+
+        Audio.Play("Death", EAudioPlayOptions.AtTransformPosition | EAudioPlayOptions.DestroyOnEnd);
     }
 
     protected override void OnDrawGizmosSelected()
@@ -528,22 +530,7 @@ public class CarController : PlayerController
 
     private void PlayEngineSounds()
     {
-        if (BatMathematics.IsZero(inputAmount.x) && BatMathematics.IsZero(inputAmount.y))
-        {
-            if (engineAudio == null)
-            {
-                engineAudio = Audio.Play(RandomIdleSound(), EAudioPlayOptions.FollowEmitter);
-            }
-            else
-            {
-                Destroy(engineAudio);
-                engineAudio = Audio.Play(RandomIdleSound(), EAudioPlayOptions.FollowEmitter);
-            }
-        }
-        else
-        {
-            Destroy(engineAudio); // play the drive sound when implemented or if none provided just use one of the idle sounds
-        }
+	    Audio.PlayUnique(RandomIdleSound(), EAudioPlayOptions.FollowEmitter);
     }
 
     private string RandomIdleSound()

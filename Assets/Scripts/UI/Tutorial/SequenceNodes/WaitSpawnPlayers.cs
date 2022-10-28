@@ -7,6 +7,8 @@ public class WaitSpawnPlayers : Node<ActionSequence>
 {
     private bool bIsDone;
 
+    private bool bSpawnNew = false;
+
     public WaitSpawnPlayers(ActionSequence blackboard)
     {
         this.Blackboard = blackboard;
@@ -16,6 +18,7 @@ public class WaitSpawnPlayers : Node<ActionSequence>
     {
         base.Init();
         bIsDone = false;
+        bSpawnNew = false;
         Blackboard.StartCoroutine(WaitTime());
     }
 
@@ -39,6 +42,7 @@ public class WaitSpawnPlayers : Node<ActionSequence>
 
         yield return new WaitForEndOfFrame();
         GameEvents.AddActiveInputs();
+        bSpawnNew = false;
 
         yield return new WaitForSeconds(1);
         bIsDone = true;

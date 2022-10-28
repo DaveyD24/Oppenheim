@@ -17,6 +17,8 @@ public class PlayDialogue : Node<ActionSequence>
     private int charAt = 0;
     private int senetenceAt = 0;
 
+    private AudioController audioController;
+
     public PlayDialogue(ActionSequence blackboard, List<string> dialogue, TextMeshProUGUI textObj, float textSpeed = 1, float sentencePauseTime = 1)
     {
         this.Blackboard = blackboard;
@@ -33,6 +35,7 @@ public class PlayDialogue : Node<ActionSequence>
         senetenceAt = 0;
         text.text = " ";
 
+        audioController = Blackboard.GetComponent<AudioController>();
         Blackboard.StartCoroutine(PrintText());
     }
 
@@ -48,6 +51,12 @@ public class PlayDialogue : Node<ActionSequence>
 
     private IEnumerator PrintText()
     {
+        AudioSource gibberish = null;
+        if (audioController)
+        {
+            gibberish = audioController.Play("Gibberish Loop", EAudioPlayOptions.AtTransformPosition | EAudioPlayOptions.DestroyOnEnd);
+        }
+	
         while (senetenceAt < dialogue.Count)
         {
             text.text += dialogue[senetenceAt][charAt];
@@ -57,7 +66,9 @@ public class PlayDialogue : Node<ActionSequence>
             {
                 charAt = 0;
                 senetenceAt++;
+                gibberish.Pause();
                 yield return new WaitForSeconds(sentencePauseTime);
+                gibberish.Play();
                 if (senetenceAt < dialogue.Count)
                 {
                     text.text = " ";
@@ -67,6 +78,11 @@ public class PlayDialogue : Node<ActionSequence>
                     senetenceAt++;
                 }
             }
+        }
+
+        if (gibberish)
+        {
+            Object.Destroy(gibberish);
         }
     }
 }

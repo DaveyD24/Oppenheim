@@ -107,6 +107,42 @@ public class MovementNode : MonoBehaviour
         return ClosestNode;
     }
 
+    public static MovementNode GetClosestNode(GameObject Target)
+    {
+        MovementNode ClosestNode = new MovementNode();
+        float smallestDistance = 99999f;
+
+        MovementNode[] allNodes = GameObject.FindObjectsOfType<MovementNode>();
+        foreach (MovementNode M in allNodes)
+        {
+            if (Vector3.Distance(M.transform.position, Target.transform.position) < smallestDistance)
+            {
+                smallestDistance = Vector3.Distance(M.transform.position, Target.transform.position);
+                ClosestNode = M;
+            }
+        }
+        return ClosestNode;
+    }
+
+    public MovementNode CalculateNextNodeTowardsPoint(Vector3 Target)
+    {
+        MovementNode ClosestNode = null;
+        if (connectedNodes.Count > 0)
+        {
+            
+            float ShortestDistance = 9999999;
+            foreach (MovementNode M in this.connectedNodes)
+            {
+                if (Vector3.Distance(M.transform.position, Target) < ShortestDistance)
+                {
+                    ShortestDistance = Vector3.Distance(M.transform.position, Target);
+                    ClosestNode = M;
+                }
+            }
+        }
+        return ClosestNode;
+    }
+
     public MovementNode GetNextNode()
     {
         CalculateNextNode();
