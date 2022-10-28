@@ -314,7 +314,10 @@ public class MonkeyController : PlayerController
 
         if (collision.transform.CompareTag("Hangable"))
         {
+            Debug.Log("leaving hang");
             hanging = false;
+            Rb.constraints = RigidbodyConstraints.None;
+            Rb.freezeRotation = true;
         }
     }
 

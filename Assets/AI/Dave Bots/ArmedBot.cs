@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using EventSystem;
 
 public class ArmedBot : MonoBehaviour
 {
@@ -9,7 +10,7 @@ public class ArmedBot : MonoBehaviour
     public float maxHealth;
     float damagePerHit = 5f;
 
-    float movementSpeed = 7.5f;
+    float movementSpeed = 2.5f;
     bool isActive;
     bool doLerp = true;
 
@@ -125,8 +126,17 @@ public class ArmedBot : MonoBehaviour
         //yield return new WaitForFixedUpdate();
     }
 
+    private float waitTimeShoot = 0.5f;
+    private float currWaitShoot = 0;
+
     void CreateScanner()
     {
+
+        if (currWaitShoot > 0)
+        {
+            currWaitShoot -= Time.deltaTime;
+            return;
+        }
 
         Vector3 Position = new Vector3(this.transform.position.x + (Width / 2), this.transform.position.y, this.transform.position.z);
         Vector3 Scale = new Vector3(this.transform.localScale.x * 2, this.transform.localScale.y, this.transform.localScale.z);
@@ -137,9 +147,10 @@ public class ArmedBot : MonoBehaviour
             if (C.gameObject.CompareTag("Player"))
             {
                 Debug.Log("Might shoot at the player innit");
-                //ShootPlayer(C.gameObject.transform.position);
+                // ShootPlayer(C.gameObject.transform.position);
                 detectedPlayer = C.gameObject;
                 isChasing = true;
+                currWaitShoot = waitTimeShoot;
                 return;
             }
         }
@@ -147,8 +158,8 @@ public class ArmedBot : MonoBehaviour
 
     void ShootPlayer(Vector3 PlayerPosition)
     {
-        GameObject bullet = Instantiate(bulletPrefab, this.transform.position, Quaternion.identity);
         Vector3 Direction = (this.transform.position - PlayerPosition).normalized;
+        GameObject bullet = Instantiate(bulletPrefab, this.transform.position + Direction, Quaternion.identity);
         bullet.GetComponent<Rigidbody>().velocity = Direction * 2.0f;
     }
 
@@ -160,6 +171,8 @@ public class ArmedBot : MonoBehaviour
     void OnDeath()
     {
         //do some death stuff
+
+        Destroy(gameObject);
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -168,6 +181,11 @@ public class ArmedBot : MonoBehaviour
         {
             TakeDamage();
         }
+
+        //if (collision.gameObject.CompareTag("Player"))
+        //{
+        //    collision.gameObject.transform.root.gameObject.GetComponent<PlayerController>().OnDeath();
+        //}
     }
 
     private void OnDrawGizmos()

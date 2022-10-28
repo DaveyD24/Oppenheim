@@ -1963,6 +1963,7 @@ MonoBehaviour:
   maxAngle: 90
   closestDist: Infinity
   closestObj: {fileID: 0}
+  soldierGun: {fileID: 3182380755078332294}
 --- !u!1 &3182380755078332308
 GameObject:
   m_ObjectHideFlags: 0

@@ -11,6 +11,7 @@ public class Forklift : MonoBehaviour, IDataInterface
     [SerializeField] private float minHeight = 36.5f;
     [SerializeField] private float maxHeight = 52.5f;
     [SerializeField] private bool bDoScaleInstead = false;
+    [SerializeField] private bool bMoveParent = false;
 
     private Transform liftPos;
     private Vector3 startPos;
@@ -23,6 +24,7 @@ public class Forklift : MonoBehaviour, IDataInterface
         if (moveWait == null)
         {
             moveWait = MoveWait(true);
+            StopAllCoroutines();
             StartCoroutine(moveWait);
         }
     }
@@ -31,6 +33,7 @@ public class Forklift : MonoBehaviour, IDataInterface
     {
         if (moveWait == null)
         {
+            StopAllCoroutines();
             moveWait = MoveWait(false);
             StartCoroutine(moveWait);
         }
@@ -39,6 +42,10 @@ public class Forklift : MonoBehaviour, IDataInterface
     private void Start()
     {
         liftPos = transform.childCount > 0 ? transform.GetChild(0) : transform;
+        if (bMoveParent)
+        {
+            liftPos = transform;
+        }
 
         if (bDoScaleInstead)
         {
