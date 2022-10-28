@@ -31,7 +31,6 @@ public class SoldierMovement : PlayerController
     [SerializeField] private GameObject ragdol;
     [SerializeField] private GameObject baseMesh;
     [SerializeField] private GameObject fovStartPoint;
-    [SerializeField] private float lookSpeed;
     [SerializeField] private float maxAngle = 90;
     [SerializeField] GameObject target;
     [SerializeField] GameObject closestObject = null;
