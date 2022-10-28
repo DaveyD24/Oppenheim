@@ -511,7 +511,7 @@ MonoBehaviour:
         bPlayOnAwake: 0
         bLoop: 1
         Priority: 128
-        Volume: 1
+        Volume: 0.75
         Pitch: 1
         StereoPan: 0
         SpatialBlend: 0.75
