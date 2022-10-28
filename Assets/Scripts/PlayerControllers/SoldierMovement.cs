@@ -81,6 +81,7 @@ public class SoldierMovement : PlayerController
         Vector3 cameraRelativeDirection = DirectionRelativeToTransform(TrackingCamera.transform, move);
         Vector3 faceDir = cameraRelativeDirection;
         faceDir.y = 0;
+        faceDir.Normalize();
 
         // if walking backwards and the camera is inheriting, do not rotate around as its disorienting
         if (move.x == 0 && move.z < 0 && TrackingCamera.bInheritRotation)
@@ -248,7 +249,7 @@ public class SoldierMovement : PlayerController
 
             animator.SetTrigger("Jump");
             bDidJump = true;
-            Audio.Play("Grunt", EAudioPlayOptions.FollowEmitter);
+            Audio.Play("Grunt", EAudioPlayOptions.FollowEmitter | EAudioPlayOptions.DestroyOnEnd);
         }
     }
 
@@ -394,7 +395,7 @@ public class SoldierMovement : PlayerController
                     Destroy(footAudio);
                 }
 
-                swimAudio = Audio.Play(RandomSwimSound(), EAudioPlayOptions.FollowEmitter);
+                swimAudio = Audio.Play(RandomSwimSound(), EAudioPlayOptions.FollowEmitter | EAudioPlayOptions.DestroyOnEnd);
             }
             else if (footAudio == null && (swimAudio == null || !swimAudio.isPlaying))
             {
@@ -403,7 +404,7 @@ public class SoldierMovement : PlayerController
                     Destroy(swimAudio);
                 }
 
-                footAudio = Audio.Play("Footsteps", EAudioPlayOptions.FollowEmitter);
+                footAudio = Audio.Play("Footsteps", EAudioPlayOptions.FollowEmitter | EAudioPlayOptions.DestroyOnEnd);
             }
         }
     }

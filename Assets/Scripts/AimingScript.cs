@@ -60,12 +60,17 @@ public class AimingScript : MonoBehaviour
                 Debug.Log("not breakable");
             }*/
         }
-        Debug.DrawLine(this.transform.position, closestObj.transform.position);
+
+        if (closestObj)
+		Debug.DrawLine(this.transform.position, closestObj.transform.position);
     }
 
     //check if the player POV can see the object
     private bool objInFieldOfView(GameObject thePlayer){
         
+        if (!closestObj)
+            return false;
+
         Vector3 targetDir = closestObj.transform.position - transform.position;
         float angle = Vector3.Angle(targetDir, thePlayer.transform.forward);
 

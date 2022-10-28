@@ -160,6 +160,13 @@ public class Bat : PlayerController
 		base.Respawn();
 	}
 
+	protected override void OnDustParticles(Vector3 Position)
+	{
+		base.OnDustParticles(Position);
+
+		Audio.PlayUnique("Crash", EAudioPlayOptions.AtTransformPosition | EAudioPlayOptions.DestroyOnEnd, .321f);
+	}
+
 #if UNITY_EDITOR
 	private void SetStartTransform()
 	{
