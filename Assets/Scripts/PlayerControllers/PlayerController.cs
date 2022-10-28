@@ -19,7 +19,8 @@ public abstract class PlayerController : MonoBehaviour
 {
     [Tooltip("When on the tutorial level do not give three ability used so need to check when it is")]
     [SerializeField] private bool bIsTutorialLevel = false;
-    [SerializeField] private GameObject controlObj;
+
+    // [SerializeField] private GameObject controlObj;
     [SerializeField] private GameObject abilityActiveObj;
     [SerializeField] private TextMeshProUGUI abilityTxt;
     [SerializeField] private Canvas playerCanvas;
@@ -123,6 +124,7 @@ public abstract class PlayerController : MonoBehaviour
         {
             numberOfValidContacts -= groundOverlap.Count(
                 collider1 => collider1.gameObject.CompareTag("Clingable"));
+            Debug.Log(groundOverlap[0].gameObject.name + "  " + numberOfValidContacts);
         }
 
         return numberOfValidContacts > 0;
@@ -137,11 +139,6 @@ public abstract class PlayerController : MonoBehaviour
     {
         Active = true;
         UIEvents.CanvasStateChanged(PlayerIdSO.PlayerID, true);
-        if (!bControlsHidden)
-        {
-            controlObj.SetActive(true);
-            bControlsHidden = false;
-        }
 
         abilityActiveObj.SetActive(true);
     }
@@ -150,10 +147,6 @@ public abstract class PlayerController : MonoBehaviour
     {
         Active = false;
         UIEvents.CanvasStateChanged(PlayerIdSO.PlayerID, false);
-        if (controlObj != null)
-        {
-            controlObj.SetActive(false);
-        }
 
         if (abilityActiveObj != null)
         {
@@ -188,8 +181,6 @@ public abstract class PlayerController : MonoBehaviour
             // Inputs.Player.Ability.canceled += PerformAbility;
             PlayerInput.FindAction("Jump").performed += Jump;
 
-            PlayerInput.FindAction("HideControls").performed += ControlsVisibility;
-
             PlayerInput.FindAction("RotatePlayer").performed += RotatePlayer;
 
             PlayerInput.FindAction("Pause").performed += GamePause;
@@ -223,7 +214,6 @@ public abstract class PlayerController : MonoBehaviour
             // Inputs.Player.Ability.canceled += PerformAbility;
             PlayerInput.FindAction("Jump").performed -= Jump;
             PlayerInput.FindAction("RotatePlayer").performed -= RotatePlayer;
-            PlayerInput.FindAction("HideControls").performed -= ControlsVisibility;
             PlayerInput.FindAction("Pause").performed -= GamePause;
 
             // camera inputs
@@ -245,12 +235,6 @@ public abstract class PlayerController : MonoBehaviour
 
     protected abstract void PerformAbility(InputAction.CallbackContext ctx);
 
-    private void ControlsVisibility(InputAction.CallbackContext ctx)
-    {
-        controlObj.SetActive(!controlObj.activeSelf);
-        bControlsHidden = !bControlsHidden;
-    }
-
     private void GamePause(InputAction.CallbackContext ctx)
     {
         UIEvents.PauseGame();
@@ -265,21 +249,17 @@ public abstract class PlayerController : MonoBehaviour
         {
             bMouseHeld = ctx.control.IsPressed();
             Debug.Log(bMouseHeld);
+
+            // when initially pressed set it appropriatly
+            PreviousMouseDragPosition = Input.mousePosition;
         }
         else
         {
             // must be using gamepad input
             Vector2 inputAmount = ctx.ReadValue<Vector2>();
             print(inputAmount);
-            if (Mathf.Abs(inputAmount.x) < DefaultPlayerData.InputDeadZone)
-            {
-                inputAmount.x = 0;
-            }
-
-            if (Mathf.Abs(inputAmount.y) < DefaultPlayerData.InputDeadZone)
-            {
-                inputAmount.y = 0;
-            }
+            inputAmount.x = AjustMovementValue(inputAmount.x);
+            inputAmount.y = AjustMovementValue(inputAmount.y);
 
             mouseControlInput = inputAmount;
         }
@@ -300,13 +280,13 @@ public abstract class PlayerController : MonoBehaviour
         if (bMouseHeld)
         {
             Vector3 inputAmount = Vector3.zero;
-            Vector3 mousePosition = Input.mousePosition;
+            Vector3 mousePosition = new Vector3(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"), 0);
             inputAmount.x = mousePosition.x - PreviousMouseDragPosition.x;
             inputAmount.y = mousePosition.y - PreviousMouseDragPosition.y;
 
-            GameEvents.CameraMove(gameObject.transform, inputAmount);
+            GameEvents.CameraMove(gameObject.transform, mousePosition * 60);
         }
-        else if (Mathf.Abs(mouseControlInput.x) >= DefaultPlayerData.InputDeadZone || Mathf.Abs(mouseControlInput.y) >= DefaultPlayerData.InputDeadZone)
+        else if (Mathf.Abs(mouseControlInput.x) > 0 || Mathf.Abs(mouseControlInput.y) > 0)
         {
             // if input has been recieved for the controller apply movement to it
             GameEvents.CameraMove(gameObject.transform, mouseControlInput * 3);
@@ -716,6 +696,39 @@ public abstract class PlayerController : MonoBehaviour
         {
             PersistentDataManager.SaveableData.PlayerDatas.Dictionary.Add(PlayerIdSO.PlayerID, pData);
         }
+    }
+
+    /// <summary>
+    /// take an input axis and limit it by a dead zone so that it can have better controllability on a controller.
+    /// </summary>
+    /// <param name="value">The current amount the specified control has has moved.</param>
+    /// <returns>the value one adjusted by the deadzone amount.</returns>
+    public float AjustMovementValue(float value)
+    {
+        if (Mathf.Abs(value) < DefaultPlayerData.InputDeadZone)
+        {
+            value = 0;
+        }
+        else
+        {
+            // below uses the formula new_value = ( (old_value - old_min) / (old_max - old_min) ) * (new_max - new_min) + new_min
+            if (value > 0)
+            {
+                // map the ratio from InputDeadZone - 1 to 0 - 1 for further controllability
+                value = (((value - DefaultPlayerData.InputDeadZone) * (1 - 0)) / (1 - DefaultPlayerData.InputDeadZone)) + 0;
+                value = Mathf.Clamp(value, 0, 1);
+            }
+            else
+            {
+                value = (((value - -1) * (0 - -1)) / (-DefaultPlayerData.InputDeadZone - 1)) + -1;
+                value = Mathf.Clamp(value, -1, 0);
+            }
+        }
+
+        // clamp the value as for some reason the negative direction gives a larger value than the positive one
+        //value = Mathf.Clamp(value, -1, 1);
+
+        return value;
     }
 
     protected virtual void OnDustParticles(Vector3 Position)

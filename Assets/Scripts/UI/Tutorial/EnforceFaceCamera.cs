@@ -16,14 +16,18 @@ public class EnforceFaceCamera : MonoBehaviour
 	void Update()
 	{
 		if (FaceMethod == EFaceMethod.OnUpdate)
-			FaceMainCamera();
-	}
+        {
+            FaceMainCamera();
+        }
+    }
 
-	void LateUpdate()
+	public void LateUpdate()
 	{
 		if (FaceMethod == EFaceMethod.OnLateUpdate)
-			FaceMainCamera();
-	}
+        {
+            FaceMainCamera();
+        }
+    }
 
 	public void SetBillboardTarget(Transform Target)
 	{
@@ -33,8 +37,10 @@ public class EnforceFaceCamera : MonoBehaviour
 	void FaceMainCamera()
 	{
 		if (BillboardTarget)
-			transform.LookAt(transform.position + BillboardTarget.rotation * Vector3.forward, Vector3.up);
-	}
+        {
+            transform.LookAt(transform.position + (BillboardTarget.rotation * Vector3.forward), Vector3.up);
+        }
+    }
 }
 
 public enum EFaceMethod : byte

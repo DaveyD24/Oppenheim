@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(BoxCollider))]
@@ -67,9 +68,9 @@ public class TutorialUICollider : MonoBehaviour
 				{
 					ShowInPlace();
 
-					if (other.TryGetComponent(out PlayerController PlayerController))
+					if (other.TryGetComponent(out PlayerController playerController) || other.transform.root.TryGetComponent(out playerController))
 					{
-						Billboard.SetBillboardTarget(PlayerController.TrackingCamera.transform);
+						Billboard.SetBillboardTarget(playerController.TrackingCamera.transform);
 					}
 				}
 			}
@@ -84,16 +85,23 @@ public class TutorialUICollider : MonoBehaviour
 
 			if (Current && PlayerCount == 0)
 			{
-				Destroy(Current.gameObject);
-				Current = null;
+				Current.Hide();
+				StartCoroutine(DestroyWait());
 			}
 		}
+	}
+
+	private IEnumerator DestroyWait()
+    {
+		yield return new WaitForSeconds(Current.TimeToTarget);
+		Destroy(Current.gameObject);
+		Current = null;
 	}
 
 	private void ShowInPlace()
 	{
 		TutorialUI InPlace = Instantiate(InPlaceTemplate, tutorialCanvasParentWorld.transform);
-		InPlace.Set(Title, Contents, kAVeryLongTime, bShowControls, controlsTitle);
+		InPlace.Set(Title, Contents, kAVeryLongTime, bShowControls, controlsTitle, true);
 
 		//InPlace.Rect.anchorMin = InPlace.Rect.anchorMax = InPlace.Rect.localScale = new Vector2(.5f, .5f);
 		//InPlace.Rect.anchoredPosition = Vector2.zero;

@@ -8,7 +8,7 @@ using UnityEngine;
 /// </summary>
 public class MoveCloser : Node<ActionSequence>
 {
-    private float maxDistanceAway = 5;
+    private float maxDistanceAway = 2.5f;
     private GameObject goalObject;
 
     public MoveCloser(ActionSequence blackboard, GameObject goal)

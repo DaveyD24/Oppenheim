@@ -96,8 +96,10 @@ public class BatMovement : MonoBehaviour
 
 	private void FixedUpdate()
 	{
-		if (!Bat.TrackingCamera)
+		if (!Bat.TrackingCamera || !Bat.Active)
 		{
+			ThrowMove = Vector2.zero;
+			HandleMovement(ThrowMove);
 			return;
 		}
 
@@ -170,7 +172,7 @@ public class BatMovement : MonoBehaviour
 			// if walking backwards and the camera is inheriting, do not rotate around as its disorienting
 			if (!(GroundMovement.x == 0 && GroundMovement.z < 0 && Bat.TrackingCamera.bInheritRotation))
 			{
-				AlignTransformToMovement(transform, MovementVector, Bat.YawSpeed, Vector3.up);
+				AlignTransformToMovement(Bat.transform, MovementVector, Bat.YawSpeed, Vector3.up);
 			}
 
 			MDebug.DrawArrow(transform.position, MovementVector, Color.magenta);
@@ -199,15 +201,8 @@ public class BatMovement : MonoBehaviour
 		{
 			ThrowMove = Context.action.ReadValue<Vector2>();
 
-			if (Mathf.Abs(ThrowMove.x) < Bat.DefaultPlayerData.InputDeadZone)
-			{
-				ThrowMove.x = 0;
-			}
-
-			if (Mathf.Abs(ThrowMove.y) < Bat.DefaultPlayerData.InputDeadZone)
-			{
-				ThrowMove.y = 0;
-			}
+			ThrowMove.x = Bat.AjustMovementValue(ThrowMove.x);
+			ThrowMove.y = Bat.AjustMovementValue(ThrowMove.y);
 		}
 		else
 		{

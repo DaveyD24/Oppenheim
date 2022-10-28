@@ -106,6 +106,10 @@ public class CarController : PlayerController
     protected override void FixedUpdate()
     {
         base.FixedUpdate();
+        if (!Active)
+        {
+            inputAmount = Vector2.zero;
+        }
 
         if (CurrentFuel > 0)
         {
@@ -157,15 +161,8 @@ public class CarController : PlayerController
     protected override void Movement(InputAction.CallbackContext ctx)
     {
         inputAmount = ctx.ReadValue<Vector2>();
-        if (Mathf.Abs(inputAmount.x) < DefaultPlayerData.InputDeadZone)
-        {
-            inputAmount.x = 0;
-        }
-
-        if (Mathf.Abs(inputAmount.y) < DefaultPlayerData.InputDeadZone)
-        {
-            inputAmount.y = 0;
-        }
+        inputAmount.x = AjustMovementValue(inputAmount.x);
+        inputAmount.y = AjustMovementValue(inputAmount.y);
 
         PlayEngineSounds();
     }

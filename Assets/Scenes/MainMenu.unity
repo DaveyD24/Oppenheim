@@ -288,6 +288,7 @@ PrefabInstance:
     - {fileID: 5583241534940801180, guid: 1efbb2aa03f53084d84cfb4d1772d502, type: 3}
     - {fileID: 5583241534940801186, guid: 1efbb2aa03f53084d84cfb4d1772d502, type: 3}
     - {fileID: 3386755762071850918, guid: 1efbb2aa03f53084d84cfb4d1772d502, type: 3}
+    - {fileID: 2905989151779824795, guid: 1efbb2aa03f53084d84cfb4d1772d502, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 1efbb2aa03f53084d84cfb4d1772d502, type: 3}
 --- !u!1 &41595194
 GameObject:
@@ -373,6 +374,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &41595197
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -441,6 +443,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &41595199
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -591,6 +594,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &47672892
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -659,6 +663,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &47672894
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -753,15 +758,15 @@ RectTransform:
   m_GameObject: {fileID: 57217526}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.4022557, y: 0.4022557, z: 0.4022557}
   m_Children:
   - {fileID: 131660134}
-  m_Father: {fileID: 1949947744}
-  m_RootOrder: 1
+  m_Father: {fileID: 1246068408}
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: -0.000030517578, y: 252.35306}
+  m_AnchoredPosition: {x: 91.99998, y: -127.997375}
   m_SizeDelta: {x: 403.5, y: 250}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &57217528
@@ -777,18 +782,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 4
     m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
+    m_SelectOnUp: {fileID: 744101087}
+    m_SelectOnDown: {fileID: 744101087}
+    m_SelectOnLeft: {fileID: 744101087}
+    m_SelectOnRight: {fileID: 744101087}
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.34117648, g: 0.34117648, b: 0.34117648, a: 1}
     m_PressedColor: {r: 0.33962262, g: 0.33962262, b: 0.33962262, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_SelectedColor: {r: 0.34117648, g: 0.34117648, b: 0.34117648, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.21176471}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -817,7 +822,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: LevelSelect
+          m_StringArgument: Player Join
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &57217529
@@ -942,6 +947,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &73933151
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1010,6 +1016,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &73933153
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1160,6 +1167,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &99688834
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1228,6 +1236,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &99688836
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1618,6 +1627,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &138290389
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1686,6 +1696,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &138290391
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1992,6 +2003,7 @@ PrefabInstance:
     - {fileID: 1340159501527262271, guid: 283b6e8a8ea81244190b33581ca13b59, type: 3}
     - {fileID: 997098492960105755, guid: 283b6e8a8ea81244190b33581ca13b59, type: 3}
     - {fileID: 6137498900000035983, guid: 283b6e8a8ea81244190b33581ca13b59, type: 3}
+    - {fileID: 4799401949374260401, guid: 283b6e8a8ea81244190b33581ca13b59, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 283b6e8a8ea81244190b33581ca13b59, type: 3}
 --- !u!1 &211534134
 GameObject:
@@ -2077,6 +2089,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &211534137
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2145,6 +2158,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &211534139
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -2295,6 +2309,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &226196182
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2363,6 +2378,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &226196184
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -2583,6 +2599,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &297864339
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2651,6 +2668,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &297864341
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -3044,6 +3062,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &342612666
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -3112,6 +3131,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &342612668
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -3206,15 +3226,15 @@ RectTransform:
   m_GameObject: {fileID: 411507687}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.55530995, y: 0.55530995, z: 0.55530995}
+  m_LocalScale: {x: 0.22337659, y: 0.22337659, z: 0.22337659}
   m_Children:
   - {fileID: 115171056}
-  m_Father: {fileID: 1949947744}
-  m_RootOrder: 3
+  m_Father: {fileID: 1246068408}
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 166.56078, y: -324.4465}
+  m_AnchoredPosition: {x: 159.00005, y: 58.997345}
   m_SizeDelta: {x: 403.5, y: 250}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &411507689
@@ -3241,7 +3261,7 @@ MonoBehaviour:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.34117648, g: 0.34117648, b: 0.34117648, a: 1}
     m_PressedColor: {r: 0.33962262, g: 0.33962262, b: 0.33962262, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_SelectedColor: {r: 0.34117648, g: 0.34117648, b: 0.34117648, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.21176471}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -3949,6 +3969,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &680257503
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -4017,6 +4038,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &680257505
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -4167,6 +4189,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &685319674
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -4235,6 +4258,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &685319676
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -4574,16 +4598,24 @@ MonoBehaviour:
   m_GameObject: {fileID: 741185200}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f231c4fb786f3946a6b90b886c48677, type: 3}
+  m_Script: {fileID: 11500000, guid: 01614664b831546d2ae94a42149d80ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_HorizontalAxis: Horizontal
-  m_VerticalAxis: Vertical
-  m_SubmitButton: Submit
-  m_CancelButton: Cancel
-  m_InputActionsPerSecond: 10
-  m_RepeatDelay: 0.5
-  m_ForceModuleActive: 0
+  m_MoveRepeatDelay: 0.5
+  m_MoveRepeatRate: 0.1
+  m_ActionsAsset: {fileID: -944628639613478452, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_PointAction: {fileID: 1054132383583890850, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_MoveAction: {fileID: 3710738434707379630, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_SubmitAction: {fileID: 2064916234097673511, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_CancelAction: {fileID: -1967631576421560919, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_LeftClickAction: {fileID: 8056856818456041789, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_MiddleClickAction: {fileID: 3279352641294131588, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_RightClickAction: {fileID: 3837173908680883260, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_ScrollWheelAction: {fileID: 4502412055082496612, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_TrackedDevicePositionAction: {fileID: 4754684134866288074, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_TrackedDeviceOrientationAction: {fileID: 1025543830046995696, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_DeselectOnBackgroundClick: 1
+  m_PointerBehavior: 0
 --- !u!114 &741185202
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4596,7 +4628,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_FirstSelected: {fileID: 0}
+  m_FirstSelected: {fileID: 57217526}
   m_sendNavigationEvents: 1
   m_DragThreshold: 10
 --- !u!4 &741185203
@@ -4641,15 +4673,15 @@ RectTransform:
   m_GameObject: {fileID: 744101085}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.4022557, y: 0.4022557, z: 0.4022557}
   m_Children:
   - {fileID: 896240288}
-  m_Father: {fileID: 1949947744}
-  m_RootOrder: 2
+  m_Father: {fileID: 1246068408}
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: -0.000030517578, y: -217.5494}
+  m_AnchoredPosition: {x: 91.99998, y: 101.99733}
   m_SizeDelta: {x: 403.5, y: 250}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &744101087
@@ -4665,18 +4697,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 4
     m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
+    m_SelectOnUp: {fileID: 57217528}
+    m_SelectOnDown: {fileID: 57217528}
+    m_SelectOnLeft: {fileID: 57217528}
+    m_SelectOnRight: {fileID: 57217528}
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.34117648, g: 0.34117648, b: 0.34117648, a: 1}
     m_PressedColor: {r: 0.33962262, g: 0.33962262, b: 0.33962262, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_SelectedColor: {r: 0.34117648, g: 0.34117648, b: 0.34117648, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.21176471}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -5347,6 +5379,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &966364280
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -5415,6 +5448,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &966364282
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -5729,6 +5763,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &1063638886
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -5797,6 +5832,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &1063638888
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -6029,6 +6065,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &1113152236
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -6097,6 +6134,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &1113152238
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -6329,6 +6367,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &1134817589
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -6397,6 +6436,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &1134817591
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -6557,6 +6597,7 @@ GameObject:
   - component: {fileID: 1246068407}
   - component: {fileID: 1246068406}
   - component: {fileID: 1246068405}
+  - component: {fileID: 1246068410}
   - component: {fileID: 1246068409}
   m_Layer: 5
   m_Name: Canvas
@@ -6640,6 +6681,9 @@ RectTransform:
   - {fileID: 814065067}
   - {fileID: 1774676649}
   - {fileID: 1487664506}
+  - {fileID: 57217527}
+  - {fileID: 744101086}
+  - {fileID: 411507688}
   - {fileID: 1949947744}
   m_Father: {fileID: 0}
   m_RootOrder: 9
@@ -6662,6 +6706,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pauseMenu: {fileID: 0}
+  firstPauseButton: {fileID: 0}
+--- !u!114 &1246068410
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1246068404}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5dca7086225272d4bafadca265e7d209, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1310199292
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6889,6 +6946,8 @@ PrefabInstance:
     - {fileID: 2158208246382839816, guid: 34b351ecfbc2ccf4f95314a24a9de033, type: 3}
     - {fileID: 5431318624597131224, guid: 34b351ecfbc2ccf4f95314a24a9de033, type: 3}
     - {fileID: 3182380755085610030, guid: 34b351ecfbc2ccf4f95314a24a9de033, type: 3}
+    - {fileID: 3779590130917346317, guid: 34b351ecfbc2ccf4f95314a24a9de033, type: 3}
+    - {fileID: 3163964536523772284, guid: 34b351ecfbc2ccf4f95314a24a9de033, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 34b351ecfbc2ccf4f95314a24a9de033, type: 3}
 --- !u!1 &1453534283
 GameObject:
@@ -7130,6 +7189,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &1464464266
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -7198,6 +7258,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &1464464268
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -7505,6 +7566,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &1497131402
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -7573,6 +7635,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &1497131404
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -7723,6 +7786,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &1604676198
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -7791,6 +7855,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &1604676200
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -7941,6 +8006,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &1625255823
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -8009,6 +8075,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &1625255825
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -8159,6 +8226,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &1688530967
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -8227,6 +8295,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &1688530969
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -8600,6 +8669,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &1723374505
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -8668,6 +8738,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &1723374507
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -8818,6 +8889,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &1732039412
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -8886,6 +8958,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &1732039414
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -9036,6 +9109,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &1764437964
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -9104,6 +9178,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &1764437966
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -9254,6 +9329,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &1764651666
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -9322,6 +9398,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &1764651668
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -9711,6 +9788,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &1797446251
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -9779,6 +9857,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &1797446253
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -10026,6 +10105,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &1806618177
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -10094,6 +10174,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &1806618179
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -10326,6 +10407,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &1869759434
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -10394,6 +10476,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &1869759436
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -10626,6 +10709,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &1917500066
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -10694,6 +10778,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &1917500068
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -10791,11 +10876,8 @@ RectTransform:
   m_LocalScale: {x: 0.40225568, y: 0.40225568, z: 0.40225568}
   m_Children:
   - {fileID: 330463341}
-  - {fileID: 57217527}
-  - {fileID: 744101086}
-  - {fileID: 411507688}
   m_Father: {fileID: 1246068408}
-  m_RootOrder: 3
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
@@ -10826,7 +10908,7 @@ MonoBehaviour:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.34117648, g: 0.34117648, b: 0.34117648, a: 1}
     m_PressedColor: {r: 0.33962262, g: 0.33962262, b: 0.33962262, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_SelectedColor: {r: 0.34117648, g: 0.34117648, b: 0.34117648, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.21176471}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -10980,6 +11062,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &1962315495
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -11048,6 +11131,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &1962315497
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -11444,6 +11528,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!54 &2051903298
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -11512,6 +11597,7 @@ MonoBehaviour:
   bFreezeXPos: 0
   bFreezeYPos: 0
   bFreezeZPos: 0
+  bDoRestrictMovement: 1
 --- !u!23 &2051903300
 MeshRenderer:
   m_ObjectHideFlags: 0

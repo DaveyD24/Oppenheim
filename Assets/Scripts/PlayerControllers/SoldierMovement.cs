@@ -218,15 +218,8 @@ public class SoldierMovement : PlayerController
 
         move = ctx.ReadValue<Vector2>();
 
-        if (Mathf.Abs(move.x) < DefaultPlayerData.InputDeadZone)
-        {
-            move.x = 0;
-        }
-
-        if (Mathf.Abs(move.y) < DefaultPlayerData.InputDeadZone)
-        {
-            move.y = 0;
-        }
+        move.x = AjustMovementValue(move.x);
+        move.y = AjustMovementValue(move.y);
 
         // Convert 2D to 3D movement.
         move.z = move.y;
@@ -282,6 +275,11 @@ public class SoldierMovement : PlayerController
     protected override void FixedUpdate()
     {
         base.FixedUpdate();
+        if (!Active)
+        {
+            move = Vector3.zero;
+        }
+
         speedometer.Record(this);
 
         Vector3 cameraRelativeDirection = DirectionRelativeToTransform(TrackingCamera.transform, move);

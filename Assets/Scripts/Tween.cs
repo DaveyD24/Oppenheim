@@ -90,6 +90,12 @@ public class Tween
         return Color.Lerp(StartColour, EndColour, curve.Evaluate(timeFraction));
     }
 
+    public Color UpdateColour()
+    {
+        float timeFraction = (Time.time - StartTime) / Duration;
+        return Color.Lerp(StartColour, EndColour, timeFraction);
+    }
+
     public Vector3 UpdatePositionCircular(float radius, Vector2 centre)
     {
         float timeFraction = (Time.time - StartTime) / Duration;

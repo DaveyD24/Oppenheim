@@ -23195,6 +23195,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pauseMenu: {fileID: 873219415}
+  firstPauseButton: {fileID: 0}
 --- !u!1 &440211885
 GameObject:
   m_ObjectHideFlags: 0
@@ -59799,7 +59800,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1236293832}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 177.5, y: 49.5, z: 6.6}
+  m_LocalPosition: {x: 180.7, y: 49.5, z: 6.6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 439040870}
@@ -59820,7 +59821,7 @@ MonoBehaviour:
   offsetPos: {x: 0, y: 0, z: 0}
   boxWidth: 23
   boxHeight: 47
-  boxDepth: 51
+  boxDepth: 65
   <StageID>k__BackingField: 0
   <SectionID>k__BackingField: 2
 --- !u!1 &1237298684

@@ -2281,7 +2281,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bIsTutorialLevel: 0
-  controlObj: {fileID: 1380014017272559542}
   abilityActiveObj: {fileID: 4292051421636100735}
   abilityTxt: {fileID: 8866032319640643977}
   playerCanvas: {fileID: 3499526161415638220}
@@ -2290,7 +2289,7 @@ MonoBehaviour:
   <PlayerIdSO>k__BackingField: {fileID: 11400000, guid: 0aca3aa46054d22439aa2cb351a6753d, type: 2}
   <DefaultPlayerData>k__BackingField: {fileID: 11400000, guid: edaf631a83ce6ea42aa9463c9228f767, type: 2}
   <Bouyancy>k__BackingField: 0
-  <MovementSpeed>k__BackingField: 5
+  <MovementSpeed>k__BackingField: 8.75
   <RotationSpeed>k__BackingField: 250
   <Health>k__BackingField: 0
   <FallDamageThreshold>k__BackingField: 25
@@ -2324,6 +2323,9 @@ MonoBehaviour:
         bBypassReverbZones: 0
         bPlayOnAwake: 0
         bLoop: 0
+        bUseFader: 0
+        Fader:
+          TimeToFull: 0
         Priority: 128
         Volume: 1
         Pitch: 1
@@ -2338,6 +2340,9 @@ MonoBehaviour:
         bBypassReverbZones: 0
         bPlayOnAwake: 0
         bLoop: 0
+        bUseFader: 0
+        Fader:
+          TimeToFull: 0
         Priority: 128
         Volume: 1
         Pitch: 1
@@ -2352,6 +2357,9 @@ MonoBehaviour:
         bBypassReverbZones: 0
         bPlayOnAwake: 0
         bLoop: 0
+        bUseFader: 0
+        Fader:
+          TimeToFull: 0
         Priority: 128
         Volume: 1
         Pitch: 1
@@ -2366,6 +2374,9 @@ MonoBehaviour:
         bBypassReverbZones: 0
         bPlayOnAwake: 0
         bLoop: 0
+        bUseFader: 0
+        Fader:
+          TimeToFull: 0
         Priority: 128
         Volume: 1
         Pitch: 1
@@ -2380,6 +2391,9 @@ MonoBehaviour:
         bBypassReverbZones: 0
         bPlayOnAwake: 0
         bLoop: 0
+        bUseFader: 0
+        Fader:
+          TimeToFull: 0
         Priority: 128
         Volume: 1
         Pitch: 1
@@ -2394,6 +2408,9 @@ MonoBehaviour:
         bBypassReverbZones: 0
         bPlayOnAwake: 0
         bLoop: 0
+        bUseFader: 0
+        Fader:
+          TimeToFull: 0
         Priority: 128
         Volume: 1
         Pitch: 1
@@ -2408,6 +2425,9 @@ MonoBehaviour:
         bBypassReverbZones: 0
         bPlayOnAwake: 0
         bLoop: 0
+        bUseFader: 0
+        Fader:
+          TimeToFull: 0
         Priority: 128
         Volume: 1
         Pitch: 1

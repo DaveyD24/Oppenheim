@@ -30,13 +30,14 @@ public class ViewportSplit : MonoBehaviour
 	[SerializeField] ETestType TestType;
 #endif
 
-	void Awake()
+	private void Awake()
 	{
 		if (!Viewport)
 		{
 			Viewport = this;
 
 			Average = new GameObject("Average Position Marker").transform;
+			DontDestroyOnLoad(Average);
 		}
 		else
 		{
@@ -52,6 +53,7 @@ public class ViewportSplit : MonoBehaviour
 		if (Average)
 		{
 			SetCameraPositions();
+			// Debug.Log("Checking Camera Fine to Rotate");
 		}
 
 #if MICHAEL_TESTING
@@ -98,7 +100,9 @@ public class ViewportSplit : MonoBehaviour
 		if (ArePlayersTooFarApart())
 		{
 			if (Time.time - Get().TimeOfLastSplit < Get().SplitPollingRate)
-				return;
+            {
+                return;
+            }
 
 			List<PlayerController> Active = Get().SwitchManager.GetActivePlayers();
 
@@ -108,19 +112,28 @@ public class ViewportSplit : MonoBehaviour
 			for (int i = 0; i < Active.Count; ++i)
 			{
 				if (Active[i].HumanPlayerIndex == EPlayer.P1)
+				{
 					P1 = i;
+				}
 				else if (Active[i].HumanPlayerIndex == EPlayer.P2)
+				{
 					P2 = i;
+				}
+
 				// 3-4 Players are not supported...
 				else if (Active[i].HumanPlayerIndex == EPlayer.P3)
+				{
 					P3 = i;
+				}
 				else if (Active[i].HumanPlayerIndex == EPlayer.P4)
+				{
 					P4 = i;
+				}
 			}
 
 #if UNITY_EDITOR
 			// Check if Michael is stupid.
-			Debug.Assert(P2 != -1, "ViewportSplit::SetCameraPosition() -> ArePlayersTooFar(...) returned true with only 1 active player!");
+			////Debug.Assert(P2 != -1, "ViewportSplit::SetCameraPosition() -> ArePlayersTooFar(...) returned true with only 1 active player!");
 
 			Debug.Assert(P3 == -1 && P4 == -1, "3-4 Players are not supported by Viewport Split!");
 #endif
@@ -131,6 +144,7 @@ public class ViewportSplit : MonoBehaviour
 
 			Get().TimeOfLastSplit = Time.time;
 		}
+
 		// Merge the two cameras back as one Viewport.
 		else
 		{
@@ -145,7 +159,9 @@ public class ViewportSplit : MonoBehaviour
 
 			Multiplayer.GetAllPlayers(out PlayerController[] All);
 			foreach (PlayerController PC in All)
-				PC.TrackingCamera = MainSpringArm;
+            {
+                PC.TrackingCamera = MainSpringArm;
+            }
 
 			if (NumberOfPlayers > 1)
 			{
@@ -161,8 +177,11 @@ public class ViewportSplit : MonoBehaviour
 			}
 			else if (NumberOfPlayers == 1)
 			{
-				PlayerController OnlyActive = All.First(PC => PC.Active);
-				MainSpringArm.Target = OnlyActive.transform;
+				if (All.Length > 0)
+				{
+					PlayerController OnlyActive = All.First(PC => PC.Active);
+					MainSpringArm.Target = OnlyActive.transform;
+				}
 			}
 		}
 	}
@@ -248,8 +267,12 @@ public class ViewportSplit : MonoBehaviour
 
 		// Use SqrDist to save the expensive Sqrt() call against a known value.
 		for (int i = 0; i < ActivePlayers.Count; ++i)
+		{
 			if (Mean.SquareDistance(ActivePlayers[i].transform.position) > T2)
+			{
 				return true;
+			}
+		}
 
 		return false;
 	}
@@ -268,8 +291,12 @@ public class ViewportSplit : MonoBehaviour
 
 		// Use SqrDist to save the expensive Sqrt() call against a known value.
 		for (int i = 0; i < ActivePlayers.Count; ++i)
+		{
 			if (Mean.SquareDistance(ActivePlayers[i].transform.position) > T2)
+			{
 				PlayersTooFar.Add(ActivePlayers[i]);
+			}
+		}
 
 		return PlayersTooFar.Count != 0;
 	}

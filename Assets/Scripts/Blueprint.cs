@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using EventSystem;
 
 public class Blueprint : MonoBehaviour
 {
@@ -18,13 +19,12 @@ public class Blueprint : MonoBehaviour
 		transform.eulerAngles += RotationSpeed * Time.deltaTime * Vector3.up;
 	}
 
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Player"))
-        {
-			Debug.Log("GAME OVER MOITE");
+	private void OnCollisionEnter(Collision collision)
+	{
+		if (collision.gameObject.CompareTag("Player"))
+		{
+			UIEvents.SceneChange(NextScene);
 			Destroy(this.gameObject.GetComponent<SpriteRenderer>());
-			SceneManager.LoadScene("WinScene");
-        }
-    }
+		}
+	}
 }

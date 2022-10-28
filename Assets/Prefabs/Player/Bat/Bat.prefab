@@ -277,7 +277,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bIsTutorialLevel: 0
-  controlObj: {fileID: 8220366738368042581}
   abilityActiveObj: {fileID: 1688039975569992954}
   abilityTxt: {fileID: 5574208273977223353}
   playerCanvas: {fileID: 6724425659509748494}
@@ -286,7 +285,7 @@ MonoBehaviour:
   <PlayerIdSO>k__BackingField: {fileID: 11400000, guid: 250a1cc6c2eafb54fb4fa9dcd6298d62, type: 2}
   <DefaultPlayerData>k__BackingField: {fileID: 11400000, guid: edaf631a83ce6ea42aa9463c9228f767, type: 2}
   <Bouyancy>k__BackingField: 0
-  <MovementSpeed>k__BackingField: 5
+  <MovementSpeed>k__BackingField: 8.75
   <RotationSpeed>k__BackingField: 7
   <Health>k__BackingField: 1
   <FallDamageThreshold>k__BackingField: 27

@@ -1849,7 +1849,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bIsTutorialLevel: 0
-  controlObj: {fileID: 2520629271491462365}
   abilityActiveObj: {fileID: 154573407821051382}
   abilityTxt: {fileID: 8677512600386673192}
   playerCanvas: {fileID: 2887658552098917795}
@@ -1858,7 +1857,7 @@ MonoBehaviour:
   <PlayerIdSO>k__BackingField: {fileID: 11400000, guid: 1e6de6128901ea94a88896b92e3bf310, type: 2}
   <DefaultPlayerData>k__BackingField: {fileID: 11400000, guid: edaf631a83ce6ea42aa9463c9228f767, type: 2}
   <Bouyancy>k__BackingField: 0
-  <MovementSpeed>k__BackingField: 6
+  <MovementSpeed>k__BackingField: 10.5
   <RotationSpeed>k__BackingField: 250
   <Health>k__BackingField: 0
   <FallDamageThreshold>k__BackingField: 25
@@ -1900,6 +1899,9 @@ MonoBehaviour:
         bBypassReverbZones: 0
         bPlayOnAwake: 0
         bLoop: 0
+        bUseFader: 0
+        Fader:
+          TimeToFull: 0
         Priority: 128
         Volume: 1
         Pitch: 1
@@ -1914,6 +1916,9 @@ MonoBehaviour:
         bBypassReverbZones: 0
         bPlayOnAwake: 0
         bLoop: 0
+        bUseFader: 0
+        Fader:
+          TimeToFull: 0
         Priority: 128
         Volume: 1
         Pitch: 1
@@ -1928,6 +1933,9 @@ MonoBehaviour:
         bBypassReverbZones: 0
         bPlayOnAwake: 0
         bLoop: 0
+        bUseFader: 0
+        Fader:
+          TimeToFull: 0
         Priority: 128
         Volume: 1
         Pitch: 1
@@ -1942,6 +1950,9 @@ MonoBehaviour:
         bBypassReverbZones: 0
         bPlayOnAwake: 0
         bLoop: 1
+        bUseFader: 0
+        Fader:
+          TimeToFull: 0
         Priority: 128
         Volume: 1
         Pitch: 1
@@ -1956,6 +1967,9 @@ MonoBehaviour:
         bBypassReverbZones: 0
         bPlayOnAwake: 0
         bLoop: 0
+        bUseFader: 0
+        Fader:
+          TimeToFull: 0
         Priority: 128
         Volume: 1
         Pitch: 1
@@ -1970,6 +1984,9 @@ MonoBehaviour:
         bBypassReverbZones: 0
         bPlayOnAwake: 0
         bLoop: 0
+        bUseFader: 0
+        Fader:
+          TimeToFull: 0
         Priority: 128
         Volume: 1
         Pitch: 1
@@ -1984,6 +2001,9 @@ MonoBehaviour:
         bBypassReverbZones: 0
         bPlayOnAwake: 0
         bLoop: 0
+        bUseFader: 0
+        Fader:
+          TimeToFull: 0
         Priority: 128
         Volume: 1
         Pitch: 1
@@ -1998,6 +2018,9 @@ MonoBehaviour:
         bBypassReverbZones: 0
         bPlayOnAwake: 0
         bLoop: 0
+        bUseFader: 0
+        Fader:
+          TimeToFull: 0
         Priority: 128
         Volume: 1
         Pitch: 1
@@ -2012,6 +2035,9 @@ MonoBehaviour:
         bBypassReverbZones: 0
         bPlayOnAwake: 0
         bLoop: 0
+        bUseFader: 0
+        Fader:
+          TimeToFull: 0
         Priority: 128
         Volume: 1
         Pitch: 1
@@ -2026,6 +2052,9 @@ MonoBehaviour:
         bBypassReverbZones: 0
         bPlayOnAwake: 0
         bLoop: 0
+        bUseFader: 0
+        Fader:
+          TimeToFull: 0
         Priority: 128
         Volume: 1
         Pitch: 1
@@ -2089,11 +2118,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1998c005e1d0f20458d066a623cf35c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  aimPosition: {fileID: 0}
   fovStartPoint: {fileID: 3182380755078332398}
   lookSpeed: 200
   maxAngle: 90
   closestDist: Infinity
+  closestObj: {fileID: 0}
 --- !u!1 &3182380755078332308
 GameObject:
   m_ObjectHideFlags: 0
