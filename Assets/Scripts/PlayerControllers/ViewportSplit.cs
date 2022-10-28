@@ -133,7 +133,7 @@ public class ViewportSplit : MonoBehaviour
 
 #if UNITY_EDITOR
 			// Check if Michael is stupid.
-			////Debug.Assert(P2 != -1, "ViewportSplit::SetCameraPosition() -> ArePlayersTooFar(...) returned true with only 1 active player!");
+			Debug.Assert(P2 != -1, "ViewportSplit::SetCameraPosition() -> ArePlayersTooFar(...) returned true with only 1 active player!");
 
 			Debug.Assert(P3 == -1 && P4 == -1, "3-4 Players are not supported by Viewport Split!");
 #endif

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using EventSystem;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using TMPro;
 
 public class IntroShowcase : MonoBehaviour
@@ -64,7 +65,11 @@ public class IntroShowcase : MonoBehaviour
                 camMoveTween = null;
                 introUIBanner.gameObject.SetActive(false);
                 UIEvents.BeginAnnoucement();
-                GameEvents.AddActiveInputs();
+
+                if (SceneManager.GetActiveScene().name != "Stage0")
+                {
+                    GameEvents.AddActiveInputs();
+                }
             }
         }
     }

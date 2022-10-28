@@ -124,7 +124,7 @@ public abstract class PlayerController : MonoBehaviour
         {
             numberOfValidContacts -= groundOverlap.Count(
                 collider1 => collider1.gameObject.CompareTag("Clingable"));
-            Debug.Log(groundOverlap[0].gameObject.name + "  " + numberOfValidContacts);
+            // Debug.Log(groundOverlap[0].gameObject.name + "  " + numberOfValidContacts);
         }
 
         return numberOfValidContacts > 0;

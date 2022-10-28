@@ -165,6 +165,12 @@ public static class BatMathematics
 	public static void AlignTransformToMovement(Transform Transform, Vector3 MovementVector, float RotationSpeed, Vector3 UpAxis)
 	{
 		Quaternion RotationNow = Transform.rotation;
+
+		if (MovementVector == Vector3.zero)
+        {
+			return;
+        }
+
 		Quaternion TargetRotation = Quaternion.LookRotation(MovementVector, UpAxis);
 		Transform.rotation = Quaternion.RotateTowards(RotationNow, TargetRotation, RotationSpeed);
 	}
