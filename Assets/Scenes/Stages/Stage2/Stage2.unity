@@ -23129,7 +23129,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pauseMenu: {fileID: 1065474921}
-  firstPauseButton: {fileID: 0}
+  firstPauseButton: {fileID: 1425275269}
 --- !u!114 &960368687
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -49001,7 +49001,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1911806346
 RectTransform:
   m_ObjectHideFlags: 0

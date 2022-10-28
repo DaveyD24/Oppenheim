@@ -10,12 +10,17 @@ public class ShowHideObject : Node<IntroTransition>
     private GameObject obj;
     private bool bIsActive;
     Tween fadeAnim;
+    private Vector3 camStartPos;
+    private Vector3 camStartRot;
 
-    public ShowHideObject(IntroTransition blackboard, GameObject obj, bool bIsActive)
+    public ShowHideObject(IntroTransition blackboard, GameObject obj, bool bIsActive, Vector3 startCamPos, Vector3 startCamRot)
     {
         this.Blackboard = blackboard;
         this.obj = obj;
         this.bIsActive = bIsActive;
+
+        camStartPos = startCamPos;
+        camStartRot = startCamRot;
     }
 
     public override void Init()
@@ -29,6 +34,10 @@ public class ShowHideObject : Node<IntroTransition>
         else
         {
             fadeAnim = new Tween(new Color(0, 0, 0, 1), new Color(0, 0, 0, 0), Time.time, 1);
+
+            obj.SetActive(bIsActive);
+            Blackboard.Camera.transform.position = camStartPos;
+            Blackboard.Camera.transform.rotation = Quaternion.Euler(camStartRot);
         }
     }
 
@@ -37,6 +46,10 @@ public class ShowHideObject : Node<IntroTransition>
         if (fadeAnim.IsComplete())
         {
             obj.SetActive(bIsActive);
+            if (obj.gameObject.name == "Blueprint")
+            {
+                Blackboard.CameraTopNode = null;
+            }
             return ENodeState.Success; // can be whatever return is nessesary
         }
 

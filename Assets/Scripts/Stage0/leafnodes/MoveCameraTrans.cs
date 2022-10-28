@@ -5,13 +5,13 @@ using UnityEngine;
 public class MoveCameraTrans : Node<IntroTransition>
 {
 
-    [SerializeField] private Vector3[] camPositions;
+    [SerializeField] private ListItems[] camPositions;
     private int currentPosAt = 0;
     private float duration;
 
     private Tween camMoveTween;
 
-    public MoveCameraTrans(IntroTransition blackboard, Vector3[] camPositions, float duration)
+    public MoveCameraTrans(IntroTransition blackboard, ListItems[] camPositions, float duration)
     {
         this.Blackboard = blackboard;
         this.camPositions = camPositions;
@@ -24,7 +24,7 @@ public class MoveCameraTrans : Node<IntroTransition>
         base.Init();
         currentPosAt = 0;
 
-        camMoveTween = new Tween(camPositions[currentPosAt], camPositions[currentPosAt + 1], Time.time, duration / (camPositions.Length - 1));
+        camMoveTween = new Tween(camPositions[currentPosAt].Position, camPositions[currentPosAt + 1].Position, Time.time, duration / (camPositions.Length - 1));
     }
 
     // called each update frame that this node returns running fall
@@ -34,12 +34,19 @@ public class MoveCameraTrans : Node<IntroTransition>
         {
             Blackboard.Camera.transform.position = camMoveTween.UpdatePosition();
 
-            Blackboard.Camera.transform.LookAt(camPositions[currentPosAt + 1]);
+            if (!camPositions[currentPosAt].bUseSpecificRotation)
+            {
+                Blackboard.Camera.transform.LookAt(camPositions[currentPosAt + 1].Position);
+            }
+            else
+            {
+                Blackboard.Camera.transform.rotation = Quaternion.Euler(camPositions[currentPosAt].Rotation);
+            }
 
             if (camMoveTween.IsComplete() && currentPosAt + 1 < camPositions.Length - 1)
             {
                 currentPosAt++;
-                camMoveTween = new Tween(camPositions[currentPosAt], camPositions[currentPosAt + 1], Time.time, duration / (camPositions.Length - 1));
+                camMoveTween = new Tween(camPositions[currentPosAt].Position, camPositions[currentPosAt + 1].Position, Time.time, duration / (camPositions.Length - 1));
             }
 
             if (camMoveTween.IsComplete())

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// plays some sentences, plotting out each character individually
@@ -54,9 +55,18 @@ public class PlayDialogue : Node<ActionSequence>
         AudioSource gibberish = null;
         if (audioController)
         {
-            gibberish = audioController.Play("Gibberish Loop", EAudioPlayOptions.AtTransformPosition | EAudioPlayOptions.DestroyOnEnd);
+            if (SceneManager.GetActiveScene().name == "IntroCutscene")
+            {
+                gibberish = audioController.Play("Gibberish Loop", EAudioPlayOptions.Global);
+            }
+            else
+            {
+                gibberish = audioController.Play("Gibberish Loop", EAudioPlayOptions.AtTransformPosition | EAudioPlayOptions.DestroyOnEnd);
+            }
+
+            // Object.DontDestroyOnLoad(gibberish.gameObject);
         }
-	
+
         while (senetenceAt < dialogue.Count)
         {
             text.text += dialogue[senetenceAt][charAt];
@@ -66,9 +76,19 @@ public class PlayDialogue : Node<ActionSequence>
             {
                 charAt = 0;
                 senetenceAt++;
-                gibberish.Pause();
+
+                if (gibberish != null)
+                {
+                    gibberish.Pause();
+                }
+
                 yield return new WaitForSeconds(sentencePauseTime);
-                gibberish.Play();
+
+                if (gibberish != null)
+                {
+                    gibberish.Play();
+                }
+
                 if (senetenceAt < dialogue.Count)
                 {
                     text.text = " ";
@@ -82,7 +102,7 @@ public class PlayDialogue : Node<ActionSequence>
 
         if (gibberish)
         {
-            Object.Destroy(gibberish);
+            Object.Destroy(gibberish.gameObject);
         }
     }
 }
