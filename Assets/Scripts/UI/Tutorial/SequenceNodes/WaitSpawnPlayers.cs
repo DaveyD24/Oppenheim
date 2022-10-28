@@ -37,6 +37,7 @@ public class WaitSpawnPlayers : Node<ActionSequence>
             player.SetActive(true);
         }
 
+        yield return new WaitForEndOfFrame();
         GameEvents.AddActiveInputs();
 
         yield return new WaitForSeconds(1);

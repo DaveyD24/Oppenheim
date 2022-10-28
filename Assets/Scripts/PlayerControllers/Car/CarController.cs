@@ -106,6 +106,10 @@ public class CarController : PlayerController
     protected override void FixedUpdate()
     {
         base.FixedUpdate();
+        if (!Active)
+        {
+            inputAmount = Vector2.zero;
+        }
 
         if (CurrentFuel > 0)
         {

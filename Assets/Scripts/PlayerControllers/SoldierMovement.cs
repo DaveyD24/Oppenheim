@@ -275,6 +275,11 @@ public class SoldierMovement : PlayerController
     protected override void FixedUpdate()
     {
         base.FixedUpdate();
+        if (!Active)
+        {
+            move = Vector3.zero;
+        }
+
         speedometer.Record(this);
 
         Vector3 cameraRelativeDirection = DirectionRelativeToTransform(TrackingCamera.transform, move);

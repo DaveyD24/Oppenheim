@@ -34,7 +34,7 @@ public class AimingScript : MonoBehaviour
         }
         else
         {
-            targetRotation = Quaternion.Euler(0,0,0);
+            targetRotation = Quaternion.Euler(0, 0, 0);
             transform.localRotation = Quaternion.RotateTowards(
                 transform.localRotation, targetRotation, Time.deltaTime * lookSpeed);
         }
@@ -63,28 +63,26 @@ public class AimingScript : MonoBehaviour
         }
 
         if (closestObj)
-		Debug.DrawLine(this.transform.position, closestObj.transform.position);
+            Debug.DrawLine(this.transform.position, closestObj.transform.position);
     }
 
     //check if the player POV can see the object
-    private bool objInFieldOfView(GameObject thePlayer){
-        
+    private bool ObjInFieldOfView(GameObject thePlayer)
+    {
+
         if (!closestObj)
             return false;
 
         Vector3 targetDir = closestObj.transform.position - transform.position;
         float angle = Vector3.Angle(targetDir, thePlayer.transform.forward);
 
-            if (angle < maxAngle)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+        if (angle < maxAngle)
+        {
+            return true;
         }
-
-        return false;
+        else
+        {
+            return false;
+        }
     }
 }

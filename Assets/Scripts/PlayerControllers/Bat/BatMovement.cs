@@ -98,6 +98,8 @@ public class BatMovement : MonoBehaviour
 	{
 		if (!Bat.TrackingCamera || !Bat.Active)
 		{
+			ThrowMove = Vector2.zero;
+			HandleMovement(ThrowMove);
 			return;
 		}
 

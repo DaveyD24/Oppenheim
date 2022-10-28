@@ -20,7 +20,7 @@ public class SetControlsUI : MonoBehaviour
 
     public void SetControlsActive(string controlName, int numPlayers, string input1Name, string input2Name)
     {
-        //headerTxt.gameObject.SetActive(true);
+        headerTxt.gameObject.SetActive(true);
         headerTxt.text = controlName;
 
         // as while joined for actual controlling characters, the input system largely sees the keyboard and mouse as seperate tell it to use the keyboard controls when seen the mouse 

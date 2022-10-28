@@ -97,7 +97,10 @@ public class SwitchManager : MonoBehaviour
     private void OnDisable()
     {
         // playerInputManager.onPlayerLeft -= PlayerLeft;
-        joinAction.JoiningGame.Join.performed -= Joining;
+        if (SceneManager.GetActiveScene().name != "Player Join")
+        {
+            joinAction.JoiningGame.Join.performed -= Joining;
+        }
 
         GameEvents.OnAddPlayerSwitch -= AddInactive;
         GameEvents.OnRotatePlayer -= RotatePlayer;
@@ -118,7 +121,7 @@ public class SwitchManager : MonoBehaviour
     {
         // only perform if at least one of the players is active
         bool bIsPlayerJoinScene = SceneManager.GetActiveScene().name == "Player Join";
-        if (bIsPlayerJoinScene || Monkey.gameObject.activeSelf || Car.gameObject.activeSelf || Bat.gameObject.activeSelf || Soldier.gameObject.activeSelf)
+        if (bIsPlayerJoinScene || (Monkey != null && Monkey.gameObject.activeSelf) || (Car != null && Car.gameObject.activeSelf) || (Bat != null && Bat.gameObject.activeSelf) || (Soldier != null && Soldier.gameObject.activeSelf))
         {
             // checks if the device currently trying to connect is already connected or not
             InputControlList<InputDevice> unpairedDevices = UnityEngine.InputSystem.Users.InputUser.GetUnpairedInputDevices();
@@ -229,7 +232,6 @@ public class SwitchManager : MonoBehaviour
                 GetPlayerByID(playerID).HumanPlayerIndex = (EPlayer)NumberOfPlayers;
 
                 GameEvents.ActivatePlayer(playerID, input);
-                Debug.LogError("Player To Activate: " + playerID);
 
                 // Debug.Log("New Player Added: " + playerAdded);
                 // print("Is Joining Enabled: " + player.playerIndex);

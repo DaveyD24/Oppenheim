@@ -177,8 +177,11 @@ public class ViewportSplit : MonoBehaviour
 			}
 			else if (NumberOfPlayers == 1)
 			{
-				PlayerController OnlyActive = All.First(PC => PC.Active);
-				MainSpringArm.Target = OnlyActive.transform;
+				if (All.Length > 0)
+				{
+					PlayerController OnlyActive = All.First(PC => PC.Active);
+					MainSpringArm.Target = OnlyActive.transform;
+				}
 			}
 		}
 	}

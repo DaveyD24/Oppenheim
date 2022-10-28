@@ -21,7 +21,6 @@ public class IntroShowcase : MonoBehaviour
     private Tween bannerColourTween;
     private Tween textColourTween;
 
-
     private enum CamLookAt
     {
         PosMovingTowards,

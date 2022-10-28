@@ -13,10 +13,11 @@ public class TutorialUI : MonoBehaviour
 
 	[SerializeField] EEquation InEquation;
 	[SerializeField] EEquation OutEquation;
-	[SerializeField] float TimeToTarget = 2.5f;
+	[SerializeField] public float TimeToTarget = 2.5f;
 
 	[SerializeField] private SetControlsUI setControlsUI;
 
+	private bool bIsInWorld = false;
 
 	Vector2 Origin, Target;
 
@@ -43,18 +44,39 @@ public class TutorialUI : MonoBehaviour
 
 		if (bIsShowing)
 		{
-			Rect.anchoredPosition = Vector2.Lerp(Origin, Target, Interpolate.Ease(InEquation, 0, 1, t));
+			if (bIsInWorld)
+			{
+				Rect.localScale = Vector3.Lerp(Vector3.zero, new Vector3(0.25f, 0.25f, 1), Interpolate.Ease(InEquation, 0, 1, t));
+			}
+			else
+			{
+				Rect.anchoredPosition = Vector2.Lerp(Origin, Target, Interpolate.Ease(InEquation, 0, 1, t));
+			}
 		}
 		else
 		{
-			Rect.anchoredPosition = Vector2.Lerp(Rect.anchoredPosition, Origin, Interpolate.Ease(OutEquation, 0, 1, t));
+			if (bIsInWorld)
+			{
+				Rect.localScale = Vector3.Lerp(new Vector3(0.25f, 0.25f, 1), Vector3.zero, Interpolate.Ease(OutEquation, 0, 1, t));
+			}
+			else
+			{
+				Rect.anchoredPosition = Vector2.Lerp(Rect.anchoredPosition, Origin, Interpolate.Ease(OutEquation, 0, 1, t));
+			}
 		}
 	}
 
-	public void Set(string TitleText, string ContentsText, float Duration = 10f, bool bShowInstructions = false, string controlsTitle = "")
+	public void Set(string TitleText, string ContentsText, float Duration = 10f, bool bShowInstructions = false, string controlsTitle = "", bool bIsInWorld = false)
 	{
 		Title.text = TitleText;
 		Contents.text = ContentsText;
+
+		this.bIsInWorld = bIsInWorld;
+		if (bIsInWorld)
+		{
+			bInterpolatable = true;
+			bIsShowing = true;
+		}
 
 		Invoke(nameof(Hide), Duration);
 		Invoke(nameof(Destroy), Duration + 1f);
