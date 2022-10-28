@@ -90,7 +90,7 @@ public class Checkpoint : MonoBehaviour, IDataInterface
             SaveSectionsData?.Invoke();
             GameEvents.RespawnPlayersOnly(true);
 
-            audio.Play("Activated", EAudioPlayOptions.AtTransformPosition | EAudioPlayOptions.Global | EAudioPlayOptions.DestroyOnEnd);
+            audio.Play("Activated", EAudioPlayOptions.AtTransformPosition | EAudioPlayOptions.DestroyOnEnd);
 
             // find all fuel which has been collected on sections that do not get saved so that these fuel values do not get saved along with it
             // this ensures that when a player dies and the section resets they do not have abilities gathered which should have been reset

@@ -454,7 +454,8 @@ public abstract class PlayerController : MonoBehaviour
 
         AdjustAbilityValue(0);
 
-        StartTime = Time.time;
+#if false
+                StartTime = Time.time;
         EndTime = StartTime + 2.0f;
         if (currentNode == null)
         {
@@ -478,7 +479,7 @@ public abstract class PlayerController : MonoBehaviour
             HeightOffset = this.GetComponent<BoxCollider>().bounds.size.y / 2.0f;
         }
 
-
+#endif
     }
 
     public virtual void OnDeath()
