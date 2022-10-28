@@ -2254,7 +2254,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 112
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!65 &2527731378979109223
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2323,9 +2323,6 @@ MonoBehaviour:
         bBypassReverbZones: 0
         bPlayOnAwake: 0
         bLoop: 0
-        bUseFader: 0
-        Fader:
-          TimeToFull: 0
         Priority: 128
         Volume: 1
         Pitch: 1
@@ -2340,9 +2337,6 @@ MonoBehaviour:
         bBypassReverbZones: 0
         bPlayOnAwake: 0
         bLoop: 0
-        bUseFader: 0
-        Fader:
-          TimeToFull: 0
         Priority: 128
         Volume: 1
         Pitch: 1
@@ -2357,9 +2351,6 @@ MonoBehaviour:
         bBypassReverbZones: 0
         bPlayOnAwake: 0
         bLoop: 0
-        bUseFader: 0
-        Fader:
-          TimeToFull: 0
         Priority: 128
         Volume: 1
         Pitch: 1
@@ -2374,9 +2365,6 @@ MonoBehaviour:
         bBypassReverbZones: 0
         bPlayOnAwake: 0
         bLoop: 0
-        bUseFader: 0
-        Fader:
-          TimeToFull: 0
         Priority: 128
         Volume: 1
         Pitch: 1
@@ -2391,9 +2379,6 @@ MonoBehaviour:
         bBypassReverbZones: 0
         bPlayOnAwake: 0
         bLoop: 0
-        bUseFader: 0
-        Fader:
-          TimeToFull: 0
         Priority: 128
         Volume: 1
         Pitch: 1
@@ -2408,9 +2393,6 @@ MonoBehaviour:
         bBypassReverbZones: 0
         bPlayOnAwake: 0
         bLoop: 0
-        bUseFader: 0
-        Fader:
-          TimeToFull: 0
         Priority: 128
         Volume: 1
         Pitch: 1
@@ -2425,9 +2407,6 @@ MonoBehaviour:
         bBypassReverbZones: 0
         bPlayOnAwake: 0
         bLoop: 0
-        bUseFader: 0
-        Fader:
-          TimeToFull: 0
         Priority: 128
         Volume: 1
         Pitch: 1

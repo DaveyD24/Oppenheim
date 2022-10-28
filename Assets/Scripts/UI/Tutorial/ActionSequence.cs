@@ -12,6 +12,9 @@ public class ActionSequence : MonoBehaviour
 {
     private Node<ActionSequence> topNode;
 
+    [field: Header("Cutscene Settings")]
+    [SerializeField] private bool bIsCutscene = false;
+
     [field: Header("Spawn In Settings")]
     [field: SerializeField] public GameObject[] DeadPlayers { get; private set; }
 
@@ -42,6 +45,25 @@ public class ActionSequence : MonoBehaviour
     private void Start()
     {
         // BuildSequenceTree();
+
+        if (bIsCutscene)
+        {
+            BuildCutscene();
+        }
+    }
+
+    /// <summary>
+    /// instead of the intro controls text, build and play the intro cutscene instead
+    /// </summary>
+    private void BuildCutscene()
+    {
+        PlayDialogue dialogue = new PlayDialogue(this, welcomeDialogue, oppenheimText, talkSpeed, sentencePauseTime);
+        ShowHideObjectActionSequence showHideObjectHideTxt = new ShowHideObjectActionSequence(this, oppenheimText.gameObject, false);
+        ShowHideObjectActionSequence showHideObject = new ShowHideObjectActionSequence(this, oppenheimObj, true);
+        PlayDialogue oppenheimTalk = new PlayDialogue(this, rotateDialogue, oppenheimObj.transform.GetChild(0).GetChild(0).gameObject.GetComponent<TextMeshProUGUI>(), talkSpeed, sentencePauseTime); // play the intro welcome text
+        SwitchScene switchScene = new SwitchScene(this, "Stage0");
+
+        topNode = new Sequence<ActionSequence>(new List<Node<ActionSequence>> { dialogue, showHideObjectHideTxt, showHideObject, oppenheimTalk, switchScene });
     }
 
     private void BuildSequenceTree()
@@ -69,7 +91,10 @@ public class ActionSequence : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
-        Gizmos.DrawWireSphere(oppenheimObj.transform.position, MaxDistanceAway);
+        if (oppenheimObj != null)
+        {
+            Gizmos.DrawWireSphere(oppenheimObj.transform.position, MaxDistanceAway);
+        }
     }
 
     private void OnEnable()

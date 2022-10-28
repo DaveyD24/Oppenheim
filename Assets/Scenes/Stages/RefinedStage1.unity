@@ -1628,7 +1628,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &11654109
 RectTransform:
   m_ObjectHideFlags: 0
@@ -17932,6 +17932,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerCage(Car)
       objectReference: {fileID: 0}
+    - target: {fileID: 2780856987565285519, guid: 6accb49116cfa2d46adabacf9f398da4, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3174988531036858487, guid: 6accb49116cfa2d46adabacf9f398da4, type: 3}
       propertyPath: m_Enabled
       value: 1
@@ -23195,7 +23199,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pauseMenu: {fileID: 873219415}
-  firstPauseButton: {fileID: 0}
+  firstPauseButton: {fileID: 1648503253}
 --- !u!1 &440211885
 GameObject:
   m_ObjectHideFlags: 0
@@ -50014,7 +50018,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2780856987565285519, guid: 6accb49116cfa2d46adabacf9f398da4, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3174988531036858487, guid: 6accb49116cfa2d46adabacf9f398da4, type: 3}
       propertyPath: m_Enabled
@@ -51022,6 +51026,10 @@ PrefabInstance:
     - target: {fileID: 2780856987565285519, guid: 6accb49116cfa2d46adabacf9f398da4, type: 3}
       propertyPath: m_Name
       value: PlayerCage(Monkey)
+      objectReference: {fileID: 0}
+    - target: {fileID: 2780856987565285519, guid: 6accb49116cfa2d46adabacf9f398da4, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3268294984861303375, guid: 6accb49116cfa2d46adabacf9f398da4, type: 3}
       propertyPath: m_TagString
@@ -56656,6 +56664,10 @@ PrefabInstance:
     - target: {fileID: 2780856987565285519, guid: 6accb49116cfa2d46adabacf9f398da4, type: 3}
       propertyPath: m_Name
       value: PlayerCage(Bat)
+      objectReference: {fileID: 0}
+    - target: {fileID: 2780856987565285519, guid: 6accb49116cfa2d46adabacf9f398da4, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3174988531036858487, guid: 6accb49116cfa2d46adabacf9f398da4, type: 3}
       propertyPath: m_Enabled
