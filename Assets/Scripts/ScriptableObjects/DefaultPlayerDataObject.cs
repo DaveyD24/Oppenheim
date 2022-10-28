@@ -24,5 +24,5 @@ public class DefaultPlayerDataObject : ScriptableObject
 
     [field: SerializeField] public float RadiusFromCheckpiont { get; private set; }
 
-    public float MaxFuel { get; private set; } = 100;
+    public int MaxFuel { get; private set; } = 25;
 }

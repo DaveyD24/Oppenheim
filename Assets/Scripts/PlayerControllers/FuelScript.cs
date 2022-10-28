@@ -56,17 +56,21 @@ public class FuelScript : MonoBehaviour
         }*/
     }
 
-    private void playerSkill(){
-        if (Input.GetKeyDown(KeyCode.Space) && isCooldown == false){
+    private void playerSkill()
+    {
+        if (Input.GetKeyDown(KeyCode.Space) && isCooldown == false)
+        {
             isCooldown = true;
             greyIcon.fillAmount = 1;
         }
 
-        if (isCooldown){
+        if (isCooldown)
+        {
             greyIcon.fillAmount -= 1 / cooldown * Time.deltaTime;
         }
 
-        if (greyIcon.fillAmount <= 0){
+        if (greyIcon.fillAmount <= 0)
+        {
             greyIcon.fillAmount = 0;
             isCooldown = false;
         }

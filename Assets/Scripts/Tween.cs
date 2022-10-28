@@ -154,6 +154,30 @@ public class Tween
         }
     }
 
+    public float UpdatePositionEaseInBounceFloat()
+    {
+        float timeFraction = 1 - ((Time.time - StartTime) / Duration);
+        const float n1 = 7.5625f;
+        const float d1 = 2.75f;
+
+        if (timeFraction < 1 / d1)
+        {
+            return Mathf.Lerp(StartPosCircular, EndPosCircular, 1 - (n1 * timeFraction * timeFraction));
+        }
+        else if (timeFraction < 2 / d1)
+        {
+            return Mathf.Lerp(StartPosCircular, EndPosCircular, 1 - ((n1 * (timeFraction -= 1.5f / d1) * timeFraction) + 0.75f));
+        }
+        else if (timeFraction < 2.5f / d1)
+        {
+            return Mathf.Lerp(StartPosCircular, EndPosCircular, 1 - ((n1 * (timeFraction -= 2.25f / d1) * timeFraction) + 0.9375f));
+        }
+        else
+        {
+            return Mathf.Lerp(StartPosCircular, EndPosCircular, 1 - ((n1 * (timeFraction -= 2.625f / d1) * timeFraction) + 0.984375f));
+        }
+    }
+
     public Vector3 UpdatePositionEaseOutCirc()
     {
         float timeFraction = (Time.time - StartTime) / Duration;

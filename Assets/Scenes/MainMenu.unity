@@ -278,11 +278,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5583241534940801185, guid: 1efbb2aa03f53084d84cfb4d1772d502, type: 3}
       propertyPath: m_ConnectedAnchor.y
-      value: -15.952106
+      value: -12.215215
       objectReference: {fileID: 0}
     - target: {fileID: 5583241534940801185, guid: 1efbb2aa03f53084d84cfb4d1772d502, type: 3}
       propertyPath: m_ConnectedAnchor.z
-      value: -2084.2651
+      value: -2103.954
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 5583241534940801180, guid: 1efbb2aa03f53084d84cfb4d1772d502, type: 3}
@@ -766,7 +766,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 91.99998, y: -127.997375}
+  m_AnchoredPosition: {x: 91.99998, y: -172}
   m_SizeDelta: {x: 403.5, y: 250}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &57217528
@@ -782,7 +782,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 4
+    m_Mode: 3
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 744101087}
     m_SelectOnDown: {fileID: 744101087}
@@ -3234,7 +3234,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 159.00005, y: 58.997345}
+  m_AnchoredPosition: {x: 159.00005, y: 112}
   m_SizeDelta: {x: 403.5, y: 250}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &411507689
@@ -3276,21 +3276,21 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 0
+  m_Interactable: 1
   m_TargetGraphic: {fileID: 411507690}
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1246068409}
         m_TargetAssemblyTypeName: Button, Assembly-CSharp
-        m_MethodName: Quit
-        m_Mode: 1
+        m_MethodName: ChangeScene
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: Credits
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &411507690
@@ -4681,7 +4681,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 91.99998, y: 101.99733}
+  m_AnchoredPosition: {x: 91.99997, y: 154.99998}
   m_SizeDelta: {x: 403.5, y: 250}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &744101087
@@ -4697,7 +4697,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 4
+    m_Mode: 3
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 57217528}
     m_SelectOnDown: {fileID: 57217528}
@@ -7058,7 +7058,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.54901963, g: 0.34509805, b: 0.14117648, a: 0}
+  m_BackGroundColor: {r: 0.11372549, g: 0.11372549, b: 0.11372549, a: 1}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0

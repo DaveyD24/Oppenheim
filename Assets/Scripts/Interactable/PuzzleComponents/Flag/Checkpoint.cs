@@ -74,6 +74,8 @@ public class Checkpoint : MonoBehaviour, IDataInterface
         flagUpAmount = (maxY - minY) / numActivePlayers;
         flagPos.y = minY + (flagUpAmount * seenId.Count);
 
+        flagPos.y = Mathf.Clamp(flagPos.y, minY, maxY);
+
         flagMoveTween = new Tween(flagTransform.localPosition, flagPos, Time.time, animationDuration);
 
         // when all active players have collided with this checkpoint set it as the active checkpoint

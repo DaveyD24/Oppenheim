@@ -22609,8 +22609,8 @@ Camera:
   m_GameObject: {fileID: 927938367}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.043137256, g: 0.04705883, b: 0.050980397, a: 1}
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0.11372549, g: 0.11372549, b: 0.11372549, a: 1}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -50446,7 +50446,7 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1
   MinDistance: 16.986923
-  MaxDistance: 16.986923
+  MaxDistance: 16.986925
   Pan2D: 0
   rolloffMode: 0
   BypassEffects: 0
@@ -50542,7 +50542,7 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1
   MinDistance: 24.096848
-  MaxDistance: 24.096848
+  MaxDistance: 24.09685
   Pan2D: 0
   rolloffMode: 0
   BypassEffects: 0

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// An Audio Controller for Oppenheim.
@@ -225,10 +226,24 @@ public class AudioController : MonoBehaviour
 	void Spawn(out GameObject Spawned, bool bTieToThis)
 	{
 		Spawned = new GameObject($"{name}");
+		if (SceneManager.sceneCount > 1)
+        {
+            for (int i = 0; i < SceneManager.sceneCount; i++)
+            {
+				// as the transition scene is only temporary need to move them off it if they appear on it
+				Scene scene = SceneManager.GetSceneAt(i);
+				if (scene.name != "TransitionScene")
+                {
+					SceneManager.MoveGameObjectToScene(Spawned, scene);
+                }
+            }
+        }
 
 		if (bTieToThis)
-			Spawned.transform.parent = transform;
-	}
+        {
+            Spawned.transform.parent = transform;
+        }
+    }
 
 	bool Get(string Name, out AudioData Data)
 	{

@@ -8,8 +8,7 @@ using Unity.Services.Analytics;
 using Unity.Services.Core;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
-using TMPro;
+using UnityEngine.UI;
 
 /// <summary>
 /// A base class for handling the common functionality across all players.
@@ -22,7 +21,7 @@ public abstract class PlayerController : MonoBehaviour
 
     // [SerializeField] private GameObject controlObj;
     [SerializeField] private GameObject abilityActiveObj;
-    [SerializeField] private TextMeshProUGUI abilityTxt;
+    [SerializeField] private Image abilityAmountImg;
     [SerializeField] private Canvas playerCanvas;
 
     private bool bControlsHidden = false;
@@ -40,6 +39,8 @@ public abstract class PlayerController : MonoBehaviour
     private bool bMouseHeld = false;
     private Vector2 mouseControlInput;
     private float camZoomValue;
+
+    private Tween abilityChangeTween;
 
     // input handleing things
     public static IEnumerator DeathWaitTimer { get; private set; }
@@ -306,13 +307,26 @@ public abstract class PlayerController : MonoBehaviour
     public void AdjustAbilityValue(int amount)
     {
         AbilityUses += amount;
-        AbilityUses = Mathf.Max(0, AbilityUses);
-        abilityTxt.text = AbilityUses.ToString();
+        AbilityUses = Mathf.Clamp(AbilityUses, 0, DefaultPlayerData.MaxFuel);
+
+        float newFillValue = (float)AbilityUses / DefaultPlayerData.MaxFuel;
+
+        abilityChangeTween = new Tween(abilityAmountImg.fillAmount, newFillValue, Time.time, 1);
     }
 
     protected virtual void Update()
     {
         CamMoveMouse();
+
+        if (abilityChangeTween != null)
+        {
+            abilityAmountImg.fillAmount = abilityChangeTween.UpdatePositionEaseInBounceFloat();
+
+            if (abilityChangeTween.IsComplete())
+            {
+                abilityChangeTween = null;
+            }
+        }
 
         if (!BatMathematics.IsZero(camZoomValue))
         {
