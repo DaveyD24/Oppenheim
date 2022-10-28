@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class GridPathfinding : MonoBehaviour
 {
-#if UNITY_EDITOR
     private NavigationNode[,,] grid;
     [SerializeField] private MeshFilter meshFilter;
     [Tooltip("The width of the grid which can be searched")]
@@ -308,5 +307,4 @@ public class GridPathfinding : MonoBehaviour
             return transform.position + offset;
         }
     }
-#endif
 }
