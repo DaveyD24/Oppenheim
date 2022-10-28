@@ -31315,6 +31315,34 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -6934552601040837373, guid: 5f891fc1f37606542b13a658ef346b19, type: 3}
+--- !u!114 &614574778
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 614574775}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdf51a863cc80a541bd21546cf8cfb67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HashMap:
+    Entries:
+    - Key: Creak
+      Value:
+        Clip: {fileID: 8300000, guid: a7f7d597d117f7a47a3ce42c719efc9b, type: 3}
+        bMute: 0
+        bBypassEffects: 0
+        bBypassReverbZones: 0
+        bPlayOnAwake: 0
+        bLoop: 1
+        Priority: 128
+        Volume: 1
+        Pitch: 1
+        StereoPan: 0
+        SpatialBlend: 0.75
+        ReverbZoneMix: 1
 --- !u!64 &614574779
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -31355,6 +31383,7 @@ MonoBehaviour:
   MaxPitch: -90
   CurrentPitch: -57.548
   MaxRotationDeltaAngle: 15
+  Audio: {fileID: 614574778}
 --- !u!1 &621125281
 GameObject:
   m_ObjectHideFlags: 0

@@ -21,10 +21,19 @@ public class Seesaw : MonoBehaviour
 
 	[SerializeField, Tooltip("How many degrees should this Seesaw be able to rotate?")] float MaxRotationDeltaAngle;
 
+	[Space]
+	[SerializeField] AudioController Audio;
+	AudioSource Creak;
+
 	float InRatio;
 	float OutRatio;
 	float SmoothDampVelocity;
 	//[SerializeField] private float timeReachTarget = 0.05f; // Doesn't work.
+
+	void Start()
+	{
+		Creak = Audio.Play("Creak", EAudioPlayOptions.FollowEmitter);
+	}
 
 	void FixedUpdate()
 	{
@@ -49,6 +58,8 @@ public class Seesaw : MonoBehaviour
 		{
 			float SmoothedPitch = Mathf.SmoothDampAngle(transform.localEulerAngles.x, Pitch, ref SmoothDampVelocity, .1f, MaxRotationDeltaAngle);
 			transform.localEulerAngles = new Vector3(SmoothedPitch, transform.localEulerAngles.y, transform.localEulerAngles.z);
+
+			Creak.volume = Mathf.Clamp01(Mathf.Abs(SmoothDampVelocity));
 		}
 #if UNITY_EDITOR
 		CurrentPitch = Pitch;
