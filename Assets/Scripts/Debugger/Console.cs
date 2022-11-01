@@ -29,13 +29,27 @@ public class Console : MonoBehaviour
 				continue;
 
 			Funcs.Add(Method.Name, new MethodExec<MethodInfo, ExecAttribute>(Method, Command));
+
+#if UNITY_EDITOR
+			if (Command.bExecOnStart)
+			{
+				Exec(Method.Name, Command.ExecParams);
+			}
+#endif
+
+			if (Command.bHideInConsole)
+			{
+				Funcs.Remove(Method.Name);
+			}
 		}
 	}
 
 	void Update()
 	{
 		if (IN.GetKeyDown(KeyCode.BackQuote))
+		{
 			bShowConsole = !bShowConsole;
+		}
 	}
 
 	void BuildExec()
