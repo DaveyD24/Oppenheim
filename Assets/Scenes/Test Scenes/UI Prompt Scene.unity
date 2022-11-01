@@ -139,7 +139,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &45442167
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1432,7 +1432,7 @@ GameObject:
   m_Icon: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &261250468
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1454,6 +1454,7 @@ MonoBehaviour:
   InPlaceTemplate: {fileID: 1920246004369980806, guid: e972a0f255847834aa9030982c0626fb, type: 3}
   InPlacePosition: {x: 0, y: 3.12, z: 0}
   tutorialCanvasParentWorld: {fileID: 1335021323}
+  Billboard: {fileID: 0}
 --- !u!65 &261250469
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3613,12 +3614,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1443515261}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ab6af619d49f7404eab92afe06f801ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   pauseMenu: {fileID: 0}
+  firstPauseButton: {fileID: 0}
 --- !u!114 &1443515263
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4087,7 +4089,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bDrawSpringArmLine: 0
-  bDrawRotationalLines: 1
+  bDrawRotationalLines: 0
   bDrawAdvancedCollisionLines: 0
   Camera: {fileID: 1673939897}
   Target: {fileID: 952481283}
@@ -4104,7 +4106,7 @@ MonoBehaviour:
   DefaultCameraRotation: {x: 29.17, y: 0, z: 0}
   bEnableScrollToDistance: 1
   ScrollSensitivity: 1
-  MaxDistance: 1e+13
+  MinMaxDistance: {x: 1, y: 30}
   OrbitSensitivity: 15
   MinMaxOrbitAngle: {x: 1, y: 70}
   bPermanentlyChangePanTargetOffset: 0
@@ -4224,7 +4226,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1730295872
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4399,6 +4401,10 @@ PrefabInstance:
     - target: {fileID: 6435307911758216489, guid: d9dd74ab3878a43479c366d089e37c50, type: 3}
       propertyPath: m_Name
       value: Button
+      objectReference: {fileID: 0}
+    - target: {fileID: 6435307911758216489, guid: d9dd74ab3878a43479c366d089e37c50, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d9dd74ab3878a43479c366d089e37c50, type: 3}

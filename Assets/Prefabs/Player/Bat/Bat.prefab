@@ -336,9 +336,14 @@ MonoBehaviour:
   TimeToV1: 1
   JumpHeight: 5
   SecondsOfPitchFlight: 0.75
-  MinMaxPitchAngle: {x: -30, y: 50}
+  MinMaxPitchAngle: {x: -0.5, y: 50}
+  AirbornePermissions: 3
   YawDeltaAngle: 2
   PitchDeltaAngle: 1.5
+  LiftSettings:
+    LiftCoefficient: 0.065
+    WingArea: 5
+    AirDensity: 1
   GroundCheckOffset: {x: 0, y: 0.15, z: 0}
   GroundRayDistance: 0.6
   WingtipVortex:

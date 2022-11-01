@@ -14,7 +14,7 @@ public class Console : MonoBehaviour
 	string Input;
 	string PreviousInput;
 
-	void Start()
+	void Awake()
 	{
 		Funcs = new Dictionary<string, MethodExec<MethodInfo, ExecAttribute>>();
 

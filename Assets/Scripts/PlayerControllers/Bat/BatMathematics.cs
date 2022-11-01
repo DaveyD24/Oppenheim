@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Extensions;
 
 /// <summary>
 /// Purpose-built mathematics function library for the Bat's behaviours and functions.
@@ -87,6 +88,14 @@ public static class BatMathematics
 		return kClDAOver2 * Speed * Speed;
 	}
 
+	/// <inheritdoc cref="ComputeLift(Rigidbody)"/>
+	public static float ComputeLift(Rigidbody Physics, LiftVariables Vars)
+	{
+		float Speed = Physics.velocity.FMagnitude();
+
+		return Vars.Formula() * Speed * Speed;
+	}
+
 	/// <summary>Rotates a Vector about an Axis by Angle degrees.</summary>
 	/// <remarks>
 	/// Because you can't really define 0-degrees with Vector angles,
@@ -167,9 +176,9 @@ public static class BatMathematics
 		Quaternion RotationNow = Transform.rotation;
 
 		if (MovementVector == Vector3.zero)
-        {
+		{
 			return;
-        }
+		}
 
 		Quaternion TargetRotation = Quaternion.LookRotation(MovementVector, UpAxis);
 		Transform.rotation = Quaternion.RotateTowards(RotationNow, TargetRotation, RotationSpeed);
@@ -188,6 +197,13 @@ public static class BatMathematics
 	public static bool IsZero(Vector3 V, float Threshold = kZeroThreshold)
 	{
 		return IsZero(V.x, Threshold) && IsZero(V.y, Threshold) && IsZero(V.z, Threshold);
+	}
+
+	public static float IfZeroThenZero(float F, float Threshold = kZeroThreshold)
+	{
+		if (IsZero(F, Threshold))
+			return 0F;
+		return F;
 	}
 
 	/// <summary>Sets V to Vector3.zero if it's close enough to zero.</summary>
@@ -216,6 +232,12 @@ public static class BatMathematics
 		ForceZero(ref V.x);
 		ForceZero(ref V.y);
 		ForceZero(ref V.z);
+	}
+
+	public static void ForceZero(ref Vector2 V)
+	{
+		ForceZero(ref V.x);
+		ForceZero(ref V.y);
 	}
 
 	/// <summary>Uses bitwise operations to force a float to be absolute zero.</summary>
@@ -274,6 +296,18 @@ public static class BatMathematics
 			F = Max;
 	}
 
+	public static void ClampMin(ref int I, int Min)
+	{
+		if (I < Min)
+			I = Min;
+	}
+
+	public static void ClampMax(ref int I, int Max)
+	{
+		if (I > Max)
+			I = Max;
+	}
+
 	/// <summary>Checks whether <paramref name="V"/> contains <see cref="float.NaN"/>.</summary>
 	/// <remarks>Used in Antipede.</remarks>
 	/// <returns><see langword="true"/> if at least one vector component is <see cref="float.NaN"/>.</returns>
@@ -319,7 +353,7 @@ public static class BatMathematics
 	/// <summary>Computes the Sine and Cosine of a given Angle.</summary>
 	public static void SinCos(out float Sine, out float Cosine, float Angle)
 	{
-		const float kInversePI = 1f / Mathf.PI;
+		const float kInversePI = 0.31830988618379067153776752674503f;
 		const float kHalfPI = Mathf.PI * .5f;
 
 		float Quotient = kInversePI * .5f * Angle;
@@ -391,6 +425,31 @@ public static class BatMathematics
 
 		float Radians = Mathf.Clamp(Vector3.Dot(L, R), -1f, 1f);
 		return 90f - FArcSine(Radians) * Mathf.Rad2Deg;
+	}
+
+	public static unsafe float FInverse(float N, int AdditionalIterations = 1)
+	{
+		int Sign = N < 0f ? -1 : 1;
+		int U = (int)(0x7EF127EA - *(uint*)&N);
+		float F = *(float*)&U;
+		float H = N * F; // Initial Approximation.
+
+		ClampMin(ref AdditionalIterations, 1);
+		ClampMax(ref AdditionalIterations, 3);
+
+		float R = F * (2f - H);
+		if (AdditionalIterations <= 2)
+		{
+			R *= 4 + H * (-6f + H * (4f - H));
+		}
+
+		if (AdditionalIterations <= 3)
+		{
+			R *= 8 + H * (-28f + H * (56f + H * (-70f + H * (56f + H * (-28f + H * (8f - H))))));
+		}
+
+		return R * Sign;
+
 	}
 
 	#endregion

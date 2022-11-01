@@ -21,6 +21,7 @@
 
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Extensions;
 using static global::BatMathematics;
 using static UnityEngine.InputSystem.InputAction;
 
@@ -41,10 +42,15 @@ public class BatMovement : MonoBehaviour
 	float RemainingSeconds;
 	IEnumerator CurrentGradualFunc;
 
+	[Space(7.5f)]
+	[SerializeField] EAirborneControlOptions AirbornePermissions;
 	[SerializeField, Min(kZeroThreshold)] float YawDeltaAngle = 2f;
 	[SerializeField, Min(kZeroThreshold)] float PitchDeltaAngle = 2f;
 	float YawDelta = 0f;
 	float PitchDelta = 0f;
+
+	[Header("Lift Settings")]
+	[SerializeField] LiftVariables LiftSettings;
 
 	[Header("Ground Checks")]
 	[SerializeField] Vector3 GroundCheckOffset;
@@ -138,30 +144,28 @@ public class BatMovement : MonoBehaviour
 		if (!IsZero(YawDelta) || !IsZero(PitchDelta) || bIsAffectedGravityPastThreshold)
 		{
 			// Translate World-Velocity to Local Forward.
-			Vector3 yawVelocity = RotateVector(Bat.Physics.velocity, transform.up, YawDelta);
-			Vector3 combinedVelocity = RotateVector(yawVelocity, -transform.right, PitchDelta);
-			Bat.Physics.velocity = combinedVelocity; // Combination of Pitch and Yaw.
+			Vector3 YawVelocity = RotateVector(Bat.Physics.velocity, transform.up, YawDelta);
+			Vector3 Velocity = RotateVector(YawVelocity, -transform.right, PitchDelta); // Combination of Pitch and Yaw.
 
 			// Set to Zero if its close enough to Zero.
-			Vector3 velocity = Bat.Physics.velocity;
-			SetZeroIfZero(ref velocity);
+			SetZeroIfZero(ref Velocity);
 
-			Bat.Physics.velocity = velocity;
+			Bat.Physics.velocity = Velocity;
 
-			// Not Zero and must be facing in the same general direction.
-			if (velocity != Vector3.zero)
+			if (Velocity != Vector3.zero && bHasDoubleJumped)
 			{
 				// If the Bat has fallen off an edge without Glide input.
 				if (bHasBeenGivenSlightBoost && !bHasGlidedThisJump && !bIsAffectedGravityPastThreshold)
 				{
 					// Ignore and do not face towards the effect of gravity.
-					velocity.y = 0f;
+					Velocity.y = 0f;
 				}
 
 				// Use transform.up or Vector3.up?
-				Quaternion rotationNow = transform.rotation;
-				Quaternion targetRot = Quaternion.LookRotation(velocity, Vector3.up);
-				transform.rotation = Quaternion.RotateTowards(rotationNow, targetRot, Bat.YawSpeed);
+				Quaternion RotationNow = transform.rotation;
+				Quaternion TargetRot = Quaternion.LookRotation(Velocity, Vector3.up);
+
+				transform.rotation = Quaternion.RotateTowards(RotationNow, TargetRot, Bat.YawSpeed);
 			}
 		}
 		else if (GroundMovement != Vector3.zero && !IsAirborne())
@@ -186,9 +190,16 @@ public class BatMovement : MonoBehaviour
 
 	private void OnCollisionEnter(Collision Collision)
 	{
-		if (bHasGlidedThisJump && IsAirborne())
+		if (IsAirborne())
 		{
-			if (Collision.relativeVelocity.magnitude > 10f)
+			if (bHasGlidedThisJump)
+			{
+				if (Collision.relativeVelocity.FMagnitude() > 10f)
+				{
+					ForceStopAllMovement();
+				}
+			}
+			else if (!bHasDoubleJumped)
 			{
 				ForceStopAllMovement();
 			}
@@ -222,23 +233,8 @@ public class BatMovement : MonoBehaviour
 		}
 	}
 
-	public void LookBinding(ref CallbackContext Context)
-	{
-		/**
-		 --      This does nothing if we're not using LOOK_AIRBORNE.     --
-		--               Can always be changed, if needed.              --
-		**/
-#if LOOK_AIRBORNE
-		if (Bat.Active)
-		{
-			ThrowLook = Context.action.ReadValue<Vector2>();
-		}
-		else
-		{
-			ThrowLook = Vector2.zero;
-		}
-#endif
-	}
+	// This is Obsolete("Camera Controls are done through PlayerController.CamMoveMouse.
+	public void LookBinding(ref CallbackContext Context) { }
 
 	public void AbilityBinding() { }
 
@@ -288,7 +284,7 @@ public class BatMovement : MonoBehaviour
 			if (!bHasCancelledGlideThisJump)
 			{
 				// Provide Lift while the Player has not cancelled their Glide.
-				float Lift = ComputeLift(Bat.Physics);
+				float Lift = ComputeLift(Bat.Physics, LiftSettings);
 				Bat.Physics.AddForce(transform.up * Lift);
 			}
 
@@ -349,6 +345,8 @@ public class BatMovement : MonoBehaviour
 			Bat.Events.OnAnimationStateChanged?.Invoke(EAnimationState.WingedFlight);
 
 			bHasDoubleJumped = false;
+
+			ForceRealign();
 		}
 #if USE_DOUBLEJUMP_GLIDE
 		else if (!IsZero(Throw))
@@ -438,7 +436,7 @@ public class BatMovement : MonoBehaviour
 
 	private IEnumerator GradualAcceleration()
 	{
-		float rTime = 1f / TimeToV1;
+		float rTime = FInverse(TimeToV1);
 		float t = 0f;
 
 		while (t <= 1f)
@@ -495,23 +493,18 @@ public class BatMovement : MonoBehaviour
 		}
 #endif
 
-		if (!IsFacingVelocity())
+		//if (!IsFacingVelocity())
+		//{
+		//	StopPitchInput();
+		//	return;
+		//}
+
+		if (!DetermineAirbornePermissions(EAirborneControlMask.Pitch))
 		{
-			StopPitchInput();
 			return;
 		}
 
-		float PitchAngle = transform.rotation.eulerAngles.x;
-		float AngleNoWinding = PitchAngle > 180f ? PitchAngle - 360 : PitchAngle;
-
-		float Incline = Mathf.Sign(Throw);
-
-		// Upwards Pitch is negative, but positive in the inspector.
-		// Downwards Pitch is positive, but negative in the inspector.
-		// It just makes more sense to have the lower Pitch Angle limit
-		// to be relative to transform.forward. (- is down. + is up).
-		float Min = MinMaxPitchAngle[0] * -1f;
-		float Max = -MinMaxPitchAngle[1];
+		GetPitchAngles(Throw, out float AngleNoWinding, out float Incline, out float Min, out float Max);
 
 		if (Incline < 0f && AngleNoWinding < Max)
 		{
@@ -558,6 +551,20 @@ public class BatMovement : MonoBehaviour
 		}
 	}
 
+	void GetPitchAngles(float Throw, out float AngleNoWinding, out float Incline, out float Min, out float Max)
+	{
+		float PitchAngle = transform.rotation.eulerAngles.x;
+		AngleNoWinding = PitchAngle > 180f ? PitchAngle - 360 : PitchAngle;
+		Incline = Mathf.Sign(Throw);
+
+		// Upwards Pitch is negative, but positive in the inspector.
+		// Downwards Pitch is positive, but negative in the inspector.
+		// It just makes more sense to have the lower Pitch Angle limit
+		// to be relative to transform.forward. (- is down. + is up).
+		Min = MinMaxPitchAngle[0] * -1f;
+		Max = -MinMaxPitchAngle[1];
+	}
+
 	/// <summary>Gives Yaw Input.</summary>
 	/// <param name="Throw">Direction of Yaw; delta. + Right. - Left.</param>
 	private void ThrowYaw(float Throw)
@@ -573,6 +580,11 @@ public class BatMovement : MonoBehaviour
 			return;
 		}
 #endif
+
+		if (!DetermineAirbornePermissions(EAirborneControlMask.Yaw))
+		{
+			return;
+		}
 
 		if (!IsFacingVelocity())
 		{
@@ -720,6 +732,23 @@ public class BatMovement : MonoBehaviour
 
 		EventSystem.GameEvents.CollectFuel(1);
 	}
+
+	bool DetermineAirbornePermissions(EAirborneControlMask DesiredOption)
+	{
+		byte P = (byte)AirbornePermissions;
+		byte D = (byte)DesiredOption;
+
+		// The Desired bits must be 1 in Permissions' bits.
+		return (P & D) > (byte)EAirborneControlOptions.None;
+
+		// P     :    0010        // Permissions set to YawOnly.
+		// D     :    0001        // Pitch Controls are Desired.
+		// P & D =    0000        // Not Allowed.
+
+		// P     :    0011        // Permissions set to both Pitch and Yaw.
+		// D     :    0010        // Yaw Controls are Desired.
+		// P & D =    0010        // Allow Yaw.
+	}
 }
 
 public struct Speedometer
@@ -748,4 +777,33 @@ public struct Speedometer
 	{
 		LastFrame = ThisFrame;
 	}
+}
+
+[System.Serializable]
+public struct LiftVariables
+{
+	public float LiftCoefficient;
+	public float WingArea;
+	public float AirDensity;
+
+	public float Formula() => LiftCoefficient * WingArea * .5f * AirDensity;
+}
+
+public enum EAirborneControlOptions : byte
+{
+	[InspectorName("Disable Mid-Air Controls")]
+	None = 0B_0000,
+	[InspectorName("Only Allow Mid-Air Pitch Input")]
+	PitchOnly = 0B_0001,
+	[InspectorName("Only Allow Mid-Air Yaw Input")]
+	YawOnly = 0B_0010,
+	[InspectorName("Enable Full Mid-Air Controls")]
+	EnablePY = 0B_0011,
+}
+
+enum EAirborneControlMask : byte
+{
+	None = 0B_0000,
+	Pitch = 0B_0001,
+	Yaw = 0B_0010
 }

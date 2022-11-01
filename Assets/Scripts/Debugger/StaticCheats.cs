@@ -112,4 +112,17 @@ public static class StaticCheats
 		if (Boundaries)
 			Boundaries.SetActive(false);
 	}
+
+	[Exec("Give all characters maximum fuel.")]
+	public static void CheatsAll()
+	{
+		// Maximum 25 = DefaultPlayerDataObject.MaxFuel.
+		for (int i = 0; i < 25; ++i)
+		{
+			EventSystem.GameEvents.CollectFuel(0);
+			EventSystem.GameEvents.CollectFuel(1);
+			EventSystem.GameEvents.CollectFuel(2);
+			EventSystem.GameEvents.CollectFuel(3);
+		}
+	}
 }

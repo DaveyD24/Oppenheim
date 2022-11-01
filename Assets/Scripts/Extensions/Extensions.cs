@@ -16,6 +16,7 @@ namespace UnityEngine.Extensions
 		public static float SqrDist(Vector3 V1, Vector3 V2) => V1.SquareDistance(V2);
 
 		public static Vector3 FNormalised(this Vector3 V) => V * FInverseSqrt(V.sqrMagnitude);
+		public static float FMagnitude(this Vector3 V) => FSqrt(V.sqrMagnitude);
 	}
 
 	public static class XGameObject

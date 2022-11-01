@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using UnityEngine;
+using static global::BatMathematics;
 
 [Serializable, Obsolete("Not used anymore with new Audio Assets.")]
 public struct AudioFade
@@ -33,7 +34,7 @@ public struct AudioFade
 
 	IEnumerator StartFade()
 	{
-		float InverseTime = 1f / TimeToFull;
+		float InverseTime = FInverse(TimeToFull);
 		float T = 0f;
 		Source.volume = 0f;
 
