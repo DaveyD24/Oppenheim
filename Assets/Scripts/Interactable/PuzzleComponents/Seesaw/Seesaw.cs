@@ -4,8 +4,8 @@ using static global::BatMathematics;
 public class Seesaw : MonoBehaviour
 {
 	[Header("Ends")]
-	[SerializeField] SeesawPressurePoint In;
-	[SerializeField] SeesawPressurePoint Out;
+	[SerializeField] private SeesawPressurePoint In;
+	[SerializeField] private SeesawPressurePoint Out;
 
 	[Header("Weight")]
 	[SerializeField, Min(1f), Tooltip("The Mass in which this Seesaw is fully tilted.")] float MaxWeight;
@@ -37,8 +37,8 @@ public class Seesaw : MonoBehaviour
 
 	void FixedUpdate()
 	{
-		InWeight = -In; // Inbound Weight should 'drop' the Seesaw.
-		OutWeight = Out;
+		InWeight = -In.GetSideMass(); // Inbound Weight should 'drop' the Seesaw.
+		OutWeight = Out.GetSideMass();
 
 		// NaN Checks.
 		ClampMax(ref InWeight, MaxWeight);
@@ -49,8 +49,19 @@ public class Seesaw : MonoBehaviour
 
 		float Average = (InRatio + OutRatio) * .5f;
 
+		// Debug.Log("Average Old: " + Average);
+
 		// Rotate.
 		float Pitch = Mathf.Lerp(DefaultPitch, MaxPitch, Spring(Average));
+		if (Average < 0 && gameObject.name == "MoveableUpwards")
+        {
+			// print("Average New: " + (Average + 1) / 2);
+			float an = 0.5f;
+
+			// print("Average New Spring: " + Spring(an ));
+			Pitch = Mathf.Lerp(DefaultPitch, -MaxPitch, Spring(-Average));
+		}
+
 		Pitch = WrapAngle(Pitch);
 
 		// More NaN Checks.

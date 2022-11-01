@@ -163,6 +163,11 @@ public class CarController : PlayerController
         inputAmount = ctx.ReadValue<Vector2>();
         inputAmount.x = AjustMovementValue(inputAmount.x);
         inputAmount.y = AjustMovementValue(inputAmount.y);
+        if (ctx.control.device.name != "Keyboard")
+        {
+            inputAmount.y /= 5;
+            inputAmount.x /= 5;
+        }
 
         PlayEngineSounds();
     }

@@ -23,6 +23,7 @@ public abstract class PlayerController : MonoBehaviour
     [SerializeField] private GameObject abilityActiveObj;
     [SerializeField] private Image abilityAmountImg;
     [SerializeField] private Canvas playerCanvas;
+    [SerializeField] private float deathHeight = 2.5f;
 
     private bool bControlsHidden = false;
     private Vector3 startPosition;

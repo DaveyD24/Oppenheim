@@ -88,16 +88,30 @@ public class Forklift : MonoBehaviour, IDataInterface
 
     private IEnumerator MoveWait(bool bIsUpMove)
     {
-        Debug.Log("Moving the item upwards");
+        // Debug.Log("Moving the item upwards");
         yield return new WaitForSeconds(waitMoveTime);
 
         if (!bIsUpMove)
         {
+            if (bDoScaleInstead)
+            {
+                moveTween = new Tween(liftPos.localScale, new Vector3(startPos.x, minHeight, startPos.z), Time.time, moveSpeed);
+            }
+            else
+            {
                 moveTween = new Tween(liftPos.position, new Vector3(startPos.x, minHeight, startPos.z), Time.time, moveSpeed);
+            }
         }
         else
         {
-            moveTween = new Tween(liftPos.position, new Vector3(startPos.x, maxHeight, startPos.z), Time.time, moveSpeed);
+            if (bDoScaleInstead)
+            {
+                moveTween = new Tween(liftPos.localScale, new Vector3(startPos.x, maxHeight, startPos.z), Time.time, moveSpeed);
+            }
+            else
+            {
+                moveTween = new Tween(liftPos.position, new Vector3(startPos.x, maxHeight, startPos.z), Time.time, moveSpeed);
+            }
         }
 
         moveWait = null;

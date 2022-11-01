@@ -49,11 +49,17 @@ public class Button : MonoBehaviour
 
     private void PauseGame()
     {
+        if (firstPauseButton == null)
+        {
+            Debug.LogError("Failed");
+        }
+        else
+        {
+            UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(firstPauseButton);
+        }
+
         pauseMenu.SetActive(!pauseMenu.activeSelf);
         Time.timeScale = pauseMenu.activeSelf ? 0 : 1;
-
-        UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(null);
-        UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(firstPauseButton);
     }
 
     /// <summary>
@@ -73,7 +79,6 @@ public class Button : MonoBehaviour
 
         // SceneManager.LoadScene(scene);
         GameObject.Find("CanvasTransition").GetComponent<TransitionWait>().StartTransition(currScene, nextScene);
-        enumerator = null;
         ////SceneManager.LoadScene(scene);
     }
 }

@@ -92,9 +92,12 @@ public class SkyBot : MonoBehaviour
             if (Time.time < EndTime)
             {
                 //Debug.Log("inwhile");
-                float TimeProgressd = (Time.time - StartTime) / 0.4f;
-                this.transform.position = new Vector3(Vector3.Lerp(currentNode.transform.position, nextNode.transform.position, TimeProgressd).x, currentNode.transform.position.y + HeightOffset, Vector3.Lerp(currentNode.transform.position, nextNode.transform.position, TimeProgressd).z);
-                //Debug.Log(TimeProgressd);
+                float timeProgressd = (Time.time - StartTime) / 0.4f;
+                if (currentNode != null && nextNode != null)
+                {
+                    this.transform.position = new Vector3(Vector3.Lerp(currentNode.transform.position, nextNode.transform.position, timeProgressd).x, currentNode.transform.position.y + HeightOffset, Vector3.Lerp(currentNode.transform.position, nextNode.transform.position, timeProgressd).z);
+                    //Debug.Log(TimeProgressd);
+                }
             }
             else
             {

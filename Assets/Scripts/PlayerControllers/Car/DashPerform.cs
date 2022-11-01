@@ -53,6 +53,7 @@ public class DashPerform : Node<CarController>
 
     public override void End()
     {
+        Blackboard.Rb.mass = Blackboard.Weight;
         base.End();
     }
 

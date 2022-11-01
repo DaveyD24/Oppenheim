@@ -32,13 +32,17 @@ public class DashTransition : Node<CarController>
 
     public override void Init()
     {
-        Blackboard.Rb.mass = Blackboard.Weight / 2.5f;
         initTime = 0;
         forwardMove = Blackboard.transform.forward;
 
         if (bIsEnd)
         {
             Blackboard.BAllowEndBreaking = true;
+            Blackboard.Rb.mass = Blackboard.Weight;
+        }
+        else
+        {
+            Blackboard.Rb.mass = Blackboard.Weight / 2.5f;
         }
 
         base.Init();
